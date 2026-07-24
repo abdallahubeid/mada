@@ -1,0 +1,163 @@
+@import 'tailwindcss';
+
+/* Brand typefaces per the Figma reference: Tajawal for UI/body copy, Cairo for display headings. */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap');
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/*
+ * Appearance Strategy (docs/DESIGN_SYSTEM.md §2, ADR-15): Dark Mode is
+ * controlled by an explicit `.dark` class on <html>, toggled by the user
+ * and persisted to localStorage — never derived only from the OS media
+ * query. This custom variant is what makes `dark:` utilities respect that
+ * class instead of Tailwind v4's default `prefers-color-scheme` behavior.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Tajawal', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Cairo', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+
+    /*
+     * Ink — navy surface scale extracted from the Figma reference (Veyra
+     * ERP dark theme: canvas #081425/#040E1F, card surface #152031,
+     * elevated surface #1F2A3C/#2A3548, heading text #D8E3FB). Figma only
+     * specifies the dark theme; the 50–400 light-mode stops are a derived
+     * counterpart, not pulled from the file.
+     */
+    --color-ink-50: #d8e3fb;
+    --color-ink-100: #eaf0fb;
+    --color-ink-200: #d3dcee;
+    --color-ink-300: #a9b8d6;
+    --color-ink-400: #7d8eaf;
+    --color-ink-500: #2a3548;
+    --color-ink-600: #1f2a3c;
+    --color-ink-700: #152031;
+    --color-ink-800: #111c2d;
+    --color-ink-900: #081425;
+    --color-ink-950: #040e1f;
+
+    /*
+     * Mist — muted text / icon / divider tones, extracted from the same
+     * reference (#bbcabf secondary text, #86948a border, #3c4a42 divider).
+     */
+    --color-mist-50: #f4f6f5;
+    --color-mist-100: #e4e9e6;
+    --color-mist-200: #c7d1cb;
+    --color-mist-300: #bbcabf;
+    --color-mist-400: #9db0a4;
+    --color-mist-500: #86948a;
+    --color-mist-600: #6c7a71;
+    --color-mist-700: #3c4a42;
+    --color-mist-800: #263129;
+    --color-mist-900: #182019;
+
+    /*
+     * Brand Emerald — overrides only the specific Tailwind default shades
+     * that the Figma file actually uses (#4EDEA3 primary accent, #00422B /
+     * #003824 success-container tones). Every other shade keeps Tailwind's
+     * stock emerald scale, which already matches the file's #10B981 usage.
+     */
+    --color-emerald-400: #4edea3;
+    --color-emerald-800: #00422b;
+    --color-emerald-900: #003824;
+
+    /* Semantic status pairs (Material-3-style container/on-container roles), extracted from Figma. */
+    --color-danger-bg: #93000a;
+    --color-danger-text: #ffb4ab;
+    --color-danger-solid: #fc7c78;
+    --color-info-bg: #0566d9;
+    --color-info-text: #adc6ff;
+
+    /* Signature ambient glow behind primary CTAs, matching Figma's tinted drop-shadow on emerald buttons. */
+    --shadow-glow: 0 8px 20px -6px color-mix(in srgb, var(--color-emerald-400) 45%, transparent),
+        0 4px 10px -4px color-mix(in srgb, var(--color-emerald-400) 30%, transparent);
+
+    /*
+     * Subtle, slow ambient motion for decorative surfaces (login split-screen
+     * showcase panel). Kept gentle and slow so it reads as "alive" rather
+     * than distracting — disabled entirely under prefers-reduced-motion below.
+     */
+    --animate-float-slow: float 6s ease-in-out infinite;
+    --animate-float-slower: float 9s ease-in-out infinite;
+    --animate-hero-float: hero-float 7s ease-in-out infinite;
+    --animate-glow-pulse: glow-pulse 5s ease-in-out infinite;
+
+    /*
+     * Infinite logo marquee (marketing "trusted by" strip). The track holds
+     * two identical copies laid out LTR; translating a full -50% swaps copy A
+     * for copy B for a seamless loop. Paused on hover and under reduced motion.
+     */
+    --animate-marquee: marquee 32s linear infinite;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Hero floating badge — gentle vertical drift with a soft 1.5° tilt. */
+@keyframes hero-float {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-1deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(1.5deg);
+    }
+}
+
+@keyframes glow-pulse {
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Alpine.js hides [x-cloak] elements until it has initialized (docs/DESIGN_SYSTEM.md component inventory). */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Slim, unobtrusive scrollbars for the premium-feel shell (sidebar nav, drawers, main content). */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-mist-300) transparent;
+}
+
+.dark * {
+    scrollbar-color: var(--color-ink-600) transparent;
+}
+
+/* Respect the user's OS-level motion preference even though we lean on animation for polish. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

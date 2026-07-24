@@ -1,0 +1,247 @@
+@extends('layouts.admin')
+
+@section('title', 'إدارة المستأجرين')
+
+@section('breadcrumbs')
+    <span class="text-mist-500 dark:text-mist-400">المستأجرون</span>
+    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="text-ink-700 dark:text-mist-200">إدارة المستأجرين</span>
+@endsection
+
+@section('content')
+    <div x-data="{ modal: null, tenant: '' }">
+        {{-- Header --}}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إدارة المستأجرين</h2>
+                <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
+                    {{ $counts['all'] }} مستأجر عبر دورة الحياة كاملة — راجِع الطلبات وأدِر الحالات.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                disabled
+                title="يتوفّر في المرحلة 4"
+                class="inline-flex cursor-not-allowed items-center gap-2 rounded-xl border border-mist-200 px-4 py-2 text-sm font-medium text-mist-400 dark:border-ink-600 dark:text-mist-500"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                تصدير
+            </button>
+        </div>
+
+        {{-- Status lifecycle tabs --}}
+        <div class="mt-6 overflow-x-auto">
+            <div class="flex min-w-max items-center gap-1 border-b border-mist-200 dark:border-ink-700">
+                @foreach ($tabs as $key => $label)
+                    @php $isActive = $activeTab === $key; @endphp
+                    <a
+                        href="{{ route('admin.tenants', ['status' => $key]) }}"
+                        @class([
+                            'flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-all duration-200',
+                            'border-emerald-400 text-emerald-600 dark:text-emerald-400' => $isActive,
+                            'border-transparent text-mist-500 hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200' => ! $isActive,
+                        ])
+                    >
+                        {{ $label }}
+                        <span @class([
+                            'rounded-full px-2 py-0.5 text-xs font-bold',
+                            'bg-emerald-400/15 text-emerald-600 dark:text-emerald-400' => $isActive,
+                            'bg-mist-100 text-mist-500 dark:bg-ink-700 dark:text-mist-400' => ! $isActive,
+                        ])>{{ $counts[$key] }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Filter bar --}}
+        <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div class="relative flex-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-mist-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                <input
+                    type="search"
+                    placeholder="ابحث بالاسم أو النطاق أو بريد المالك..."
+                    class="w-full rounded-xl border border-mist-200 bg-white py-2.5 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
+                >
+            </div>
+
+            <select class="rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50">
+                <option value="">كل الخطط</option>
+                <option value="startup">Startup</option>
+                <option value="growth">Growth</option>
+                <option value="enterprise">Enterprise</option>
+            </select>
+        </div>
+
+        {{-- Tenants table --}}
+        <div class="mt-4 overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-max text-start text-sm">
+                    <thead>
+                        <tr class="border-b border-mist-100 text-xs uppercase tracking-wide text-mist-500 dark:border-ink-700 dark:text-mist-400">
+                            <th class="px-5 py-3 text-start font-semibold">الشركة</th>
+                            <th class="px-5 py-3 text-start font-semibold">المالك</th>
+                            <th class="px-5 py-3 text-start font-semibold">الخطة</th>
+                            <th class="px-5 py-3 text-start font-semibold">الحالة</th>
+                            <th class="px-5 py-3 text-start font-semibold">الموظفون</th>
+                            <th class="px-5 py-3 text-start font-semibold">تاريخ التسجيل</th>
+                            <th class="px-5 py-3 text-start font-semibold">آخر نشاط</th>
+                            <th class="px-5 py-3 text-end font-semibold">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
+                        @forelse ($tenants as $t)
+                            <tr class="transition duration-150 hover:bg-mist-50 dark:hover:bg-ink-700/40">
+                                <td class="px-5 py-3.5">
+                                    <a href="{{ route('admin.tenants.show', $t['slug']) }}" class="group flex items-center gap-3">
+                                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-mist-100 font-display text-sm font-bold text-mist-500 dark:bg-ink-700 dark:text-mist-300">
+                                            {{ mb_substr($t['name'], 0, 1) }}
+                                        </span>
+                                        <div class="min-w-0">
+                                            <p class="truncate font-semibold text-ink-900 group-hover:text-emerald-600 dark:text-ink-50 dark:group-hover:text-emerald-400">{{ $t['name'] }}</p>
+                                            <p class="truncate text-xs text-mist-400 dark:text-mist-500">{{ $t['slug'] }}.veyra.app</p>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <p class="text-ink-700 dark:text-mist-200">{{ $t['owner'] }}</p>
+                                    <p class="text-xs text-mist-400 dark:text-mist-500">{{ $t['email'] }}</p>
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-medium text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $t['plan'] }}</span>
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <x-admin.status-badge :status="$t['status']" />
+                                </td>
+                                <td class="px-5 py-3.5 text-ink-700 dark:text-mist-200">{{ $t['employees'] }}</td>
+                                <td class="px-5 py-3.5 text-mist-500 dark:text-mist-400">{{ $t['signup'] }}</td>
+                                <td class="px-5 py-3.5 text-mist-500 dark:text-mist-400">{{ $t['last_active'] }}</td>
+                                <td class="px-5 py-3.5">
+                                    <div class="flex items-center justify-end gap-2">
+                                        @switch($t['status'])
+                                            @case('pending_approval')
+                                                <button type="button" @click="modal = 'approve'; tenant = @js($t['name'])" class="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">موافقة</button>
+                                                <button type="button" @click="modal = 'reject'; tenant = @js($t['name'])" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-95 dark:border-ink-600 dark:text-mist-300">رفض</button>
+                                                @break
+                                            @case('active')
+                                                <button type="button" @click="modal = 'suspend'; tenant = @js($t['name'])" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-95 dark:border-ink-600 dark:text-mist-300">إيقاف</button>
+                                                @break
+                                            @case('suspended')
+                                                <button type="button" @click="modal = 'reactivate'; tenant = @js($t['name'])" class="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">إعادة تفعيل</button>
+                                                @break
+                                            @case('cancelled')
+                                                <span class="text-xs text-mist-400 dark:text-mist-500">عرض فقط · يُحذف خلال 90 يومًا</span>
+                                                @break
+                                            @default
+                                                <span class="text-xs text-mist-400 dark:text-mist-500">بانتظار تحقق البريد</span>
+                                        @endswitch
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-5 py-16 text-center">
+                                    <div class="mx-auto flex max-w-sm flex-col items-center">
+                                        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-mist-100 text-mist-400 dark:bg-ink-700 dark:text-mist-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6M9 10.5h6M9 14.25h6" /></svg>
+                                        </span>
+                                        <p class="mt-3 text-sm font-medium text-ink-900 dark:text-ink-50">لا يوجد مستأجرون في هذه الحالة</p>
+                                        <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">جرّب تبويبًا آخر أو عدّل معايير البحث.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{-- Transition confirm modals --}}
+        <div
+            x-show="modal !== null"
+            x-cloak
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div @click="modal = null" class="absolute inset-0 bg-ink-950/60 backdrop-blur-sm"></div>
+
+            <div
+                x-show="modal !== null"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                class="relative w-full max-w-md rounded-2xl border border-mist-200 bg-white p-6 shadow-xl dark:border-ink-600 dark:bg-ink-800"
+            >
+                {{-- Approve --}}
+                <div x-show="modal === 'approve'">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-500 dark:text-emerald-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    </div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">تفعيل المستأجر</h3>
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
+                        سيتم تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span> وفتح لوحة التحكم الكاملة له فورًا دون الحاجة لإعادة تسجيل الدخول.
+                    </p>
+                </div>
+
+                {{-- Reject --}}
+                <div x-show="modal === 'reject'">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-danger-solid/15 text-danger-solid">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+                    </div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">رفض المستأجر</h3>
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
+                        سيتم رفض طلب <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span>. يُرجى توضيح السبب (يُسجّل في سجل النشاط).
+                    </p>
+                    <textarea rows="3" placeholder="سبب الرفض..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
+                </div>
+
+                {{-- Suspend --}}
+                <div x-show="modal === 'suspend'">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-danger-solid/15 text-danger-solid">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
+                    </div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">إيقاف المستأجر</h3>
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
+                        سيتم إيقاف <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span> وإنهاء جميع جلسات مستخدميه فورًا. يُرجى توضيح السبب.
+                    </p>
+                    <textarea rows="3" placeholder="سبب الإيقاف..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
+                </div>
+
+                {{-- Reactivate --}}
+                <div x-show="modal === 'reactivate'">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-500 dark:text-emerald-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                    </div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">إعادة تفعيل المستأجر</h3>
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
+                        سيتم إعادة تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span> واستعادة وصول مستخدميه الكامل.
+                    </p>
+                </div>
+
+                {{-- Footer actions --}}
+                <div class="mt-6 flex items-center justify-end gap-3">
+                    <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
+
+                    <button
+                        type="button"
+                        @click="modal = null"
+                        :class="(modal === 'reject' || modal === 'suspend')
+                            ? 'bg-danger-solid text-white hover:opacity-90'
+                            : 'bg-emerald-400 text-emerald-900 shadow-glow hover:bg-emerald-300'"
+                        class="rounded-xl px-4 py-2 text-sm font-semibold transition duration-200 active:scale-95"
+                    >
+                        <span x-show="modal === 'approve'">تأكيد التفعيل</span>
+                        <span x-show="modal === 'reject'">تأكيد الرفض</span>
+                        <span x-show="modal === 'suspend'">تأكيد الإيقاف</span>
+                        <span x-show="modal === 'reactivate'">تأكيد إعادة التفعيل</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
