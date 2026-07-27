@@ -19,6 +19,12 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             TestimonialSeeder::class,
             SettingSeeder::class,
+            ProblemSeeder::class,
+            SolutionSeeder::class,
+            OfferingSeeder::class,
+            ModuleSeeder::class,
+            AiFeatureSeeder::class,
+            FeatureSeeder::class,
             DemoTenantSeeder::class,
         ]);
     }

@@ -52,12 +52,6 @@
 
                 {{-- Form --}}
                 <div class="lg:col-span-3">
-                    @if (session('status'))
-                        <div class="mb-6 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-5 py-4 text-sm font-medium text-emerald-700 dark:text-emerald-300" role="status">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
                     <form method="POST" action="{{ route('marketing.contact.store') }}" class="rounded-3xl border border-mist-200 bg-ink-50/40 p-6 sm:p-8 dark:border-ink-800 dark:bg-ink-800/60">
                         @csrf
 

@@ -52,6 +52,12 @@
                 <p class="text-xs text-mist-500">{{ auth()->user()->tenant?->name }}</p>
             </div>
 
+            <img
+                src="{{ auth()->user()->avatar_url }}"
+                alt="{{ auth()->user()->name }}"
+                class="h-8 w-8 rounded-full border border-slate-700 object-cover"
+            >
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button

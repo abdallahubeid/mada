@@ -59,24 +59,23 @@ test('problem resource supports full crud with icon upload', function () {
     $this->delete(route('admin.problems.destroy', $problem))
         ->assertRedirect(route('admin.problems.index'));
 
-    expect(Problem::query()->whereKey($problem->id)->exists())->toBeFalse();
+    $this->assertSoftDeleted('problems', ['id' => $problem->id]);
+    expect(Problem::query()->whereKey($problem->id)->exists())->toBeFalse()
+        ->and(Problem::withTrashed()->whereKey($problem->id)->exists())->toBeTrue();
 });
 
-test('solution resource stores optional button fields', function () {
+test('solution resource stores phosphor icon field', function () {
     $this->post(route('admin.solutions.store'), [
         'title' => 'حل متكامل',
         'description' => 'وصف الحل',
-        'btn_text' => 'اكتشف المزيد',
-        'btn_link' => '/features',
-        'icon_key' => 'check',
+        'icon' => 'ph:check-bold',
         'sort_order' => 1,
         'is_published' => true,
     ])->assertRedirect(route('admin.solutions.index'));
 
     $solution = Solution::query()->where('title', 'حل متكامل')->firstOrFail();
 
-    expect($solution->btn_text)->toBe('اكتشف المزيد')
-        ->and($solution->btn_link)->toBe('/features');
+    expect($solution->icon)->toBe('ph:check-bold');
 });
 
 test('remaining landing card resources can be stored', function (string $route, string $modelClass) {

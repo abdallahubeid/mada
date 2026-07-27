@@ -10,7 +10,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'لوحة تحكم المنصّة') · Veyra</title>
+
+    <x-site-favicon />
 
     {{-- Applied before first paint to avoid a flash of the wrong theme (ADR-15); console defaults to dark. --}}
     <script>
@@ -21,6 +24,7 @@
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
     @livewireStyles
 </head>
 <body
@@ -86,6 +90,7 @@
         </div>
     </div>
 
+    @stack('scripts')
     @livewireScripts
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -32,7 +32,8 @@
 | Method | Route (name) | Handler | Notes |
 |---|---|---|---|
 | POST | `/contact` (`marketing.contact.store`) | `Marketing\ContactController@store` | FormRequest validation + `throttle` + mail via configured SMTP (Maildev in dev). |
-| POST | `/newsletter` (`marketing.newsletter.store`) | `Marketing\NewsletterController@store` | Footer signup; FormRequest + `throttle`. |
+| POST | `/newsletter/subscribe` (`marketing.newsletter.subscribe`; alias `POST /newsletter`) | `Marketing\NewsletterController@subscribe` | Footer signup → `newsletter_subscribers` + welcome mail; FormRequest + `throttle`. |
+| GET | `/newsletter/unsubscribe/{email}` (`marketing.newsletter.unsubscribe`) | `Marketing\NewsletterController@unsubscribe` | Public unsubscribe confirmation. |
 
 These are the only non-GET public routes. No inline closures — every route points to a dedicated controller (project convention).
 

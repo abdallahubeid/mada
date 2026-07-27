@@ -17,6 +17,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? 'Veyra ERP' }}</title>
 
+    <x-site-favicon />
+
     {{-- SEO & Open Graph (docs/MARKETING.md §5.4) --}}
     <meta name="description" content="{{ $description }}">
     <meta property="og:type" content="website">
@@ -38,6 +40,7 @@
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
     @livewireStyles
 </head>
 <body class="h-full bg-ink-100 font-sans text-ink-600 antialiased dark:bg-ink-950 dark:text-mist-300">
@@ -124,5 +127,21 @@
     </script>
 
     @livewireScripts
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (session('flasher'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: @js(session('flasher.type', 'success')),
+                    title: @js(session('flasher.message')),
+                    confirmButtonColor: '#4edea3',
+                    confirmButtonText: 'حسنًا',
+                    timer: 4200,
+                    timerProgressBar: true,
+                });
+            });
+        </script>
+    @endif
 </body>
 </html>

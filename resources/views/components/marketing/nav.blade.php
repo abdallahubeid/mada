@@ -19,9 +19,13 @@
     class="sticky top-0 z-40 border-b border-mist-200/70 bg-white/80 backdrop-blur-md dark:border-ink-800 dark:bg-ink-900/80"
 >
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="/" class="flex shrink-0 items-center gap-2">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 font-display text-sm font-bold text-ink-950 shadow-glow">V</span>
-            <span class="font-display text-xl font-bold text-ink-900 dark:text-white">Veyra <span class="text-emerald-600 dark:text-emerald-400">ERP</span></span>
+        <a href="/" class="flex shrink-0 items-center gap-2.5">
+            @if ($logoUrl = \App\Models\Setting::assetUrl($settings['site_logo'] ?? null))
+                <img src="{{ $logoUrl }}" alt="Veyra ERP" class="h-10 max-h-10 w-auto max-w-[220px] shrink-0 object-contain object-start">
+            @else
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 font-display text-sm font-bold text-ink-950 shadow-glow">V</span>
+                <span class="font-display text-xl font-bold text-ink-900 dark:text-white">Veyra <span class="text-emerald-600 dark:text-emerald-400">ERP</span></span>
+            @endif
         </a>
 
         <nav class="hidden items-center gap-8 lg:flex">

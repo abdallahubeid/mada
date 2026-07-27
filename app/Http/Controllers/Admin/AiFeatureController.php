@@ -34,22 +34,22 @@ class AiFeatureController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         $aiFeature = AiFeature::query()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'icon_key' => $validated['icon_key'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $request->boolean('is_published'),
         ]);
 
-        $this->syncIcon($request, $aiFeature);
+        $this->syncIconImage($request, $aiFeature);
 
         MarketingCache::flush();
         flash()->success('تم إنشاء ميزة الذكاء الاصطناعي بنجاح.');
@@ -71,22 +71,22 @@ class AiFeatureController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         $aiFeature->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'icon_key' => $validated['icon_key'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $request->boolean('is_published'),
         ]);
 
-        $this->syncIcon($request, $aiFeature);
+        $this->syncIconImage($request, $aiFeature);
 
         MarketingCache::flush();
         flash()->info('تم تحديث ميزة الذكاء الاصطناعي بنجاح.');
@@ -105,16 +105,16 @@ class AiFeatureController extends Controller
         return redirect()->route('admin.ai-features.index');
     }
 
-    private function syncIcon(Request $request, AiFeature $aiFeature): void
+    private function syncIconImage(Request $request, AiFeature $aiFeature): void
     {
-        if (! $request->hasFile('icon')) {
+        if (! $request->hasFile('icon_image')) {
             return;
         }
 
         /** @var UploadedFile $file */
-        $file = $request->file('icon');
+        $file = $request->file('icon_image');
 
-        $aiFeature->images()->where('collection', 'icon')->get()->each->delete();
+        $aiFeature->images()->where('collection', 'icon')->get()->each->forceDelete();
 
         $path = $file->store('aifeature/icon', 'custom');
 

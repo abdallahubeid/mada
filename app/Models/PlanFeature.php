@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Display bullet / optional limit row for a plan (docs/MARKETING_CMS.md).
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PlanFeature extends Model
 {
+    use SoftDeletes;
+
     /**
      * @var list<string>
      */

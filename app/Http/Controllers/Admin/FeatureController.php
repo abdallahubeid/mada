@@ -34,22 +34,22 @@ class FeatureController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         $feature = Feature::query()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'icon_key' => $validated['icon_key'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $request->boolean('is_published'),
         ]);
 
-        $this->syncIcon($request, $feature);
+        $this->syncIconImage($request, $feature);
 
         MarketingCache::flush();
         flash()->success('تم إنشاء الميزة بنجاح.');
@@ -71,22 +71,22 @@ class FeatureController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         $feature->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'icon_key' => $validated['icon_key'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $request->boolean('is_published'),
         ]);
 
-        $this->syncIcon($request, $feature);
+        $this->syncIconImage($request, $feature);
 
         MarketingCache::flush();
         flash()->info('تم تحديث الميزة بنجاح.');
@@ -105,16 +105,16 @@ class FeatureController extends Controller
         return redirect()->route('admin.features.index');
     }
 
-    private function syncIcon(Request $request, Feature $feature): void
+    private function syncIconImage(Request $request, Feature $feature): void
     {
-        if (! $request->hasFile('icon')) {
+        if (! $request->hasFile('icon_image')) {
             return;
         }
 
         /** @var UploadedFile $file */
-        $file = $request->file('icon');
+        $file = $request->file('icon_image');
 
-        $feature->images()->where('collection', 'icon')->get()->each->delete();
+        $feature->images()->where('collection', 'icon')->get()->each->forceDelete();
 
         $path = $file->store('feature/icon', 'custom');
 

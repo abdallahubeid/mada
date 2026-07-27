@@ -1,0 +1,28 @@
+---
+description: Log architecture and convention changes in project markdown docs
+alwaysApply: true
+---
+
+# Documentation Logging Rule
+
+Whenever you implement, refactor, or update any of the following, **automatically update the relevant project `.md` documentation** in the same change set (do not wait to be asked again):
+
+- Database schemas / migrations / models
+- Controllers, routes, form requests
+- View directory layouts and naming conventions
+- Cross-cutting conventions (flash/alerts, pagination, disks, polymorphic media, settings keys, env/config)
+
+## What to document
+
+1. **Architecture decisions** — entity structure, separate vs merged tables, polymorphic relations, tenancy boundaries.
+2. **Naming & layout** — controller namespaces, route names, Blade paths (e.g. `admin.landing.{entity}.*`).
+3. **Flash / alert standards** — which `flash()` method is used for store / update / destroy / errors.
+4. **New env / config keys** — e.g. `PAGINATE_PAGE` → `config('app.paginate_page')`.
+
+## Where to write
+
+Prefer existing docs under `docs/` (especially `MARKETING_CMS.md`, `ADMIN_CMS_ANALYSIS.md`, `DATABASE_ROADMAP.md`, `ARCHITECTURE.md`, and dedicated implementation logs). Create or append a dated “Implementation log” section rather than inventing parallel undocumented conventions.
+
+## Do not skip
+
+If code lands without a docs update for a decision above, the task is incomplete.

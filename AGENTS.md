@@ -12,6 +12,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - php - 8.4
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
+- laravel/reverb (REVERB) - v1
 - livewire/livewire (LIVEWIRE) - v3
 - laravel/boost (BOOST) - v2
 - laravel/mcp (MCP) - v0
@@ -30,7 +31,8 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
-- **Documentation logging:** When implementing or changing schemas, models, controllers, routes, view layouts, or cross-cutting conventions (flash, pagination, disks, env keys), update the relevant `docs/*.md` files in the same change set. See `.cursor/rules/documentation-logging.mdc` and `docs/LANDING_CMS_IMPLEMENTATION.md` for the Landing CMS example.
+- **Soft deletes (mandatory):** All core tables/models must use `$table->softDeletes()` and the `SoftDeletes` trait. Default delete is soft; hard delete only via explicit `forceDelete()`. See `.cursor/rules/soft-deletes.mdc`.
+- **Documentation logging:** When implementing or changing schemas, models, controllers, routes, view layouts, or cross-cutting conventions (flash, pagination, disks, env keys), update the relevant `docs/*.md` files in the same change set. See `.cursor/rules/documentation-logging.mdc`.
 
 ## Verification Scripts
 

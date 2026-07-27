@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class Image extends Model
 {
+    use SoftDeletes;
+
     /**
      * @var list<string>
      */
@@ -75,7 +78,9 @@ class Image extends Model
 
     protected static function booted(): void
     {
-        static::deleting(function (Image $image): void {
+        // Soft delete keeps the file so restore can revive the media row.
+        // Disk cleanup only runs on permanent removal.
+        static::forceDeleting(function (Image $image): void {
             Storage::disk($image->disk)->delete($image->path);
         });
     }

@@ -12,7 +12,7 @@ test('the faq page renders categorised questions from config', function () {
     $this->get(route('marketing.faq'))
         ->assertOk()
         ->assertSee('الأسئلة الشائعة')
-        ->assertSee('ما هو نظام Veyra ERP؟')
+        ->assertSee('هل أحتاج إلى خبرة تقنية لاستخدام النظام؟')
         ->assertSee('التسعير والفوترة')
         ->assertSee('هل تدعمون التحقق بخطوتين');
 });

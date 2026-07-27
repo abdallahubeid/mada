@@ -9,6 +9,7 @@ use App\Domain\Tenancy\TenantContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Services\Admin\PlatformNotificationPublisher;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ class RegisterController extends Controller
     public function __construct(
         private readonly SeedDefaultTenantRoles $seedDefaultTenantRoles,
         private readonly TenantContext $tenantContext,
+        private readonly PlatformNotificationPublisher $notifications,
     ) {}
 
     /**
@@ -47,7 +49,9 @@ class RegisterController extends Controller
     {
         $data = $request->validated();
 
-        $user = DB::transaction(function () use ($data): User {
+        $tenant = null;
+
+        $user = DB::transaction(function () use ($data, &$tenant): User {
             $tenant = Tenant::create([
                 'name' => $data['company_name'],
                 'slug' => $data['company_slug'],
@@ -71,6 +75,10 @@ class RegisterController extends Controller
 
             return $user;
         });
+
+        if ($tenant instanceof Tenant) {
+            $this->notifications->tenantRegisteredPendingApproval($tenant);
+        }
 
         Auth::login($user);
 

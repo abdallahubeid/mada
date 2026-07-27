@@ -19,12 +19,10 @@ class UpdateSolutionRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'btn_text' => ['nullable', 'string', 'max:120'],
-            'btn_link' => ['nullable', 'string', 'max:500'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ];
     }

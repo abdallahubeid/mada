@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasImages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Landing-page offering card (ما نقدمه).
@@ -12,13 +13,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $title
  * @property string $description
- * @property string|null $icon_key
+ * @property string|null $icon
  * @property int $sort_order
  * @property bool $is_published
  */
 class Offering extends Model
 {
-    use HasImages;
+    use HasImages, SoftDeletes;
 
     /**
      * @var list<string>
@@ -26,7 +27,7 @@ class Offering extends Model
     protected $fillable = [
         'title',
         'description',
-        'icon_key',
+        'icon',
         'sort_order',
         'is_published',
     ];

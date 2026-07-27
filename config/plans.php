@@ -1,10 +1,8 @@
 <?php
 
 /*
- * Single source of truth for public plan tiers (docs/MARKETING.md §3).
- * Consumed by the marketing pricing table and landing preview. Tier names are
- * locked to Startup / Growth / Enterprise to match the admin console and docs.
- * Prices are in USD; `monthly`/`yearly` null means "contact sales".
+ * Fallback plan tiers when the database has no active plans (docs/MARKETING.md §3).
+ * Primary source: `plans` + `plan_features` tables via PlanSeeder.
  */
 
 return [
@@ -12,8 +10,8 @@ return [
 
     'tiers' => [
         [
-            'name' => 'Startup',
-            'tagline' => 'للشركات الناشئة والفرق الصغيرة',
+            'name' => 'الأساسية',
+            'tagline' => 'للشركات الناشئة والمؤسسات الصغيرة',
             'monthly' => 49,
             'yearly' => 39,
             'cta' => 'ابدأ الآن',
@@ -21,16 +19,16 @@ return [
             'highlighted' => false,
             'features' => [
                 'حتى 10 مستخدمين',
-                'الموارد البشرية الأساسية',
+                'إدارة الموارد البشرية والرواتب',
                 'دعم عبر البريد الإلكتروني',
-                'تخصيص محدود للواجهة',
+                'تقارير أساسية',
             ],
         ],
         [
-            'name' => 'Growth',
+            'name' => 'النمو',
             'tagline' => 'للمؤسسات المتوسطة سريعة النمو',
             'monthly' => 129,
-            'yearly' => 103,
+            'yearly' => 99,
             'cta' => 'ابدأ الآن',
             'href' => '/register',
             'highlighted' => true,

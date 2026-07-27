@@ -5,7 +5,7 @@ test('the landing page renders with hero and pricing content', function () {
         ->assertOk()
         ->assertSee('Veyra')
         ->assertSee('ابدأ التجربة المجانية')
-        ->assertSee('Growth')
+        ->assertSee('النمو', false)
         ->assertSee('الأكثر طلباً');
 });
 

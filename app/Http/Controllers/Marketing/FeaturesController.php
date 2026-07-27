@@ -17,6 +17,10 @@ class FeaturesController extends Controller
     {
         return view('marketing.features', [
             'features' => $this->marketing->featuresHeading(),
+            'offerings' => $this->marketing->offerings(),
+            'modules' => $this->marketing->modules(),
+            'productPreviewStats' => $this->marketing->productPreviewStats(),
+            'whyUsFeatures' => $this->marketing->whyUsFeatures(),
             'cta' => $this->marketing->cta(),
         ]);
     }

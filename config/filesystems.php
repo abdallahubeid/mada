@@ -49,8 +49,11 @@ return [
 
         'custom' => [
             'driver' => 'local',
+            // Files live under public/ (web document root for `artisan serve` / typical vhosts).
             'root' => public_path(''),
-            'url' => rtrim(env('APP_URL'), '/').'/public',
+            // Do NOT append "/public" — that produces 404s like /public/user/avatar/*.jpg
+            // when the server already serves from the public directory.
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/'),
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

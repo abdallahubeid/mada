@@ -16,6 +16,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>404 — الصفحة غير موجودة | Veyra ERP</title>
+    <x-site-favicon />
     @vite(['resources/css/app.css'])
 </head>
 <body class="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink-900 px-4 py-16 font-sans text-mist-300 antialiased sm:py-20">

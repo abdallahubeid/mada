@@ -1,7 +1,5 @@
 @props([
     'compact' => false,
-    'title' => 'استثمار ذكي لنمو مستدام',
-    'subtitle' => 'اختر الخطة التي تناسب حجم مؤسستك، وطوّرها متى شئت.',
     'plans' => null,
     'currency' => null,
 ])
@@ -14,7 +12,10 @@
 
 <section id="pricing" x-data="{ yearly: false }" class="bg-ink-100 py-24 dark:bg-ink-950">
     <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <x-marketing.section-heading :title="$title" :subtitle="$subtitle" />
+        <x-marketing.section-heading
+            :title="$settings['pricing_title'] ?? ''"
+            :subtitle="$settings['pricing_sub_title'] ?? ''"
+        />
 
         <div class="mt-8 inline-flex items-center gap-1.5 rounded-full border border-mist-200 bg-white p-1.5 dark:border-ink-800 dark:bg-ink-800">
             <button
@@ -81,8 +82,8 @@
         </div>
 
         @if ($compact)
-            <a href="/pricing" class="mt-12 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 transition hover:gap-3 dark:text-emerald-400">
-                قارن جميع المزايا بالتفصيل
+            <a href="{{ $settings['pricing_btn_link'] ?? '/pricing' }}" class="mt-12 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 transition hover:gap-3 dark:text-emerald-400">
+                {{ $settings['pricing_btn_text'] ?? 'قارن جميع المزايا بالتفصيل' }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" /></svg>
             </a>
         @endif

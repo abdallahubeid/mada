@@ -44,7 +44,7 @@
                         </td>
                         <td class="px-4 py-3 text-mist-500">{{ $offering->sort_order }}</td>
                         <td class="px-4 py-3 font-medium text-ink-900 dark:text-ink-50">{{ $offering->title }}</td>
-                        <td class="px-4 py-3 text-mist-500">{{ $offering->icon_key }}</td>
+                        <td class="px-4 py-3 text-mist-500">{{ $offering->icon }}</td>
                         <td class="px-4 py-3">
                             <span @class([
                                 'rounded-full px-2 py-0.5 text-[10px] font-semibold',

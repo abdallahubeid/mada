@@ -108,7 +108,7 @@ Each subscription Plan defines feature limits (e.g., max employees, max projects
 | Caching | Tenant-prefixed cache keys, no shared keys across tenants (NFR-07). |
 | Queues | Tenant-context-safe job payloads (NFR-08, see §1.2). |
 | Tenancy evolution | Resolver abstracted for a future hybrid dedicated-DB model without app rewrite (NFR-09, see §1.4). |
-| Deletion | Financial and HR records are soft-deleted only, never hard-deleted (NFR-10). |
+| Deletion | **All core business tables/models use SoftDeletes (`deleted_at`).** Hard delete is forbidden unless an explicit `forceDelete()` is intentional (e.g. media replacement). Financial/HR records remain soft-delete-only per NFR-10; see `.cursor/rules/soft-deletes.mdc`. |
 | Payroll immutability | Locked/approved payroll runs cannot be edited; corrections are adjustment entries in a subsequent run (NFR-11, see `MODULES.md` BR-603). |
 
 ## 7. Cross-Module Communication

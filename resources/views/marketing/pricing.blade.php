@@ -14,14 +14,12 @@
 
         <x-marketing.pricing-table
             :compact="false"
-            title="استثمار ذكي لنمو مستدام"
-            subtitle="نفس الخطط المعتمدة في لوحة الإدارة — Startup و Growth و Enterprise."
             :plans="$plans"
             :currency="$currency"
         />
 
         <x-marketing.faq-accordion
-            :items="$faqs"
+            :faqs="$faqs"
             title="أسئلة شائعة حول التسعير"
             subtitle="إجابات سريعة عن التجربة المجانية وتغيير الخطط والفوترة."
         />

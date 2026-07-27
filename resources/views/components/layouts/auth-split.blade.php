@@ -16,6 +16,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? 'Veyra ERP' }}</title>
 
+    <x-site-favicon />
+
     {{-- Applied before first paint to avoid a flash of the wrong theme (docs/DESIGN_SYSTEM.md §2, ADR-15). --}}
     <script>
         (function () {

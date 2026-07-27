@@ -34,26 +34,22 @@ class SolutionController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'btn_text' => ['nullable', 'string', 'max:120'],
-            'btn_link' => ['nullable', 'string', 'max:500'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         $solution = Solution::query()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'btn_text' => $validated['btn_text'] ?? null,
-            'btn_link' => $validated['btn_link'] ?? null,
-            'icon_key' => $validated['icon_key'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $request->boolean('is_published'),
         ]);
 
-        $this->syncIcon($request, $solution);
+        $this->syncIconImage($request, $solution);
 
         MarketingCache::flush();
         flash()->success('تم إنشاء الحل بنجاح.');
@@ -75,26 +71,22 @@ class SolutionController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'btn_text' => ['nullable', 'string', 'max:120'],
-            'btn_link' => ['nullable', 'string', 'max:500'],
-            'icon_key' => ['nullable', 'string', 'max:120'],
+            'icon' => ['nullable', 'string', 'max:120'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['sometimes', 'boolean'],
-            'icon' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
+            'icon_image' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:2048'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         $solution->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'btn_text' => $validated['btn_text'] ?? null,
-            'btn_link' => $validated['btn_link'] ?? null,
-            'icon_key' => $validated['icon_key'] ?? null,
+            'icon' => $validated['icon'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_published' => $request->boolean('is_published'),
         ]);
 
-        $this->syncIcon($request, $solution);
+        $this->syncIconImage($request, $solution);
 
         MarketingCache::flush();
         flash()->info('تم تحديث الحل بنجاح.');
@@ -113,16 +105,16 @@ class SolutionController extends Controller
         return redirect()->route('admin.solutions.index');
     }
 
-    private function syncIcon(Request $request, Solution $solution): void
+    private function syncIconImage(Request $request, Solution $solution): void
     {
-        if (! $request->hasFile('icon')) {
+        if (! $request->hasFile('icon_image')) {
             return;
         }
 
         /** @var UploadedFile $file */
-        $file = $request->file('icon');
+        $file = $request->file('icon_image');
 
-        $solution->images()->where('collection', 'icon')->get()->each->delete();
+        $solution->images()->where('collection', 'icon')->get()->each->forceDelete();
 
         $path = $file->store('solution/icon', 'custom');
 

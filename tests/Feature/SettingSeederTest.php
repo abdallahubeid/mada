@@ -15,7 +15,10 @@ test('setting seeder persists hero section content', function () {
         ->and(Setting::getValue('hero_btn1_text'))->toBe('ابدأ التجربة المجانية')
         ->and(Setting::getValue('hero_btn1_link'))->toBe('#')
         ->and(Setting::getValue('hero_btn2_text'))->toBe('احجز عرضًا توضيحيًا')
-        ->and(Setting::getValue('hero_btn2_link'))->toBe('#');
+        ->and(Setting::getValue('hero_btn2_link'))->toBe('#')
+        ->and(Setting::getValue('problems_badge_text'))->toBe('التحديات')
+        ->and(Setting::getValue('problems_title'))->toBe('هل تبدو هذه المشاكل مألوفة؟')
+        ->and(Setting::getValue('problems_sub_title'))->toBe('معظم المؤسسات تُدار عبر أدوات متفرقة تخلق فوضى تشغيلية بدل أن تحلّها.');
 });
 
 test('the landing page hero renders seeded settings', function () {

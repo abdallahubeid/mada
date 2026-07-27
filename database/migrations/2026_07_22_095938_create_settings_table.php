@@ -10,9 +10,10 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->string('key')->index();
             $table->longText('value')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

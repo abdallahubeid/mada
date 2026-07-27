@@ -1,6 +1,16 @@
+@props([
+    'stats' => null,
+])
+
 @php
-    /* Dashboard preview / product showcase (docs/MARKETING.md §4.7). Tabbed UI
-       mock (Alpine) standing in for real screenshots until assets are ready. */
+    /** @var array<string, array<string, mixed>>|null $stats */
+    $stats ??= [
+        'tenants' => ['value' => 1284, 'decimals' => 0, 'prefix' => '', 'suffix' => '', 'separator' => true],
+        'employees' => ['value' => 18420, 'decimals' => 0, 'prefix' => '', 'suffix' => '', 'separator' => true],
+        'revenue' => ['value' => 458, 'decimals' => 0, 'prefix' => '', 'suffix' => 'K', 'separator' => false],
+        'uptime' => ['value' => 99.9, 'decimals' => 1, 'prefix' => '%', 'suffix' => '', 'separator' => false],
+    ];
+
     $tabs = [
         ['key' => 'dashboard', 'label' => 'لوحة التحكم'],
         ['key' => 'projects', 'label' => 'المشاريع'],
@@ -11,9 +21,9 @@
 <section x-data="{ tab: 'dashboard' }" class="bg-white py-24 dark:bg-ink-900">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <x-marketing.section-heading
-            eyebrow="جولة في المنتج"
-            title="واجهة أنيقة تجعل العمل متعة"
-            subtitle="تصميم عصري يركّز على الوضوح والسرعة، بدعم كامل للعربية والوضعين الفاتح والداكن."
+            :eyebrow="$settings['product_previews_badge_text'] ?? 'جولة في المنتج'"
+            :title="$settings['product_previews_title'] ?? ''"
+            :subtitle="$settings['product_previews_sub_title'] ?? ''"
         />
 
         <div class="mt-10 flex justify-center">
@@ -45,25 +55,49 @@
                         <div class="rounded-xl bg-ink-800 p-4 text-center">
                             <p class="text-xs text-mist-400">المستأجرون</p>
                             <p class="mt-1 font-display text-xl font-bold text-ink-50">
-                                <x-marketing.stat-counter :value="1284" />
+                                <x-marketing.stat-counter
+                                    :value="$stats['tenants']['value']"
+                                    :prefix="$stats['tenants']['prefix'] ?? ''"
+                                    :suffix="$stats['tenants']['suffix'] ?? ''"
+                                    :decimals="$stats['tenants']['decimals'] ?? 0"
+                                    :separator="$stats['tenants']['separator'] ?? true"
+                                />
                             </p>
                         </div>
                         <div class="rounded-xl bg-ink-800 p-4 text-center">
                             <p class="text-xs text-mist-400">الموظفون</p>
                             <p class="mt-1 font-display text-xl font-bold text-ink-50">
-                                <x-marketing.stat-counter :value="18420" />
+                                <x-marketing.stat-counter
+                                    :value="$stats['employees']['value']"
+                                    :prefix="$stats['employees']['prefix'] ?? ''"
+                                    :suffix="$stats['employees']['suffix'] ?? ''"
+                                    :decimals="$stats['employees']['decimals'] ?? 0"
+                                    :separator="$stats['employees']['separator'] ?? true"
+                                />
                             </p>
                         </div>
                         <div class="rounded-xl bg-ink-800 p-4 text-center">
                             <p class="text-xs text-mist-400">الإيرادات</p>
                             <p class="mt-1 font-display text-xl font-bold text-emerald-400">
-                                <x-marketing.stat-counter :value="458" suffix="K" :separator="false" />
+                                <x-marketing.stat-counter
+                                    :value="$stats['revenue']['value']"
+                                    :prefix="$stats['revenue']['prefix'] ?? ''"
+                                    :suffix="$stats['revenue']['suffix'] ?? ''"
+                                    :decimals="$stats['revenue']['decimals'] ?? 0"
+                                    :separator="$stats['revenue']['separator'] ?? false"
+                                />
                             </p>
                         </div>
                         <div class="rounded-xl bg-ink-800 p-4 text-center">
                             <p class="text-xs text-mist-400">الجاهزية</p>
                             <p class="mt-1 font-display text-xl font-bold text-ink-50">
-                                <x-marketing.stat-counter :value="99.9" prefix="%" :decimals="1" />
+                                <x-marketing.stat-counter
+                                    :value="$stats['uptime']['value']"
+                                    :prefix="$stats['uptime']['prefix'] ?? ''"
+                                    :suffix="$stats['uptime']['suffix'] ?? ''"
+                                    :decimals="$stats['uptime']['decimals'] ?? 1"
+                                    :separator="$stats['uptime']['separator'] ?? false"
+                                />
                             </p>
                         </div>
                         <div class="sm:col-span-4 rounded-xl bg-ink-800 p-4">

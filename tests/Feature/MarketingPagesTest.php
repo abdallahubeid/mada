@@ -3,7 +3,6 @@
 /**
  * Smoke coverage for the public marketing pages (docs/MARKETING.md §5.5).
  */
-
 test('the features page renders successfully', function () {
     $this->get(route('marketing.features'))
         ->assertOk()
@@ -25,8 +24,8 @@ test('the pricing page renders plan tiers from the shared catalog', function () 
     $this->get(route('marketing.pricing'))
         ->assertOk()
         ->assertSee('الأسعار')
-        ->assertSee('Startup')
-        ->assertSee('Growth')
+        ->assertSee('الأساسية', false)
+        ->assertSee('النمو', false)
         ->assertSee('Enterprise')
         ->assertSee('الأكثر طلباً');
 });

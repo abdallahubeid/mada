@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -24,11 +26,12 @@ class SettingController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $textKeys = collect(Setting::landingKeys())
-            ->reject(fn (string $key): bool => in_array($key, ['site_logo', 'previews_img', 'previews_video'], true))
+            ->reject(fn (string $key): bool => in_array($key, ['site_logo', 'site_favicon', 'previews_img', 'previews_video'], true))
             ->all();
 
         $rules = [
             'site_logo' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:4096'],
+            'site_favicon' => ['nullable', 'file', 'mimes:png,svg,ico', 'max:2048'],
             'previews_img' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:8192'],
             'previews_video' => ['nullable', 'file', 'mimes:mp4,webm,ogg', 'max:51200'],
         ];
@@ -39,7 +42,7 @@ class SettingController extends Controller
 
         $validated = $request->validate($rules);
 
-        foreach (['site_logo', 'previews_img', 'previews_video'] as $fileKey) {
+        foreach (['site_logo', 'site_favicon', 'previews_img', 'previews_video'] as $fileKey) {
             if ($request->hasFile($fileKey)) {
                 /** @var UploadedFile $file */
                 $file = $request->file($fileKey);
@@ -67,5 +70,13 @@ class SettingController extends Controller
         flash()->info('Settings Updated successfully');
 
         return redirect()->route('admin.landing.settings.edit');
+    }
+
+    public function destroyImage(string $key): JsonResponse
+    {
+        Setting::clearUploadedFile($key);
+        MarketingCache::flush();
+
+        return response()->json(['success' => true]);
     }
 }

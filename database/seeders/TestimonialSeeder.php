@@ -6,8 +6,7 @@ use App\Models\Testimonial;
 use Illuminate\Database\Seeder;
 
 /**
- * Seeds published marketing testimonials (docs/MARKETING_CMS.md).
- * Replace with real attributable quotes before launch.
+ * Seeds landing-page success story testimonials (docs/LANDING_CMS_IMPLEMENTATION.md).
  */
 class TestimonialSeeder extends Seeder
 {
@@ -21,13 +20,13 @@ class TestimonialSeeder extends Seeder
                 'organization_name' => 'مجموعة الأفق',
             ],
             [
-                'quote' => 'أخيرًا نظام يفهم العربية فعلاً. الواجهة أنيقة والفريق تأقلم معها بسرعة دون تدريب طويل.',
+                'quote' => 'أخيرًا نظام يفهم العربية فعلاً، الواجهة أنيقة والفريق تأقلم معها بسرعة دون تدريب طويل.',
                 'client_name' => 'عبدالله الشمري',
                 'client_role' => 'الرئيس التنفيذي',
                 'organization_name' => 'مؤسسة نماء',
             ],
             [
-                'quote' => 'مستوى الأمان وعزل البيانات كان العامل الحاسم بالنسبة لنا كجهة تتعامل مع بيانات حسّاسة.',
+                'quote' => 'مستوى الأمان وعزل البيانات كان العامل الحاسم بالنسبة لنا كجهة تتعامل مع بيانات حساسة.',
                 'client_name' => 'ريم الدوسري',
                 'client_role' => 'مديرة العمليات',
                 'organization_name' => 'حلول بيان',

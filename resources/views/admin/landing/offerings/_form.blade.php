@@ -22,11 +22,10 @@
         <textarea name="description" rows="4" class="{{ $inputClass }}" required>{{ old('description', $offering->description) }}</textarea>
     </div>
 
-
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-            <label class="{{ $labelClass }}">مفتاح الأيقونة</label>
-            <input type="text" dir="ltr" name="icon_key" value="{{ old('icon_key', $offering->icon_key) }}" class="{{ $inputClass }}" placeholder="shield">
+            <label class="{{ $labelClass }}">أيقونة Phosphor</label>
+            <input type="text" dir="ltr" name="icon" value="{{ old('icon', $offering->icon) }}" class="{{ $inputClass }}" placeholder="ph:shield-check-bold">
         </div>
         <div>
             <label class="{{ $labelClass }}">ترتيب العرض</label>
@@ -40,14 +39,14 @@
     </label>
 
     <div>
-        <label class="{{ $labelClass }}">صورة الأيقونة</label>
+        <label class="{{ $labelClass }}">صورة الأيقونة (اختياري)</label>
         @if ($image)
             <div class="mb-3 flex items-center gap-3">
                 <img src="{{ $image->url() }}" alt="{{ $image->alt_text }}" class="h-14 w-14 rounded-xl object-cover ring-1 ring-mist-200 dark:ring-ink-600">
                 <p class="text-xs text-mist-500">{{ $image->path }}</p>
             </div>
         @endif
-        <input type="file" name="icon" accept="image/*" class="{{ $inputClass }}">
+        <input type="file" name="icon_image" accept="image/*" class="{{ $inputClass }}">
         <input type="text" name="alt_text" value="{{ old('alt_text', $image?->alt_text) }}" placeholder="نص بديل للصورة" class="{{ $inputClass }} mt-2">
     </div>
 

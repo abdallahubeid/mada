@@ -3,9 +3,11 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Services\Admin\PlatformNotificationPublisher;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -61,9 +63,38 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            $this->recordFailedLoginAttempt();
+
             throw ValidationException::withMessages([
                 'email' => 'بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى.',
             ]);
         }
+
+        cache()->forget($this->failedLoginCacheKey());
+    }
+
+    private function recordFailedLoginAttempt(): void
+    {
+        $key = $this->failedLoginCacheKey();
+        $attempts = (int) cache()->get($key, 0) + 1;
+        cache()->put($key, $attempts, now()->addMinutes(10));
+
+        if ($attempts < 5) {
+            return;
+        }
+
+        // Fire once per streak window (reset after alert).
+        cache()->forget($key);
+
+        app(PlatformNotificationPublisher::class)->securityAlert(
+            'محاولات دخول فاشلة متكررة',
+            'رُصدت '.$attempts.' محاولات دخول فاشلة على «'.$this->string('email').'» خلال فترة قصيرة.',
+            Route::has('admin.audit-log') ? route('admin.audit-log') : null,
+        );
+    }
+
+    private function failedLoginCacheKey(): string
+    {
+        return 'auth.failed-login.'.sha1(strtolower((string) $this->input('email')).'|'.$this->ip());
     }
 }

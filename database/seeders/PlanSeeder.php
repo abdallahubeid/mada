@@ -4,40 +4,87 @@ namespace Database\Seeders;
 
 use App\Models\Plan;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 /**
- * Seeds SaaS plans from config/plans.php (docs/MARKETING_CMS.md).
+ * Seeds SaaS pricing plans for the landing page (docs/LANDING_CMS_IMPLEMENTATION.md).
  */
 class PlanSeeder extends Seeder
 {
     public function run(): void
     {
-        $currency = (string) config('plans.currency', '$');
-        $currencyCode = $currency === '$' ? 'USD' : 'USD';
+        $items = [
+            [
+                'slug' => 'startup',
+                'name' => 'الأساسية',
+                'tagline' => 'للشركات الناشئة والمؤسسات الصغيرة',
+                'price_monthly' => 49,
+                'price_yearly' => 39,
+                'cta_label' => 'ابدأ الآن',
+                'cta_url' => '/register',
+                'is_highlighted' => false,
+                'features' => [
+                    'حتى 10 مستخدمين',
+                    'إدارة الموارد البشرية والرواتب',
+                    'دعم عبر البريد الإلكتروني',
+                    'تقارير أساسية',
+                ],
+            ],
+            [
+                'slug' => 'growth',
+                'name' => 'النمو',
+                'tagline' => 'للمؤسسات المتوسطة سريعة النمو',
+                'price_monthly' => 129,
+                'price_yearly' => 99,
+                'cta_label' => 'ابدأ الآن',
+                'cta_url' => '/register',
+                'is_highlighted' => true,
+                'features' => [
+                    'حتى 100 مستخدم',
+                    'الرواتب والتوظيف الكاملة',
+                    'دعم أولوية على مدار الساعة',
+                    'تقارير وتحليلات متقدمة',
+                    'صلاحيات وأدوار مخصصة',
+                ],
+            ],
+            [
+                'slug' => 'enterprise',
+                'name' => 'Enterprise',
+                'tagline' => 'للمؤسسات الكبيرة ومتطلبات مخصصة',
+                'price_monthly' => null,
+                'price_yearly' => null,
+                'cta_label' => 'تواصل مع المبيعات',
+                'cta_url' => '/contact',
+                'is_highlighted' => false,
+                'features' => [
+                    'مستخدمين غير محدودين',
+                    'تكامل الذكاء الاصطناعي',
+                    'مدير حساب مخصص',
+                    'استضافة خاصة (On-Premise)',
+                ],
+            ],
+        ];
 
-        foreach (array_values(config('plans.tiers', [])) as $index => $tier) {
-            $slug = Str::slug($tier['name']);
+        foreach ($items as $index => $item) {
+            $features = $item['features'];
+            unset($item['features']);
 
-            $plan = Plan::query()->updateOrCreate(
-                ['slug' => $slug],
+            $plan = Plan::query()->withTrashed()->updateOrCreate(
+                ['slug' => $item['slug']],
                 [
-                    'name' => $tier['name'],
-                    'tagline' => $tier['tagline'] ?? null,
-                    'price_monthly' => $tier['monthly'],
-                    'price_yearly' => $tier['yearly'],
-                    'currency' => $currencyCode,
-                    'cta_label' => $tier['cta'],
-                    'cta_url' => $tier['href'],
-                    'is_highlighted' => (bool) ($tier['highlighted'] ?? false),
+                    ...$item,
+                    'currency' => 'USD',
                     'is_active' => true,
                     'sort_order' => $index,
                 ],
             );
 
+            if ($plan->trashed()) {
+                $plan->restore();
+            }
+
             $plan->features()->delete();
 
-            foreach (array_values($tier['features'] ?? []) as $featureIndex => $label) {
+            foreach ($features as $featureIndex => $label) {
                 $plan->features()->create([
                     'label' => $label,
                     'sort_order' => $featureIndex,

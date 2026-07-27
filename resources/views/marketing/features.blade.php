@@ -15,13 +15,14 @@
         <x-marketing.feature-grid
             :title="$features['title']"
             :subtitle="$features['subtitle']"
+            :offerings="$offerings"
         />
 
-        <x-marketing.module-grid />
+        <x-marketing.module-grid :modules="$modules" />
 
-        <x-marketing.showcase />
+        <x-marketing.showcase :stats="$productPreviewStats" />
 
-        <x-marketing.differentiators />
+        <x-marketing.differentiators :features="$whyUsFeatures" />
 
         <x-marketing.cta-band
             :title="$cta['title']"

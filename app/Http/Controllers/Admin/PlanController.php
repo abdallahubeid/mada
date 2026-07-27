@@ -113,7 +113,8 @@ class PlanController extends Controller
             ->filter()
             ->values();
 
-        $plan->features()->delete();
+        // Soft-deleted feature rows must not block a fresh sync of the same plan.
+        $plan->features()->withTrashed()->get()->each->forceDelete();
 
         $labels->each(function (string $label, int $index) use ($plan): void {
             PlanFeature::query()->create([

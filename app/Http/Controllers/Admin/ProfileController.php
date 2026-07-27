@@ -3,40 +3,90 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateProfileRequest;
+use App\Models\User;
+use App\Services\Admin\PlatformNotificationPublisher;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 
 /**
- * Super Admin Profile (docs/MODULES.md §6). Self-service surface for the logged-in
- * operator's personal details, interface preferences, and notification opt-ins.
- * Frontend slice: the profile is mocked in-controller; persistence lands with the
- * backend phase.
+ * Authenticated user profile — personal details, avatar, and password.
  */
 class ProfileController extends Controller
 {
+    public function __construct(private PlatformNotificationPublisher $notifications) {}
+
     public function index(): View
     {
-        $profile = [
-            'name' => 'عبد الله خالد عبيد',
-            'email' => 'abdullah@veyra.app',
-            'email_verified' => true,
-            'phone' => '+966 55 123 4567',
-            'role' => 'super_admin',
-            'role_label' => 'مشرف عام - Super Admin',
-            'avatar' => null,
-            'language' => 'ar',
-            'theme' => 'system',
-        ];
-
-        $notificationPreferences = [
-            ['key' => 'security_alerts', 'label' => 'التنبيهات الأمنية', 'desc' => 'محاولات دخول مشبوهة أو تغييرات على الحساب.', 'enabled' => true],
-            ['key' => 'tenant_requests', 'label' => 'طلبات المستأجرين', 'desc' => 'إشعار عند وجود مستأجر جديد بانتظار الموافقة.', 'enabled' => true],
-            ['key' => 'system_errors', 'label' => 'أخطاء النظام', 'desc' => 'فشل المهام الخلفية والأخطاء الحرجة في المنصّة.', 'enabled' => false],
-            ['key' => 'support_updates', 'label' => 'تحديثات تذاكر الدعم', 'desc' => 'ردود جديدة على محادثات الدعم الفني.', 'enabled' => true],
-        ];
+        /** @var User $user */
+        $user = Auth::user();
+        $user->load('avatar');
 
         return view('admin.profile.index', [
-            'profile' => $profile,
-            'notificationPreferences' => $notificationPreferences,
+            'user' => $user,
+        ]);
+    }
+
+    public function update(UpdateProfileRequest $request): RedirectResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $validated = $request->validated();
+        $passwordChanged = ! empty($validated['password']);
+
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'job_title' => $validated['job_title'] ?? null,
+        ]);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        if ($passwordChanged) {
+            $user->password = $validated['password'];
+        }
+
+        $user->save();
+
+        $this->syncAvatar($request, $user);
+
+        if ($passwordChanged) {
+            $this->notifications->passwordChanged($user);
+        }
+
+        flash()->info('تم تحديث الملف الشخصي بنجاح.');
+
+        return redirect()->route('admin.profile');
+    }
+
+    private function syncAvatar(UpdateProfileRequest $request, User $user): void
+    {
+        /** @var UploadedFile|null $file */
+        $file = $request->file('avatar');
+
+        if ($file === null) {
+            return;
+        }
+
+        $user->avatar()->get()->each->forceDelete();
+
+        $path = $file->store('user/avatar', 'custom');
+
+        $user->images()->create([
+            'collection' => 'avatar',
+            'disk' => 'custom',
+            'path' => $path,
+            'original_name' => $file->getClientOriginalName(),
+            'mime_type' => $file->getMimeType(),
+            'file_size' => $file->getSize(),
+            'alt_text' => $user->name,
+            'sort_order' => 0,
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Offering;
 use App\Models\Problem;
 use App\Models\Solution;
 use App\Models\Testimonial;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 
@@ -15,11 +16,13 @@ uses(RefreshDatabase::class);
 
 test('landing content tables exist with expected columns', function () {
     expect(Schema::hasColumns('problems', ['title', 'description', 'icon_key', 'sort_order', 'is_published']))->toBeTrue()
-        ->and(Schema::hasColumns('solutions', ['title', 'description', 'btn_text', 'btn_link', 'icon_key', 'sort_order', 'is_published']))->toBeTrue()
-        ->and(Schema::hasColumns('offerings', ['title', 'description', 'icon_key', 'sort_order', 'is_published']))->toBeTrue()
-        ->and(Schema::hasColumns('modules', ['title', 'description', 'icon_key', 'sort_order', 'is_published']))->toBeTrue()
-        ->and(Schema::hasColumns('ai_features', ['title', 'description', 'icon_key', 'sort_order', 'is_published']))->toBeTrue()
-        ->and(Schema::hasColumns('features', ['title', 'description', 'icon_key', 'sort_order', 'is_published']))->toBeTrue()
+        ->and(Schema::hasColumns('solutions', ['title', 'description', 'icon', 'sort_order', 'is_published']))->toBeTrue()
+        ->and(Schema::hasColumn('solutions', 'btn_text'))->toBeFalse()
+        ->and(Schema::hasColumn('solutions', 'btn_link'))->toBeFalse()
+        ->and(Schema::hasColumns('offerings', ['title', 'description', 'icon', 'sort_order', 'is_published']))->toBeTrue()
+        ->and(Schema::hasColumns('modules', ['title', 'description', 'icon', 'sort_order', 'is_published']))->toBeTrue()
+        ->and(Schema::hasColumns('ai_features', ['title', 'description', 'icon', 'sort_order', 'is_published']))->toBeTrue()
+        ->and(Schema::hasColumns('features', ['title', 'description', 'icon', 'sort_order', 'is_published']))->toBeTrue()
         ->and(Schema::hasColumn('testimonials', 'rate'))->toBeTrue()
         ->and(Schema::hasColumn('testimonials', 'logo_path'))->toBeFalse()
         ->and(Schema::hasColumn('tenants', 'show_on_marketing'))->toBeTrue()
@@ -32,11 +35,12 @@ test('landing content models persist and expose polymorphic images relation', fu
         'title' => 'عنوان تجريبي',
         'description' => 'وصف تجريبي',
         'icon_key' => 'shield',
+        'icon' => 'ph:check-bold',
     ]);
 
     expect($model->is_published)->toBeTrue()
         ->and($model->sort_order)->toBe(0)
-        ->and($model->images())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class)
+        ->and($model->images())->toBeInstanceOf(MorphMany::class)
         ->and($modelClass::query()->published()->whereKey($model)->exists())->toBeTrue();
 })->with([
     Problem::class,
@@ -51,7 +55,7 @@ test('testimonial accepts rate and uses has images without logo path', function 
     $testimonial = Testimonial::factory()->create(['rate' => 5]);
 
     expect($testimonial->rate)->toBe(5)
-        ->and($testimonial->images())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class)
+        ->and($testimonial->images())->toBeInstanceOf(MorphMany::class)
         ->and(array_key_exists('logo_path', $testimonial->getAttributes()))->toBeFalse();
 });
 
@@ -59,6 +63,6 @@ test('tenant keeps show on marketing and uses has images', function () {
     $tenant = Tenant::factory()->create(['show_on_marketing' => true]);
 
     expect($tenant->show_on_marketing)->toBeTrue()
-        ->and($tenant->images())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\MorphMany::class)
+        ->and($tenant->images())->toBeInstanceOf(MorphMany::class)
         ->and(array_key_exists('marketing_logo_path', $tenant->getAttributes()))->toBeFalse();
 });

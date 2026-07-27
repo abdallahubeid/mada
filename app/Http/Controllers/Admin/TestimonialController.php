@@ -123,7 +123,7 @@ class TestimonialController extends Controller
             return;
         }
 
-        $testimonial->images()->whereIn('collection', ['avatar', 'logo'])->get()->each->delete();
+        $testimonial->images()->whereIn('collection', ['avatar', 'logo'])->get()->each->forceDelete();
 
         $path = $file->store('testimonial/avatar', 'custom');
 

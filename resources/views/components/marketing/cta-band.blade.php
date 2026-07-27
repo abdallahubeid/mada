@@ -1,15 +1,19 @@
 @props([
-    'title' => 'جاهز لتحويل مؤسستك؟',
-    'subtitle' => 'ابدأ تجربتك المجانية اليوم — دون بطاقة ائتمان، وبإعداد يستغرق دقائق.',
-    'primaryLabel' => 'ابدأ التجربة المجانية',
+    'title' => null,
+    'subtitle' => null,
+    'primaryLabel' => null,
     'primaryHref' => null,
-    'secondaryLabel' => 'تواصل مع المبيعات',
-    'secondaryHref' => '/contact',
+    'secondaryLabel' => null,
+    'secondaryHref' => null,
 ])
 
 @php
-    /* Final high-impact CTA (docs/MARKETING.md §4.13). */
-    $primaryHref ??= route('register');
+    $title ??= $settings['cta_title'] ?? '';
+    $subtitle ??= $settings['cta_sub_title'] ?? '';
+    $primaryLabel ??= $settings['cta_btn1_text'] ?? 'ابدأ التجربة المجانية';
+    $primaryHref ??= $settings['cta_btn1_link'] ?? route('register');
+    $secondaryLabel ??= $settings['cta_btn2_text'] ?? 'تواصل مع المبيعات';
+    $secondaryHref ??= $settings['cta_btn2_link'] ?? '/contact';
 @endphp
 
 <section class="bg-white py-24 dark:bg-ink-900">

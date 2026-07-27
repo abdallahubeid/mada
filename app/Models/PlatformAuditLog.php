@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Lightweight platform CMS audit trail (NFR-05 / docs/ADMIN_CMS_ANALYSIS.md).
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PlatformAuditLog extends Model
 {
+    use SoftDeletes;
+
     /**
      * @var list<string>
      */

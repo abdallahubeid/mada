@@ -9,6 +9,7 @@ use App\Models\Offering;
 use App\Models\Problem;
 use App\Models\Solution;
 use App\Models\Testimonial;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -24,12 +25,11 @@ test('all imageable entities expose morphMany and morphOne via HasImages', funct
     $model = match ($modelClass) {
         Testimonial::class => Testimonial::factory()->create(),
         Tenant::class => Tenant::factory()->create(),
+        User::class => User::factory()->create(),
         Solution::class => Solution::query()->create([
             'title' => 'حل',
             'description' => 'وصف',
-            'btn_text' => 'المزيد',
-            'btn_link' => '#',
-            'icon_key' => 'check',
+            'icon' => 'ph:check-bold',
         ]),
         default => $modelClass::query()->create([
             'title' => 'عنوان',
@@ -62,4 +62,5 @@ test('all imageable entities expose morphMany and morphOne via HasImages', funct
     [Feature::class, 'icon'],
     [Testimonial::class, 'avatar'],
     [Tenant::class, 'logo'],
+    [User::class, 'avatar'],
 ]);

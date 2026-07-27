@@ -3,114 +3,177 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SupportThread;
+use App\Services\Support\SupportInbox;
+use App\Services\Support\SupportInboxPoller;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 /**
- * Messages & Support Inquiries (docs/MODULES.md §6, BR-805/BR-806, ADR-17).
- * A tenant Owner-initiated conversation handled by the Super Admin — a
- * dedicated model, not the Approval Engine. Frontend slice: threads are mocked
- * in-controller and filtered by the `status` param; `thread` selects the open
- * conversation. Reading a thread is an explicit audited cross-tenant read
- * (ARCHITECTURE.md §8).
+ * Messages & Support Inquiries inbox (docs/MODULES.md §6, BR-805/BR-806).
  */
 class MessageController extends Controller
 {
-    /**
-     * @return list<array{id:int, tenant:string, subject:string, snippet:string, status:string, time:string, unread:bool, messages:list<array{from:string, name:string, body:string, time:string}>}>
-     */
-    private function threads(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'tenant' => 'شركة الأفق للتقنية',
-                'subject' => 'استفسار حول ترقية الخطة',
-                'snippet' => 'نرغب بترقية اشتراكنا إلى خطة Growth، ما الخطوات المطلوبة؟',
-                'status' => 'open',
-                'time' => 'قبل 10 دقائق',
-                'unread' => true,
-                'messages' => [
-                    ['from' => 'owner', 'name' => 'سارة المنصوري', 'body' => 'السلام عليكم، نرغب بترقية اشتراكنا إلى خطة Growth. ما الخطوات المطلوبة وهل سيتم احتساب فرق السعر تلقائيًا؟', 'time' => 'قبل 10 دقائق'],
-                ],
-            ],
-            [
-                'id' => 2,
-                'tenant' => 'مؤسسة نماء',
-                'subject' => 'مشكلة في تسجيل دخول أحد الموظفين',
-                'snippet' => 'أحد الموظفين لا يستطيع الدخول رغم إعادة تعيين كلمة المرور.',
-                'status' => 'in_progress',
-                'time' => 'قبل ساعتين',
-                'unread' => false,
-                'messages' => [
-                    ['from' => 'owner', 'name' => 'خالد العتيبي', 'body' => 'لدينا موظف لا يستطيع تسجيل الدخول رغم إعادة تعيين كلمة المرور عدة مرات.', 'time' => 'قبل 3 ساعات'],
-                    ['from' => 'admin', 'name' => 'مشرف المنصّة', 'body' => 'أهلًا خالد، هل يظهر للموظف رسالة خطأ محددة؟ يرجى تزويدنا ببريده الإلكتروني لمراجعة السجل.', 'time' => 'قبل ساعتين'],
-                    ['from' => 'owner', 'name' => 'خالد العتيبي', 'body' => 'نعم، تظهر رسالة «بيانات الدخول غير صحيحة». بريده: staff@namaa.co', 'time' => 'قبل ساعتين'],
-                ],
-            ],
-            [
-                'id' => 3,
-                'tenant' => 'مجموعة رواد',
-                'subject' => 'طلب فاتورة ضريبية',
-                'snippet' => 'نحتاج فاتورة ضريبية رسمية عن اشتراك هذا الشهر.',
-                'status' => 'open',
-                'time' => 'أمس',
-                'unread' => true,
-                'messages' => [
-                    ['from' => 'owner', 'name' => 'ليلى الحربي', 'body' => 'مرحبًا، نحتاج فاتورة ضريبية رسمية عن اشتراك هذا الشهر لأغراض المحاسبة.', 'time' => 'أمس'],
-                ],
-            ],
-            [
-                'id' => 4,
-                'tenant' => 'شركة الابتكار',
-                'subject' => 'شكر على الدعم السريع',
-                'snippet' => 'شكرًا لكم، تم حل المشكلة بشكل ممتاز.',
-                'status' => 'resolved',
-                'time' => 'قبل 3 أيام',
-                'unread' => false,
-                'messages' => [
-                    ['from' => 'owner', 'name' => 'نورة القحطاني', 'body' => 'واجهنا بطئًا في تحميل لوحة المشاريع.', 'time' => 'قبل 4 أيام'],
-                    ['from' => 'admin', 'name' => 'مشرف المنصّة', 'body' => 'تم تحسين الأداء من جانبنا، يرجى إعادة المحاولة.', 'time' => 'قبل 3 أيام'],
-                    ['from' => 'owner', 'name' => 'نورة القحطاني', 'body' => 'شكرًا لكم، تم حل المشكلة بشكل ممتاز.', 'time' => 'قبل 3 أيام'],
-                ],
-            ],
-        ];
-    }
+    public function __construct(
+        private SupportInbox $inbox,
+        private SupportInboxPoller $poller,
+    ) {}
 
     public function index(Request $request): View
     {
-        $threads = $this->threads();
-
         $tabs = [
-            'open' => 'مفتوح',
-            'in_progress' => 'قيد المعالجة',
-            'resolved' => 'تم الحل',
+            SupportThread::STATUS_OPEN => 'مفتوح',
+            SupportThread::STATUS_IN_PROGRESS => 'قيد المعالجة',
+            SupportThread::STATUS_RESOLVED => 'تم الحل',
+            SupportThread::STATUS_ARCHIVED => 'مؤرشف',
         ];
 
-        $counts = [];
-
-        foreach (array_keys($tabs) as $status) {
-            $counts[$status] = count(array_filter($threads, fn ($t): bool => $t['status'] === $status));
-        }
-
-        $activeStatus = $request->query('status', 'open');
+        $activeStatus = (string) $request->query('status', SupportThread::STATUS_OPEN);
 
         if (! array_key_exists($activeStatus, $tabs)) {
-            $activeStatus = 'open';
+            $activeStatus = SupportThread::STATUS_OPEN;
         }
 
-        $filtered = array_values(array_filter($threads, fn ($t): bool => $t['status'] === $activeStatus));
-
-        // Resolve the open conversation: requested thread (if it's in the current tab), else the first.
+        $search = trim((string) $request->query('q', ''));
         $requestedId = (int) $request->query('thread', 0);
-        $selected = collect($filtered)->firstWhere('id', $requestedId) ?? ($filtered[0] ?? null);
+
+        $list = $this->poller->listThreads($activeStatus, $search, $requestedId);
+
+        // Only open a thread when explicitly requested — never auto-select the first.
+        $selected = null;
+        $selectedMessages = [];
+
+        if ($requestedId > 0) {
+            $selected = SupportThread::query()
+                ->with(['messages.user.avatar', 'user.avatar'])
+                ->find($requestedId);
+
+            if ($selected !== null && $selected->status === $activeStatus) {
+                $this->inbox->markCustomerMessagesAsRead($selected);
+                $selected->unsetRelation('messages');
+                $selected->load(['messages.user.avatar', 'user.avatar']);
+                $selectedMessages = $selected->messages
+                    ->map(fn ($message) => $this->poller->serializeMessage($message))
+                    ->values()
+                    ->all();
+            } else {
+                $selected = null;
+            }
+        }
 
         return view('admin.messages.index', [
-            'threads' => $filtered,
+            'threads' => $list['threads'],
             'tabs' => $tabs,
-            'counts' => $counts,
+            'counts' => $list['counts'],
             'activeStatus' => $activeStatus,
             'selected' => $selected,
+            'selectedMessages' => $selectedMessages,
+            'search' => $search,
+            'pollSignature' => $list['signature'],
+        ]);
+    }
+
+    public function poll(Request $request): JsonResponse
+    {
+        $activeStatus = (string) $request->query('status', SupportThread::STATUS_OPEN);
+
+        if (! array_key_exists($activeStatus, SupportInboxPoller::STATUS_META)) {
+            $activeStatus = SupportThread::STATUS_OPEN;
+        }
+
+        $search = trim((string) $request->query('q', ''));
+        $selectedThreadId = (int) $request->query('thread', 0);
+        $afterMessageId = max(0, (int) $request->query('after_message_id', 0));
+
+        $list = $this->poller->listThreads($activeStatus, $search, $selectedThreadId);
+
+        // Poll only returns messages newer than the client's last id (never a full replay).
+        $messagesPayload = $afterMessageId > 0
+            ? $this->poller->messagesSince($selectedThreadId, $afterMessageId)
+            : [
+                'messages' => [],
+                'selected_exists' => $selectedThreadId <= 0
+                    || SupportThread::query()->whereKey($selectedThreadId)->exists(),
+            ];
+
+        return response()->json([
+            'counts' => $list['counts'],
+            'threads' => $list['threads'],
+            'signature' => $list['signature'],
+            'messages' => $messagesPayload['messages'],
+            'selected_exists' => $messagesPayload['selected_exists'],
+        ]);
+    }
+
+    public function reply(Request $request, SupportThread $thread): RedirectResponse
+    {
+        $validated = $request->validate([
+            'body' => ['required', 'string', 'min:1', 'max:5000'],
+        ]);
+
+        $admin = Auth::user();
+
+        abort_unless($admin !== null, 403);
+
+        $this->inbox->replyAsAdmin($thread, $admin, $validated['body']);
+
+        flash()->success('تم إرسال الرد بنجاح.');
+
+        return redirect()->route('admin.messages', [
+            'status' => $thread->fresh()?->status ?? SupportThread::STATUS_IN_PROGRESS,
+            'thread' => $thread->id,
+        ]);
+    }
+
+    public function updateStatus(Request $request, SupportThread $thread): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', Rule::in([
+                SupportThread::STATUS_OPEN,
+                SupportThread::STATUS_IN_PROGRESS,
+                SupportThread::STATUS_RESOLVED,
+                SupportThread::STATUS_ARCHIVED,
+            ])],
+        ]);
+
+        $thread->update(['status' => $validated['status']]);
+
+        $message = match ($validated['status']) {
+            SupportThread::STATUS_ARCHIVED => 'تم أرشفة المحادثة بنجاح.',
+            SupportThread::STATUS_RESOLVED => 'تم تعليم المحادثة كمحلولة.',
+            default => 'تم تحديث حالة المحادثة.',
+        };
+
+        flash()->info($message);
+
+        return redirect()->route('admin.messages', [
+            'status' => $validated['status'],
+            'thread' => $thread->id,
+        ]);
+    }
+
+    public function archive(SupportThread $thread): RedirectResponse
+    {
+        $thread->update(['status' => SupportThread::STATUS_ARCHIVED]);
+
+        flash()->info('تم أرشفة المحادثة بنجاح.');
+
+        return redirect()->route('admin.messages', [
+            'status' => SupportThread::STATUS_ARCHIVED,
+        ]);
+    }
+
+    public function destroy(SupportThread $thread): JsonResponse
+    {
+        $thread->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم حذف المحادثة بنجاح.',
         ]);
     }
 }

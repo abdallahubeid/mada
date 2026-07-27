@@ -4,24 +4,28 @@ use App\Http\Controllers\Admin\AccountSecurityController as AdminAccountSecurity
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AiFeatureController as AdminAiFeatureController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
+use App\Http\Controllers\Admin\ChromeController as AdminChromeController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\FeatureController as AdminFeatureController;
 use App\Http\Controllers\Admin\MessageController as AdminMessageController;
 use App\Http\Controllers\Admin\ModuleController as AdminModuleController;
+use App\Http\Controllers\Admin\NewsletterCampaignController as AdminNewsletterCampaignController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\OfferingController as AdminOfferingController;
 use App\Http\Controllers\Admin\PlanController as AdminPlanController;
 use App\Http\Controllers\Admin\ProblemController as AdminProblemController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\SearchController as AdminSearchController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\SolutionController as AdminSolutionController;
 use App\Http\Controllers\Admin\TenantController as AdminTenantController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardSetupController;
 use App\Http\Controllers\Marketing\AboutController;
@@ -55,9 +59,15 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('marketing.contact.store');
 
-Route::post('/newsletter', NewsletterController::class)
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
+    ->middleware('throttle:10,1')
+    ->name('marketing.newsletter.subscribe');
+Route::post('/newsletter', [NewsletterController::class, 'subscribe'])
     ->middleware('throttle:10,1')
     ->name('marketing.newsletter.store');
+Route::get('/newsletter/unsubscribe/{email}', [NewsletterController::class, 'unsubscribe'])
+    ->where('email', '[^/]+')
+    ->name('marketing.newsletter.unsubscribe');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
@@ -89,11 +99,6 @@ Route::middleware(['auth', 'verified', 'tenant.active'])->prefix('app')->group(f
     Route::get('/dashboard', Overview::class)->name('dashboard');
 });
 
-
-
-
-
-
 // Super Admin / Platform Console (docs/MODULES.md §6). Frontend-first preview
 // with mock data — the auth/2FA gate (ADR-14) and cross-tenant authorization
 // middleware are added with the backend phase.
@@ -119,13 +124,41 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/landing/settings', [AdminSettingController::class, 'edit'])->name('landing.settings.edit');
     Route::put('/landing/settings', [AdminSettingController::class, 'update'])->name('landing.settings.update');
+    Route::delete('/landing/settings/image/{key}', [AdminSettingController::class, 'destroyImage'])->name('landing.settings.image.destroy');
 
-    Route::get('/notifications', AdminNotificationController::class)->name('notifications');
+    Route::get('/chrome/poll', [AdminChromeController::class, 'poll'])->name('chrome.poll');
+    Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
+    Route::get('/search/suggest', [AdminSearchController::class, 'suggest'])->name('search.suggest');
+
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/read-all', [AdminNotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::delete('/notifications', [AdminNotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
+    Route::put('/notifications/{notification}/read', [AdminNotificationController::class, 'toggleRead'])->name('notifications.toggle-read');
+    Route::delete('/notifications/{notification}', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::get('/messages', [AdminMessageController::class, 'index'])->name('messages');
+    Route::get('/messages/poll', [AdminMessageController::class, 'poll'])->name('messages.poll');
+    Route::post('/messages/{thread}/reply', [AdminMessageController::class, 'reply'])->name('messages.reply');
+    Route::put('/messages/{thread}/status', [AdminMessageController::class, 'updateStatus'])->name('messages.status');
+    Route::post('/messages/{thread}/archive', [AdminMessageController::class, 'archive'])->name('messages.archive');
+    Route::delete('/messages/{thread}', [AdminMessageController::class, 'destroy'])->name('messages.destroy');
+
+    Route::get('/newsletter', [AdminNewsletterController::class, 'index'])->name('newsletter.index');
+    Route::get('/newsletter/poll', [AdminNewsletterController::class, 'poll'])->name('newsletter.poll');
+    Route::get('/newsletter/export', [AdminNewsletterController::class, 'export'])->name('newsletter.export');
+    Route::get('/newsletter/campaigns', [AdminNewsletterCampaignController::class, 'index'])->name('newsletter.campaigns.index');
+    Route::get('/newsletter/campaigns/{campaign}', [AdminNewsletterCampaignController::class, 'show'])->name('newsletter.campaigns.show');
+    Route::post('/newsletter/campaign', [AdminNewsletterController::class, 'sendCampaign'])->name('newsletter.campaign');
+    Route::put('/newsletter/{subscriber}/toggle', [AdminNewsletterController::class, 'toggle'])->name('newsletter.toggle');
+    Route::delete('/newsletter/{subscriber}', [AdminNewsletterController::class, 'destroy'])->name('newsletter.destroy');
+
     Route::get('/audit-log', AdminAuditLogController::class)->name('audit-log');
     Route::get('/account/security', AdminAccountSecurityController::class)->name('account.security');
     Route::get('/admins', [AdminUserController::class, 'index'])->name('admins');
-    Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile');
+        Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
+    });
 });
 
 // Standalone Two-Factor Challenge (docs/MODULES.md §6, ADR-14) — rendered

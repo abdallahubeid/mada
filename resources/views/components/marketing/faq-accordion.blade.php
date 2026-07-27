@@ -1,30 +1,37 @@
 @props([
-    'limit' => null,
+    'faqs' => null,
     'items' => null,
-    'title' => 'الأسئلة الشائعة',
-    'subtitle' => 'إجابات سريعة عن أكثر ما يسأل عنه عملاؤنا.',
+    'limit' => null,
+    'title' => null,
+    'subtitle' => null,
     'framed' => true,
 ])
 
 @php
-    /* FAQ accordion (docs/MARKETING.md §4.12) — single source: config/faq.php.
-       `limit` powers the landing preview (top N); /faq passes the full set.
-       `framed=false` renders only the accordion list (for category sections on /faq). */
-    $items ??= config('faq.items', []);
-    if ($limit) {
-        $items = array_slice($items, 0, $limit);
+    /** @var \Illuminate\Support\Collection<int, \App\Models\Faq|array<string, string>> $faqs */
+    $faqs = collect($faqs ?? $items ?? []);
+
+    if ($faqs->isEmpty()) {
+        $faqs = collect(config('faq.items', []));
     }
+
+    if ($limit) {
+        $faqs = $faqs->take($limit);
+    }
+
+    $sectionTitle = $title ?? ($settings['faq_title'] ?? 'الأسئلة الشائعة');
+    $sectionSubtitle = $subtitle ?? ($settings['faq_sub_title'] ?? '');
 @endphp
 
 @if ($framed)
 <section class="bg-white py-24 dark:bg-ink-900">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        @if ($title !== '' && $title !== null)
-            <x-marketing.section-heading :title="$title" :subtitle="$subtitle" />
+        @if ($sectionTitle !== '')
+            <x-marketing.section-heading :title="$sectionTitle" :subtitle="$sectionSubtitle" />
         @endif
 
-        <div @class(['mt-12' => $title !== '' && $title !== null, 'space-y-3' => true]) x-data="{ open: 0 }">
-            @include('components.marketing.partials.faq-items', ['items' => $items])
+        <div @class(['mt-12' => $sectionTitle !== '', 'space-y-3' => true]) x-data="{ open: 0 }">
+            @include('components.marketing.partials.faq-items', ['items' => $faqs])
         </div>
 
         @if ($limit)
@@ -39,6 +46,6 @@
 </section>
 @else
 <div class="space-y-3" x-data="{ open: 0 }">
-    @include('components.marketing.partials.faq-items', ['items' => $items])
+    @include('components.marketing.partials.faq-items', ['items' => $faqs])
 </div>
 @endif

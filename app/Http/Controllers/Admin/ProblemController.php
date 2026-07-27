@@ -114,7 +114,7 @@ class ProblemController extends Controller
         /** @var UploadedFile $file */
         $file = $request->file('icon');
 
-        $problem->images()->where('collection', 'icon')->get()->each->delete();
+        $problem->images()->where('collection', 'icon')->get()->each->forceDelete();
 
         $path = $file->store('problem/icon', 'custom');
 

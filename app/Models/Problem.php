@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasImages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Landing-page problem card (pain points section).
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Problem extends Model
 {
-    use HasImages;
+    use HasImages, SoftDeletes;
 
     /**
      * @var list<string>

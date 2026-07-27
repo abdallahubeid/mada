@@ -5,6 +5,9 @@ use App\Models\Plan;
 use App\Models\PlatformAuditLog;
 use App\Models\User;
 use App\Services\Admin\AdminDashboard;
+use Database\Seeders\FaqSeeder;
+use Database\Seeders\PlanSeeder;
+use Database\Seeders\TestimonialSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,9 +15,9 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed([
-        \Database\Seeders\PlanSeeder::class,
-        \Database\Seeders\FaqSeeder::class,
-        \Database\Seeders\TestimonialSeeder::class,
+        PlanSeeder::class,
+        FaqSeeder::class,
+        TestimonialSeeder::class,
     ]);
 
     AdminDashboard::flush();
@@ -41,8 +44,8 @@ test('admin dashboard renders live tenant metrics from the database', function (
         ->assertSee('توزيع الخطط', false)
         ->assertSee('أحدث التسجيلات', false)
         ->assertSee('حالة النظام', false)
-        ->assertSee('Startup', false)
-        ->assertSee('Growth', false);
+        ->assertSee('الأساسية', false)
+        ->assertSee('النمو', false);
 });
 
 test('admin dashboard respects range query and caches aggregate metrics', function () {

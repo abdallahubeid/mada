@@ -6,8 +6,6 @@
     /** @var array<string, mixed> $content */
     $hero = $content['hero'];
     $partners = $content['partners'];
-    $cta = $content['cta'];
-    $featuresHeading = $content['features'];
 @endphp
 
 <x-layouts.marketing title="Veyra ERP — مستقبل إدارة المؤسسات">
@@ -16,29 +14,22 @@
     <main>
         <x-marketing.hero :hero="$hero" />
         <x-marketing.logo-ticker :eyebrow="$partners['eyebrow']" :brands="$partners['names']" />
-        <x-marketing.problems />
-        <x-marketing.solution />
-        <x-marketing.feature-grid :title="$featuresHeading['title']" :subtitle="$featuresHeading['subtitle']" />
-        <x-marketing.module-grid />
-        <x-marketing.showcase />
-        <x-marketing.ai-capabilities />
-        <x-marketing.differentiators />
+        <x-marketing.problems :problems="$content['problems']" />
+        <x-marketing.solution :modules="$content['solution_sidebar_modules']" :solutions="$content['solutions']" />
+        <x-marketing.feature-grid :offerings="$content['offerings']" />
+        <x-marketing.module-grid :modules="$content['modules']" />
+        <x-marketing.showcase :stats="$content['product_preview_stats']" />
+        <x-marketing.ai-capabilities :ai-features="$content['ai_features']" />
+        <x-marketing.differentiators :features="$content['why_us_features']" />
         <x-marketing.testimonials :testimonials="$content['testimonials']" />
         <x-marketing.pricing-table
             :compact="true"
             :plans="$content['plans']"
             :currency="$content['currency']"
         />
-        <x-marketing.faq-accordion :items="$content['faqs']" />
-        <x-marketing.cta-band
-            :title="$cta['title']"
-            :subtitle="$cta['subtitle']"
-            :primary-label="$cta['primary']['label']"
-            :primary-href="$cta['primary']['url']"
-            :secondary-label="$cta['secondary']['label']"
-            :secondary-href="$cta['secondary']['url']"
-        />
+        <x-marketing.faq-accordion :faqs="$content['faqs']" />
+        <x-marketing.cta-band />
     </main>
 
-    <x-marketing.footer :footer="$content['footer']" />
+    <x-marketing.footer />
 </x-layouts.marketing>

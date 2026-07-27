@@ -1,0 +1,37 @@
+---
+description: Mandatory SoftDeletes on all core Eloquent models and database tables. Hard deletes only via explicit forceDelete().
+alwaysApply: true
+---
+
+# Soft Deletes (Mandatory)
+
+Every **core** business model and its database table in Veyra MUST use Soft Deletes.
+
+## Required on every new table / model
+
+1. Migration: `$table->softDeletes();` (nullable `deleted_at` timestamp).
+2. Model: `use Illuminate\Database\Eloquent\SoftDeletes;` and include the trait on the class.
+3. Delete actions (`destroy`, archive, unsubscribe cleanup, etc.) must call `$model->delete()` (soft) by default.
+
+## Hard delete is an exception
+
+- Use `$model->forceDelete()` **only** when permanently removing data is intentional and documented (e.g. replacing media files, syncing plan feature bullets that must not leave soft-deleted orphans).
+- Never use `Model::query()->truncate()` or raw `DELETE` for core entities as a substitute for soft delete.
+- Mass soft delete is fine: `Model::query()->delete()` soft-deletes when the SoftDeletes trait is present.
+
+## Exclusions (infrastructure only)
+
+Do **not** add SoftDeletes to framework/infra tables such as: `sessions`, `cache` / `cache_locks`, `jobs` / `job_batches` / `failed_jobs`, `password_reset_tokens`, Spatie `model_has_*` / `role_has_permissions` pivots.
+
+## Media / related rows
+
+- Soft-deleting a parent may soft-delete related `images` so restore can revive them.
+- When **replacing** or **clearing** uploaded media, prefer `forceDelete()` on the `Image` row so the disk file is removed (`Image` deletes storage only on `forceDeleting`).
+
+## Settings keys
+
+`settings.key` is indexed, not uniquely constrained, so a soft-deleted key does not block re-upsert of the same key.
+
+## Tests
+
+Deleting a core record MUST leave the row in the database with `deleted_at` set. Prefer `assertSoftDeleted()` / `withTrashed()` over `assertDatabaseMissing()` for destroy flows.

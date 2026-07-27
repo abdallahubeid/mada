@@ -1,0 +1,35 @@
+---
+description: Always surface user-facing action feedback with SweetAlert2 (toast or modal) via flash() or inline Swal.
+alwaysApply: true
+---
+
+# SweetAlert Notifications (Global)
+
+Whenever the user performs **any** meaningful action across the application (create, send, update, delete, archive, upload, etc.), show an elegant **SweetAlert2** toast or modal.
+
+## Preferred pattern (server redirects)
+
+Use the app helper so layouts can render the alert from session flash:
+
+```php
+flash()->success('تم الحفظ بنجاح.');
+flash()->info('تم أرشفة العنصر.');
+flash()->warning('تحقق من البيانات.');
+flash()->error('تعذّر إكمال العملية.');
+```
+
+Layouts (`layouts/admin`, `layouts/marketing`, etc.) must load SweetAlert2 and fire `Swal.fire` when `session('flasher')` is present.
+
+## AJAX / destructive confirms
+
+For in-page AJAX (e.g. soft delete), use SweetAlert confirmation first, then a success/error toast after the request:
+
+```js
+Swal.fire({ icon: 'warning', showCancelButton: true, /* ... */ })
+  .then(/* fetch … then toast */);
+```
+
+## Do not
+
+- Rely only on silent redirects or plain HTML banners for primary success/error feedback when SweetAlert is available.
+- Skip confirmation for destructive deletes when the product UX expects it.

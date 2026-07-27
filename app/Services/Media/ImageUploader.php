@@ -43,7 +43,7 @@ class ImageUploader
         $model->images()
             ->where('collection', $collection)
             ->get()
-            ->each(fn (Image $image) => $image->delete());
+            ->each(fn (Image $image) => $image->forceDelete());
     }
 
     public function syncDenormalizedPath(Model $model, string $attribute, ?Image $image): void

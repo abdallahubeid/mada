@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Marketing;
 
 use App\Http\Controllers\Controller;
+use App\Models\Faq;
 use App\Services\Marketing\MarketingContent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -16,14 +17,14 @@ class FaqController extends Controller
 
     public function __invoke(): View
     {
-        /** @var Collection<int, array{id: string, title: string, items: list<array{category: string, question: string, answer: string}>}> $categories */
-        $categories = collect($this->marketing->faqs())
+        /** @var Collection<int, array{id: string, title: string, items: \Illuminate\Database\Eloquent\Collection<int, Faq>}> $categories */
+        $categories = $this->marketing->faqs()
             ->groupBy('category')
             ->values()
             ->map(fn (Collection $items, int $index): array => [
                 'id' => 'cat-'.($index + 1),
-                'title' => (string) $items->first()['category'],
-                'items' => $items->values()->all(),
+                'title' => (string) $items->first()->category,
+                'items' => $items->values(),
             ]);
 
         return view('marketing.faq', [

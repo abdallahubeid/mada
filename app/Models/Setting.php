@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Platform key/value settings for landing-page CMS content.
@@ -14,6 +16,8 @@ use Illuminate\Support\Collection;
  */
 class Setting extends Model
 {
+    use SoftDeletes;
+
     /**
      * @var list<string>
      */
@@ -31,6 +35,7 @@ class Setting extends Model
     {
         return [
             'site_logo',
+            'site_favicon',
             'hero_badge_text',
             'hero_title',
             'hero_description',
@@ -38,42 +43,48 @@ class Setting extends Model
             'hero_btn1_link',
             'hero_btn2_text',
             'hero_btn2_link',
-            'problem_badge_text',
-            'problem_title',
-            'problem_sup_title',
-            'solution_badge_text',
-            'solution_title',
-            'solution_description',
+            'problems_badge_text',
+            'problems_title',
+            'problems_sub_title',
+            'solutions_badge_text',
+            'solutions_title',
+            'solutions_sub_title',
+            'solutions_btn_text',
+            'solutions_btn_link',
             'offerings_title',
-            'offerings_sup_title',
+            'offerings_sub_title',
             'modules_badge_text',
             'modules_title',
-            'modules_sup_title',
-            'previews_title',
-            'previews_sup_title',
+            'modules_sub_title',
+            'product_previews_badge_text',
+            'product_previews_title',
+            'product_previews_sub_title',
             'previews_img',
             'previews_video',
             'ai_badge_text',
             'ai_title',
-            'ai_sup_title',
-            'features_title',
-            'features_sup_title',
-            'features_badge_text',
+            'ai_sub_title',
+            'why_us_badge_text',
+            'why_us_title',
+            'why_us_sub_title',
             'testimonials_badge_text',
             'testimonials_title',
-            'testimonials_sup_title',
+            'testimonials_sub_title',
             'pricing_title',
-            'pricing_sup_title',
+            'pricing_sub_title',
             'pricing_btn_text',
             'pricing_btn_link',
             'faq_title',
-            'faq_sup_title',
+            'faq_sub_title',
             'cta_title',
-            'cta_sup_title',
+            'cta_sub_title',
             'cta_btn1_text',
             'cta_btn1_link',
             'cta_btn2_text',
             'cta_btn2_link',
+            'footer_description',
+            'footer_newsletter_title',
+            'footer_newsletter_btn_text',
             'footer_title1',
             'footer_btn1_text',
             'footer_btn1_link',
@@ -133,5 +144,49 @@ class Setting extends Model
         $setting = static::query()->where('key', $key)->first();
 
         return $setting?->value ?? $default;
+    }
+
+    /**
+     * Public URL for a setting-stored upload path (custom disk → public root).
+     */
+    public static function assetUrl(?string $path): ?string
+    {
+        if (! filled($path)) {
+            return null;
+        }
+
+        return asset($path);
+    }
+
+    /**
+     * Settings keys that support AJAX image deletion from the admin Site tab.
+     *
+     * @return list<string>
+     */
+    public static function deletableBrandingKeys(): array
+    {
+        return ['site_logo', 'site_favicon'];
+    }
+
+    /**
+     * Delete the stored file for a branding setting and null the DB value.
+     */
+    public static function clearUploadedFile(string $key): void
+    {
+        if (! in_array($key, self::deletableBrandingKeys(), true)) {
+            abort(422, 'Invalid setting key.');
+        }
+
+        $setting = static::query()->where('key', $key)->first();
+
+        if ($setting === null) {
+            return;
+        }
+
+        if (filled($setting->value)) {
+            Storage::disk('custom')->delete($setting->value);
+        }
+
+        $setting->update(['value' => null]);
     }
 }

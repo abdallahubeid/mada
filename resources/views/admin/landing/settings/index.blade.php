@@ -23,12 +23,12 @@
             'modules' => 'Modules',
             'previews' => 'Previews',
             'ai' => 'AI',
-            'features' => 'Features',
+            'features' => 'Why Us',
             'testimonials' => 'Testimonials',
             'pricing' => 'Pricing',
             'faq' => 'FAQ',
             'cta' => 'CTA',
-            'footer' => 'Footer',
+            'footer' => 'Footer & Social',
             'privacy' => 'Privacy',
             'terms' => 'Terms',
         ];
@@ -61,13 +61,18 @@
 
             <div x-show="tab === 'site'" x-cloak class="{{ $cardClass }} space-y-4">
                 <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Site</h3>
-                <div>
-                    <label class="{{ $labelClass }}">site_logo</label>
-                    @if ($val('site_logo'))
-                        <p class="mb-2 text-xs text-mist-500" dir="ltr">{{ $val('site_logo') }}</p>
-                    @endif
-                    <input type="file" name="site_logo" accept="image/*" class="{{ $inputClass }}">
-                </div>
+                @include('admin.landing.settings._setting-image-field', [
+                    'key' => 'site_logo',
+                    'label' => 'site_logo',
+                    'accept' => 'image/*',
+                    'previewClass' => 'h-20 w-auto max-w-xs object-contain',
+                ])
+                @include('admin.landing.settings._setting-image-field', [
+                    'key' => 'site_favicon',
+                    'label' => 'site_favicon',
+                    'accept' => '.ico,.png,.svg,image/x-icon,image/svg+xml',
+                    'previewClass' => 'h-16 w-auto max-w-[4rem] object-contain',
+                ])
             </div>
 
             <div x-show="tab === 'hero'" x-cloak class="{{ $cardClass }} space-y-4">
@@ -108,16 +113,16 @@
                 <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Problem</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="{{ $labelClass }}">problem_badge_text</label>
-                        <input type="text" name="problem_badge_text" value="{{ $val('problem_badge_text') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">problems_badge_text</label>
+                        <input type="text" name="problems_badge_text" value="{{ $val('problems_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">problem_title</label>
-                        <input type="text" name="problem_title" value="{{ $val('problem_title') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">problems_title</label>
+                        <input type="text" name="problems_title" value="{{ $val('problems_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">problem_sup_title</label>
-                        <textarea name="problem_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('problem_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">problems_sub_title</label>
+                        <textarea name="problems_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('problems_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -126,16 +131,26 @@
                 <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Solution</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="{{ $labelClass }}">solution_badge_text</label>
-                        <input type="text" name="solution_badge_text" value="{{ $val('solution_badge_text') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">solutions_badge_text</label>
+                        <input type="text" name="solutions_badge_text" value="{{ $val('solutions_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">solution_title</label>
-                        <input type="text" name="solution_title" value="{{ $val('solution_title') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">solutions_title</label>
+                        <input type="text" name="solutions_title" value="{{ $val('solutions_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">solution_description</label>
-                        <textarea name="solution_description" rows="3" class="{{ $inputClass }}">{{ $val('solution_description') }}</textarea>
+                        <label class="{{ $labelClass }}">solutions_sub_title</label>
+                        <textarea name="solutions_sub_title" rows="3" class="{{ $inputClass }}">{{ $val('solutions_sub_title') }}</textarea>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="{{ $labelClass }}">solutions_btn_text</label>
+                            <input type="text" name="solutions_btn_text" value="{{ $val('solutions_btn_text') }}" class="{{ $inputClass }}">
+                        </div>
+                        <div>
+                            <label class="{{ $labelClass }}">solutions_btn_link</label>
+                            <input type="text" dir="ltr" name="solutions_btn_link" value="{{ $val('solutions_btn_link') }}" class="{{ $inputClass }}">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,8 +163,8 @@
                         <input type="text" name="offerings_title" value="{{ $val('offerings_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">offerings_sup_title</label>
-                        <textarea name="offerings_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('offerings_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">offerings_sub_title</label>
+                        <textarea name="offerings_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('offerings_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -166,8 +181,8 @@
                         <input type="text" name="modules_title" value="{{ $val('modules_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">modules_sup_title</label>
-                        <textarea name="modules_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('modules_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">modules_sub_title</label>
+                        <textarea name="modules_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('modules_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -176,12 +191,16 @@
                 <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Product Previews</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="{{ $labelClass }}">previews_title</label>
-                        <input type="text" name="previews_title" value="{{ $val('previews_title') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">product_previews_badge_text</label>
+                        <input type="text" name="product_previews_badge_text" value="{{ $val('product_previews_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">previews_sup_title</label>
-                        <textarea name="previews_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('previews_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">product_previews_title</label>
+                        <input type="text" name="product_previews_title" value="{{ $val('product_previews_title') }}" class="{{ $inputClass }}">
+                    </div>
+                    <div>
+                        <label class="{{ $labelClass }}">product_previews_sub_title</label>
+                        <textarea name="product_previews_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('product_previews_sub_title') }}</textarea>
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">previews_img</label>
@@ -212,26 +231,26 @@
                         <input type="text" name="ai_title" value="{{ $val('ai_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">ai_sup_title</label>
-                        <textarea name="ai_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('ai_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">ai_sub_title</label>
+                        <textarea name="ai_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('ai_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
 
             <div x-show="tab === 'features'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Features</h3>
+                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Why Us</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="{{ $labelClass }}">features_title</label>
-                        <input type="text" name="features_title" value="{{ $val('features_title') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">why_us_badge_text</label>
+                        <input type="text" name="why_us_badge_text" value="{{ $val('why_us_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">features_sup_title</label>
-                        <textarea name="features_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('features_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">why_us_title</label>
+                        <input type="text" name="why_us_title" value="{{ $val('why_us_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">features_badge_text</label>
-                        <input type="text" name="features_badge_text" value="{{ $val('features_badge_text') }}" class="{{ $inputClass }}">
+                        <label class="{{ $labelClass }}">why_us_sub_title</label>
+                        <textarea name="why_us_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('why_us_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -248,8 +267,8 @@
                         <input type="text" name="testimonials_title" value="{{ $val('testimonials_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">testimonials_sup_title</label>
-                        <textarea name="testimonials_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('testimonials_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">testimonials_sub_title</label>
+                        <textarea name="testimonials_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('testimonials_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -262,8 +281,8 @@
                         <input type="text" name="pricing_title" value="{{ $val('pricing_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="{{ $labelClass }}">pricing_sup_title</label>
-                        <textarea name="pricing_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('pricing_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">pricing_sub_title</label>
+                        <textarea name="pricing_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('pricing_sub_title') }}</textarea>
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">pricing_btn_text</label>
@@ -284,8 +303,8 @@
                         <input type="text" name="faq_title" value="{{ $val('faq_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">faq_sup_title</label>
-                        <textarea name="faq_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('faq_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">faq_sub_title</label>
+                        <textarea name="faq_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('faq_sub_title') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -298,8 +317,8 @@
                         <input type="text" name="cta_title" value="{{ $val('cta_title') }}" class="{{ $inputClass }}">
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="{{ $labelClass }}">cta_sup_title</label>
-                        <textarea name="cta_sup_title" rows="2" class="{{ $inputClass }}">{{ $val('cta_sup_title') }}</textarea>
+                        <label class="{{ $labelClass }}">cta_sub_title</label>
+                        <textarea name="cta_sub_title" rows="2" class="{{ $inputClass }}">{{ $val('cta_sub_title') }}</textarea>
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">cta_btn1_text</label>
@@ -321,10 +340,33 @@
             </div>
 
             <div x-show="tab === 'footer'" x-cloak class="{{ $cardClass }} space-y-6">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Footer</h3>
+                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Footer & Social</h3>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 1</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Brand & About</p>
+                    <p class="text-xs text-mist-500">الشعار يُدار من تبويب «الموقع» (<code class="text-emerald-600">site_logo</code>).</p>
+                    <div>
+                        <label class="{{ $labelClass }}">footer_description</label>
+                        <textarea name="footer_description" rows="3" class="{{ $inputClass }}">{{ $val('footer_description') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Newsletter</p>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="{{ $labelClass }}">footer_newsletter_title</label>
+                            <input type="text" name="footer_newsletter_title" value="{{ $val('footer_newsletter_title') }}" class="{{ $inputClass }}">
+                        </div>
+                        <div>
+                            <label class="{{ $labelClass }}">footer_newsletter_btn_text</label>
+                            <input type="text" name="footer_newsletter_btn_text" value="{{ $val('footer_newsletter_btn_text') }}" class="{{ $inputClass }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 1 — المنتج</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_title1</label>
                         <input type="text" name="footer_title1" value="{{ $val('footer_title1') }}" class="{{ $inputClass }}">
@@ -344,7 +386,7 @@
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 2</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 2 — الشركة</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_title2</label>
                         <input type="text" name="footer_title2" value="{{ $val('footer_title2') }}" class="{{ $inputClass }}">
@@ -364,7 +406,7 @@
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 3</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 3 — القانونية</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_title3</label>
                         <input type="text" name="footer_title3" value="{{ $val('footer_title3') }}" class="{{ $inputClass }}">
@@ -466,4 +508,88 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+            document.querySelectorAll('.setting-image-delete').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const field = button.closest('.setting-image-field');
+                    const preview = field?.querySelector('[data-preview-wrapper]');
+                    const fileInput = field?.querySelector('[data-file-input]');
+                    const deleteUrl = button.dataset.deleteUrl;
+
+                    if (! field || ! deleteUrl) {
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: 'هل أنت أثق من حذف الصورة؟',
+                        text: 'سيتم حذف الملف نهائياً والعودة إلى الشعار/الأيقونة الافتراضية.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'نعم، احذف',
+                        cancelButtonText: 'إلغاء',
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#64748b',
+                        reverseButtons: true,
+                    }).then(function (result) {
+                        if (! result.isConfirmed) {
+                            return;
+                        }
+
+                        fetch(deleteUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json',
+                            },
+                        })
+                            .then(function (response) {
+                                if (! response.ok) {
+                                    throw new Error('Delete failed');
+                                }
+
+                                return response.json();
+                            })
+                            .then(function (data) {
+                                if (! data.success) {
+                                    throw new Error('Delete failed');
+                                }
+
+                                if (preview) {
+                                    preview.classList.add('opacity-0');
+                                    window.setTimeout(function () {
+                                        preview.remove();
+                                    }, 300);
+                                }
+
+                                if (fileInput) {
+                                    fileInput.value = '';
+                                }
+
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'تم حذف الصورة بنجاح',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                });
+                            })
+                            .catch(function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'تعذّر حذف الصورة',
+                                    text: 'حاول مرة أخرى.',
+                                    confirmButtonColor: '#4edea3',
+                                });
+                            });
+                    });
+                });
+            });
+        });
+    </script>
 @endsection
