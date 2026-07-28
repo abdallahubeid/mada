@@ -90,7 +90,7 @@
             </form>
         </div>
 
-        <div class="overflow-x-auto overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="w-full overflow-x-auto overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
             <table class="min-w-full table-fixed divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>

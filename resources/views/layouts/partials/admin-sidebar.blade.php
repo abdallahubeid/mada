@@ -109,7 +109,11 @@
     ];
 @endphp
 
-{{-- Mobile scrim --}}
+{{--
+    Off-canvas drawer below lg. Root cause of prior overlay: `end-0` + `translate-x-full`
+    in RTL moved the closed sidebar ONTO the canvas instead of off-screen.
+    Sidebar docks at inline-start (right in RTL). Closed = -translate-x-full / rtl:translate-x-full.
+--}}
 <div
     x-show="sidebarOpen"
     x-cloak
@@ -119,25 +123,64 @@
     x-transition:leave="transition ease-in duration-200"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    @click="sidebarOpen = false"
-    class="fixed inset-0 z-30 bg-ink-950/60 lg:hidden"
+    @click="closeSidebarDrawer()"
+    class="fixed inset-0 z-40 bg-ink-950/60 lg:hidden"
+    aria-hidden="true"
 ></div>
 
 <aside
+    id="admin-sidebar"
     :class="{
-        'translate-x-0': sidebarOpen,
-        'translate-x-full lg:translate-x-0': ! sidebarOpen,
+        'translate-x-0 shadow-2xl pointer-events-auto': sidebarOpen,
+        '-translate-x-full rtl:translate-x-full max-lg:pointer-events-none': ! sidebarOpen,
         'lg:w-20': sidebarCollapsed,
         'lg:w-64': ! sidebarCollapsed,
     }"
-    class="fixed inset-y-0 end-0 z-40 flex w-64 shrink-0 translate-x-full flex-col border-s border-mist-200 bg-white transition-all duration-300 ease-out lg:static lg:end-auto lg:start-0 lg:translate-x-0 dark:border-ink-700 dark:bg-ink-900"
+    :aria-hidden="(!sidebarOpen).toString()"
+    class="fixed inset-y-0 start-0 z-50 flex w-64 max-w-[min(16rem,85vw)] shrink-0 -translate-x-full flex-col border-e border-mist-200 bg-white transition-transform duration-300 ease-out rtl:translate-x-full lg:static lg:z-auto lg:max-w-none lg:translate-x-0 lg:pointer-events-auto lg:shadow-none lg:rtl:translate-x-0 dark:border-ink-700 dark:bg-ink-900"
+    role="navigation"
+    aria-label="قائمة لوحة التحكم"
 >
+    @php
+        $adminLogoUrl = \App\Models\Setting::assetUrl($settings['site_logo'] ?? null);
+    @endphp
     <div class="flex h-16 shrink-0 items-center gap-2 border-b border-mist-200 px-6 dark:border-ink-700/70" :class="sidebarCollapsed && 'lg:justify-center lg:px-0'">
-        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400 font-display text-sm font-bold text-emerald-900 shadow-glow">V</span>
-        <div class="leading-tight" x-show="! sidebarCollapsed">
-            <span class="block font-display text-sm font-bold text-ink-900 dark:text-ink-50">Veyra</span>
-            <span class="block text-[10px] font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
-        </div>
+        <a
+            href="{{ route('landing') }}"
+            class="flex min-w-0 items-center gap-2"
+            :class="sidebarCollapsed && 'lg:justify-center'"
+            title="الصفحة الرئيسية"
+            aria-label="الصفحة الرئيسية — Veyra ERP"
+            @click="closeSidebarDrawer()"
+        >
+            @if ($adminLogoUrl)
+                <img
+                    src="{{ $adminLogoUrl }}"
+                    alt="Veyra ERP"
+                    class="h-8 max-h-8 w-auto max-w-[140px] shrink-0 object-contain object-start"
+                    :class="sidebarCollapsed && 'lg:max-w-8'"
+                >
+                <div class="leading-tight" x-show="! sidebarCollapsed">
+                    <span class="block text-[10px] font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
+                </div>
+            @else
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400 font-display text-sm font-bold text-emerald-900 shadow-glow">V</span>
+                <div class="leading-tight" x-show="! sidebarCollapsed">
+                    <span class="block font-display text-sm font-bold text-ink-900 dark:text-ink-50">Veyra</span>
+                    <span class="block text-[10px] font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
+                </div>
+            @endif
+        </a>
+        <button
+            type="button"
+            @click="closeSidebarDrawer()"
+            class="ms-auto rounded-lg p-1.5 text-mist-500 transition hover:bg-mist-100 lg:hidden dark:text-mist-400 dark:hover:bg-ink-800"
+            aria-label="إغلاق القائمة"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </button>
     </div>
 
     <nav class="flex-1 space-y-6 overflow-y-auto px-3 py-6">
@@ -201,6 +244,7 @@
                                                 <li>
                                                     <a
                                                         href="{{ route($child['route']) }}"
+                                                        @click="closeSidebarDrawer()"
                                                         @class([
                                                             'block rounded-lg px-3 py-1.5 text-sm transition duration-200',
                                                             'bg-emerald-400/10 font-semibold text-emerald-600 dark:text-emerald-400' => $childIsActive,
@@ -208,13 +252,13 @@
                                                         ])
                                                     >{{ $child['label'] }}</a>
                                                 </li>
-                                            @endif
-                                        @endforeach
+                                            @endif                                        @endforeach
                                     </ul>
                                 </div>
                             @elseif ($hasRoute)
                                 <a
                                     href="{{ route($item['route']) }}"
+                                    @click="closeSidebarDrawer()"
                                     x-bind:title="sidebarCollapsed ? @js($item['label']) : null"
                                     :class="sidebarCollapsed && 'lg:justify-center'"
                                     @class([

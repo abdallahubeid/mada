@@ -37,7 +37,18 @@
 
 These are the only non-GET public routes. No inline closures — every route points to a dedicated controller (project convention).
 
-### 2.2 Deferred (post-MVP)
+### 2.3 Sticky top nav (locked order) — 2026-07-28
+
+Public `<x-marketing.nav>` link order:
+
+1. الصفحة الرئيسية → `/` (`landing`)
+2. من نحن → `/about` (`marketing.about`)
+3. الوحدات → `/#modules` (landing modules section)
+4. المميزات → `/features` (`marketing.features`)
+5. الأسعار → `/pricing` (`marketing.pricing`)
+6. تواصل معنا → `/contact` (`marketing.contact`)
+
+**لوحة التحكم** (`admin.dashboard`) appears in the actions/mobile menu **only** when `auth()->user()->canAccessPlatformConsole()` is true (platform operator: `tenant_id = null`, or Spatie admin roles). Guests and tenant users never see it.
 
 Request-a-Demo (standalone page — folded into Contact for now), Changelog / Product Updates, Blog / Resources, Integrations (mentioned inside Features until real), Careers, standalone Case Studies, external Status page, marketing locale switcher. Reserve route namespaces where sensible; do not build thin placeholder pages.
 

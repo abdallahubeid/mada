@@ -31,6 +31,7 @@
             @click="sidebarOpen = true"
             class="rounded-lg p-1.5 text-mist-500 transition duration-200 ease-in-out hover:bg-mist-100 active:scale-90 lg:hidden dark:text-mist-400 dark:hover:bg-ink-800"
             aria-label="فتح القائمة"
+            :aria-expanded="sidebarOpen.toString()"
         >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

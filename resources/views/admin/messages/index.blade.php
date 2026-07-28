@@ -64,7 +64,7 @@
         </div>
 
         <div class="mt-4 flex flex-col overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm lg:h-[calc(100dvh-15rem)] lg:flex-row dark:border-ink-600 dark:bg-ink-800">
-            <div class="flex shrink-0 flex-col border-b border-mist-200 lg:w-80 lg:border-b-0 lg:border-e dark:border-ink-700">
+            <div class="flex max-h-[42vh] shrink-0 flex-col border-b border-mist-200 lg:max-h-none lg:w-80 lg:border-b-0 lg:border-e dark:border-ink-700">
                 <div class="border-b border-mist-100 p-3 dark:border-ink-700">
                     <form method="GET" action="{{ route('admin.messages') }}" class="relative">
                         <input type="hidden" name="status" value="{{ $activeStatus }}">

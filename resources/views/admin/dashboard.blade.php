@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3 xl:grid-cols-5">
         <x-admin.stat-card
             :label="$metrics['total']['label']"
             :value="$metrics['total']['value']"

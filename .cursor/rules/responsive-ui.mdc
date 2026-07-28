@@ -1,0 +1,36 @@
+---
+description: Mandatory responsive UI across Admin Console and public Landing pages (desktop, tablet, mobile, split-screen).
+alwaysApply: true
+---
+
+# Responsive UI (Mandatory)
+
+Every UI view, component, table, and layout in Veyra MUST be fully usable from ~360px through desktop, including browser split-screen widths.
+
+## Admin shell / sidebars
+
+- Below **`lg`** (`< 1024px`, including typical split-screen): the sidebar is **fixed + off-canvas only**. It must **not** occupy layout space and must **not** overlay content when closed.
+- Closed drawer (RTL-safe): dock at `start-0`, hide with `-translate-x-full rtl:translate-x-full` (never bare `translate-x-full` on `end-0` — that slides the panel onto the canvas in Arabic RTL).
+- Open drawer: `translate-x-0` + backdrop; close via hamburger/backdrop/Escape/nav click.
+- At **`lg` and above**: `lg:static lg:translate-x-0 lg:rtl:translate-x-0` so the sidebar is pinned in the flex row without transforms/overlays.
+- Main column: `w-full min-w-0 flex-1`; `<main>` scrolls (`overflow-y-auto overflow-x-hidden`).
+
+## Data tables
+
+- Wrap every data `<table>` in `overflow-x-auto w-full` (optionally inside a rounded card).
+- Prefer `min-w-full` / `min-w-max` on the table so columns scroll instead of clipping.
+
+## Grids & spacing
+
+- Base: `grid-cols-1`. Multi-column only from `lg:` (or `min-[900px]:`) upward for dense admin/marketing strips so split-screen (~900px) stacks cleanly.
+- Avoid bare `grid-cols-2` / `grid-cols-3` without a single-column mobile/split fallback.
+- Prefer logical properties (`ps`/`pe`/`start`/`end`) for RTL.
+
+## Marketing / public nav
+
+- Desktop nav may hide below `lg`; mobile menu must expose the same destinations.
+- Section grids must stack on small viewports; no horizontal page scroll from layouts.
+
+## Verification mindset
+
+When adding admin/marketing Blade, verify: closed drawer off-screen in RTL, `lg:static` pin, table `overflow-x-auto w-full`, and `grid-cols-1` base.

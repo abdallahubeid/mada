@@ -32,6 +32,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
 - **Soft deletes (mandatory):** All core tables/models must use `$table->softDeletes()` and the `SoftDeletes` trait. Default delete is soft; hard delete only via explicit `forceDelete()`. See `.cursor/rules/soft-deletes.mdc`.
+- **Responsive UI (mandatory):** Admin and marketing UIs must work from ~360px through desktop/split-screen. Sidebars off-canvas below `xl`; tables use `overflow-x-auto`. See `.cursor/rules/responsive-ui.mdc`.
 - **Documentation logging:** When implementing or changing schemas, models, controllers, routes, view layouts, or cross-cutting conventions (flash, pagination, disks, env keys), update the relevant `docs/*.md` files in the same change set. See `.cursor/rules/documentation-logging.mdc`.
 
 ## Verification Scripts

@@ -23,7 +23,7 @@
             <p class="mt-4 text-mist-400">{{ $settings['ai_sub_title'] ?? '' }}</p>
         </div>
 
-        <div class="mt-16 grid gap-6 sm:grid-cols-3">
+        <div class="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($aiFeatures as $feature)
                 <div class="relative rounded-2xl border border-ink-800 bg-ink-900/60 p-6">
                     <span class="absolute end-4 top-4 rounded-full bg-ink-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-mist-400">قريباً</span>

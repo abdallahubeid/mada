@@ -5,13 +5,16 @@
      * toggle. Links use final marketing paths; active state via request()->is().
      */
     $links = [
-        ['label' => 'المميزات', 'path' => '/features'],
-        ['label' => 'الحلول', 'path' => '/solutions'],
-        ['label' => 'الأسعار', 'path' => '/pricing'],
-        ['label' => 'الأمان', 'path' => '/security'],
-        ['label' => 'من نحن', 'path' => '/about'],
-        ['label' => 'تواصل معنا', 'path' => '/contact'],
+        ['label' => 'الصفحة الرئيسية', 'path' => '/', 'route' => 'landing'],
+        ['label' => 'من نحن', 'path' => '/about', 'route' => 'marketing.about'],
+        ['label' => 'الوحدات', 'path' => '/#modules', 'route' => null],
+        ['label' => 'المميزات', 'path' => '/features', 'route' => 'marketing.features'],
+        ['label' => 'الأسعار', 'path' => '/pricing', 'route' => 'marketing.pricing'],
+        ['label' => 'تواصل معنا', 'path' => '/contact', 'route' => 'marketing.contact'],
     ];
+
+    $showAdminDashboard = auth()->check()
+        && auth()->user()->canAccessPlatformConsole();
 @endphp
 
 <header
@@ -19,7 +22,7 @@
     class="sticky top-0 z-40 border-b border-mist-200/70 bg-white/80 backdrop-blur-md dark:border-ink-800 dark:bg-ink-900/80"
 >
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="/" class="flex shrink-0 items-center gap-2.5">
+        <a href="{{ route('landing') }}" class="flex shrink-0 items-center gap-2.5">
             @if ($logoUrl = \App\Models\Setting::assetUrl($settings['site_logo'] ?? null))
                 <img src="{{ $logoUrl }}" alt="Veyra ERP" class="h-10 max-h-10 w-auto max-w-[220px] shrink-0 object-contain object-start">
             @else
@@ -28,9 +31,13 @@
             @endif
         </a>
 
-        <nav class="hidden items-center gap-8 lg:flex">
+        <nav class="hidden items-center gap-8 lg:flex" aria-label="التنقّل الرئيسي">
             @foreach ($links as $link)
-                @php $active = request()->is(ltrim($link['path'], '/')); @endphp
+                @php
+                    $active = ($link['route'] ?? null)
+                        ? request()->routeIs($link['route'])
+                        : false;
+                @endphp
                 <a
                     href="{{ $link['path'] }}"
                     @class([
@@ -57,6 +64,15 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
                 </svg>
             </button>
+
+            @if ($showAdminDashboard)
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    class="text-sm font-semibold text-emerald-600 transition duration-200 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                >
+                    لوحة التحكم
+                </a>
+            @endif
 
             <a href="{{ route('login') }}" class="text-sm font-medium text-ink-600 transition duration-200 hover:text-emerald-600 dark:text-mist-300 dark:hover:text-emerald-400">
                 تسجيل الدخول
@@ -93,10 +109,13 @@
         x-transition:leave-end="opacity-0 -translate-y-2"
         class="border-t border-mist-200 bg-white px-4 py-4 lg:hidden dark:border-ink-800 dark:bg-ink-900"
     >
-        <nav class="flex flex-col gap-1">
+        <nav class="flex flex-col gap-1" aria-label="التنقّل للجوال">
             @foreach ($links as $link)
                 <a href="{{ $link['path'] }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">{{ $link['label'] }}</a>
             @endforeach
+            @if ($showAdminDashboard)
+                <a href="{{ route('admin.dashboard') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-emerald-600 hover:bg-mist-100 dark:text-emerald-400 dark:hover:bg-ink-800">لوحة التحكم</a>
+            @endif
             <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">تسجيل الدخول</a>
             <a href="{{ route('register') }}" class="mt-1 rounded-full bg-emerald-500 px-5 py-2.5 text-center text-sm font-semibold text-ink-950 shadow-glow">ابدأ التجربة المجانية</a>
         </nav>

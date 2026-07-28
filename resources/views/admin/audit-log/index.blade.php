@@ -71,7 +71,7 @@
 
         {{-- Audit table --}}
         <div class="mt-4 overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
-            <div class="overflow-x-auto">
+            <div class="w-full overflow-x-auto">
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs uppercase tracking-wide text-mist-500 dark:border-ink-700 dark:text-mist-400">

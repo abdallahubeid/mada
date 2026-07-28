@@ -122,4 +122,26 @@ SVG;
             ? 'مشرف عام - Super Admin'
             : 'مستخدم';
     }
+
+    /**
+     * Whether this user may open the Super Admin / Platform Console (`/admin/*`).
+     *
+     * Platform operators have `tenant_id = null` (Super Admin / Support Admin).
+     * Named admin roles are also accepted for future Spatie-backed operator accounts.
+     */
+    public function canAccessPlatformConsole(): bool
+    {
+        if ($this->tenant_id === null) {
+            return true;
+        }
+
+        return $this->hasAnyRole([
+            'Super Admin',
+            'Support Admin',
+            'Admin',
+            'super_admin',
+            'support_admin',
+            'admin',
+        ]);
+    }
 }

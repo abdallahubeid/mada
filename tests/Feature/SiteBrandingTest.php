@@ -54,3 +54,11 @@ test('the admin layout renders the dynamic favicon from settings', function () {
         ->assertOk()
         ->assertSee(Setting::assetUrl($faviconPath), false);
 });
+
+test('the admin layout falls back to default favicon when settings are empty', function () {
+    $this->seed(SettingSeeder::class);
+
+    $this->get(route('admin.dashboard'))
+        ->assertOk()
+        ->assertSee(asset('favicon.svg'), false);
+});

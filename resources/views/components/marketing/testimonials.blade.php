@@ -16,7 +16,7 @@
             :subtitle="$settings['testimonials_sub_title'] ?? ''"
         />
 
-        <div class="mt-16 grid gap-6 lg:grid-cols-3">
+        <div class="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($testimonials as $testimonial)
                 @php
                     $avatar = $testimonial->relationLoaded('images')

@@ -109,6 +109,7 @@ Each subscription Plan defines feature limits (e.g., max employees, max projects
 | Queues | Tenant-context-safe job payloads (NFR-08, see §1.2). |
 | Tenancy evolution | Resolver abstracted for a future hybrid dedicated-DB model without app rewrite (NFR-09, see §1.4). |
 | Deletion | **All core business tables/models use SoftDeletes (`deleted_at`).** Hard delete is forbidden unless an explicit `forceDelete()` is intentional (e.g. media replacement). Financial/HR records remain soft-delete-only per NFR-10; see `.cursor/rules/soft-deletes.mdc`. |
+| Responsive UI | **All Admin Console and public Landing UIs must be fully responsive** (desktop, tablet, mobile, and split-screen down to ~360px). Admin sidebar is off-canvas below `lg` with RTL-safe `-translate-x-full rtl:translate-x-full` (docked at `start-0`); pinned via `lg:static` above. Data tables use `overflow-x-auto w-full`. See `.cursor/rules/responsive-ui.mdc`. |
 | Payroll immutability | Locked/approved payroll runs cannot be edited; corrections are adjustment entries in a subsequent run (NFR-11, see `MODULES.md` BR-603). |
 
 ## 7. Cross-Module Communication

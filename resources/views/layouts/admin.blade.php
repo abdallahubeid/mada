@@ -28,7 +28,7 @@
     @livewireStyles
 </head>
 <body
-    class="h-full bg-neutral-50 font-sans text-ink-600 antialiased dark:bg-ink-950 dark:text-mist-300"
+    class="h-full overflow-hidden bg-neutral-50 font-sans text-ink-600 antialiased dark:bg-ink-950 dark:text-mist-300"
     x-data="{
         sidebarOpen: false,
         profileOpen: false,
@@ -38,12 +38,25 @@
             this.sidebarCollapsed = ! this.sidebarCollapsed;
             localStorage.setItem('veyra-admin-sidebar-collapsed', this.sidebarCollapsed);
         },
+        closeSidebarDrawer() {
+            this.sidebarOpen = false;
+        },
+        init() {
+            this._onResize = () => {
+                if (window.matchMedia('(min-width: 1024px)').matches) {
+                    this.sidebarOpen = false;
+                }
+            };
+            window.addEventListener('resize', this._onResize);
+            this.$cleanup?.(() => window.removeEventListener('resize', this._onResize));
+        },
     }"
+    @keydown.escape.window="closeSidebarDrawer()"
 >
-    <div class="flex h-full">
+    <div class="flex h-full min-h-0 w-full">
         @include('layouts.partials.admin-sidebar')
 
-        <div class="flex min-w-0 flex-1 flex-col">
+        <div class="flex min-h-0 w-full min-w-0 flex-1 flex-col">
             @include('layouts.partials.admin-topbar')
 
             {{--
@@ -68,7 +81,7 @@
                 </button>
             </div>
 
-            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <main class="min-h-0 w-full min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-3 sm:p-6 lg:p-8">
                 @if (session('status'))
                     <div class="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-sm font-medium text-emerald-700 dark:text-emerald-300">
                         {{ session('status') }}

@@ -486,3 +486,24 @@ Mandatory SoftDeletes on all core Eloquent models/tables. Hard delete only via e
 | Architecture | `docs/ARCHITECTURE.md` §6 Deletion row |
 | Tests | `tests/Feature/SoftDeletesConventionTest.php` |
 
+### 1.5u Public navbar order + admin logo branding — 2026-07-28
+
+| Area | Notes |
+|---|---|
+| Public nav | Locked order: Home → About → Modules (`/#modules`) → Features → Pricing → Contact |
+| Dashboard link | `لوحة التحكم` only when `User::canAccessPlatformConsole()` (`tenant_id = null` or admin Spatie roles) |
+| Admin sidebar brand | `site_logo` from settings with lettermark fallback; wraps `route('landing')` |
+| Tests | `tests/Feature/MarketingNavbarAndAdminBrandingTest.php` |
+| Docs | `docs/MARKETING.md` §2.3 |
+
+### 1.5v Responsive admin shell + UI audit — 2026-07-28
+
+| Area | Notes |
+|---|---|
+| Root cause | Closed drawer used `end-0` + `translate-x-full` in RTL, which slid the sidebar **onto** the canvas. Fixed: `start-0` + `-translate-x-full rtl:translate-x-full`; open = `translate-x-0`. |
+| Breakpoint | Off-canvas below `lg` (`<1024px`); pinned `lg:static lg:translate-x-0 lg:rtl:translate-x-0`. |
+| Main column | `w-full min-w-0 flex-1`; closed drawer `pointer-events-none` so it cannot intercept clicks. |
+| Tables | `overflow-x-auto w-full` wrappers on CMS/admin tables. |
+| AI rule | `.cursor/rules/responsive-ui.mdc` |
+| Tests | `tests/Feature/AdminResponsiveLayoutTest.php` |
+

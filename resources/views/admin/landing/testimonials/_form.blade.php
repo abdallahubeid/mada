@@ -36,7 +36,7 @@
             <input type="number" min="1" max="5" name="rate" value="{{ old('rate', $testimonial->rate) }}" class="{{ $inputClass }}">
         </div>
     </div>
-    <div class="grid grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
             <label class="{{ $labelClass }}">ترتيب العرض</label>
             <input type="number" name="sort_order" value="{{ old('sort_order', $testimonial->sort_order) }}" class="{{ $inputClass }}">

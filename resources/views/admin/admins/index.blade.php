@@ -102,7 +102,7 @@
         </div>
 
         {{-- Metrics --}}
-        <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($metrics as $metric)
                 <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <p class="text-sm text-mist-500 dark:text-mist-400">{{ $metric['label'] }}</p>
@@ -112,8 +112,8 @@
         </div>
 
         {{-- Admins table --}}
-        <div class="mt-4 overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
-            <div class="overflow-x-auto">
+        <div class="mt-4 overflow-x-auto w-full rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="w-full overflow-x-auto">
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs uppercase tracking-wide text-mist-500 dark:border-ink-700 dark:text-mist-400">

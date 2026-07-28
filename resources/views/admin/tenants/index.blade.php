@@ -31,7 +31,7 @@
         </div>
 
         {{-- Status lifecycle tabs --}}
-        <div class="mt-6 overflow-x-auto">
+        <div class="mt-6 w-full overflow-x-auto">
             <div class="flex min-w-max items-center gap-1 border-b border-mist-200 dark:border-ink-700">
                 @foreach ($tabs as $key => $label)
                     @php $isActive = $activeTab === $key; @endphp
@@ -75,7 +75,7 @@
 
         {{-- Tenants table --}}
         <div class="mt-4 overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
-            <div class="overflow-x-auto">
+            <div class="w-full overflow-x-auto">
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs uppercase tracking-wide text-mist-500 dark:border-ink-700 dark:text-mist-400">

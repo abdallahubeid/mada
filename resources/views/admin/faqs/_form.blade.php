@@ -21,7 +21,7 @@
         <label class="{{ $labelClass }}">الإجابة</label>
         <textarea name="answer" rows="5" class="{{ $inputClass }}" required>{{ old('answer', $faq->answer) }}</textarea>
     </div>
-    <div class="grid grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
             <label class="{{ $labelClass }}">ترتيب العرض</label>
             <input type="number" name="sort_order" value="{{ old('sort_order', $faq->sort_order) }}" class="{{ $inputClass }}">

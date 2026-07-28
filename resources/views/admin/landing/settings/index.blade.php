@@ -40,7 +40,7 @@
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة محتوى الصفحة عبر مفاتيح فريدة لكل قسم.</p>
         </div>
 
-        <div class="mt-6 overflow-x-auto">
+        <div class="mt-6 w-full overflow-x-auto">
             <div class="flex min-w-max items-center gap-1 border-b border-mist-200 dark:border-ink-700">
                 @foreach ($tabs as $key => $label)
                     <button

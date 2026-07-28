@@ -17,7 +17,7 @@
         <a href="{{ route('admin.testimonials.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">إضافة شهادة</a>
     </div>
 
-    <div class="mt-6 overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="mt-6 overflow-x-auto w-full rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
         <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
             <thead class="bg-mist-50 dark:bg-ink-900">
                 <tr>

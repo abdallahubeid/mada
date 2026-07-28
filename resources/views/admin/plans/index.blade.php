@@ -133,7 +133,7 @@
                         <label class="{{ $labelClass }}">الوصف القصير</label>
                         <input type="text" name="tagline" x-model="form.tagline" class="{{ $inputClass }}">
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                             <label class="{{ $labelClass }}">السعر الشهري</label>
                             <input type="number" step="0.01" min="0" name="price_monthly" x-model="form.price_monthly" class="{{ $inputClass }}">
@@ -143,7 +143,7 @@
                             <input type="number" step="0.01" min="0" name="price_yearly" x-model="form.price_yearly" class="{{ $inputClass }}">
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                             <label class="{{ $labelClass }}">العملة</label>
                             <input type="text" dir="ltr" name="currency" x-model="form.currency" maxlength="3" class="{{ $inputClass }}">
@@ -153,7 +153,7 @@
                             <input type="number" name="sort_order" x-model="form.sort_order" class="{{ $inputClass }}">
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                             <label class="{{ $labelClass }}">نص الزر</label>
                             <input type="text" name="cta_label" x-model="form.cta_label" class="{{ $inputClass }}">

@@ -52,7 +52,7 @@
                 </a>
             </div>
 
-            <div class="mt-12 grid grid-cols-3 gap-6 border-t border-mist-200 pt-8 dark:border-ink-800">
+            <div class="mt-12 grid grid-cols-1 gap-6 border-t border-mist-200 pt-8 sm:grid-cols-3 dark:border-ink-800">
                 @foreach ($metrics as $metric)
                     <div>
                         <p class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">
