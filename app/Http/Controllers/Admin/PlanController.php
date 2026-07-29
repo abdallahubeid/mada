@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StorePlanRequest;
 use App\Http\Requests\Admin\UpdatePlanRequest;
 use App\Models\Plan;
 use App\Models\PlanFeature;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use App\Services\Platform\PlatformAuditor;
 use Illuminate\Contracts\View\View;
@@ -73,9 +74,9 @@ class PlanController extends Controller
         MarketingCache::flush();
         $auditor->log('plan.created', $plan);
 
-        return redirect()
-            ->route('admin.plans')
-            ->with('status', 'تم إنشاء الخطة.');
+        flash()->success('تم إنشاء الخطة بنجاح.');
+
+        return redirect()->route('admin.plans');
     }
 
     public function update(UpdatePlanRequest $request, Plan $plan, PlatformAuditor $auditor): RedirectResponse
@@ -88,9 +89,9 @@ class PlanController extends Controller
         MarketingCache::flush();
         $auditor->log('plan.updated', $plan);
 
-        return redirect()
-            ->route('admin.plans')
-            ->with('status', 'تم حفظ الخطة.');
+        flash()->info('تم تحديث الخطة بنجاح.');
+
+        return redirect()->route('admin.plans');
     }
 
     public function destroy(Plan $plan, PlatformAuditor $auditor): RedirectResponse
@@ -101,9 +102,9 @@ class PlanController extends Controller
         MarketingCache::flush();
         $auditor->log('plan.archived', $plan);
 
-        return redirect()
-            ->route('admin.plans')
-            ->with('status', 'تم أرشفة الخطة.');
+        app(TrashManager::class)->flashSoftDeleted('تم أرشفة الخطة بنجاح.', 'plans', $plan);
+
+        return redirect()->route('admin.plans');
     }
 
     private function syncFeatures(Plan $plan, string $featuresText): void

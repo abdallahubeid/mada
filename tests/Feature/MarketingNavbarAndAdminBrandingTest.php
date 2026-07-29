@@ -50,10 +50,9 @@ test('guests and tenant users never see the admin dashboard navbar link', functi
 });
 
 test('platform admins see the dashboard link on the public navbar', function () {
-    $admin = User::factory()->create(['tenant_id' => null]);
+    actingAsPlatformOperator();
 
-    $this->actingAs($admin)
-        ->get(route('landing'))
+    $this->get(route('landing'))
         ->assertOk()
         ->assertSee('href="'.route('admin.dashboard').'"', false)
         ->assertSee('لوحة التحكم', false);
@@ -61,6 +60,7 @@ test('platform admins see the dashboard link on the public navbar', function () 
 
 test('admin sidebar uses site_logo when set and links to the public home route', function () {
     Storage::fake('custom');
+    actingAsPlatformOperator();
 
     $logoPath = UploadedFile::fake()->create('logo.png', 10, 'image/png')->store('uploads/settings', 'custom');
     Setting::query()->updateOrCreate(['key' => 'site_logo'], ['value' => $logoPath]);
@@ -73,6 +73,7 @@ test('admin sidebar uses site_logo when set and links to the public home route',
 });
 
 test('admin sidebar falls back to the default brand mark when site_logo is empty', function () {
+    actingAsPlatformOperator();
     $this->seed(SettingSeeder::class);
 
     Setting::query()->where('key', 'site_logo')->update(['value' => null]);

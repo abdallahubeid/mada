@@ -4,6 +4,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('admin layout hides the sidebar off-canvas with RTL-safe transforms below lg', function () {
     $html = $this->get(route('admin.dashboard'))
         ->assertOk()

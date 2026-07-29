@@ -154,8 +154,8 @@ class TenantController extends Controller
             'show_on_marketing' => $record->show_on_marketing,
         ]);
 
-        return redirect()
-            ->route('admin.tenants.show', $record->slug)
-            ->with('status', 'تم حفظ إعدادات التسويق للمستأجر.');
+        flash()->info('تم تحديث إعدادات التسويق للمستأجر بنجاح.');
+
+        return redirect()->route('admin.tenants.show', $record->slug);
     }
 }

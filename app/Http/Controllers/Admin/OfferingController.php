@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Offering;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -100,7 +101,7 @@ class OfferingController extends Controller
         $offering->delete();
 
         MarketingCache::flush();
-        flash()->warning('تم حذف العرض بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف العرض بنجاح.', 'offerings', $offering);
 
         return redirect()->route('admin.offerings.index');
     }

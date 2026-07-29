@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\Auth;
 /**
  * Unified login for Super Admin, CEO/Owner, and Employees
  * (docs/USER_JOURNEYS.md). Post-authentication redirects branch on the
- * account's onboarding progress: unverified emails go back to the
- * verification notice, verified users on a not-yet-active tenant land on
- * the pending setup screen, and everyone else reaches the tenant app.
+ * account's onboarding progress: platform operators go to the admin console,
+ * unverified emails go back to the verification notice, verified users on a
+ * not-yet-active tenant land on the pending setup screen, and everyone else
+ * reaches the tenant app.
  */
 class LoginController extends Controller
 {
@@ -35,6 +36,10 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
+
+        if ($user->canAccessPlatformConsole()) {
+            return redirect()->intended(route($user->preferredAdminHomeRoute()));
+        }
 
         if (! $user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');

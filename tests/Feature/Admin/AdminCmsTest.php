@@ -6,6 +6,9 @@ use App\Models\Plan;
 use App\Models\Testimonial;
 use App\Services\Marketing\MarketingCache;
 use App\Services\Marketing\MarketingContent;
+use Database\Seeders\FaqSeeder;
+use Database\Seeders\PlanSeeder;
+use Database\Seeders\TestimonialSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
@@ -14,10 +17,14 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
+beforeEach(function () {
     $this->seed([
-        \Database\Seeders\PlanSeeder::class,
-        \Database\Seeders\FaqSeeder::class,
-        \Database\Seeders\TestimonialSeeder::class,
+        PlanSeeder::class,
+        FaqSeeder::class,
+        TestimonialSeeder::class,
     ]);
 });
 

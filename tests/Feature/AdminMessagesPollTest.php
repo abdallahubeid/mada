@@ -6,6 +6,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('messages poll returns thread list signature and counts', function () {
     $thread = SupportThread::factory()->create([
         'status' => SupportThread::STATUS_OPEN,

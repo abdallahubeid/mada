@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('platform notification publisher persists and broadcasts urgent alerts', function () {
     Event::fake([PlatformNotificationCreated::class]);
 
@@ -130,6 +134,7 @@ test('platform notification created event broadcasts on private admin channel', 
 });
 
 test('failed login streak publishes a security notification', function () {
+    auth()->logout();
     Event::fake([PlatformNotificationCreated::class]);
 
     User::factory()->create([

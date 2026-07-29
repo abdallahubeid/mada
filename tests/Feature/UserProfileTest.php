@@ -11,15 +11,14 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 test('profile page renders authenticated user details', function () {
-    $user = User::factory()->create([
+    actingAsPlatformOperator(attributes: [
         'name' => 'سارة المطيري',
         'email' => 'sara@veyra.test',
         'phone' => '+966501234567',
         'job_title' => 'مديرة تقنية',
     ]);
 
-    $this->actingAs($user)
-        ->get(route('admin.profile'))
+    $this->get(route('admin.profile'))
         ->assertOk()
         ->assertSee('سارة المطيري', false)
         ->assertSee('sara@veyra.test', false)
@@ -32,13 +31,12 @@ test('profile page renders authenticated user details', function () {
 });
 
 test('verified badge is placed beside the email label not inside the input', function () {
-    $user = User::factory()->create([
+    actingAsPlatformOperator(attributes: [
         'email' => 'owner@veyra.test',
         'email_verified_at' => now(),
     ]);
 
-    $html = $this->actingAs($user)
-        ->get(route('admin.profile'))
+    $html = $this->get(route('admin.profile'))
         ->assertOk()
         ->assertSee('owner@veyra.test', false)
         ->assertSee('متحقق منه', false)
@@ -52,18 +50,17 @@ test('verified badge is placed beside the email label not inside the input', fun
 });
 
 test('profile update persists personal information', function () {
-    $user = User::factory()->create([
+    $user = actingAsPlatformOperator(attributes: [
         'name' => 'Old Name',
         'email' => 'old@veyra.test',
     ]);
 
-    $this->actingAs($user)
-        ->put(route('admin.profile.update'), [
-            'name' => 'New Name',
-            'email' => 'new@veyra.test',
-            'phone' => '+966509998877',
-            'job_title' => 'Product Manager',
-        ])
+    $this->put(route('admin.profile.update'), [
+        'name' => 'New Name',
+        'email' => 'new@veyra.test',
+        'phone' => '+966509998877',
+        'job_title' => 'Product Manager',
+    ])
         ->assertRedirect(route('admin.profile'));
 
     $user->refresh();
@@ -79,14 +76,13 @@ test('profile update persists personal information', function () {
 test('profile update creates polymorphic avatar image', function () {
     Storage::fake('custom');
 
-    $user = User::factory()->create();
+    $user = actingAsPlatformOperator();
 
-    $this->actingAs($user)
-        ->put(route('admin.profile.update'), [
-            'name' => $user->name,
-            'email' => $user->email,
-            'avatar' => UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg'),
-        ])
+    $this->put(route('admin.profile.update'), [
+        'name' => $user->name,
+        'email' => $user->email,
+        'avatar' => UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg'),
+    ])
         ->assertRedirect(route('admin.profile'));
 
     $user->refresh();
@@ -106,7 +102,7 @@ test('profile update creates polymorphic avatar image', function () {
 test('profile update replaces existing avatar and deletes old file', function () {
     Storage::fake('custom');
 
-    $user = User::factory()->create();
+    $user = actingAsPlatformOperator();
     $oldPath = 'user/avatar/old.png';
     Storage::disk('custom')->put($oldPath, 'old-avatar');
 
@@ -120,12 +116,11 @@ test('profile update replaces existing avatar and deletes old file', function ()
         'sort_order' => 0,
     ]);
 
-    $this->actingAs($user)
-        ->put(route('admin.profile.update'), [
-            'name' => $user->name,
-            'email' => $user->email,
-            'avatar' => UploadedFile::fake()->create('new-avatar.png', 120, 'image/png'),
-        ])
+    $this->put(route('admin.profile.update'), [
+        'name' => $user->name,
+        'email' => $user->email,
+        'avatar' => UploadedFile::fake()->create('new-avatar.png', 120, 'image/png'),
+    ])
         ->assertRedirect(route('admin.profile'));
 
     $user->refresh();
@@ -139,12 +134,11 @@ test('profile update replaces existing avatar and deletes old file', function ()
 });
 
 test('profile password update requires current password and updates hash', function () {
-    $user = User::factory()->create([
-        'password' => Hash::make('password'),
+    $user = actingAsPlatformOperator(attributes: [
+        'password' => 'password',
     ]);
 
-    $this->actingAs($user)
-        ->from(route('admin.profile'))
+    $this->from(route('admin.profile'))
         ->put(route('admin.profile.update'), [
             'name' => $user->name,
             'email' => $user->email,
@@ -154,14 +148,13 @@ test('profile password update requires current password and updates hash', funct
         ->assertRedirect(route('admin.profile'))
         ->assertSessionHasErrors('current_password');
 
-    $this->actingAs($user)
-        ->put(route('admin.profile.update'), [
-            'name' => $user->name,
-            'email' => $user->email,
-            'current_password' => 'password',
-            'password' => 'NewPassword123!',
-            'password_confirmation' => 'NewPassword123!',
-        ])
+    $this->put(route('admin.profile.update'), [
+        'name' => $user->name,
+        'email' => $user->email,
+        'current_password' => 'password',
+        'password' => 'NewPassword123!',
+        'password_confirmation' => 'NewPassword123!',
+    ])
         ->assertRedirect(route('admin.profile'));
 
     expect(Hash::check('NewPassword123!', $user->fresh()->password))->toBeTrue();
@@ -170,7 +163,7 @@ test('profile password update requires current password and updates hash', funct
 test('profile page does not render raw avatar storage path as plain text', function () {
     Storage::fake('custom');
 
-    $user = User::factory()->create();
+    $user = actingAsPlatformOperator();
     $path = 'user/avatar/sample.png';
     Storage::disk('custom')->put($path, 'avatar-bytes');
 
@@ -190,8 +183,7 @@ test('profile page does not render raw avatar storage path as plain text', funct
     expect($user->avatar_url)->toBe($expectedUrl)
         ->and($user->avatar?->disk)->toBe('custom');
 
-    $html = $this->actingAs($user)
-        ->get(route('admin.profile'))
+    $html = $this->get(route('admin.profile'))
         ->assertOk()
         ->getContent();
 
@@ -203,7 +195,7 @@ test('profile page does not render raw avatar storage path as plain text', funct
 test('admin topbar renders the authenticated user avatar url', function () {
     Storage::fake('custom');
 
-    $user = User::factory()->create(['name' => 'Demo Owner']);
+    $user = actingAsPlatformOperator(attributes: ['name' => 'Demo Owner']);
     $path = 'user/avatar/topbar-avatar.jpg';
     Storage::disk('custom')->put($path, 'avatar-bytes');
 
@@ -219,8 +211,7 @@ test('admin topbar renders the authenticated user avatar url', function () {
 
     $avatarUrl = $user->fresh()->avatar_url;
 
-    $html = $this->actingAs($user)
-        ->get(route('admin.profile'))
+    $html = $this->get(route('admin.profile'))
         ->assertOk()
         ->assertSee('Demo Owner', false)
         ->getContent();

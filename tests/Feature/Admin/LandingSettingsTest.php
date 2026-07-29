@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('settings page renders landing cms form', function () {
     Setting::query()->create([
         'key' => 'hero_title',
@@ -37,7 +41,7 @@ test('settings update persists key value pairs and file uploads', function () {
         ->and(Setting::getValue('hero_badge_text'))->toBe('منصة SaaS')
         ->and(Setting::getValue('cta_title'))->toBe('ابدأ الآن')
         ->and(Setting::getValue('site_logo'))->not->toBeNull()
-        ->and(session('flasher.message'))->toBe('Settings Updated successfully')
+        ->and(session('flasher.message'))->toBe('تم تحديث الإعدادات بنجاح.')
         ->and(session('flasher.type'))->toBe('info');
 
     Storage::disk('custom')->assertExists(Setting::getValue('site_logo'));

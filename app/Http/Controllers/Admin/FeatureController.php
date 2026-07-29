@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Feature;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -100,7 +101,7 @@ class FeatureController extends Controller
         $feature->delete();
 
         MarketingCache::flush();
-        flash()->warning('تم حذف الميزة بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف الميزة بنجاح.', 'features', $feature);
 
         return redirect()->route('admin.features.index');
     }

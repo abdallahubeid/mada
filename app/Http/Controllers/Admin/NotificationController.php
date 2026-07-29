@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PlatformNotification;
 use App\Services\Admin\PlatformNotifications;
+use App\Services\Admin\TrashManager;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class NotificationController extends Controller
     {
         $this->notifications->destroyAll();
 
-        flash()->info('تم مسح جميع الإشعارات.');
+        flash()->warning('تم مسح جميع الإشعارات.');
 
         return back();
     }
@@ -95,7 +96,7 @@ class NotificationController extends Controller
     {
         $notification->delete();
 
-        flash()->info('تم حذف الإشعار.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف الإشعار.', 'notifications', $notification);
 
         return back();
     }

@@ -68,6 +68,7 @@ class RegisterController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => $data['password'],
+                'email_verified_at' => null,
             ]);
 
             $this->tenantContext->setTenant($tenant);

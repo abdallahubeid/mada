@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('settings update persists site favicon upload', function () {
     Storage::fake('custom');
 

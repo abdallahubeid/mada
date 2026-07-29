@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Module;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -100,7 +101,7 @@ class ModuleController extends Controller
         $module->delete();
 
         MarketingCache::flush();
-        flash()->warning('تم حذف الوحدة بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف الوحدة بنجاح.', 'modules', $module);
 
         return redirect()->route('admin.modules.index');
     }

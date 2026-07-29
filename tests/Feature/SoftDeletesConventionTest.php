@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('core models soft delete instead of removing rows', function (string $modelClass, callable $factory) {
     /** @var Model $record */
     $record = $factory();

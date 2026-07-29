@@ -107,15 +107,92 @@
     @livewireScripts
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('submit', function (event) {
+            const form = event.target;
+
+            if (! (form instanceof HTMLFormElement) || ! form.hasAttribute('data-swal-confirm')) {
+                return;
+            }
+
+            if (form.dataset.swalConfirmed === '1') {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (typeof Swal === 'undefined') {
+                form.dataset.swalConfirmed = '1';
+                form.submit();
+
+                return;
+            }
+
+            Swal.fire({
+                title: form.dataset.swalTitle || 'هل أنت متأكد من الحذف؟',
+                text: form.dataset.swalText || 'سيتم الحذف الناعم ويمكن الاستعادة من سلة المحذوفات.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: form.dataset.swalConfirmButton || 'نعم، احذف',
+                cancelButtonText: form.dataset.swalCancelButton || 'إلغاء',
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                reverseButtons: true,
+            }).then((result) => {
+                if (! result.isConfirmed) {
+                    return;
+                }
+
+                form.dataset.swalConfirmed = '1';
+                form.submit();
+            });
+        }, true);
+    </script>
     @if (session('flasher'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                const flasher = @js(session('flasher'));
+                const hasUndo = Boolean(flasher.undo_url);
+
                 Swal.fire({
-                    icon: @js(session('flasher.type', 'success')),
-                    title: @js(session('flasher.message')),
+                    toast: hasUndo,
+                    position: hasUndo ? 'top-end' : 'center',
+                    icon: flasher.type || 'success',
+                    title: flasher.message,
+                    showConfirmButton: hasUndo,
+                    confirmButtonText: flasher.undo_label || 'تراجع',
                     confirmButtonColor: '#4edea3',
-                    timer: 3200,
+                    showCancelButton: false,
+                    timer: hasUndo ? 8000 : 3200,
                     timerProgressBar: true,
+                }).then((result) => {
+                    if (! result.isConfirmed || ! flasher.undo_url) {
+                        return;
+                    }
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = flasher.undo_url;
+                    form.style.display = 'none';
+
+                    const csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = @js(csrf_token());
+                    form.appendChild(csrf);
+
+                    const method = (flasher.undo_method || 'POST').toUpperCase();
+                    if (method !== 'POST') {
+                        const methodInput = document.createElement('input');
+                        methodInput.type = 'hidden';
+                        methodInput.name = '_method';
+                        methodInput.value = method;
+                        form.appendChild(methodInput);
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
                 });
             });
         </script>

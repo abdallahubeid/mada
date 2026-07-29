@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -109,7 +110,7 @@ class TestimonialController extends Controller
         $testimonial->delete();
 
         MarketingCache::flush();
-        flash()->warning('تم حذف الشهادة بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف الشهادة بنجاح.', 'testimonials', $testimonial);
 
         return redirect()->route('admin.testimonials.index');
     }

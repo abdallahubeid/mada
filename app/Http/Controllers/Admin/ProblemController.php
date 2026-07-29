@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Problem;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -100,7 +101,7 @@ class ProblemController extends Controller
         $problem->delete();
 
         MarketingCache::flush();
-        flash()->warning('تم حذف المشكلة بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف المشكلة بنجاح.', 'problems', $problem);
 
         return redirect()->route('admin.problems.index');
     }

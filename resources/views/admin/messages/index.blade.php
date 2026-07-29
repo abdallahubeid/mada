@@ -582,9 +582,29 @@
                                 position: 'top-end',
                                 icon: 'success',
                                 title: data.message || 'تم حذف المحادثة بنجاح.',
-                                showConfirmButton: false,
-                                timer: 2800,
+                                showConfirmButton: Boolean(data.undo_url),
+                                confirmButtonText: data.undo_label || 'تراجع',
+                                confirmButtonColor: '#4edea3',
+                                timer: data.undo_url ? 8000 : 2800,
                                 timerProgressBar: true,
+                            }).then((toastResult) => {
+                                if (! toastResult.isConfirmed || ! data.undo_url) {
+                                    return;
+                                }
+
+                                const form = document.createElement('form');
+                                form.method = 'POST';
+                                form.action = data.undo_url;
+                                form.style.display = 'none';
+
+                                const csrf = document.createElement('input');
+                                csrf.type = 'hidden';
+                                csrf.name = '_token';
+                                csrf.value = this.csrf;
+                                form.appendChild(csrf);
+
+                                document.body.appendChild(form);
+                                form.submit();
                             });
 
                             if (this.selectedThreadId === deletedId) {

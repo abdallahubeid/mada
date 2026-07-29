@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AiFeature;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -100,7 +101,7 @@ class AiFeatureController extends Controller
         $aiFeature->delete();
 
         MarketingCache::flush();
-        flash()->warning('تم حذف ميزة الذكاء الاصطناعي بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف ميزة الذكاء الاصطناعي بنجاح.', 'ai-features', $aiFeature);
 
         return redirect()->route('admin.ai-features.index');
     }

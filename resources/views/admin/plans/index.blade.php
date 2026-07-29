@@ -85,7 +85,7 @@
 
                     <div class="mt-5 flex items-center gap-2 border-t border-mist-100 pt-4 dark:border-ink-700">
                         <button type="button" @click="edit(@js($plan))" class="flex-1 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:text-mist-200">تعديل</button>
-                        <form method="POST" action="{{ route('admin.plans.destroy', $plan['id']) }}" onsubmit="return confirm('أرشفة هذه الخطة؟')">
+                        <form method="POST" action="{{ route('admin.plans.destroy', $plan['id']) }}" data-swal-confirm data-swal-title="أرشفة هذه الخطة؟">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-mist-500 transition hover:border-danger-solid hover:text-danger-solid dark:border-ink-600">أرشفة</button>

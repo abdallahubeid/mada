@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('admin messages inbox lists open contact threads without auto selecting', function () {
     $thread = SupportThread::factory()->create([
         'name' => 'سارة المنصوري',
@@ -53,7 +57,7 @@ test('selecting a thread loads history and marks customer messages as read', fun
 });
 
 test('admin can reply and thread moves to in progress', function () {
-    $admin = User::factory()->create(['name' => 'مشرف المنصّة']);
+    auth()->user()->update(['name' => 'مشرف المنصّة']);
     $thread = SupportThread::factory()->create(['status' => SupportThread::STATUS_OPEN]);
 
     SupportMessage::factory()->create([
@@ -61,10 +65,9 @@ test('admin can reply and thread moves to in progress', function () {
         'body' => 'سؤال العميل',
     ]);
 
-    $this->actingAs($admin)
-        ->post(route('admin.messages.reply', $thread), [
-            'body' => 'أهلًا، تم استلام طلبك وسنتابع معك.',
-        ])
+    $this->post(route('admin.messages.reply', $thread), [
+        'body' => 'أهلًا، تم استلام طلبك وسنتابع معك.',
+    ])
         ->assertRedirect()
         ->assertSessionHas('flasher', fn (array $flasher): bool => ($flasher['type'] ?? null) === 'success');
 

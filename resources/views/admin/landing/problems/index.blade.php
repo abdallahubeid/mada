@@ -55,7 +55,7 @@
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('admin.problems.edit', $problem) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600">تعديل</a>
-                                <form method="POST" action="{{ route('admin.problems.destroy', $problem) }}" onsubmit="return confirm('حذف هذا العنصر؟')">
+                                <form method="POST" action="{{ route('admin.problems.destroy', $problem) }}" data-swal-confirm data-swal-title="حذف هذا العنصر؟">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>

@@ -5,6 +5,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('settings page exposes privacy terms and social fields', function () {
     $this->get(route('admin.landing.settings.edit'))
         ->assertOk()

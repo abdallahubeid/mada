@@ -174,6 +174,11 @@ class MessageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'تم حذف المحادثة بنجاح.',
+            'undo_url' => route('admin.trash.restore', [
+                'type' => 'support-threads',
+                'id' => $thread->id,
+            ]),
+            'undo_label' => 'تراجع',
         ]);
     }
 }

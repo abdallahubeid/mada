@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domain\Platform\PlatformPermissionCatalog;
 use App\Domain\Tenancy\Concerns\BelongsToTenant;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Domain\Tenancy\TenantContext;
@@ -25,12 +26,21 @@ use Spatie\Permission\Traits\HasRoles;
  * (docs/USER_JOURNEYS.md — Onboarding) can gate access behind a signed
  * email-verification link before a tenant reaches `pending_approval`.
  */
-#[Fillable(['tenant_id', 'name', 'email', 'phone', 'job_title', 'password'])]
+#[Fillable(['tenant_id', 'name', 'email', 'phone', 'job_title', 'password', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmailContract
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasImages, HasRoles, MustVerifyEmail, Notifiable, SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user): void {
+            if (! array_key_exists('email_verified_at', $user->getAttributes())) {
+                $user->email_verified_at = now();
+            }
+        });
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -126,22 +136,40 @@ SVG;
     /**
      * Whether this user may open the Super Admin / Platform Console (`/admin/*`).
      *
-     * Platform operators have `tenant_id = null` (Super Admin / Support Admin).
-     * Named admin roles are also accepted for future Spatie-backed operator accounts.
+     * Platform operators are users without a tenant who hold at least one
+     * Spatie role under the platform team sentinel (includes custom roles).
      */
     public function canAccessPlatformConsole(): bool
     {
-        if ($this->tenant_id === null) {
-            return true;
+        if ($this->tenant_id !== null) {
+            return false;
         }
 
-        return $this->hasAnyRole([
-            'Super Admin',
-            'Support Admin',
-            'Admin',
-            'super_admin',
-            'support_admin',
-            'admin',
-        ]);
+        return PlatformPermissionCatalog::withTeam(
+            fn (): bool => $this->roles()->exists(),
+        );
+    }
+
+    public function isPlatformSuperAdmin(): bool
+    {
+        return PlatformPermissionCatalog::withTeam(
+            fn (): bool => $this->hasRole(PlatformPermissionCatalog::ROLE_SUPER_ADMIN),
+        );
+    }
+
+    /**
+     * Named route for the best post-login / home landing page in the admin console.
+     */
+    public function preferredAdminHomeRoute(): string
+    {
+        return PlatformPermissionCatalog::withTeam(function (): string {
+            foreach (PlatformPermissionCatalog::adminHomeCandidates() as $permission => $route) {
+                if ($this->can($permission)) {
+                    return $route;
+                }
+            }
+
+            return 'admin.profile';
+        });
     }
 }

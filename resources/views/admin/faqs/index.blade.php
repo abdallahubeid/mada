@@ -14,7 +14,9 @@
             <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الأسئلة الشائعة</h2>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة محتوى صفحة الأسئلة الشائعة وترتيبها ونشرها.</p>
         </div>
-        <a href="{{ route('admin.faqs.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">إضافة سؤال</a>
+        @can('faqs.create')
+            <a href="{{ route('admin.faqs.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">إضافة سؤال</a>
+        @endcan
     </div>
 
     <div class="mt-6 overflow-x-auto w-full rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
@@ -43,12 +45,16 @@
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('admin.faqs.edit', $faq) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600">تعديل</a>
-                                <form method="POST" action="{{ route('admin.faqs.destroy', $faq) }}" onsubmit="return confirm('حذف هذا السؤال؟')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
-                                </form>
+                                @can('faqs.update')
+                                    <a href="{{ route('admin.faqs.edit', $faq) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600">تعديل</a>
+                                @endcan
+                                @can('faqs.delete')
+                                    <form method="POST" action="{{ route('admin.faqs.destroy', $faq) }}" data-swal-confirm data-swal-title="حذف هذا السؤال؟">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                    </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>

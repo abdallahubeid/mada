@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreFaqRequest;
 use App\Http\Requests\Admin\UpdateFaqRequest;
 use App\Models\Faq;
+use App\Services\Admin\TrashManager;
 use App\Services\Marketing\MarketingCache;
 use App\Services\Platform\PlatformAuditor;
 use Illuminate\Contracts\View\View;
@@ -38,9 +39,9 @@ class FaqController extends Controller
         MarketingCache::flush();
         $auditor->log('faq.created', $faq);
 
-        return redirect()
-            ->route('admin.faqs.index')
-            ->with('status', 'تم إنشاء السؤال.');
+        flash()->success('تم إنشاء السؤال بنجاح.');
+
+        return redirect()->route('admin.faqs.index');
     }
 
     public function edit(Faq $faq): View
@@ -55,9 +56,9 @@ class FaqController extends Controller
         MarketingCache::flush();
         $auditor->log('faq.updated', $faq);
 
-        return redirect()
-            ->route('admin.faqs.index')
-            ->with('status', 'تم تحديث السؤال.');
+        flash()->info('تم تحديث السؤال بنجاح.');
+
+        return redirect()->route('admin.faqs.index');
     }
 
     public function destroy(Faq $faq, PlatformAuditor $auditor): RedirectResponse
@@ -67,8 +68,8 @@ class FaqController extends Controller
         MarketingCache::flush();
         $auditor->log('faq.deleted', $faq);
 
-        return redirect()
-            ->route('admin.faqs.index')
-            ->with('status', 'تم حذف السؤال.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف السؤال بنجاح.', 'faqs', $faq);
+
+        return redirect()->route('admin.faqs.index');
     }
 }

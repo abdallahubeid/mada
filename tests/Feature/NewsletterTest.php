@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('new newsletter subscription saves subscriber sends welcome mail and flashes success', function () {
     Mail::fake();
 

@@ -32,6 +32,8 @@ Do **not** add SoftDeletes to framework/infra tables such as: `sessions`, `cache
 
 `settings.key` is indexed, not uniquely constrained, so a soft-deleted key does not block re-upsert of the same key.
 
-## Tests
+## Trash / Recycle Bin
 
-Deleting a core record MUST leave the row in the database with `deleted_at` set. Prefer `assertSoftDeleted()` / `withTrashed()` over `assertDatabaseMissing()` for destroy flows.
+- Soft-deleted rows are managed from `/admin/trash` (`TrashManager` + `TrashableResourceCatalog`).
+- Soft delete UX: SweetAlert confirm (`data-swal-confirm`) then flash toast with **Undo** → `admin.trash.restore`.
+- Permanent removal only via trash force-delete / empty (requires `trash.force_delete`).

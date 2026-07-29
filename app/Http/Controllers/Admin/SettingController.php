@@ -67,7 +67,7 @@ class SettingController extends Controller
             );
         }
 
-        flash()->info('Settings Updated successfully');
+        flash()->info('تم تحديث الإعدادات بنجاح.');
 
         return redirect()->route('admin.landing.settings.edit');
     }

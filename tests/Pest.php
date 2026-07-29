@@ -1,6 +1,10 @@
 <?php
 
+use App\Domain\Platform\PlatformPermissionCatalog;
+use App\Models\User;
+use Database\Seeders\PlatformRolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 /*
@@ -10,7 +14,7 @@ use Tests\TestCase;
 |
 | The closure you provide to your test functions is always bound to a specific PHPUnit test
 | case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind different classes or traits.
+| need to change this if the default isn't what you want.
 |
 */
 
@@ -23,9 +27,8 @@ pest()->extend(TestCase::class)
 | Expectations
 |--------------------------------------------------------------------------
 |
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
+| When you're writing expectations, you can use the `expect()` function. Of course,
+| you may also use Pest's expectation API to extend the Expectation class.
 |
 */
 
@@ -44,7 +47,30 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function seedPlatformPermissions(): void
 {
-    // ..
+    test()->seed(PlatformRolesAndPermissionsSeeder::class);
+    PlatformPermissionCatalog::bindTeam();
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+}
+
+/**
+ * Create a platform operator and authenticate as them.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function actingAsPlatformOperator(string $role = PlatformPermissionCatalog::ROLE_SUPER_ADMIN, array $attributes = []): User
+{
+    seedPlatformPermissions();
+
+    $user = User::factory()->create(array_merge([
+        'tenant_id' => null,
+    ], $attributes));
+
+    PlatformPermissionCatalog::bindTeam();
+    $user->assignRole($role);
+
+    test()->actingAs($user);
+
+    return $user;
 }

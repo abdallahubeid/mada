@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Cache;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
+beforeEach(function () {
     $this->seed([
         PlanSeeder::class,
         FaqSeeder::class,

@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Platform\PlatformPermissionCatalog;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,6 +54,24 @@ test('a verified user on a non-active tenant is redirected to the pending setup 
         'email' => $user->email,
         'password' => 'correct-password',
     ])->assertRedirect(route('dashboard.setup'));
+});
+
+test('a platform operator is redirected to the admin dashboard on sign in', function () {
+    seedPlatformPermissions();
+
+    $admin = User::factory()->create([
+        'tenant_id' => null,
+        'password' => 'correct-password',
+    ]);
+    PlatformPermissionCatalog::bindTeam();
+    $admin->assignRole(PlatformPermissionCatalog::ROLE_SUPER_ADMIN);
+
+    $this->post('/login', [
+        'email' => $admin->email,
+        'password' => 'correct-password',
+    ])->assertRedirect(route('admin.dashboard'));
+
+    $this->assertAuthenticatedAs($admin);
 });
 
 test('invalid credentials are rejected with a validation error', function () {

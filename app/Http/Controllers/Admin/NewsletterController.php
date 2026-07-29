@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SendNewsletterCampaignRequest;
 use App\Models\NewsletterSubscriber;
+use App\Services\Admin\TrashManager;
 use App\Services\Newsletter\NewsletterDashboardPoller;
 use App\Services\Newsletter\NewsletterService;
 use Illuminate\Contracts\View\View;
@@ -86,7 +87,7 @@ class NewsletterController extends Controller
     {
         $subscriber->delete();
 
-        flash()->success('تم حذف المشترك بنجاح.');
+        app(TrashManager::class)->flashSoftDeleted('تم حذف المشترك بنجاح.', 'newsletter-subscribers', $subscriber);
 
         return back();
     }

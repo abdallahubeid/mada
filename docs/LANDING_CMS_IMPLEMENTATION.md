@@ -278,7 +278,7 @@ Key/value rows on `settings` (registered via migration `register_privacy_terms_a
 
 - `social_btn1_text` / `social_btn1_link` … through `social_btn5_text` / `social_btn5_link` (seeded by `SettingSeeder`; see §1.5n for footer nav/newsletter keys)
 
-Admin UI: `resources/views/admin/landing/settings/index.blade.php` — Privacy & Terms tabs; **Footer & Social** tab (brand blurb, newsletter, three nav columns, social links). Controller: `App\Http\Controllers\Admin\SettingController` (`edit` / `update`). Successful save uses `flash()->info('Settings Updated successfully')`.
+Admin UI: `resources/views/admin/landing/settings/index.blade.php` — Privacy & Terms tabs; **Footer & Social** tab (brand blurb, newsletter, three nav columns, social links). Controller: `App\Http\Controllers\Admin\SettingController` (`edit` / `update`). Successful save uses `flash()->info('تم تحديث الإعدادات بنجاح.')`.
 
 ---
 
@@ -385,7 +385,10 @@ Authenticated Super Admin / operator self-service profile (persisted; no longer 
 | Controller | `App\Http\Controllers\Admin\ProfileController` — personal fields, optional password (requires `current_password`), avatar replace deletes old file on `Storage::disk('custom')` then `store('user/avatar', 'custom')` with `images.disk = custom` |
 | Form request | `App\Http\Requests\Admin\UpdateProfileRequest` |
 | View | `resources/views/admin/profile/index.blade.php` — header card (clickable avatar lightbox, crop camera button, name, role badge, email) + tabs: المعلومات الشخصية / الأمان وكلمة المرور. Verified badge sits beside the email **label** (not overlaid on the input). Avatar UX: click → lightbox preview; camera / «إعادة ضبط / قص الصورة» → Cropper.js (1:1, zoom, rotate) → cropped JPEG blob into `input[name=avatar]` before PUT. CDN: Cropper.js 1.6.2 via `@push('styles'|'scripts')` on `layouts.admin`. Topbar (`layouts/partials/admin-topbar.blade.php` + app `components/layouts/partials/topbar.blade.php`) renders `auth()->user()->avatar_url` (`h-8 w-8 rounded-full object-cover border border-slate-700`) with SVG/initial fallback from the accessor. |
-| Flash | `flash()->info('تم تحديث الملف الشخصي بنجاح.')` |
+| Flash | `flash()->info('تم تحديث الإعدادات بنجاح.')` (create=`success`, update=`info`, delete=`warning`, failures=`error`) via `App\Support\FlashNotifier` |
+| Routes | Platform console routes live in `routes/admin.php`, registered from `bootstrap/app.php` (`web` + `auth` + `platform.operator`, prefix/name `admin`) |
+| Login | Platform operators (`canAccessPlatformConsole()` = `tenant_id` null + any platform team role, including custom) redirect via `preferredAdminHomeRoute()` |
+| Custom roles | Created as global (`roles.tenant_id` null) via `withGlobalTeam()`; cache cleared with `forgetCachedPermissions()` after role/user mutations |
 | Tests | `tests/Feature/UserProfileTest.php`; `PolymorphicImageRelationTest` includes `User` + `avatar` |
 
 ### 1.5p Support inbox + Contact Us threading — 2026-07-27
@@ -486,6 +489,18 @@ Mandatory SoftDeletes on all core Eloquent models/tables. Hard delete only via e
 | Architecture | `docs/ARCHITECTURE.md` §6 Deletion row |
 | Tests | `tests/Feature/SoftDeletesConventionTest.php` |
 
+### 1.5t-ii Trash / Recycle Bin UI — 2026-07-29
+
+| Area | Notes |
+|---|---|
+| Catalog | `App\Domain\Platform\TrashableResourceCatalog` — problems, solutions, offerings, modules, ai-features, features, testimonials, faqs, plans, admins, support-threads, newsletter-subscribers, notifications |
+| Service | `App\Services\Admin\TrashManager` — list `onlyTrashed()`, restore (+ related images / plan reactivation), forceDestroy, bulk, empty |
+| Routes | `admin/trash` (`admin.trash.*`) — index, restore, force-destroy, restore-selected, force-selected, empty |
+| Permissions | `trash.view_any`, `trash.restore`, `trash.force_delete` (super_admin/admin full; content/support/billing get view+restore) |
+| UX | Delete forms use `data-swal-confirm` → SweetAlert2; soft-delete flash includes Undo → `POST admin.trash.restore`; trash page has checkboxes + bulk restore/force + empty |
+| Exclusions | Spatie `Role` remains hard-delete (not in recycle bin) |
+| Tests | `tests/Feature/TrashManagementTest.php` |
+
 ### 1.5u Public navbar order + admin logo branding — 2026-07-28
 
 | Area | Notes |
@@ -496,14 +511,17 @@ Mandatory SoftDeletes on all core Eloquent models/tables. Hard delete only via e
 | Tests | `tests/Feature/MarketingNavbarAndAdminBrandingTest.php` |
 | Docs | `docs/MARKETING.md` §2.3 |
 
-### 1.5v Responsive admin shell + UI audit — 2026-07-28
+### 1.5w Platform Roles & Permissions (Spatie) — 2026-07-29
 
 | Area | Notes |
 |---|---|
-| Root cause | Closed drawer used `end-0` + `translate-x-full` in RTL, which slid the sidebar **onto** the canvas. Fixed: `start-0` + `-translate-x-full rtl:translate-x-full`; open = `translate-x-0`. |
-| Breakpoint | Off-canvas below `lg` (`<1024px`); pinned `lg:static lg:translate-x-0 lg:rtl:translate-x-0`. |
-| Main column | `w-full min-w-0 flex-1`; closed drawer `pointer-events-none` so it cannot intercept clicks. |
-| Tables | `overflow-x-auto w-full` wrappers on CMS/admin tables. |
-| AI rule | `.cursor/rules/responsive-ui.mdc` |
-| Tests | `tests/Feature/AdminResponsiveLayoutTest.php` |
+| Catalog | `App\Domain\Platform\PlatformPermissionCatalog` — granular perms by domain (`tenants`, `plans`, `cms`, `faqs`, `settings`, `support`, `notifications`, `newsletters`, `audit_logs`, `admins`, `roles`, `account`) |
+| Seeders | `PlatformRolesAndPermissionsSeeder` then `UserSeeder` (single owner `owner@veyra.com` / `super_admin`); roles global (`roles.tenant_id` null), assignments use platform team sentinel `0` |
+| Gate | `Gate::before` → `User::isPlatformSuperAdmin()` bypass |
+| Middleware | `platform.operator` + Spatie `permission:` on every `/admin/*` route; binds Spatie team to `PlatformPermissionCatalog::TEAM_ID` (0) |
+| Console UI | Roles: create/delete + users_count + `#`; Admins: `#` + avatar column (upload thumbnail or initial badge) + soft delete; form Alpine preselects role permissions into toggles |
+| Sidebar | «مديرو المنصّة» dropdown → Users/Admins + Roles & Permissions; «سلة المحذوفات» under المنصّة (`trash.view_any`) |
+| Auto-verify | `User::creating` sets `email_verified_at` when attribute omitted; SaaS registration passes `null` explicitly to keep email verification |
+| Error pages | Custom `errors/403.blade.php` (brand-matched to 404); platform operators CTA → `preferredAdminHomeRoute()`, others → dashboard/landing |
+| Tests | `tests/Feature/AdminAuthorizationTest.php`; `tests/Feature/ForbiddenPageTest.php`; `tests/Feature/TrashManagementTest.php`; Pest helpers `seedPlatformPermissions()` / `actingAsPlatformOperator()` |
 

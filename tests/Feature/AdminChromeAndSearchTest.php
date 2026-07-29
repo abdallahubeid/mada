@@ -9,6 +9,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('chrome poll returns unread message and notification badge counts', function () {
     $thread = SupportThread::factory()->create(['status' => SupportThread::STATUS_OPEN]);
     SupportMessage::factory()->create([

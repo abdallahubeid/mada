@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    actingAsPlatformOperator();
+});
+
 test('admin landing content resource routes resolve', function (string $routePrefix) {
     $this->get(route($routePrefix.'.index'))->assertOk();
     $this->get(route($routePrefix.'.create'))->assertOk();
