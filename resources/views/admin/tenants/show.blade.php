@@ -45,6 +45,36 @@
             </div>
         </div>
 
+        {{--
+            Why this tenant is not live. Reads from the columns the actions
+            write, so the console can always answer "why is this customer
+            locked out" without anyone opening the audit log.
+        --}}
+        @if ($tenant['suspension'])
+            <div class="mt-6 rounded-2xl border border-danger-solid/30 bg-danger-solid/5 p-5">
+                <div class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-5 w-5 shrink-0 text-danger-solid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
+                    <div class="min-w-0">
+                        <h3 class="font-display text-base font-semibold text-danger-solid">الحساب موقوف</h3>
+                        <p class="mt-1.5 whitespace-pre-line text-sm text-ink-700 dark:text-mist-200">{{ $tenant['suspension']['reason'] }}</p>
+                        <p class="mt-2 text-xs text-mist-500 dark:text-mist-400">
+                            أوقفه {{ $tenant['suspension']['by'] }} · {{ $tenant['suspension']['at'] }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @elseif ($tenant['status'] === 'rejected' && $tenant['rejection_reason'])
+            <div class="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
+                <div class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+                    <div class="min-w-0">
+                        <h3 class="font-display text-base font-semibold text-rose-600 dark:text-rose-400">طلب مرفوض</h3>
+                        <p class="mt-1.5 whitespace-pre-line text-sm text-ink-700 dark:text-mist-200">{{ $tenant['rejection_reason'] }}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         {{-- Marketing opt-in (docs/ADMIN_CMS_ANALYSIS.md) --}}
         <div class="mt-6 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
             <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">الظهور في التسويق</h3>
@@ -94,8 +124,8 @@
                 icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" /></svg>'
             />
             <x-admin.stat-card
-                label="المشاريع"
-                :value="(string) $tenant['projects']"
+                label="الأقسام"
+                :value="(string) $tenant['departments']"
                 icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg>'
             />
             <x-admin.stat-card
@@ -240,42 +270,87 @@
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
                 class="relative w-full max-w-md rounded-2xl border border-mist-200 bg-white p-6 shadow-xl dark:border-ink-600 dark:bg-ink-800"
             >
-                <div x-show="modal === 'approve'">
+                {{--
+                    Every modal below was previously a decorative shell whose
+                    "تأكيد" button only ran `modal = null`. On a screen that
+                    renders a real customer record, a confirm button that does
+                    nothing reads as a FAILED action rather than an unbuilt one,
+                    so each is now either a real POST or says plainly that it is
+                    not available yet.
+                --}}
+
+                {{-- Approve — real POST, with plan confirmation --}}
+                <form x-show="modal === 'approve'" method="POST" action="{{ route('admin.tenants.approve', $tenant['slug']) }}">
+                    @csrf
                     <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">تفعيل المستأجر</h3>
-                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيتم تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> وفتح لوحة التحكم الكاملة له.</p>
-                </div>
-                <div x-show="modal === 'reject'">
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيتم تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> وفتح لوحة التحكم الكاملة له، مع إرسال إشعار بالبريد إلى مالك الحساب.</p>
+
+                    <label for="approve_plan_id" class="mt-4 block text-sm font-medium text-ink-700 dark:text-mist-200">الخطة المعتمدة</label>
+                    <select id="approve_plan_id" name="plan_id" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                        <option value="">— إبقاء الخطة المختارة عند التسجيل —</option>
+                        @foreach ($plans as $plan)
+                            <option value="{{ $plan->id }}" @selected($tenant['plan_id'] === $plan->id)>{{ $plan->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <div class="mt-6 flex items-center justify-end gap-3">
+                        <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
+                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">تأكيد التفعيل</button>
+                    </div>
+                </form>
+
+                {{-- Reject — real POST, reason required --}}
+                <form x-show="modal === 'reject'" method="POST" action="{{ route('admin.tenants.reject', $tenant['slug']) }}">
+                    @csrf
                     <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">رفض المستأجر</h3>
-                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">يُرجى توضيح سبب رفض <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span>.</p>
-                    <textarea rows="3" placeholder="سبب الرفض..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
-                </div>
-                <div x-show="modal === 'suspend'">
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">يُرجى توضيح سبب رفض <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span>. النص <span class="font-semibold">يُرسل إلى مقدّم الطلب</span> ويُحفظ في سجل التدقيق.</p>
+                    <textarea name="rejection_reason" rows="3" required minlength="10" maxlength="2000" placeholder="سبب الرفض..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
+
+                    <div class="mt-6 flex items-center justify-end gap-3">
+                        <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
+                        <button type="submit" class="rounded-xl bg-danger-solid px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:opacity-90 active:scale-95">تأكيد الرفض</button>
+                    </div>
+                </form>
+
+                {{-- Suspend — real POST, reason required --}}
+                <form x-show="modal === 'suspend'" method="POST" action="{{ route('admin.tenants.suspend', $tenant['slug']) }}">
+                    @csrf
                     <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">إيقاف المستأجر</h3>
-                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيتم إيقاف <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> وإنهاء جميع جلسات مستخدميه فورًا.</p>
-                    <textarea rows="3" placeholder="سبب الإيقاف..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
-                </div>
-                <div x-show="modal === 'reactivate'">
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيفقد جميع مستخدمي <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> الوصول إلى وحدات النظام فوراً. النص <span class="font-semibold">يُرسل إلى مالك الحساب</span> ويُحفظ في سجل التدقيق.</p>
+                    <p class="mt-2 rounded-lg bg-mist-100 px-3 py-2 text-xs text-mist-600 dark:bg-ink-700 dark:text-mist-300">البيانات تبقى محفوظة بالكامل، والإجراء قابل للتراجع عبر إعادة التفعيل.</p>
+                    <textarea name="suspension_reason" rows="3" required minlength="10" maxlength="2000" placeholder="سبب الإيقاف..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
+
+                    <div class="mt-6 flex items-center justify-end gap-3">
+                        <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
+                        <button type="submit" class="rounded-xl bg-danger-solid px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:opacity-90 active:scale-95">تأكيد الإيقاف</button>
+                    </div>
+                </form>
+
+                {{-- Reactivate — real POST --}}
+                <form x-show="modal === 'reactivate'" method="POST" action="{{ route('admin.tenants.reactivate', $tenant['slug']) }}">
+                    @csrf
                     <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">إعادة تفعيل المستأجر</h3>
-                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيتم إعادة تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> واستعادة وصول مستخدميه.</p>
-                </div>
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيستعيد مستخدمو <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> الوصول الكامل فوراً، ويُرسَل إشعار بالبريد إلى مالك الحساب. سبب الإيقاف الحالي يُرفع من السجل.</p>
+
+                    <div class="mt-6 flex items-center justify-end gap-3">
+                        <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
+                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">تأكيد إعادة التفعيل</button>
+                    </div>
+                </form>
+
+                {{--
+                    Cancel has no backend. Unlike suspension it is a customer-
+                    initiated exit (ADR-04), so the Super Admin path to it is a
+                    separate decision that has not been specified yet — a close
+                    button, not a confirm button that silently does nothing.
+                --}}
                 <div x-show="modal === 'cancel'">
                     <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">إلغاء الحساب</h3>
-                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيتم إلغاء حساب <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> والاحتفاظ ببياناته 90 يومًا قبل الحذف النهائي.</p>
-                    <textarea rows="3" placeholder="سبب الإلغاء..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
-                </div>
+                    <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">إلغاء الحسابات غير متاح بعد من هذه الشاشة — الإيقاف المؤقت هو الإجراء المتاح حالياً، وهو قابل للتراجع.</p>
 
-                <div class="mt-6 flex items-center justify-end gap-3">
-                    <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                    <button
-                        type="button"
-                        @click="modal = null"
-                        :class="(modal === 'reject' || modal === 'suspend' || modal === 'cancel')
-                            ? 'bg-danger-solid text-white hover:opacity-90'
-                            : 'bg-emerald-400 text-emerald-900 shadow-glow hover:bg-emerald-300'"
-                        class="rounded-xl px-4 py-2 text-sm font-semibold transition duration-200 active:scale-95"
-                    >
-                        تأكيد
-                    </button>
+                    <div class="mt-6 flex items-center justify-end gap-3">
+                        <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إغلاق</button>
+                    </div>
                 </div>
             </div>
         </div>

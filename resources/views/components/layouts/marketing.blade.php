@@ -1,6 +1,11 @@
 @props([
     'title' => null,
-    'description' => 'منصة Veyra ERP الشاملة لإدارة الموارد البشرية والمشاريع والرواتب — أتمتة كاملة لعمليات مؤسستك في نظام واحد آمن ومعزول لكل عميل.',
+    {{--
+        "المشاريع" removed 2026-08-10: the Projects module does not exist, and
+        this string is the default meta description on every marketing page —
+        it was the single most widely-published fabricated claim on the site.
+    --}}
+    'description' => 'منصة Veyra ERP لإدارة الموارد البشرية والتوظيف والرواتب — دورة حياة الموظف كاملة في نظام واحد، بعزل بيانات وسجل تدقيق لكل مؤسسة.',
 ])
 <!DOCTYPE html>
 {{--
@@ -30,14 +35,7 @@
     <meta name="twitter:title" content="{{ $title ?? 'Veyra ERP' }}">
     <meta name="twitter:description" content="{{ $description }}">
 
-    {{-- Applied before first paint to avoid a flash of the wrong theme (docs/DESIGN_SYSTEM.md §2, ADR-15). --}}
-    <script>
-        (function () {
-            const stored = localStorage.getItem('veyra-theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.documentElement.classList.toggle('dark', stored ? stored === 'dark' : prefersDark);
-        })();
-    </script>
+    <x-theme-script />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>

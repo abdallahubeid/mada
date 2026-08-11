@@ -12,8 +12,8 @@ test('setting seeder persists modules section chrome', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('modules_badge_text'))->toBe('الوحدات')
-        ->and(Setting::getValue('modules_title'))->toBe('وحدات متكاملة لكل احتياجات مؤسستك')
-        ->and(Setting::getValue('modules_sub_title'))->toBe('كل وحدة مصممة لتعمل بتناغم مع البقية، فتنساب البيانات بينها دون جهد.');
+        ->and(Setting::getValue('modules_title'))->toBe('وحدات تعمل معاً، لا بجوار بعضها')
+        ->and(Setting::getValue('modules_sub_title'))->toBe('كل وحدة تكتب وتقرأ من البيانات المعزولة نفسها، فلا يوجد رقمان لنفس الحقيقة ولا مطابقة يدوية في نهاية الشهر.');
 });
 
 test('module seeder persists the six module cards', function () {
@@ -25,7 +25,7 @@ test('module seeder persists the six module cards', function () {
         ->and($modules->pluck('icon')->all())->toBe([
             'ph:users-three-bold',
             'ph:credit-card-bold',
-            'ph:kanban-bold',
+            'ph:identification-badge-bold',
             'ph:chat-teardrop-dots-bold',
             'ph:buildings-bold',
             'ph:shield-check-bold',
@@ -40,11 +40,11 @@ test('the landing page modules section renders seeded settings and cards', funct
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('الوحدات', false)
-        ->assertSee('وحدات متكاملة لكل احتياجات مؤسستك', false)
-        ->assertSee('كل وحدة مصممة لتعمل بتناغم مع البقية، فتنساب البيانات بينها دون جهد.', false)
+        ->assertSee('وحدات تعمل معاً، لا بجوار بعضها', false)
+        ->assertSee('كل وحدة تكتب وتقرأ من البيانات المعزولة نفسها، فلا يوجد رقمان لنفس الحقيقة ولا مطابقة يدوية في نهاية الشهر.', false)
         ->assertSee('الموارد البشرية', false)
         ->assertSee('المالية والرواتب', false)
-        ->assertSee('المشاريع والعمليات', false)
+        ->assertSee('التوظيف والمقابلات', false)
         ->assertSee('الدعم والتذاكر', false)
         ->assertSee('إدارة المستأجرين', false)
         ->assertSee('الأمان والصلاحيات', false)

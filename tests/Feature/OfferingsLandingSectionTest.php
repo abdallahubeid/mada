@@ -11,8 +11,8 @@ uses(RefreshDatabase::class);
 test('setting seeder persists offerings section chrome', function () {
     $this->seed(SettingSeeder::class);
 
-    expect(Setting::getValue('offerings_title'))->toBe('قوة تتناسب مع طموحاتك')
-        ->and(Setting::getValue('offerings_sub_title'))->toBe('كل ما تحتاجه مؤسستك من أدوات إدارية وتشغيلية في نظام واحد متكامل.');
+    expect(Setting::getValue('offerings_title'))->toBe('أربع ركائز يقوم عليها النظام')
+        ->and(Setting::getValue('offerings_sub_title'))->toBe('كل ركيزة مبنية ومُفعّلة اليوم — ما هو قيد التطوير معروض بوضوح في خارطة الطريق أدناه.');
 });
 
 test('offering seeder persists the four offering cards', function () {
@@ -24,7 +24,7 @@ test('offering seeder persists the four offering cards', function () {
         ->and($offerings->pluck('icon')->all())->toBe([
             'ph:shield-check-bold',
             'ph:users-three-bold',
-            'ph:kanban-bold',
+            'ph:check-square-offset-bold',
             'ph:credit-card-bold',
         ])
         ->and($offerings->first()->title)->toBe('أمان متعدد المستأجرين');
@@ -36,12 +36,12 @@ test('the landing page offerings section renders seeded settings and cards', fun
 
     $this->get(route('landing'))
         ->assertOk()
-        ->assertSee('قوة تتناسب مع طموحاتك', false)
-        ->assertSee('كل ما تحتاجه مؤسستك من أدوات إدارية وتشغيلية في نظام واحد متكامل.', false)
+        ->assertSee('أربع ركائز يقوم عليها النظام', false)
+        ->assertSee('كل ركيزة مبنية ومُفعّلة اليوم — ما هو قيد التطوير معروض بوضوح في خارطة الطريق أدناه.', false)
         ->assertSee('أمان متعدد المستأجرين', false)
         ->assertSee('التوظيف وإدارة الموارد البشرية', false)
-        ->assertSee('المشاريع والعمليات', false)
-        ->assertSee('الرواتب والتحليلات المالية', false)
+        ->assertSee('محرّك الموافقات وسجل التدقيق', false)
+        ->assertSee('الرواتب والمصروفات', false)
         ->assertSee('ph:shield-check-bold', false)
         ->assertSee('ph:credit-card-bold', false);
 });

@@ -35,6 +35,22 @@ Shared conventions on card tables: `sort_order` default `0`, `is_published` defa
 - `testimonials`: added `rate`; **dropped** `logo_path` (use `HasImages`).
 - `tenants`: kept `show_on_marketing`; **dropped** `marketing_logo_path` (use `HasImages` / `logo`).
 
+### 1.3b Renaming seeded content — the orphan trap (2026-08-10)
+
+Every landing content seeder calls `updateOrCreate()` keyed on `title` (or `question`). That means **renaming a card does not update it — it inserts a second row and leaves the original published.**
+
+This silently defeated two earlier rounds of fabrication removal. The 2026-08-09 pass replaced the «المشاريع والعمليات» module and offering with built ones and reworded several bullets; on any already-seeded database the originals stayed live, so the landing page went on advertising a Projects module — with a Kanban mock-up in the product tour — for the entire period it was believed to have been removed. By 2026-08-10 the Solutions section was rendering **nine** bullets from four seeded entries.
+
+**Rule:** when you change the `title` of a seeded row, add its previous title(s) to an explicit retirement list at the top of that seeder:
+
+```php
+Module::query()->where('title', 'المشاريع والعمليات')->delete();
+```
+
+Soft-delete, never hard-delete: the rows stay recoverable from Trash, and the call is idempotent — a fresh database simply matches nothing. Rewording a `description` while keeping the `title` is safe and needs no retirement entry.
+
+**This class of bug is invisible to the test suite.** Every landing test uses `RefreshDatabase`, so it only ever sees a database seeded once from scratch, where orphans cannot exist. Verify content changes against a long-lived database (or in the browser) as well as under test.
+
 ### 1.4 Polymorphic images
 
 - `Image::imageable()` → `MorphTo`
@@ -517,11 +533,118 @@ Mandatory SoftDeletes on all core Eloquent models/tables. Hard delete only via e
 |---|---|
 | Catalog | `App\Domain\Platform\PlatformPermissionCatalog` — granular perms by domain (`tenants`, `plans`, `cms`, `faqs`, `settings`, `support`, `notifications`, `newsletters`, `audit_logs`, `admins`, `roles`, `account`) |
 | Seeders | `PlatformRolesAndPermissionsSeeder` then `UserSeeder` (single owner `owner@veyra.com` / `super_admin`); roles global (`roles.tenant_id` null), assignments use platform team sentinel `0` |
-| Gate | `Gate::before` → `User::isPlatformSuperAdmin()` bypass |
+| Gate | `Gate::before` → `User::isPlatformSuperAdmin()` **or** `User::isTenantOwner()` bypass; else `null` |
 | Middleware | `platform.operator` + Spatie `permission:` on every `/admin/*` route; binds Spatie team to `PlatformPermissionCatalog::TEAM_ID` (0) |
 | Console UI | Roles: create/delete + users_count + `#`; Admins: `#` + avatar column (upload thumbnail or initial badge) + soft delete; form Alpine preselects role permissions into toggles |
 | Sidebar | «مديرو المنصّة» dropdown → Users/Admins + Roles & Permissions; «سلة المحذوفات» under المنصّة (`trash.view_any`) |
 | Auto-verify | `User::creating` sets `email_verified_at` when attribute omitted; SaaS registration passes `null` explicitly to keep email verification |
 | Error pages | Custom `errors/403.blade.php` (brand-matched to 404); platform operators CTA → `preferredAdminHomeRoute()`, others → dashboard/landing |
 | Tests | `tests/Feature/AdminAuthorizationTest.php`; `tests/Feature/ForbiddenPageTest.php`; `tests/Feature/TrashManagementTest.php`; Pest helpers `seedPlatformPermissions()` / `actingAsPlatformOperator()` |
+
+### Phase 0 — Tenant setup wizard & tenant RBAC — 2026-07-30
+
+| Area | Notes |
+|---|---|
+| Routes | `routes/tenant.php` (registered in `bootstrap/app.php`) — setup wizard + `/app/dashboard` |
+| Catalog | `App\Domain\Tenancy\TenantPermissionCatalog` — dashboard/settings/departments/roles/users permissions |
+| Seed | `SeedDefaultTenantRoles` creates global permission names and syncs role grants per tenant team |
+| Models | `org_settings`, `work_calendars` (`BelongsToTenant`, SoftDeletes) |
+| Wizard | Password, logo (`images` collection `logo`), currency/timezone, working days/holidays → Flasher toast |
+| Sidebar | Tenant sidebar uses `@can` / `permission_any` from the catalog |
+| Tests | `tests/Feature/Tenant/SetupWizardTest.php`; `actingAsTenantUser()` Pest helper |
+
+### Phase 1a/1b — Company settings & departments CRUD — 2026-07-30
+
+| Area | Notes |
+|---|---|
+| Routes | `routes/tenant.php` — `settings.company` (+ update), originally `departments.*` (moved to `hr.departments.*` 2026-08-01) under `tenant.active` + Spatie `permission:` |
+| Controllers | `CompanySettingController`, `DepartmentController` in `App\Http\Controllers\Tenant` |
+| Views | `tenant/settings/company.blade.php`; departments views now under `tenant/hr/departments/*` |
+| Model | `App\Domain\Tenancy\Models\Department` — `BelongsToTenant`, SoftDeletes, `parent`/`children` |
+| Migration | `departments` — `name`, `code`, `description`, `parent_id`, `manager_id`, unique `(tenant_id, code)`; later `department_head_id` → employees |
+| RBAC | HR Manager: `hr.departments.view_any` + `update` only (no create/delete). Owner: full. Buttons gated with `@can` |
+| UX | App layout: SweetAlert2 flasher + `data-swal-confirm` soft-delete |
+| Tests | `tests/Feature/Tenant/DepartmentTest.php`, `CompanySettingTest.php` |
+
+### HR Module Steps 1–2 — Departments & Employee Profiles — 2026-08-01
+
+| Area | Notes |
+|---|---|
+| Routes | `/app/hr/departments` (`hr.departments.*`), `/app/hr/employees` (`hr.employees.*`) |
+| Models | `Employee` + `EmployeeStatus` under `App\Domain\Tenancy`; no salary/payroll columns yet |
+| Controllers | `Tenant\EmployeeController` — avatar/CV on `custom` disk; optional linked system user |
+| Views | `tenant/hr/{departments,employees}/*`; index `#` column uses `$loop->iteration` |
+| Sidebar | Collapsible «الموارد البشرية» → الأقسام + الموظفين |
+| Tests | `tests/Feature/Tenant/HrModuleTest.php` |
+
+### HR Module Steps 3–4 — Contracts & Recruitment/ATS — 2026-08-01
+
+| Area | Notes |
+|---|---|
+| Routes | `hr.contracts.*`, `hr.jobs.*`, `hr.applications.*`; public `portal.jobs.apply` |
+| Models | `employee_contracts`, `job_postings`, `job_applications` |
+| Controllers | `App\Http\Controllers\Tenant\HR\*` |
+| Tests | `tests/Feature/Tenant/HrContractsAndRecruitmentTest.php` |
+
+### HR Attendance Hub + Employee Show Tabs — 2026-08-01
+
+| Area | Notes |
+|---|---|
+| Routes | `hr.attendance.index/store/update/check-in/check-out`; employee show already `hr.employees.show` |
+| Model | `attendances` + `AttendanceStatus` |
+| Views | `tenant/hr/attendance/index`; tabbed `tenant/hr/employees/show` |
+| Tests | `tests/Feature/Tenant/AttendanceTest.php` |
+
+### HR Leave & Performance — 2026-08-01 (updated 2026-08-03)
+
+| Area | Notes |
+|---|---|
+| Routes | `hr.leaves.*`; performance replaced by `hr.evaluations.*` (`/app/hr/evaluations`) |
+| Models | `LeaveType`, `LeaveRequest`; hierarchical `EmployeeEvaluation` (legacy `ReviewCycle` / `PerformanceReview` dropped) |
+| Controllers | `LeaveController`, `EmployeeEvaluationController` |
+| Views | `tenant/hr/leaves/index`, `tenant/hr/evaluations/index`; employee show evaluation history |
+| Org setting | `org_settings.evaluation_periodicity` (`monthly` / `quarterly` / `semi_annually` / `annually`) |
+| Permissions | `hr.evaluations.view_any\|manage\|approve`; Gate `hr.evaluations.access` (managers with reports) |
+| Flash | success on leave create/approve & evaluation upsert/approve; info on reject/status |
+| Tests | `LeaveAndPerformanceTest`, `EmployeeEvaluationsTest` |
+
+### HR My Space (Employee Self-Service) — 2026-08-01
+
+| Area | Notes |
+|---|---|
+| Routes | `hr.my-space`, `hr.my-space.check-in`, `hr.my-space.check-out`, `hr.my-space.leaves.store` |
+| Controller | `App\Http\Controllers\Tenant\HR\MySpaceController` |
+| View | `resources/views/tenant/hr/my-space.blade.php` |
+| Permission | `hr.my_space.view` |
+| Flash | success on check-in/out/leave/self; error on duplicate attendance / insufficient balance |
+| Tests | `tests/Feature/Tenant/MySpaceTest.php` |
+
+### Tenant Profile + Dark Default + Forgot Password — 2026-08-02
+
+| Area | Notes |
+|---|---|
+| Theme | `veyra-theme` localStorage; FOUC default dark on app/guest/auth-split/admin |
+| Routes | `profile.edit`, `profile.update`; `password.request/email/reset/update` |
+| Avatar | Cropper.js → `custom` disk → polymorphic `images` (`collection=avatar`) |
+| Controllers | `Tenant\ProfileController`, `Auth\{Forgot,Reset}PasswordController` |
+| Tests | `Tenant/ProfileTest`, `Auth/PasswordResetTest` |
+
+### Tenant Subscription Portal — 2026-08-02
+
+| Area | Notes |
+|---|---|
+| Routes | `tenant.subscription.index`, `tenant.subscription.invoices.download` |
+| Models | `TenantInvoice`; tenant billing columns; PlanSeeder limit features |
+| Service | `SubscriptionOverview` |
+| Permission | `tenant.subscription.view` |
+| Tests | `tests/Feature/Tenant/SubscriptionTest.php` |
+
+### Phase 2 — Roles & team invitations — 2026-07-30
+
+| Area | Notes |
+|---|---|
+| Routes | `roles.*` (`permission:tenant.roles.manage`); `team.*` invite/update permissions |
+| Model | `tenant_invitations` + `users.is_active` |
+| Controllers | `Tenant\RoleController`, `Tenant\TeamController` |
+| Tests | `tests/Feature/Tenant/RoleAndTeamTest.php` |
 

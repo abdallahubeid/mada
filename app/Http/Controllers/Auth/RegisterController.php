@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Domain\Tenancy\Actions\SeedDefaultTenantRoles;
-use App\Domain\Tenancy\Enums\TenantStatus;
-use App\Domain\Tenancy\Models\Tenant;
-use App\Domain\Tenancy\TenantContext;
+use App\Domain\Tenancy\Actions\RegisterTenantAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\User;
-use App\Services\Admin\PlatformNotificationPublisher;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Handles the SaaS multi-step registration wizard (docs/USER_JOURNEYS.md
@@ -24,9 +18,7 @@ use Illuminate\Support\Facades\DB;
 class RegisterController extends Controller
 {
     public function __construct(
-        private readonly SeedDefaultTenantRoles $seedDefaultTenantRoles,
-        private readonly TenantContext $tenantContext,
-        private readonly PlatformNotificationPublisher $notifications,
+        private readonly RegisterTenantAction $registerTenant,
     ) {}
 
     /**
@@ -47,40 +39,20 @@ class RegisterController extends Controller
      */
     public function store(RegisterRequest $request): RedirectResponse
     {
-        $data = $request->validated();
+        // Tenant + Owner creation lives in the action so the ordering it
+        // depends on (tenant → roles → owner, all inside the tenant context)
+        // has exactly one implementation.
+        [$tenant, $user] = $this->registerTenant->handle($request->validated());
 
-        $tenant = null;
-
-        $user = DB::transaction(function () use ($data, &$tenant): User {
-            $tenant = Tenant::create([
-                'name' => $data['company_name'],
-                'slug' => $data['company_slug'],
-                'status' => TenantStatus::PendingVerification,
-                'industry' => $data['industry'],
-                'team_size' => $data['team_size'],
-                'plan' => $data['plan'],
-            ]);
-
-            $this->seedDefaultTenantRoles->handle($tenant);
-
-            $user = User::create([
-                'tenant_id' => $tenant->id,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'email_verified_at' => null,
-            ]);
-
-            $this->tenantContext->setTenant($tenant);
-            $user->assignRole('Owner');
-
-            return $user;
-        });
-
-        if ($tenant instanceof Tenant) {
-            $this->notifications->tenantRegisteredPendingApproval($tenant);
-        }
-
+        /*
+         * The "awaiting your review" notification is NOT published here. It used
+         * to be, which announced a tenant to the Super Admin while it was still
+         * `pending_verification` — the body rendered that status verbatim, the
+         * approve action would have refused it, and the operator was sent to
+         * review something not yet reviewable. It now fires from
+         * VerifyTenantEmailAction, at the moment the tenant actually enters the
+         * queue.
+         */
         Auth::login($user);
 
         $user->sendEmailVerificationNotification();

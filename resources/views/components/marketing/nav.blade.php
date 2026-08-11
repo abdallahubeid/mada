@@ -13,8 +13,45 @@
         ['label' => 'تواصل معنا', 'path' => '/contact', 'route' => 'marketing.contact'],
     ];
 
-    $showAdminDashboard = auth()->check()
-        && auth()->user()->canAccessPlatformConsole();
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * WHERE "GO TO MY WORKSPACE" ACTUALLY LANDS
+     *
+     * A signed-in visitor previously saw THREE controls here: the admin link
+     * (operators only), plus "تسجيل الدخول" and "ابدأ التجربة المجانية" —
+     * inviting someone who is already authenticated to log in again and start
+     * a second trial. All three now collapse into one CTA.
+     *
+     * The destination is resolved rather than hardcoded to `dashboard`,
+     * because that route sits behind `tenant.active`: sending a tenant that is
+     * still verifying or awaiting approval there produces a 403, which is a
+     * dead end reached from a button that promised a dashboard. Onboarding
+     * tenants go to the setup wizard instead, which is reachable precisely
+     * because those routes sit under `tenant.context` and never `tenant.active`.
+     *
+     * Suspended, rejected and cancelled tenants DO go to `dashboard` and get
+     * the 403 — its message is per-status and explains the actual situation
+     * ("تم إيقاف حساب مؤسستك مؤقتاً…"), which the setup wizard would not.
+     *
+     * Operators route through preferredAdminHomeRoute() — the same helper the
+     * 403 page uses — so an admin whose role lacks `dashboard.view` lands on a
+     * console page they can actually open rather than another 403.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    $authUser = auth()->user();
+    $workspaceUrl = null;
+    $workspaceLabel = 'انتقل إلى لوحة التحكم';
+
+    if ($authUser !== null) {
+        if ($authUser->canAccessPlatformConsole()) {
+            $workspaceUrl = route($authUser->preferredAdminHomeRoute());
+        } elseif ($authUser->tenant?->status->isOnboarding()) {
+            $workspaceUrl = route('dashboard.setup');
+            $workspaceLabel = 'أكمل إعداد مؤسستك';
+        } else {
+            $workspaceUrl = route('dashboard');
+        }
+    }
 @endphp
 
 <header
@@ -54,8 +91,10 @@
                 type="button"
                 x-data
                 @click="
-                    const isDark = document.documentElement.classList.toggle('dark');
-                    localStorage.setItem('veyra-theme', isDark ? 'dark' : 'light');
+                    const root = document.documentElement;
+                    const nextDark = ! root.classList.contains('dark');
+                    root.classList.toggle('dark', nextDark);
+                    localStorage.setItem('veyra-theme', nextDark ? 'dark' : 'light');
                 "
                 class="rounded-lg p-2 text-mist-500 transition duration-200 ease-in-out hover:bg-mist-100 active:scale-90 dark:text-mist-400 dark:hover:bg-ink-800"
                 aria-label="تبديل المظهر"
@@ -65,24 +104,26 @@
                 </svg>
             </button>
 
-            @if ($showAdminDashboard)
+            @auth
                 <a
-                    href="{{ route('admin.dashboard') }}"
-                    class="text-sm font-semibold text-emerald-600 transition duration-200 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+                    href="{{ $workspaceUrl }}"
+                    class="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-ink-950 shadow-glow transition duration-200 ease-in-out hover:bg-emerald-400 active:scale-[0.98]"
                 >
-                    لوحة التحكم
+                    {{ $workspaceLabel }}
                 </a>
-            @endif
+            @endauth
 
-            <a href="{{ route('login') }}" class="text-sm font-medium text-ink-600 transition duration-200 hover:text-emerald-600 dark:text-mist-300 dark:hover:text-emerald-400">
-                تسجيل الدخول
-            </a>
-            <a
-                href="{{ route('register') }}"
-                class="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-ink-950 shadow-glow transition duration-200 ease-in-out hover:bg-emerald-400 active:scale-[0.98]"
-            >
-                ابدأ التجربة المجانية
-            </a>
+            @guest
+                <a href="{{ route('login') }}" class="text-sm font-medium text-ink-600 transition duration-200 hover:text-emerald-600 dark:text-mist-300 dark:hover:text-emerald-400">
+                    تسجيل الدخول
+                </a>
+                <a
+                    href="{{ route('register') }}"
+                    class="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-ink-950 shadow-glow transition duration-200 ease-in-out hover:bg-emerald-400 active:scale-[0.98]"
+                >
+                    ابدأ التجربة المجانية
+                </a>
+            @endguest
         </div>
 
         <button
@@ -113,11 +154,18 @@
             @foreach ($links as $link)
                 <a href="{{ $link['path'] }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">{{ $link['label'] }}</a>
             @endforeach
-            @if ($showAdminDashboard)
-                <a href="{{ route('admin.dashboard') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-emerald-600 hover:bg-mist-100 dark:text-emerald-400 dark:hover:bg-ink-800">لوحة التحكم</a>
-            @endif
-            <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">تسجيل الدخول</a>
-            <a href="{{ route('register') }}" class="mt-1 rounded-full bg-emerald-500 px-5 py-2.5 text-center text-sm font-semibold text-ink-950 shadow-glow">ابدأ التجربة المجانية</a>
+            {{-- Mirrors the desktop bar above: one CTA when signed in, the
+                 login/register pair when not. Kept in step deliberately — a
+                 mobile menu still offering "تسجيل الدخول" to a signed-in user
+                 is the same defect, just on a narrower screen. --}}
+            @auth
+                <a href="{{ $workspaceUrl }}" class="mt-1 rounded-full bg-emerald-500 px-5 py-2.5 text-center text-sm font-semibold text-ink-950 shadow-glow">{{ $workspaceLabel }}</a>
+            @endauth
+
+            @guest
+                <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">تسجيل الدخول</a>
+                <a href="{{ route('register') }}" class="mt-1 rounded-full bg-emerald-500 px-5 py-2.5 text-center text-sm font-semibold text-ink-950 shadow-glow">ابدأ التجربة المجانية</a>
+            @endguest
         </nav>
     </div>
 </header>

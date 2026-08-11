@@ -51,7 +51,7 @@
                         'ملغى',
                     ] as $i => $state)
                         <li class="relative rounded-2xl border border-mist-200 bg-white p-4 text-center dark:border-ink-800 dark:bg-ink-800/60">
-                            <span class="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-400/15 font-display text-sm font-bold text-emerald-600 dark:text-emerald-400">{{ $i + 1 }}</span>
+                            <span class="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-400/15 font-display text-sm font-bold text-emerald-800 dark:text-emerald-400">{{ $i + 1 }}</span>
                             <p class="mt-3 text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $state }}</p>
                         </li>
                     @endforeach

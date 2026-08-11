@@ -18,14 +18,7 @@
 
     <x-site-favicon />
 
-    {{-- Applied before first paint to avoid a flash of the wrong theme (docs/DESIGN_SYSTEM.md §2, ADR-15). --}}
-    <script>
-        (function () {
-            const stored = localStorage.getItem('veyra-theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.documentElement.classList.toggle('dark', stored ? stored === 'dark' : prefersDark);
-        })();
-    </script>
+    <x-theme-script />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles

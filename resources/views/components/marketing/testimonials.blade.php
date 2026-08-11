@@ -37,7 +37,7 @@
                         @if ($avatar)
                             <img src="{{ $avatar->url() }}" alt="{{ $avatar->alt_text ?? $testimonial->client_name }}" class="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-emerald-400/20">
                         @else
-                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 font-display text-sm font-bold text-emerald-600 dark:text-emerald-400">{{ $initial }}</span>
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 font-display text-sm font-bold text-emerald-800 dark:text-emerald-400">{{ $initial }}</span>
                         @endif
                         <div>
                             <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $testimonial->client_name }}</p>

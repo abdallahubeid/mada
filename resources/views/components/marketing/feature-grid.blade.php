@@ -18,7 +18,7 @@
 
         <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($offerings as $offering)
-                <div class="group rounded-2xl border border-mist-200 bg-ink-50/40 p-6 text-start shadow-sm transition duration-200 ease-out hover:-translate-y-1 hover:border-emerald-400/50 hover:shadow-lg dark:border-ink-800 dark:bg-ink-800/60">
+                <div class="veyra-card group rounded-2xl border border-mist-200 bg-ink-50/40 p-6 text-start shadow-sm hover:border-emerald-400/50 hover:shadow-lg dark:border-ink-800 dark:bg-ink-800/60">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-600 transition duration-200 group-hover:bg-emerald-400 group-hover:text-ink-950 dark:text-emerald-400">
                         @if ($offering->icon)
                             <iconify-icon icon="{{ $offering->icon }}" width="24" height="24" aria-hidden="true"></iconify-icon>

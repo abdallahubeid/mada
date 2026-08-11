@@ -14,8 +14,8 @@ test('setting seeder persists solutions section chrome and cta', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('solutions_badge_text'))->toBe('الحل')
-        ->and(Setting::getValue('solutions_title'))->toBe('منصّة واحدة تدير كل شيء بسلاسة')
-        ->and(Setting::getValue('solutions_sub_title'))->toBe('يوحّد Veyra ERP كل عمليات مؤسستك في نظام واحد متكامل، فتختفي الفوضى ويحلّ محلّها الوضوح.')
+        ->and(Setting::getValue('solutions_title'))->toBe('مصدر واحد للحقيقة عبر مؤسستك بالكامل')
+        ->and(Setting::getValue('solutions_sub_title'))->toBe('تنتقل البيانات من إعلان الوظيفة إلى العقد إلى الحضور إلى مسيّرة الرواتب دون إعادة إدخال واحدة، ودون جدول جانبي واحد.')
         ->and(Setting::getValue('solutions_btn_text'))->toBe('اكتشف كل المميزات')
         ->and(Setting::getValue('solutions_btn_link'))->toBe('#modules');
 });
@@ -36,7 +36,7 @@ test('solution seeder persists the four bullet points', function () {
 
     expect($solutions)->toHaveCount(4)
         ->and($solutions->pluck('icon')->unique()->all())->toBe(['ph:check-bold'])
-        ->and($solutions->first()->title)->toBe('نظام واحد موحّد يربط الموارد البشرية والمشاريع والرواتب والمالية.');
+        ->and($solutions->first()->title)->toBe('دورة حياة الموظف كاملة في مسار واحد: من إعلان الوظيفة إلى المقابلة إلى العقد إلى مستحق نهاية الخدمة.');
 });
 
 test('the landing page solutions section renders seeded settings and sidebar modules', function () {
@@ -47,15 +47,15 @@ test('the landing page solutions section renders seeded settings and sidebar mod
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('الحل', false)
-        ->assertSee('منصّة واحدة تدير كل شيء بسلاسة', false)
-        ->assertSee('يوحّد Veyra ERP كل عمليات مؤسستك في نظام واحد متكامل، فتختفي الفوضى ويحلّ محلّها الوضوح.', false)
-        ->assertSee('نظام واحد موحّد يربط الموارد البشرية والمشاريع والرواتب والمالية.', false)
-        ->assertSee('أتمتة كاملة للموافقات وسير العمل بدل العمليات اليدوية.', false)
+        ->assertSee('مصدر واحد للحقيقة عبر مؤسستك بالكامل', false)
+        ->assertSee('تنتقل البيانات من إعلان الوظيفة إلى العقد إلى الحضور إلى مسيّرة الرواتب دون إعادة إدخال واحدة، ودون جدول جانبي واحد.', false)
+        ->assertSee('دورة حياة الموظف كاملة في مسار واحد: من إعلان الوظيفة إلى المقابلة إلى العقد إلى مستحق نهاية الخدمة.', false)
+        ->assertSee('محرّك موافقات موحّد للإجازات والمصروفات ومسيّرات الرواتب، بفصل صارم بين مَن يُعدّ المعاملة ومَن يعتمدها.', false)
         ->assertSee('ph:check-bold', false)
         ->assertSee('اكتشف كل المميزات', false)
         ->assertSee('#modules', false)
         ->assertSee('الموارد البشرية', false)
         ->assertSee('المالية والرواتب', false)
-        ->assertSee('المشاريع والعمليات', false)
+        ->assertSee('التوظيف والمقابلات', false)
         ->assertSee('الدعم والتذاكر', false);
 });

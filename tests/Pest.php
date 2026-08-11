@@ -1,6 +1,10 @@
 <?php
 
 use App\Domain\Platform\PlatformPermissionCatalog;
+use App\Domain\Tenancy\Actions\SeedDefaultTenantRoles;
+use App\Domain\Tenancy\Models\Tenant;
+use App\Domain\Tenancy\TenantContext;
+use App\Domain\Tenancy\TenantPermissionCatalog;
 use App\Models\User;
 use Database\Seeders\PlatformRolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -52,6 +56,33 @@ function seedPlatformPermissions(): void
     test()->seed(PlatformRolesAndPermissionsSeeder::class);
     PlatformPermissionCatalog::bindTeam();
     app(PermissionRegistrar::class)->forgetCachedPermissions();
+}
+
+/**
+ * Seed tenant role templates and authenticate as a tenant user with the given role.
+ *
+ * @param  array<string, mixed>  $tenantAttributes
+ * @param  array<string, mixed>  $userAttributes
+ */
+function actingAsTenantUser(
+    string $role = TenantPermissionCatalog::ROLE_OWNER,
+    array $tenantAttributes = [],
+    array $userAttributes = [],
+): User {
+    $tenant = Tenant::factory()->create($tenantAttributes);
+
+    app(SeedDefaultTenantRoles::class)->handle($tenant);
+
+    $user = User::factory()->create(array_merge([
+        'tenant_id' => $tenant->id,
+    ], $userAttributes));
+
+    app(TenantContext::class)->setTenant($tenant);
+    $user->assignRole($role);
+
+    test()->actingAs($user);
+
+    return $user;
 }
 
 /**

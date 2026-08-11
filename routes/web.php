@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\DashboardSetupController;
 use App\Http\Controllers\Marketing\AboutController;
 use App\Http\Controllers\Marketing\ContactController;
 use App\Http\Controllers\Marketing\FaqController;
@@ -17,7 +18,6 @@ use App\Http\Controllers\Marketing\PrivacyController;
 use App\Http\Controllers\Marketing\SecurityController;
 use App\Http\Controllers\Marketing\SolutionsController;
 use App\Http\Controllers\Marketing\TermsController;
-use App\Livewire\Dashboard\Overview;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('landing');
@@ -53,6 +53,16 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store'])->middleware('throttle:5,1');
+
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {
@@ -65,16 +75,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/verify-email/resend', [VerifyEmailController::class, 'resend'])
         ->middleware('throttle:6,1')
         ->name('verification.send');
-
-    Route::get('/dashboard/setup', DashboardSetupController::class)
-        ->middleware('verified')
-        ->name('dashboard.setup');
-});
-
-// Operational tenant app — gated behind a verified user on an active tenant
-// (docs/ARCHITECTURE.md §1.3, BR-203).
-Route::middleware(['auth', 'verified', 'tenant.active'])->prefix('app')->group(function () {
-    Route::get('/dashboard', Overview::class)->name('dashboard');
 });
 
 // Standalone Two-Factor Challenge (docs/MODULES.md §6, ADR-14) — rendered

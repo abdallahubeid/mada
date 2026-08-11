@@ -6,12 +6,17 @@
 <tr>
 <td class="header">
 <a href="{{ $url }}" style="display: inline-block;">
+{{--
+    The uploaded site logo when one is set, otherwise the Veyra wordmark.
+
+    The Laravel-logo branch that sat between these two was removed on
+    2026-08-10: it fired whenever the header slot happened to read "Laravel"
+    and pulled a remote image from laravel.com into a Veyra customer's inbox.
+--}}
 @if ($logoUrl)
-<img src="{{ $logoUrl }}" class="logo" alt="{{ $appName }}" style="max-height: 48px; width: auto;">
-@elseif (trim($slot) === 'Laravel')
-<img src="https://laravel.com/img/notification-logo-v2.1.png" class="logo" alt="Laravel Logo">
+<img src="{{ $logoUrl }}" class="logo" alt="{{ $appName }}">
 @else
-<span style="font-size: 22px; font-weight: 700; color: #1f2937;">{{ $appName }}</span>
+<span style="font-size: 22px; font-weight: 700; color: #081425; letter-spacing: -0.01em;">{{ $appName }}</span>
 @endif
 </a>
 </td>

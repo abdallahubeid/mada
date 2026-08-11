@@ -4,8 +4,11 @@ namespace App\Models;
 
 use App\Domain\Platform\PlatformPermissionCatalog;
 use App\Domain\Tenancy\Concerns\BelongsToTenant;
+use App\Domain\Tenancy\Models\Department;
+use App\Domain\Tenancy\Models\Employee;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Domain\Tenancy\TenantContext;
+use App\Domain\Tenancy\TenantPermissionCatalog;
 use App\Models\Concerns\HasImages;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
@@ -14,11 +17,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -26,7 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
  * (docs/USER_JOURNEYS.md — Onboarding) can gate access behind a signed
  * email-verification link before a tenant reaches `pending_approval`.
  */
-#[Fillable(['tenant_id', 'name', 'email', 'phone', 'job_title', 'password', 'email_verified_at'])]
+#[Fillable(['tenant_id', 'department_id', 'name', 'email', 'phone', 'job_title', 'password', 'email_verified_at', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmailContract
 {
@@ -52,6 +57,14 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            // Messenger privacy toggles. Deliberately NOT in the Fillable
+            // attribute above: they are only ever set from the user's own
+            // settings form, never mass-assigned from an admin-facing payload
+            // that happens to carry them.
+            'chat_hide_last_seen' => 'boolean',
+            'chat_hide_read_receipts' => 'boolean',
+            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -70,6 +83,24 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /**
+     * @return BelongsTo<Department, $this>
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Linked HR employee profile (self-service / My Space), if any.
+     *
+     * @return HasOne<Employee, $this>
+     */
+    public function employee(): HasOne
+    {
+        return $this->hasOne(Employee::class);
     }
 
     /**
@@ -152,9 +183,61 @@ SVG;
 
     public function isPlatformSuperAdmin(): bool
     {
-        return PlatformPermissionCatalog::withTeam(
-            fn (): bool => $this->hasRole(PlatformPermissionCatalog::ROLE_SUPER_ADMIN),
-        );
+        try {
+            return PlatformPermissionCatalog::withTeam(
+                fn (): bool => $this->hasRole(PlatformPermissionCatalog::ROLE_SUPER_ADMIN),
+            );
+        } finally {
+            // hasRole() lazy-loads and caches the `roles` relation via
+            // loadMissing(), scoped to whatever team id was active at that
+            // moment. Left cached, a later team-scoped check (e.g.
+            // isTenantOwner()) would reuse this stale collection instead of
+            // re-querying under its own team id. Unset so every team-scoped
+            // check on this model always queries fresh.
+            $this->unsetRelation('roles');
+        }
+    }
+
+    /**
+     * Whether this user is the Tenant Owner for their organization.
+     *
+     * Spatie team context is bound to {@see $this->tenant_id} for the check so
+     * Gate::before works even if the registrar team was temporarily switched
+     * (e.g. platform team sentinel during Super Admin evaluation).
+     */
+    public function isTenantOwner(): bool
+    {
+        if ($this->tenant_id === null) {
+            return false;
+        }
+
+        $registrar = app(PermissionRegistrar::class);
+        $previousTeamId = $registrar->getPermissionsTeamId();
+        $registrar->setPermissionsTeamId($this->tenant_id);
+
+        try {
+            return $this->hasRole(TenantPermissionCatalog::ROLE_OWNER);
+        } finally {
+            $registrar->setPermissionsTeamId($previousTeamId);
+            // See isPlatformSuperAdmin() — avoid leaking a team-scoped cache.
+            $this->unsetRelation('roles');
+        }
+    }
+
+    /**
+     * Alias for {@see isTenantOwner()}.
+     */
+    public function isOwner(): bool
+    {
+        return $this->isTenantOwner();
+    }
+
+    /**
+     * Private Reverb channel for dual-channel tenant notifications.
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'tenant.'.$this->tenant_id.'.notifications.'.$this->id;
     }
 
     /**

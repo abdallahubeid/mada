@@ -1,7 +1,7 @@
 {{-- About Us — grounded in docs/PROJECT_VISION.md. --}}
 <x-layouts.marketing
     title="من نحن — Veyra ERP"
-    description="تعرّف على رؤية Veyra ERP: منصة SaaS متعددة المستأجرين تربط الموارد البشرية والمشاريع والرواتب في حلقة بيانات مغلقة."
+    description="تعرّف على رؤية Veyra ERP: منصة SaaS متعددة المستأجرين تربط التوظيف والموارد البشرية والرواتب في حلقة بيانات مغلقة."
 >
     <x-marketing.nav />
 
@@ -21,9 +21,12 @@
                 />
                 <div class="mt-12 grid gap-6 sm:grid-cols-3">
                     @foreach ([
-                        ['title' => 'الموارد البشرية والتوظيف', 'body' => 'التوظيف، سجلات الموظفين، الحضور، والإجازات.'],
-                        ['title' => 'العمليات والمشاريع', 'body' => 'تنفيذ المهام والمشاريع وتتبع الوقت.'],
-                        ['title' => 'المالية والرواتب', 'body' => 'الرواتب، الفوترة، المصاريف، والتقارير المالية.'],
+                        {{-- "العمليات والمشاريع" (no projects/timesheets module) and
+                             "الفوترة" (client invoicing is Phase 2B, blocked — ADR-18)
+                             removed 2026-08-10 and replaced with built domains. --}}
+                        ['title' => 'الموارد البشرية والتوظيف', 'body' => 'التوظيف والمقابلات، سجلات الموظفين، العقود، الحضور، والإجازات.'],
+                        ['title' => 'الحوكمة والصلاحيات', 'body' => 'أدوار مخصّصة لكل مؤسسة، محرّك موافقات، وسجل تدقيق كامل.'],
+                        ['title' => 'المالية والرواتب', 'body' => 'مسيّرات الرواتب، المصروفات، وتسويات نهاية الخدمة.'],
                     ] as $domain)
                         <div class="rounded-2xl border border-mist-200 bg-ink-50/40 p-5 dark:border-ink-800 dark:bg-ink-800/60">
                             <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">{{ $domain['title'] }}</h3>

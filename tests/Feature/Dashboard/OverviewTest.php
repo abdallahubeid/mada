@@ -1,9 +1,7 @@
 <?php
 
 use App\Domain\Tenancy\Enums\TenantStatus;
-use App\Domain\Tenancy\Models\Tenant;
-use App\Livewire\Dashboard\Overview;
-use App\Models\User;
+use App\Domain\Tenancy\TenantPermissionCatalog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -12,24 +10,28 @@ test('guests are redirected to login', function () {
     $this->get('/app/dashboard')->assertRedirect('/login');
 });
 
-test('a user on an active tenant can view the dashboard shell', function () {
-    $tenant = Tenant::factory()->active()->create(['name' => 'Acme Robotics']);
-    $user = User::factory()->create(['tenant_id' => $tenant->id, 'name' => 'Jane Owner']);
+test('a user on an active tenant can view the executive dashboard', function () {
+    actingAsTenantUser(
+        TenantPermissionCatalog::ROLE_OWNER,
+        ['status' => TenantStatus::Active->value, 'name' => 'Acme Robotics'],
+        ['name' => 'Jane Owner'],
+    );
 
-    $this->actingAs($user)
-        ->get('/app/dashboard')
+    $this->get('/app/dashboard')
         ->assertOk()
-        ->assertSeeLivewire(Overview::class)
         ->assertSee('Jane Owner')
-        ->assertSee('Acme Robotics');
+        ->assertSee('Acme Robotics')
+        ->assertSee('إجمالي الموظفين')
+        ->assertSee('نسبة الحضور الشهرية');
 });
 
 test('a user on a non-active tenant is forbidden from the dashboard', function (TenantStatus $status) {
-    $tenant = Tenant::factory()->create(['status' => $status]);
-    $user = User::factory()->create(['tenant_id' => $tenant->id]);
+    actingAsTenantUser(
+        TenantPermissionCatalog::ROLE_OWNER,
+        ['status' => $status->value],
+    );
 
-    $this->actingAs($user)
-        ->get('/app/dashboard')
+    $this->get('/app/dashboard')
         ->assertForbidden();
 })->with([
     'pending verification' => TenantStatus::PendingVerification,
@@ -37,3 +39,14 @@ test('a user on a non-active tenant is forbidden from the dashboard', function (
     'suspended' => TenantStatus::Suspended,
     'cancelled' => TenantStatus::Cancelled,
 ]);
+
+test('an active tenant user without dashboard permission cannot view the dashboard', function () {
+    $user = actingAsTenantUser(
+        TenantPermissionCatalog::ROLE_OWNER,
+        ['status' => TenantStatus::Active->value],
+    );
+
+    $user->syncRoles([]);
+
+    $this->get('/app/dashboard')->assertForbidden();
+});

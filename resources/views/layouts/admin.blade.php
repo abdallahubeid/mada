@@ -15,13 +15,7 @@
 
     <x-site-favicon />
 
-    {{-- Applied before first paint to avoid a flash of the wrong theme (ADR-15); console defaults to dark. --}}
-    <script>
-        (function () {
-            const stored = localStorage.getItem('veyra-theme');
-            document.documentElement.classList.toggle('dark', stored ? stored === 'dark' : true);
-        })();
-    </script>
+    <x-theme-script />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
@@ -129,14 +123,33 @@
                 return;
             }
 
+            /*
+             * Mirrors the tenant shell's variant map (see
+             * components/layouts/app.blade.php). `danger` stays the default so
+             * every existing delete form behaves exactly as before.
+             */
+            const swalVariants = {
+                danger: {
+                    icon: 'warning',
+                    color: '#ef4444',
+                    confirm: 'نعم، احذف',
+                    text: 'سيتم الحذف الناعم ويمكن الاستعادة من سلة المحذوفات.',
+                },
+                warning: { icon: 'warning', color: '#f59e0b', confirm: 'نعم، تابع', text: '' },
+                success: { icon: 'question', color: '#10b981', confirm: 'نعم، تابع', text: '' },
+                info: { icon: 'question', color: '#0ea5e9', confirm: 'نعم، تابع', text: '' },
+            };
+
+            const variant = swalVariants[form.dataset.swalVariant] || swalVariants.danger;
+
             Swal.fire({
                 title: form.dataset.swalTitle || 'هل أنت متأكد من الحذف؟',
-                text: form.dataset.swalText || 'سيتم الحذف الناعم ويمكن الاستعادة من سلة المحذوفات.',
-                icon: 'warning',
+                text: form.dataset.swalText || variant.text,
+                icon: form.dataset.swalIcon || variant.icon,
                 showCancelButton: true,
-                confirmButtonText: form.dataset.swalConfirmButton || 'نعم، احذف',
+                confirmButtonText: form.dataset.swalConfirmButton || variant.confirm,
                 cancelButtonText: form.dataset.swalCancelButton || 'إلغاء',
-                confirmButtonColor: '#ef4444',
+                confirmButtonColor: variant.color,
                 cancelButtonColor: '#64748b',
                 reverseButtons: true,
             }).then((result) => {

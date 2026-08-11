@@ -1,0 +1,478 @@
+================================================================================
+SESSION BRIEFING - VEYRA ERP
+Role-aware navigation, task management, split dashboards, a role-aware
+notification system, My Space retirement, and a system-wide table standard
+================================================================================
+
+Repo:             veyra
+Date:             2026-08-05
+Area:             Tenant app — navigation, HR module, dashboards, notifications, UI
+Tasks completed:  5
+Tests at close:   403 / 404 (2,262 assertions) — 1 pre-existing failure, not ours
+
+--------------------------------------------------------------------------------
+AT A GLANCE
+--------------------------------------------------------------------------------
+Files created ................ 34
+Files deleted ................. 4
+Tests added .................. 38
+Permissions added ............. 6
+Permissions removed ........... 1
+Routes added ................. 10
+Routes removed ................ 4
+Events created ................ 4
+Notifications created ......... 5
+Notifications re-targeted .... 15  (were Owner-only)
+Data tables standardized ..... 29
+Root-cause bugs fixed ......... 2
+
+--------------------------------------------------------------------------------
+EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Five sequential tasks, each building on the last. The sidebar was made
+role-aware. A Task/Scrum module was built end-to-end. Dashboards were split
+three ways and the notification system — which had silently delivered to
+Owners only — was rebuilt to route by permission. The My Space hub was
+retired in favour of four first-class self-service routes. Finally, every
+data table in the tenant app was brought under one markup contract, which
+surfaced and fixed a real RTL alignment bug.
+
+Two findings changed the shape of the work. First, `TenantOwnerNotifier`
+hard-filtered every one of the app's 15 notifications to Owners, so an HR
+Manager received nothing at all — not even the leave requests they are
+responsible for approving. Second, table columns appeared misaligned not
+because of missing CSS classes but because `dir="ltr"` on a `<td>` silently
+flips what the logical `text-start` resolves to.
+
+Both were diagnosed by measurement, not inspection.
+
+================================================================================
+01 - ROLE-AWARE SIDEBAR NAVIGATION
+================================================================================
+Goal: Owner sees HR collapsed into one dropdown; HR Manager sees the same
+pages flat; employees get a flat self-service section.
+
+APPROACH
+  The existing render loop already supported both shapes — flat items and
+  dropdown-with-children (used by the Access & Permissions group). No new
+  markup was needed. The nine HR items were extracted to $hrManagementItems
+  and the group's *shape* is branched once, up front:
+
+    @hasrole('Owner')  ->  $hrGroup = [ 'children' => $hrManagementItems ]
+    otherwise          ->  $hrGroup = [ 'items'    => $hrManagementItems ]
+
+CARRY-OVER BUG GUARD
+  `@hasrole` calls hasRole() with no cleanup, caching the `roles` relation
+  scoped to the team id active at that moment. Left cached, the next
+  Gate-driven @can (which runs Gate::before -> isPlatformSuperAdmin() ->
+  isTenantOwner(), both team-switching) would reuse it via a no-op
+  loadMissing() — the exact stale-cache class of bug fixed at source in the
+  previous session. A defensive `auth()->user()?->unsetRelation('roles')`
+  was added immediately after the @hasrole block.
+
+FILES
+  [MOD] partials/sidebar.blade.php
+  [NEW] tests/Feature/Tenant/SidebarRoleAwareTest.php   (3 tests)
+
+CLOSE: tenant suite 104 / 104
+
+================================================================================
+02 - LINE MANAGER TASK ASSIGNMENT + EMPLOYEE SCRUM BOARD
+================================================================================
+DATA MODEL
+  tasks: tenant_id, manager_id, employee_id, title, description, due_date,
+         priority, status, timestamps, softDeletes
+  manager_id / employee_id reference `employees` (NOT `users`), matching the
+  existing EmployeeEvaluation convention.
+
+  TaskStatus  : todo | in_progress | review | completed  (+ previous(), next())
+  TaskPriority: low | medium | high
+
+AUTHORIZATION
+  hr.tasks.manage        - real permission, granted to HR Manager + Owner
+  hr.my_tasks.view       - self-service bucket
+  Gate::define('hr.tasks.access')  - mirrors hr.evaluations.access exactly:
+    anyone with direct reports passes, so ad-hoc line managers can assign
+    without holding a formal HR role.
+
+  StoreTaskRequest restricts employee_id to the acting manager's own direct
+  reports via a scoped Rule::exists (tenant_id + manager_id + not deleted).
+  updateStatus verifies the task belongs to the acting employee.
+
+UI
+  Manager  : tenant/hr/tasks/index.blade.php    - form + team task table
+  Employee : tenant/hr/employee/tasks.blade.php - 4-column Scrum board,
+             Alpine HTML5 drag-and-drop PLUS prev/next buttons that work
+             without JS (verified by real click in browser).
+
+NOTE
+  `priority` appears in the brief's §2 (manager form) but not §1 (field
+  list). It was included, and flagged.
+
+FILES
+  [NEW] Enums/TaskStatus.php, Enums/TaskPriority.php
+  [NEW] Models/Task.php, database/factories/TaskFactory.php
+  [NEW] migrations/2026_08_05_090000_create_tasks_table.php
+  [NEW] Controllers/Tenant/HR/TaskController.php
+  [NEW] Requests/Tenant/StoreTaskRequest.php, UpdateTaskStatusRequest.php
+  [NEW] views/tenant/hr/tasks/index.blade.php
+  [NEW] views/tenant/hr/employee/tasks.blade.php
+  [NEW] tests/Feature/Tenant/TaskManagementTest.php   (5 tests)
+  [MOD] Models/Employee.php (tasks() / assignedTasks())
+  [MOD] TenantPermissionCatalog.php, AppServiceProvider.php
+  [MOD] routes/tenant.php, partials/sidebar.blade.php
+
+CLOSE: tenant suite 109 / 109
+
+================================================================================
+03 - ROLE-SPECIFIC DASHBOARDS + ROLE-AWARE NOTIFICATIONS
+================================================================================
+Ran as a two-phase task: a read-only analysis phase delivered for approval,
+then implementation.
+
+--------------------------------------------------------------------------------
+3.1  PHASE 1 - FINDINGS THAT CHANGED THE BRIEF
+--------------------------------------------------------------------------------
+(1) THERE IS NO PAYROLL MODULE.
+    Zero tables, zero models, zero controllers. EmployeeContract is
+    explicitly docblocked "(non-payroll)" and carries no salary field.
+    All payroll widgets were struck from scope.
+
+(2) THERE IS NO birth_date COLUMN.
+    The requested "upcoming birthdays" widget was not buildable. Work
+    anniversaries derived from joining_date shipped instead (approved).
+
+(3) EVERY NOTIFICATION WAS OWNER-ONLY.
+    TenantOwnerNotifier::ownersForTenant() hard-filters ->role(ROLE_OWNER).
+    All 15 notifications routed through it. An HR Manager received nothing.
+
+    The delivery half of the stack was already role-neutral and needed no
+    change: NotificationController uses $user->notifications(), the Reverb
+    channel is per-user (tenant.{tenantId}.notifications.{userId}), and
+    TenantNotificationChannel authorizes any user on their own channel.
+    Only the fan-out layer was hardcoded.
+
+(4) ANNOUNCEMENTS PERMISSION GAP.
+    tenant.announcements.view_any was granted only to HR Manager + Owner —
+    a standard Employee could not read ANY announcement, including urgent
+    ones. A read-only self-service grant was added.
+
+APPROVED DECISIONS (all four "Recommended")
+  - Work anniversaries only (no birth_date migration)
+  - Smart dispatcher on /dashboard (not separate routes + login redirect)
+  - HR task widget scoped org-wide
+  - Rename TenantOwnerNotification -> TenantNotification
+
+--------------------------------------------------------------------------------
+3.2  NOTIFICATION ARCHITECTURE REBUILD
+--------------------------------------------------------------------------------
+  [RENAME] TenantOwnerNotification -> TenantNotification
+           14 subclasses updated mechanically.
+
+  [NEW] Services/Tenancy/TenantNotifier.php
+        toOwners() / toRole() / toPermission() / toEmployee() /
+        toLineManagerOf() / toAllStaff() / toUsers()
+        Every resolver binds the tenant as Spatie's permission team id and
+        restores it in a finally block, then unsets the cached `roles`
+        relation — same discipline as User::isTenantOwner().
+
+  [KEEP] TenantOwnerNotifier — now a thin delegating wrapper, so all 15
+         existing call sites work untouched.
+
+  THE DOUBLE-DELIVERY PROBLEM
+    Rather than rewrite the Owner listeners (risk, and their names would
+    start lying), a parallel listener was added:
+
+      NotifyOwnersOf*            (untouched)  -> Owners
+      NotifyHrOfOperationalEvents (new)       -> permission holders, minus Owners
+
+    Recipients resolve by PERMISSION, not role name, so custom tenant roles
+    holding the ability are included automatically. All 9 call sites pass
+    `includeOwners: false` — without it a user holding both Owner and HR
+    Manager receives every notification twice.
+
+    This guard is covered by a test that was VERIFIED TO FAIL when the flag
+    is flipped (asserts 1 sent, gets 2). A test that cannot fail is worthless.
+
+  NEW EVENTS
+    TaskAssigned, TaskCompleted, LeaveRequestDecided, EvaluationPublished
+
+  NEW NOTIFICATIONS
+    TaskAssignedNotification, TaskCompletedNotification,
+    LeaveDecisionNotification, EvaluationPublishedNotification,
+    CheckOutReminderNotification
+
+  TRANSITION GUARDS (each fires once, on the real state change)
+    - Task completion  : only on the transition INTO Completed
+    - Evaluation       : only on the draft -> visible transition; approve()
+                         captures draft ids BEFORE the mass update overwrites
+                         status, since ->update() fires no model events
+    - Leave            : only on a terminal decision; an escalation to the
+                         next approval level leaves it pending and is silent
+
+  NOTE: LeaveController::approve()/reject() previously fired NO events at
+  all — only audit logs. Employees were never told the outcome of their own
+  leave request.
+
+  SCHEDULED
+    tenant:send-check-out-reminders — weekdays 18:30, idempotent per
+    employee per day via Cache::add expiring at midnight (matches the
+    existing expiring-contract command pattern).
+
+--------------------------------------------------------------------------------
+3.3  DASHBOARDS
+--------------------------------------------------------------------------------
+  DISPATCHER
+    /app/dashboard stays the single post-login destination and routes by
+    role. Owner falls through to the executive dashboard rendered in place;
+    HR Manager and Employee redirect to their own bookmarkable URLs.
+
+    Owner is checked FIRST — Owners hold every permission through the
+    Gate::before bypass, so a permission-first ordering would route them to
+    the HR dashboard.
+
+  THE ABSENCE GAP  (worth knowing about)
+    AttendanceStatus::Absent only exists when someone explicitly recorded
+    it. An employee who simply never checked in has NO ROW AT ALL and is
+    invisible to a `where(status, Absent)` count. HrDashboard therefore
+    computes a third bucket:
+
+      no_record = active headcount - employees with any row today
+
+    and counts both toward the absence rate. This is why the existing
+    ExecutiveDashboard attendance rate can read misleadingly high.
+    Verified live: 3 employees, 1 present, 1 late, 1 no-record -> 33.3%.
+
+  HR DASHBOARD (tenant.hr.dashboard, permission hr.dashboard.view)
+    KPIs: headcount, present today, absence rate, pending leaves
+    Attendance split incl. the no_record bucket
+    Pending leave approval queue
+    Evaluation progress for the org's configured period
+    Org-wide task rollup + overdue (excludes completed-but-past-due)
+    Contract renewals (30d), probation endings (30d) [previously unused],
+    on-leave-today roster, work anniversaries (30d)
+
+  EMPLOYEE DASHBOARD (tenant.hr.employee.dashboard, hr.my_dashboard.view)
+    Deliberately a SUMMARY, not a second My Space — deep-links into the
+    existing surfaces rather than duplicating their history tables.
+    Today's attendance + check-in/out CTA, Scrum summary + overdue + next
+    due, leave balances, latest evaluation (Submitted/Approved only — Draft
+    is the evaluator's private copy), pending leaves, month attendance,
+    contract, assigned assets, announcements.
+
+  REGRESSIONS FIXED
+    The dispatcher broke 3 existing tests that asserted 200 on /app/dashboard
+    for non-Owners. Fixed with followingRedirects() — preserving intent
+    ("this role is not denied"), not weakening the assertion.
+
+FILES
+  [NEW] Services/Tenancy/TenantNotifier.php, HrDashboard.php, EmployeeDashboard.php
+  [NEW] Controllers/Tenant/HR/HrDashboardController.php
+  [NEW] Notifications/Tenant/TenantNotification.php (+5 new notifications)
+  [NEW] Events/Tenancy/ x4
+  [NEW] Listeners/Tenancy/NotifyStaffOfHrEvents.php, NotifyHrOfOperationalEvents.php
+  [NEW] Console/Commands/Tenancy/SendCheckOutRemindersCommand.php
+  [NEW] views/tenant/dashboard/hr.blade.php, employee.blade.php
+  [NEW] tests/.../RoleDashboardTest.php (10), RoleNotificationTest.php (10)
+  [MOD] DashboardController, LeaveController, EmployeeEvaluationController,
+        TaskController, TenantOwnerNotifier, AppServiceProvider,
+        TenantPermissionCatalog, routes/tenant.php, routes/console.php, sidebar
+
+CLOSE: full suite 397 / 398
+
+================================================================================
+04 - MY SPACE RETIREMENT
+================================================================================
+MySpaceController and its four routes were deleted. Its logic split into two
+focused controllers, each pinned to the acting user's own employee record:
+
+  MyAttendanceController -> tenant.hr.my-attendance (+ check-in / check-out)
+  MyLeaveController      -> tenant.hr.my-leaves     (+ store)
+
+All four self-service features are now first-class routes. /app/my-space
+returns 404.
+
+SIDEBAR
+  "مساحتي الخاصة" removed. الخدمة الذاتية now lists four standalone items.
+  Critically: three of them previously shared the `hr.my-space*` pattern, so
+  they ALL highlighted at once. Each now owns a distinct pattern, covered by
+  a test asserting each page highlights only its own item.
+
+TWO THINGS THE BRIEF GOT WRONG
+  - The view was at views/tenant/hr/my-space.blade.php, not
+    views/tenant/hr/employee/my-space.blade.php.
+  - hr.my_space.view ALSO gated the topbar check-out button, not just the
+    My Space link. Deleting the permission blindly would have silently
+    removed that shortcut for every employee. It was re-gated to
+    hr.attendance.check_in_out — the ability it actually exercises — and the
+    adjacent link relabelled "حضوري 🕒".
+
+PERMISSION REMOVED
+  hr.my_space.view dropped from the catalog (nothing gates on it anymore).
+  The `permissions` table row still exists; any CUSTOM role holding it keeps
+  an inert grant. tenant:sync-role-permissions detaches it from the five
+  default roles — already run against all 5 tenants.
+
+NOT REBUILT
+  My Space had a third tab (profile + contract). That content already lives
+  on the Employee Dashboard, so it was not duplicated.
+
+FILES
+  [NEW] Controllers/Tenant/HR/MyAttendanceController.php, MyLeaveController.php
+  [NEW] views/tenant/hr/employee/attendance.blade.php, leaves.blade.php
+  [NEW] tests/Feature/Tenant/SelfServiceRoutesTest.php   (10 tests)
+  [DEL] Controllers/Tenant/HR/MySpaceController.php
+  [DEL] views/tenant/hr/my-space.blade.php
+  [DEL] tests/Feature/Tenant/MySpaceTest.php
+  [MOD] routes/tenant.php, sidebar, topbar, dashboard/employee.blade.php,
+        CheckOutReminderNotification, LeaveDecisionNotification,
+        TenantPermissionCatalog
+
+CLOSE: full suite 403 / 404
+
+================================================================================
+05 - SYSTEM-WIDE DATA TABLE STANDARD
+================================================================================
+--------------------------------------------------------------------------------
+5.1  THE ALIGNMENT BUG - ROOT CAUSE
+--------------------------------------------------------------------------------
+Not missing classes. Measured in the browser on my-attendance:
+
+  column          header inset    cell inset     drift
+  --------------  ------------    -----------    --------
+  #                     16px           16px      aligned
+  التاريخ                16px          185px      169px
+  حضور                  16px          127px      111px
+  انصراف                16px          149px      133px
+  الحالة                 16px           16px      aligned
+
+Cells WITHOUT dir="ltr" aligned perfectly. Cells WITH it drifted.
+
+getComputedStyle reported `text-align: start` on BOTH the <th> and the <td>
+— which is exactly why this looked like a class problem. But `start`
+resolves against each element's OWN direction: left inside a dir="ltr" cell,
+right inside the RTL header. Same class string, opposite physical edge.
+
+FIX
+  dir="ltr" moved off the cell onto an inner <x-ui.ltr> span. The cell stays
+  RTL so header and value share one edge; digits still render in reading
+  order (2026-08-04, not reversed). Re-measured: all columns at 16px.
+
+--------------------------------------------------------------------------------
+5.2  WHAT WAS APPLIED
+--------------------------------------------------------------------------------
+  Scope: 29 tables across 23 tenant views.
+  Excluded: 4 reports/print/* views — standalone HTML with inline CSS and no
+  Tailwind. They already had # and explicit text-align: right, and were
+  never affected by the bug.
+
+  dir="ltr" cells fixed .............. 40
+  <th> restyled ..................... 145
+  index columns normalized ........... 23  (+5 tables that had none)
+  status/action columns centred ...... 32  (header AND cell moved together)
+  empty states -> component .......... 25
+  padding normalized (px-3 -> px-4) .. 19
+  explicit alignment added ........... 103
+
+  [NEW] components/ui/ltr.blade.php         - bidi isolation
+  [NEW] components/ui/table-empty.blade.php - icon + Arabic copy + colspan
+  [DOC] DESIGN_SYSTEM.md §8 — the full contract
+
+--------------------------------------------------------------------------------
+5.3  FOUR JUDGMENT CALLS
+--------------------------------------------------------------------------------
+(1) THE SPECIFIED slate-* CLASSES WERE NOT USED.
+    `bg-slate-800/50` + `text-slate-200` assume a dark-only design. This app
+    defaults to LIGHT mode with dark opt-in via an explicit .dark class
+    (ADR-15). Applied literally, all 29 tables would get a dark header bar
+    and near-white text on a #fafafa page. The exact typography SCALE was
+    implemented using the project's ink/mist tokens with light+dark pairs.
+    Verified rendering: 12px / 600 / uppercase / 0.6px tracking; thead
+    #f4f6f5 in light, #081425 in dark.
+
+(2) SIX TABLES ALREADY HAD BETTER INDEXING THAN $loop->iteration.
+    They carry the page offset so numbering stays continuous across pages.
+    These were PRESERVED, not downgraded, and offset-carrying is now the
+    documented rule for paginated tables.
+
+(3) TRASH KEEPS ITS CHECKBOX IN COLUMN 1.
+    It is a selection control, not data. # follows it.
+
+(4) ONE TABLE HAS NO # COLUMN BY DESIGN.
+    The audit-log field-diff panel compares before/after values for a single
+    record via Alpine x-for. No row sequence to number, no Blade $loop.
+
+--------------------------------------------------------------------------------
+5.4  A NEAR-MISS WORTH RECORDING
+--------------------------------------------------------------------------------
+The action-column centring initially used a global `flex justify-end` ->
+`justify-center` replace. A check before applying showed only 5 of 14
+occurrences were inside tables — the other 9 were FORM FOOTERS (Cancel /
+Save button rows) across 9 files. The replacement was scoped to table blocks
+only; form footers verified unchanged.
+
+CLOSE: full suite 403 / 404
+
+================================================================================
+06 - VERIFICATION SUMMARY
+================================================================================
+  Check                                                    Result
+  -------------------------------------------------------- ------------------
+  vendor/bin/pint --test (all touched files)               passed
+  Blade compile + php -l across every view                 206 / 206 clean
+  php artisan route:list (new + removed routes)            confirmed
+  Static table audit (th/td alignment, counts, colspans)   29 / 29 conform
+  tenant:sync-role-permissions                             5 tenants synced
+  Full Pest suite                                          403 / 404
+
+  Browser-verified end to end (real interaction, not just page loads):
+    - Scrum board "التالي" button moved a task between columns
+    - Self-service check-in recorded 13:28, correctly flagged متأخر
+    - Leave request submitted, appeared قيد الانتظار, 3 days computed
+    - Dispatcher redirects for HR Manager and Employee
+    - 403 on HR dashboard for an employee; 404 on retired /app/my-space
+    - Sidebar active-state isolation per self-service page
+    - Table alignment re-measured; light AND dark mode
+    - Empty-state component renders with icon and correct colspan
+
+  All QA tenants created during verification were cleaned up. Database back
+  to its starting state (5 tenants, 6 users).
+
+--------------------------------------------------------------------------------
+KNOWN ISSUE - NOT OURS
+--------------------------------------------------------------------------------
+tests/Feature/PricingLandingSectionTest.php fails:
+  "plan seeder persists the three erp pricing tiers"
+  expects the startup plan to have 4 features, gets 7.
+
+Cause: uncommitted local changes to database/seeders/PlanSeeder.php
+(+30/-3 vs HEAD) added features without updating the test. This was already
+failing at session start and is unrelated to any work here. A background
+task chip was spawned to resolve it — decide whether the seeder or the test
+is the source of truth.
+
+--------------------------------------------------------------------------------
+ARCHITECTURAL NOTES FOR NEXT SESSION
+--------------------------------------------------------------------------------
+- TenantNotifier is now the single place recipients are decided. New
+  notifications should depend on it directly and pick an explicit resolver.
+  Owner-only delivery is rarely what a tenant-wide event actually wants.
+
+- The "line manager" audience is a CAPABILITY (has direct reports), not a
+  Spatie role. Three things now key off it: hr.evaluations.access,
+  hr.tasks.access, and TenantNotifier::toLineManagerOf().
+
+- Any new team-scoped check on a User instance must leave the model with no
+  cached `roles` relation. This has now bitten twice.
+
+- Any new data table must follow DESIGN_SYSTEM.md §8, and must NOT put
+  dir="ltr" on a <td>. Use <x-ui.ltr>.
+
+- Still not addressed (carried from the previous briefing): the orphaned
+  Livewire dashboard component, and the two Owner-reserved gaps in the HR
+  Manager grant (department create/delete, employee delete) — both
+  intentional.
+
+================================================================================
+END OF BRIEFING
+================================================================================

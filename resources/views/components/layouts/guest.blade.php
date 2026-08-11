@@ -1,11 +1,8 @@
 @props(['maxWidth' => 'max-w-md', 'title' => null])
 <!DOCTYPE html>
 {{--
-    Registration, login, email-verification, and the pending-setup screen
-    are all pre-full-access onboarding steps reached directly from the
-    Arabic-first marketing funnel (resources/views/landing.blade.php), so
-    this layout is hardcoded to `ar`/`rtl` for the same reason
-    components/layouts/marketing.blade.php is — see that file's note.
+    Centered auth card layout for forgot/reset password, email verification,
+    and other non-split guest flows. Full-viewport navy background — no 50/50 grid.
 --}}
 <html lang="ar" dir="rtl" class="h-full scroll-smooth">
 <head>
@@ -15,23 +12,37 @@
 
     <x-site-favicon />
 
-    {{-- Applied before first paint to avoid a flash of the wrong theme (docs/DESIGN_SYSTEM.md §2, ADR-15). --}}
-    <script>
-        (function () {
-            const stored = localStorage.getItem('veyra-theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.documentElement.classList.toggle('dark', stored ? stored === 'dark' : prefersDark);
-        })();
-    </script>
+    <x-theme-script />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="flex min-h-full items-center justify-center bg-ink-100 px-4 py-12 font-sans text-ink-600 dark:bg-ink-950 dark:text-ink-50">
-    <div class="w-full {{ $maxWidth }}">
+<body class="flex min-h-dvh w-full items-center justify-center bg-[#0B132B] px-4 py-12 font-sans text-ink-50 antialiased dark:bg-[#0F172A]">
+    <div class="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <div class="absolute -top-32 start-1/4 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl"></div>
+        <div class="absolute -bottom-24 end-0 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 w-full {{ $maxWidth }}">
         {{ $slot }}
     </div>
 
     @livewireScripts
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (session('flasher'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: @js(session('flasher.type', 'success')),
+                    title: @js(session('flasher.message')),
+                    confirmButtonColor: '#4edea3',
+                    confirmButtonText: 'حسنًا',
+                    timer: 4200,
+                    timerProgressBar: true,
+                });
+            });
+        </script>
+    @endif
 </body>
 </html>

@@ -34,6 +34,8 @@ Do **not** add SoftDeletes to framework/infra tables such as: `sessions`, `cache
 
 ## Trash / Recycle Bin
 
-- Soft-deleted rows are managed from `/admin/trash` (`TrashManager` + `TrashableResourceCatalog`).
-- Soft delete UX: SweetAlert confirm (`data-swal-confirm`) then flash toast with **Undo** → `admin.trash.restore`.
-- Permanent removal only via trash force-delete / empty (requires `trash.force_delete`).
+- Soft-deleted platform rows are managed from `/admin/trash` (`App\Services\Admin\TrashManager` + `TrashableResourceCatalog`).
+- Soft-deleted **tenant** rows are managed from `/app/trash` (`App\Services\Tenancy\TrashManager` + `App\Domain\Tenancy\TrashableResourceCatalog`).
+- Soft delete UX: SweetAlert confirm (`data-swal-confirm` / «هل أنت تأكد من الحذف؟») then flash toast with **Undo / تراجع** → `*.trash.restore`.
+- Permanent removal only via trash force-delete / empty (requires `trash.force_delete` or `tenant.trash.force_delete`).
+- Tenant hierarchical evaluations use `employee_evaluations` (not legacy review cycles).

@@ -36,9 +36,16 @@ class AdminNavigationCatalog
                 'keywords' => ['خطط', 'الخطة', 'الخُطط', 'حدود', 'plans', 'limits'],
                 'scope' => 'plans',
             ],
+            /*
+             * Subtitles are the sidebar group each page lives under, so search
+             * results read as "where would I have clicked to get here". FAQs
+             * moved from المستأجرون to المحتوى when the sidebar was regrouped —
+             * `faqs` rows are platform-global marketing content, not tenant
+             * data (see layouts/partials/admin-sidebar.blade.php).
+             */
             [
                 'title' => 'الأسئلة الشائعة',
-                'subtitle' => 'المستأجرون',
+                'subtitle' => 'المحتوى',
                 'route' => 'admin.faqs.index',
                 'keywords' => ['أسئلة', 'شائعة', 'faq', 'faqs'],
                 'scope' => 'faqs',

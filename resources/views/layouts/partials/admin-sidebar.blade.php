@@ -3,6 +3,25 @@
      * Platform Console navigation — Super Admin pages (docs/MODULES.md §6).
      * Items with `route => null` (or an unregistered route) render as
      * disabled "قريباً" entries. Items with `children` render as Alpine dropdowns.
+     *
+     * ─────────────────────────────────────────────────────────────────────
+     * GROUP ORDER IS A UX CONTRACT — same four tiers as the tenant shell
+     * (components/layouts/partials/sidebar.blade.php):
+     *
+     *   L1  نظرة عامة              where the shift starts
+     *   L2  المستأجرون، التواصل     the operator's actual daily queue
+     *   L2  المحتوى                marketing surfaces, edited in bursts
+     *   L3  المنصّة                audit history and recovery
+     *   L4  الحساب والوصول          security and operator administration
+     *
+     * Two changes: التواصل now sits above المحتوى, because approving tenants
+     * and answering support is what a Super Admin does every day while the
+     * landing-page CMS is touched in occasional bursts; and الأسئلة الشائعة
+     * moved out of المستأجرون into المحتوى, where it belongs — `faqs` rows are
+     * platform-global marketing content (DATABASE_ROADMAP.md §2.1), not
+     * tenant data. It stays a top-level item rather than joining the CMS
+     * dropdown so its own `faqs.view_any` permission keeps gating it alone.
+     * ─────────────────────────────────────────────────────────────────────
      */
     $navGroups = [
         [
@@ -32,34 +51,6 @@
                     'permission' => 'plans.view_any',
                     'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />',
                 ],
-                [
-                    'label' => 'الأسئلة الشائعة',
-                    'route' => 'admin.faqs.index',
-                    'pattern' => 'admin.faqs*',
-                    'permission' => 'faqs.view_any',
-                    'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />',
-                ],
-            ],
-        ],
-        [
-            'label' => 'المحتوى',
-            'items' => [
-                [
-                    'label' => 'محتوى الصفحة الرئيسية',
-                    'permission_any' => ['cms.view_any', 'settings.view'],
-                    'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />',
-                    'pattern' => 'admin.problems*|admin.solutions*|admin.offerings*|admin.modules*|admin.ai-features*|admin.features*|admin.testimonials*|admin.landing.settings*',
-                    'children' => [
-                        ['label' => 'المشاكل', 'route' => 'admin.problems.index', 'pattern' => 'admin.problems*', 'permission' => 'cms.view_any'],
-                        ['label' => 'الحلول', 'route' => 'admin.solutions.index', 'pattern' => 'admin.solutions*', 'permission' => 'cms.view_any'],
-                        ['label' => 'ما نقدمه', 'route' => 'admin.offerings.index', 'pattern' => 'admin.offerings*', 'permission' => 'cms.view_any'],
-                        ['label' => 'الموديولات', 'route' => 'admin.modules.index', 'pattern' => 'admin.modules*', 'permission' => 'cms.view_any'],
-                        ['label' => 'ميزات الذكاء الاصطناعي', 'route' => 'admin.ai-features.index', 'pattern' => 'admin.ai-features*', 'permission' => 'cms.view_any'],
-                        ['label' => 'الميزات العامة', 'route' => 'admin.features.index', 'pattern' => 'admin.features*', 'permission' => 'cms.view_any'],
-                        ['label' => 'آراء العملاء', 'route' => 'admin.testimonials.index', 'pattern' => 'admin.testimonials*', 'permission' => 'cms.view_any'],
-                        ['label' => 'إعدادات الصفحة الرئيسية', 'route' => 'admin.landing.settings.edit', 'pattern' => 'admin.landing.settings*', 'permission' => 'settings.view'],
-                    ],
-                ],
             ],
         ],
         [
@@ -86,6 +77,40 @@
                         ['label' => 'المشتركين', 'route' => 'admin.newsletter.index', 'pattern' => 'admin.newsletter.index', 'permission' => 'newsletters.view_any'],
                         ['label' => 'الحملات البريدية', 'route' => 'admin.newsletter.campaigns.index', 'pattern' => 'admin.newsletter.campaigns.*', 'permission' => 'newsletters.view_any'],
                     ],
+                ],
+            ],
+        ],
+        [
+            'label' => 'المحتوى',
+            'items' => [
+                [
+                    'label' => 'محتوى الصفحة الرئيسية',
+                    'permission_any' => ['cms.view_any', 'settings.view'],
+                    'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />',
+                    'pattern' => 'admin.problems*|admin.solutions*|admin.offerings*|admin.modules*|admin.ai-features*|admin.features*|admin.testimonials*|admin.landing.settings*',
+                    /*
+                     * Children stay in landing-page section order, not
+                     * frequency order — this dropdown mirrors the page it
+                     * edits, top to bottom, and reshuffling it would make the
+                     * CMS harder to reason about, not easier.
+                     */
+                    'children' => [
+                        ['label' => 'المشاكل', 'route' => 'admin.problems.index', 'pattern' => 'admin.problems*', 'permission' => 'cms.view_any'],
+                        ['label' => 'الحلول', 'route' => 'admin.solutions.index', 'pattern' => 'admin.solutions*', 'permission' => 'cms.view_any'],
+                        ['label' => 'ما نقدمه', 'route' => 'admin.offerings.index', 'pattern' => 'admin.offerings*', 'permission' => 'cms.view_any'],
+                        ['label' => 'الموديولات', 'route' => 'admin.modules.index', 'pattern' => 'admin.modules*', 'permission' => 'cms.view_any'],
+                        ['label' => 'ميزات الذكاء الاصطناعي', 'route' => 'admin.ai-features.index', 'pattern' => 'admin.ai-features*', 'permission' => 'cms.view_any'],
+                        ['label' => 'الميزات العامة', 'route' => 'admin.features.index', 'pattern' => 'admin.features*', 'permission' => 'cms.view_any'],
+                        ['label' => 'آراء العملاء', 'route' => 'admin.testimonials.index', 'pattern' => 'admin.testimonials*', 'permission' => 'cms.view_any'],
+                        ['label' => 'إعدادات الصفحة الرئيسية', 'route' => 'admin.landing.settings.edit', 'pattern' => 'admin.landing.settings*', 'permission' => 'settings.view'],
+                    ],
+                ],
+                [
+                    'label' => 'الأسئلة الشائعة',
+                    'route' => 'admin.faqs.index',
+                    'pattern' => 'admin.faqs*',
+                    'permission' => 'faqs.view_any',
+                    'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />',
                 ],
             ],
         ],

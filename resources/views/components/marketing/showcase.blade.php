@@ -11,9 +11,16 @@
         'uptime' => ['value' => 99.9, 'decimals' => 1, 'prefix' => '%', 'suffix' => '', 'separator' => false],
     ];
 
+    /*
+     * The middle tab was «المشاريع», showing a Kanban mock-up for a module
+     * that does not exist — a product tour of vapourware, on the landing page,
+     * next to two tabs showing real screens. Replaced 2026-08-10 with the
+     * recruitment pipeline, which is built and whose columns below are the
+     * actual `job_applications` statuses (new / under_review / interviewed).
+     */
     $tabs = [
         ['key' => 'dashboard', 'label' => 'لوحة التحكم'],
-        ['key' => 'projects', 'label' => 'المشاريع'],
+        ['key' => 'recruitment', 'label' => 'التوظيف'],
         ['key' => 'payroll', 'label' => 'الرواتب'],
     ];
 @endphp
@@ -109,9 +116,9 @@
                         </div>
                     </div>
 
-                    {{-- Projects --}}
-                    <div x-show="tab === 'projects'" x-cloak class="grid gap-4 p-6 sm:grid-cols-3">
-                        @foreach (['قيد الإعداد', 'قيد التنفيذ', 'مكتمل'] as $col)
+                    {{-- Recruitment pipeline — real JobApplication statuses --}}
+                    <div x-show="tab === 'recruitment'" x-cloak class="grid gap-4 p-6 sm:grid-cols-3">
+                        @foreach (['طلبات جديدة', 'قيد المراجعة', 'تمت المقابلة'] as $col)
                             <div class="rounded-xl bg-ink-800 p-4">
                                 <p class="mb-3 text-xs font-semibold text-mist-300">{{ $col }}</p>
                                 <div class="space-y-2">

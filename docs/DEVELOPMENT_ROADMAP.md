@@ -17,7 +17,7 @@
 - **Employee Workspace (BR-701):** Check-In/Check-Out, "My Tasks" scoped view — this is core MVP, not deferred, since it's the highest-frequency user journey.
 - Design System foundation: Emerald/Charcoal palette, **Dark/Light mode (ADR-15) built into every component from the start**, RTL/LTR logical spacing (ADR-10).
 - Platform services (minimum viable): basic Notifications (email + simple in-app list), Activity/Audit Log, generic Approval Engine (used by Time Off in this phase; ready for Payroll/Offers in later phases), custom 403/404/500 error pages.
-- **Super Admin / Platform Console (`MODULES.md` §6):** Dashboard, Tenant Management (list), Tenant Detail, Plans & Feature Limits (reference/configuration only — enforcement is Phase 4), Platform Settings (branding, SMTP, registration auto-approval toggle, legal documents — **payment gateway key fields are present in the UI but inert until Phase 2**), Notifications Console (pending-approval/security-flag/failed-job categories active; plan-limit-warning category stays empty until Phase 4's `CheckFeatureLimit` ships), Support Inquiries (message thread inbox + audit log), Super Admin User Management (invite-only operator accounts with mandatory 2FA and last-admin lockout safeguards — BR-807/BR-808), and the Two-Factor Challenge + Account Security surfaces that back mandatory 2FA (ADR-14).
+- **Super Admin / Platform Console (`MODULES.md` §6):** Dashboard, Tenant Management (list with search, plan filter and pagination over real records), Tenant Detail, **the four lifecycle transitions — approve, reject, suspend, reactivate — each gated on `tenants.manage`, each refusing any status but the one it accepts, each mailing the Owner and writing to the platform audit log (BR-205, BR-207, BR-209)**, Plans & Feature Limits (reference/configuration only — enforcement is Phase 4), Platform Settings (branding, SMTP, registration auto-approval toggle, legal documents — **payment gateway key fields are present in the UI but inert until Phase 2**), Notifications Console (pending-approval/security-flag/failed-job categories active; plan-limit-warning category stays empty until Phase 4's `CheckFeatureLimit` ships), Support Inquiries (message thread inbox + audit log), Super Admin User Management (invite-only operator accounts with mandatory 2FA and last-admin lockout safeguards — BR-807/BR-808), and the Two-Factor Challenge + Account Security surfaces that back mandatory 2FA (ADR-14).
 
 **Exit criteria:** a new tenant can go from signup to an active, functioning HR+Projects workspace, with employees able to check in/out and manage their own tasks, entirely in their chosen theme and language direction, with zero cross-tenant data leakage under test. A Super Admin can approve/reject/suspend tenants, configure baseline platform settings, and respond to a tenant support inquiry, all from the Platform Console.
 
@@ -25,18 +25,49 @@
 
 ## Phase 2 — Finance & Payroll
 
-**Goal:** close the loop from tracked work to money — both employee pay and client revenue.
+> **Re-scoped 2026-08-06 (ADR-18).** Phase 2 is split into **2A — Payroll** and **2B — Revenue**. Phase 2B is blocked on the Projects & Timesheets module, which is unbuilt Phase 1 scope (see "Phase 1 carry-over debt" below). BR-604 sources invoices from billable timesheets; with no `timesheets`, `projects`, or `clients` table, invoicing has no source data. Delivering them as one phase would block payroll — which *is* buildable today against attendance, leave, calendars and contracts — behind unrelated work.
+
+### Phase 2A — Payroll
+
+**Goal:** turn the attendance/leave data the system already holds into a locked, auditable payroll run.
+
+**Scope:**
+- **Approval Engine (ADR-08):** the `approvals` table, built before its second consumer. Leave Requests backfilled onto it; the three bespoke escalation columns on `leave_requests` migrated in and dropped (BR-901).
+- **Work Ledger (ADR-21):** materialized `work_ledger_entries`, one `WorkLedgerReconciler` service, idempotent rebuild, locked-period guard (BR-403–BR-407).
+- **Contract pay fields (ADR-19):** `pay_basis`, `base_rate`, `billing_rate`, `pay_currency` on `employee_contracts` (BR-301a/b).
+- Payroll: maker-checker workflow (BR-603), flexible allowance/deduction line items (BR-601), absence deductions sourced from the Work Ledger (BR-602), snapshot-on-lock (BR-608), adjustment-only corrections.
+- Expenses: expense claims and categories routed through the Approval Engine (BR-613).
+- Offboarding: contract end dates, final settlement calculation, automatic access revocation (BR-606).
+- **Finance Settings (ADR-23, BR-624–BR-627):** per-tenant end-of-service rules — tier boundary, both accrual rates, resignation taper bands, nominal working month — configured by the Owner and Finance Manager, consumed by the pure calculator as a value object, and snapshot onto every settlement. Closes the "EOSB rates are a hardcoded assumption" item that BR-621 raised.
+- **Cost-side** Financial Dashboard: payroll + expense figures, sourced only from `approved`/`paid` records (BR-607). Revenue and Net Profit tiles do **not** render — a zero would misread as "no revenue" rather than "not tracked yet."
+- Employee Workspace extension: employees can view their own (locked) payslips, read-only, print-friendly (BR-614).
+
+**Exit criteria:** a full payroll run can be produced end-to-end from real attendance/leave data — reconciled through the Work Ledger, approved by a checker who is provably not the maker, locked against edit at the model layer, and visible read-only to the employee — with the cost-side dashboard reflecting only finalized data.
+
+### Phase 2B — Revenue *(blocked)*
+
+**Goal:** close the loop from tracked work to client revenue.
+
+**Entry condition:** the Projects & Timesheets module exists (`projects`, `tasks.project_id`, `task_statuses`, `timesheets` with `is_billable`).
 
 **Scope:**
 - Clients (CRM-lite) entity.
-- Payroll: maker-checker workflow (BR-603), flexible allowance/deduction line items (BR-601), absence deductions sourced from the Work Ledger (BR-602).
-- Offboarding: contract end dates, final settlement calculation, automatic access revocation (BR-606).
-- Invoicing & Expenses: invoices generated from billable timesheets (BR-604), expense claims routed through the Approval Engine.
-- Financial Dashboard: revenue/expense/net-profit view, sourced only from `approved`/`paid`/`issued` records (BR-607).
-- Employee Workspace extension: employees can view their own (locked) payslips, read-only, print-friendly.
+- Invoicing: `client_invoices` generated from billable timesheets (BR-604, BR-616), per-tenant gapless numbering, number assigned at issue.
+- **VAT/tax (ADR-22):** line-level tax designed in from the first migration, per `DATABASE_ROADMAP.md` §5 — not retrofitted onto issued invoices.
+- Revenue-side Financial Dashboard: revenue and net-profit tiles activate.
 - Tenant's own subscription billing (payment gateway integration — selection is an open item, see `VEYRA_DOCS.md` §16). This is when the payment gateway key fields already present in Phase 1's Platform Settings page (`/admin/settings`) become live/functional.
 
-**Exit criteria:** a full payroll run and a full client invoice can be produced end-to-end from real timesheet/attendance data, with maker-checker approval enforced and the Financial Dashboard reflecting only finalized data.
+**Exit criteria:** a full client invoice can be produced end-to-end from real timesheet data, with tax correctly applied and the Financial Dashboard reflecting only finalized data.
+
+---
+
+## Phase 1 Carry-Over Debt
+
+Tracked explicitly rather than left implicit, because Phase 2B and Phase 3 both depend on it:
+
+- **Projects & Timesheets module — not built.** Phase 1 scope listed "Projects, Tasks, Kanban board, Timesheets (`is_billable` flag present even though Invoicing isn't built yet)." None of it exists. The `tasks` table that does exist is an HR line-manager assignment tool (`manager_id`/`employee_id` → `employees`, no `project_id`) and does not satisfy this; reconciling the two shapes is part of the work.
+- **Approval Engine — not built in Phase 1** as scoped ("generic Approval Engine (used by Time Off in this phase; ready for Payroll/Offers in later phases)"). Leave shipped with bespoke escalation columns instead. Phase 2A now builds the engine and backfills Leave onto it.
+- **MediaLibrary (ADR-13) — not installed.** Files use path columns on a `custom` disk. Must be resolved before payslip PDFs ship, since signed tenant-isolated URLs are a security requirement (NFR-03).
 
 ---
 

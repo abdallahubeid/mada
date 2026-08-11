@@ -174,8 +174,10 @@
             type="button"
             x-data
             @click="
-                const isDark = document.documentElement.classList.toggle('dark');
-                localStorage.setItem('veyra-theme', isDark ? 'dark' : 'light');
+                const root = document.documentElement;
+                const nextDark = ! root.classList.contains('dark');
+                root.classList.toggle('dark', nextDark);
+                localStorage.setItem('veyra-theme', nextDark ? 'dark' : 'light');
             "
             class="rounded-lg p-2 text-mist-500 transition duration-200 ease-in-out hover:bg-mist-100 active:scale-90 dark:text-mist-400 dark:hover:bg-ink-800"
             aria-label="تبديل الوضع الليلي"

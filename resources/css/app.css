@@ -42,14 +42,39 @@
     /*
      * Mist — muted text / icon / divider tones, extracted from the same
      * reference (#bbcabf secondary text, #86948a border, #3c4a42 divider).
+     *
+     * ─────────────────────────────────────────────────────────────────────
+     * 400–600 ARE THEME-DEPENDENT — see the `.dark` override below.
+     *
+     * The Figma file specifies the DARK theme only, so these three stops were
+     * originally its dark-theme values used in both themes. On a light canvas
+     * that measured:
+     *
+     *     text-mist-400 on #fff → 2.29:1   (WCAG AA needs 4.5:1)
+     *     text-mist-500 on #fff → 3.17:1
+     *
+     * which is the washed-out secondary text across every light-mode screen —
+     * and `mist-500` alone is used well over a thousand times, so the fix
+     * cannot live in the markup. The values below are the LIGHT-mode ramp,
+     * re-derived for contrast; `.dark` restores the Figma tones, which already
+     * measure 8.4:1 / 6.1:1 against the ink canvas.
+     *
+     * Because `text-mist-500` resolves this variable at the element, a class
+     * like `text-mist-500 dark:text-mist-400` keeps working untouched: it picks
+     * the light value on a light canvas and the dark value inside `.dark`.
+     *
+     * Stops 50–300 and 700–900 are NOT theme-split: they paint borders,
+     * dividers and light surfaces whose appearance is correct as-is, and
+     * `text-mist-300` in light mode is only ever a breadcrumb "/" separator.
+     * ─────────────────────────────────────────────────────────────────────
      */
     --color-mist-50: #f4f6f5;
     --color-mist-100: #e4e9e6;
     --color-mist-200: #c7d1cb;
     --color-mist-300: #bbcabf;
-    --color-mist-400: #9db0a4;
-    --color-mist-500: #86948a;
-    --color-mist-600: #6c7a71;
+    --color-mist-400: #67756c; /* light: 4.84:1 on white — tertiary/meta text */
+    --color-mist-500: #57645b; /* light: 6.21:1 on white — secondary body text */
+    --color-mist-600: #454f49; /* light: 8.51:1 on white — emphasis */
     --color-mist-700: #3c4a42;
     --color-mist-800: #263129;
     --color-mist-900: #182019;
@@ -140,6 +165,111 @@
     display: none !important;
 }
 
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * MARKETING SURFACE POLISH
+ *
+ * Two primitives shared by the public landing page and the tenant portal so
+ * both surfaces age together. Both are built from tokens already in the
+ * palette — no new colours enter the system here.
+ *
+ * A third, `.veyra-hero-grid`, was removed on request: the hero canvas keeps
+ * the two emerald bloom layers it had before and no background texture.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
+/*
+ * One card-lift interaction for every marketing card, replacing the mix of
+ * `hover:scale-[1.02]`, `hover:scale-[1.03]` and `hover:-translate-y-1` that
+ * had accumulated across the sections — three different physics on one page
+ * reads as inconsistency rather than as variety.
+ *
+ * Translate, not scale: scaling a card resamples its text and its border
+ * hairline, which shimmers on a 1px border at these sizes.
+ */
+.veyra-card {
+    transition-property: transform, box-shadow, border-color;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.veyra-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-emerald-400) 45%, transparent);
+    box-shadow:
+        0 18px 40px -18px color-mix(in srgb, var(--color-ink-950) 22%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--color-emerald-400) 12%, transparent);
+}
+
+.dark .veyra-card:hover {
+    box-shadow:
+        0 18px 44px -16px rgb(0 0 0 / 0.55),
+        0 0 30px -12px color-mix(in srgb, var(--color-emerald-400) 30%, transparent);
+}
+
+/*
+ * Brand focus ring. The browser default is a thin platform outline that
+ * disappears against the ink canvas, which on an enterprise product is an
+ * accessibility gap as much as a polish one. `:focus-visible` only, so pointer
+ * users never see it.
+ */
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * The ring is a box-shadow, NOT an outline, and there is no `border-radius`
+ * declaration here.
+ *
+ * The first version of this rule carried `border-radius: inherit`, intending
+ * to make the ring follow the control's curve. It does the opposite: it
+ * OVERRIDES the control's own radius with the parent's — almost always 0 — so
+ * a `rounded-xl` input snapped to square corners the moment it was focused,
+ * and the outline then correctly traced that new square shape. That is the
+ * hard-cornered halo seen on /forgot-password.
+ *
+ * A control's radius already applies to its own outline in current browsers,
+ * so nothing needed declaring. `box-shadow` is used regardless because it
+ * follows `border-radius` everywhere, including Safari below 16.4 where
+ * `outline` is still drawn square, and because it renders as a soft halo
+ * rather than a hard rule.
+ *
+ * The transparent `outline` is deliberate: Windows High Contrast Mode discards
+ * box-shadow entirely, and a transparent outline is repainted there as a
+ * visible system-coloured one — so the focus state survives forced colours.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--color-emerald-400);
+    outline-offset: 2px;
+}
+
+/*
+ * `outline`, not `box-shadow`, and NOT wrapped in :where().
+ *
+ * box-shadow was the first attempt and is the wrong tool here: Tailwind writes
+ * its rings and elevation into that same property, so any control already
+ * carrying `shadow-sm` — which most inputs in this app do — replaced the focus
+ * halo wholesale and rendered no focus state at all. Wrapping the rule in
+ * :where() made that worse by dropping its specificity to zero, so every
+ * utility won.
+ *
+ * `outline` occupies a property nothing else in the system writes to, so it
+ * cannot be clobbered, and current engines already clip it to the element's
+ * own border-radius — which is all that was ever needed. Controls that declare
+ * their own `focus:ring-*` still win on specificity, as they should.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+    .veyra-card:hover {
+        transform: none;
+    }
+}
+
 /* Slim, unobtrusive scrollbars for the premium-feel shell (sidebar nav, drawers, main content). */
 * {
     scrollbar-width: thin;
@@ -148,6 +278,76 @@
 
 .dark * {
     scrollbar-color: var(--color-ink-600) transparent;
+}
+
+/*
+ * Dark-theme muted tones — the original Figma values (DESIGN_SYSTEM.md §2).
+ *
+ * These are restored here rather than left in `@theme` because the same three
+ * stops need different values per theme: the tones that read correctly against
+ * the ink canvas are far too light against white. Measured against `ink-950`:
+ * mist-400 = 8.4:1, mist-500 = 6.1:1, mist-600 = 4.3:1 (separators only).
+ *
+ * Declared on `.dark` itself, not `.dark *`, so the variables cascade to every
+ * descendant exactly once — matching where the class is set (<html>).
+ */
+.dark,
+/*
+ * ...and any ALWAYS-DARK surface, whatever the active theme.
+ *
+ * Several brand surfaces are dark in both themes and therefore carry no
+ * `dark:` variants: the product-tour browser frame, the footer, the CTA panel,
+ * the login showcase, and the 403/404 pages. Their muted text uses the same
+ * `text-mist-*` utilities, so the light-mode ramp above — correct on white —
+ * rendered at roughly 3:1 on those panels.
+ *
+ * Keying on the background utility means a dark panel carries its own muted
+ * tones with it, instead of every such surface needing to remember an opt-out.
+ *
+ * Every selector uses `~=` (whole-token match), NOT `*=`. A substring match
+ * would also hit `dark:bg-ink-900/60`, which is present in the class attribute
+ * of cards that are WHITE in light mode — those cards would then take the dark
+ * muted tones on a white background, i.e. exactly the bug this block exists to
+ * fix, inverted. The opacity variants are therefore enumerated explicitly.
+ *
+ * Wrapped in :where() so specificity stays 0 and nothing here outranks a real
+ * utility class.
+ */
+:where(
+    [class~='bg-ink-700'],
+    [class~='bg-ink-800'],
+    [class~='bg-ink-900'],
+    [class~='bg-ink-950'],
+    [class~='bg-ink-700/60'],
+    [class~='bg-ink-800/60'],
+    [class~='bg-ink-800/70'],
+    [class~='bg-ink-800/80'],
+    [class~='bg-ink-800/90'],
+    [class~='bg-ink-900/60'],
+    [class~='bg-ink-950/50'],
+    [class~='bg-ink-950/60'],
+    [class~='bg-ink-950/80'],
+    [class~='bg-ink-950/85']
+) {
+    --color-mist-400: #9db0a4;
+    --color-mist-500: #86948a;
+    --color-mist-600: #6c7a71;
+}
+
+/*
+ * Brand accent, light mode only. Tailwind's stock emerald-600 measures ~3.7:1
+ * on white — below AA for the 12–14px eyebrow labels, active nav items and
+ * step numbers it is used for throughout the marketing site. emerald-700's
+ * value takes it to 5.5:1 while staying unmistakably the same brand green.
+ * Dark mode is untouched: it pairs `text-emerald-600` with
+ * `dark:text-emerald-400`, which already measures well against ink.
+ */
+:root {
+    --color-emerald-600: #047857;
+}
+
+.dark {
+    --color-emerald-600: oklch(0.596 0.145 163.225);
 }
 
 /* Respect the user's OS-level motion preference even though we lean on animation for polish. */

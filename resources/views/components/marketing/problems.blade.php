@@ -17,7 +17,7 @@
 
         <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($problems as $problem)
-                <div class="rounded-2xl border border-mist-200 bg-ink-50/40 p-6 transition duration-200 ease-out hover:-translate-y-1 hover:border-danger-solid/40 dark:border-ink-800 dark:bg-ink-800/40">
+                <div class="veyra-card rounded-2xl border border-mist-200 bg-ink-50/40 p-6 hover:border-danger-solid/40 dark:border-ink-800 dark:bg-ink-800/40">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-danger-solid/10 text-danger-solid">
                         @if ($problem->icon_key)
                             <iconify-icon icon="{{ $problem->icon_key }}" width="24" height="24" aria-hidden="true"></iconify-icon>

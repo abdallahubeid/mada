@@ -66,6 +66,15 @@ final class PlatformPermissionCatalog
                     'tenants.view_any' => 'عرض قائمة المستأجرين',
                     'tenants.view' => 'عرض تفاصيل مستأجر',
                     'tenants.update' => 'تحديث بيانات المستأجر التسويقية',
+                    /*
+                     * Deliberately separate from `tenants.update`. Editing a
+                     * tenant's marketing toggle and deciding whether a paying
+                     * customer keeps access to the product are different powers
+                     * at different blast radii — suspension locks out every
+                     * user of that tenant at once. Granting one must not grant
+                     * the other by accident.
+                     */
+                    'tenants.manage' => 'اعتماد المستأجرين ورفضهم وإيقافهم وإعادة تفعيلهم',
                 ],
             ],
             'plans' => [

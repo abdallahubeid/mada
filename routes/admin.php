@@ -46,6 +46,35 @@ Route::put('/tenants/{tenant}/marketing', [AdminTenantController::class, 'update
     ->middleware('permission:tenants.update')
     ->name('tenants.marketing');
 
+/*
+ * Tenant lifecycle transitions (BR-202, BR-203).
+ *
+ * All four carry `tenants.manage` rather than `tenants.update`: the latter
+ * gates the marketing form above, and deciding whether a paying customer keeps
+ * access to the product is not the same power as toggling their logo on the
+ * landing page.
+ *
+ * The middleware answers "may this operator act at all". Each action separately
+ * refuses any tenant not in the one status that transition accepts, so a stale
+ * open tab cannot approve a tenant twice or suspend one that is already
+ * suspended.
+ */
+Route::post('/tenants/{tenant}/approve', [AdminTenantController::class, 'approve'])
+    ->middleware('permission:tenants.manage')
+    ->name('tenants.approve');
+
+Route::post('/tenants/{tenant}/reject', [AdminTenantController::class, 'reject'])
+    ->middleware('permission:tenants.manage')
+    ->name('tenants.reject');
+
+Route::post('/tenants/{tenant}/suspend', [AdminTenantController::class, 'suspend'])
+    ->middleware('permission:tenants.manage')
+    ->name('tenants.suspend');
+
+Route::post('/tenants/{tenant}/reactivate', [AdminTenantController::class, 'reactivate'])
+    ->middleware('permission:tenants.manage')
+    ->name('tenants.reactivate');
+
 Route::get('/plans', [AdminPlanController::class, 'index'])
     ->middleware('permission:plans.view_any')
     ->name('plans');

@@ -2,124 +2,249 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Tenancy\Actions\ApproveTenantAction;
+use App\Domain\Tenancy\Actions\ReactivateTenantAction;
+use App\Domain\Tenancy\Actions\RejectTenantAction;
+use App\Domain\Tenancy\Actions\SuspendTenantAction;
+use App\Domain\Tenancy\Enums\TenantStatus;
+use App\Domain\Tenancy\Exceptions\TenantReviewException;
+use App\Domain\Tenancy\Models\Employee;
 use App\Domain\Tenancy\Models\Tenant;
+use App\Domain\Tenancy\TenantPlanResolver;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RejectTenantRequest;
+use App\Http\Requests\Admin\SuspendTenantRequest;
 use App\Http\Requests\Admin\UpdateTenantMarketingRequest;
+use App\Models\Plan;
+use App\Models\User;
 use App\Services\Marketing\MarketingCache;
 use App\Services\Media\ImageUploader;
 use App\Services\Platform\PlatformAuditor;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
- * Tenant Management — the 5-state lifecycle system of record (docs/MODULES.md
- * §6, ARCHITECTURE.md §3, BR-205/BR-206). List/detail remain frontend-first
- * mocks; marketing opt-in persists to real Tenant rows when present.
+ * Tenant Management — the tenant lifecycle system of record (docs/MODULES.md
+ * §6, ARCHITECTURE.md §3, BR-205/BR-206).
+ *
+ * Rebuilt on real `Tenant` records 2026-08-09. This screen previously rendered
+ * a hardcoded array of ten fictional companies, which meant the Super Admin
+ * approve/reject buttons had nothing to act on — the Phase 1 exit criterion
+ * "a Super Admin can approve/reject/suspend tenants" was not actually met.
+ *
+ * Every figure below is now sourced or omitted. Nothing is invented: there is
+ * no "projects" count because the Projects module does not exist, and "last
+ * activity" comes from the tenant's own audit log rather than a made-up
+ * relative time.
  */
 class TenantController extends Controller
 {
     /**
-     * @var list<array{name:string, slug:string, owner:string, email:string, plan:string, status:string, employees:int, signup:string, last_active:string}>
+     * Rows per page. The review queue is worked front to back, so this is sized
+     * to a screenful rather than to a "load everything" habit.
      */
-    private function tenants(): array
-    {
-        return [
-            ['name' => 'شركة الأفق للتقنية', 'slug' => 'ofoq-tech', 'owner' => 'سارة المنصوري', 'email' => 'sara@ofoq.tech', 'plan' => 'Growth', 'status' => 'pending_approval', 'employees' => 24, 'signup' => '2026-07-19', 'last_active' => 'منذ ساعتين'],
-            ['name' => 'مؤسسة نماء', 'slug' => 'namaa', 'owner' => 'خالد العتيبي', 'email' => 'khaled@namaa.co', 'plan' => 'Startup', 'status' => 'pending_approval', 'employees' => 6, 'signup' => '2026-07-19', 'last_active' => 'منذ 5 ساعات'],
-            ['name' => 'مجموعة رواد', 'slug' => 'ruwad', 'owner' => 'ليلى الحربي', 'email' => 'laila@ruwad.sa', 'plan' => 'Enterprise', 'status' => 'pending_approval', 'employees' => 140, 'signup' => '2026-07-18', 'last_active' => 'منذ يوم'],
-            ['name' => 'حلول بيان', 'slug' => 'bayan', 'owner' => 'عمر الشمري', 'email' => 'omar@bayan.io', 'plan' => 'Growth', 'status' => 'pending_verification', 'employees' => 0, 'signup' => '2026-07-20', 'last_active' => '—'],
-            ['name' => 'شركة الابتكار', 'slug' => 'ibtikar', 'owner' => 'نورة القحطاني', 'email' => 'noura@ibtikar.sa', 'plan' => 'Growth', 'status' => 'active', 'employees' => 58, 'signup' => '2026-05-02', 'last_active' => 'منذ 10 دقائق'],
-            ['name' => 'مؤسسة التميّز', 'slug' => 'tamayoz', 'owner' => 'فهد الدوسري', 'email' => 'fahad@tamayoz.co', 'plan' => 'Startup', 'status' => 'active', 'employees' => 12, 'signup' => '2026-04-15', 'last_active' => 'منذ ساعة'],
-            ['name' => 'مجموعة الريادة', 'slug' => 'riyada', 'owner' => 'هند السالم', 'email' => 'hind@riyada.sa', 'plan' => 'Enterprise', 'status' => 'active', 'employees' => 210, 'signup' => '2026-01-20', 'last_active' => 'منذ 3 ساعات'],
-            ['name' => 'متجر السلام', 'slug' => 'salam-store', 'owner' => 'ماجد العنزي', 'email' => 'majed@salam.store', 'plan' => 'Startup', 'status' => 'suspended', 'employees' => 9, 'signup' => '2026-03-11', 'last_active' => 'منذ 4 أيام'],
-            ['name' => 'شركة المدى', 'slug' => 'almada', 'owner' => 'ريم الغامدي', 'email' => 'reem@almada.co', 'plan' => 'Growth', 'status' => 'suspended', 'employees' => 33, 'signup' => '2026-02-08', 'last_active' => 'منذ أسبوع'],
-            ['name' => 'حلول أفنان', 'slug' => 'afnan', 'owner' => 'بدر المطيري', 'email' => 'bader@afnan.io', 'plan' => 'Startup', 'status' => 'cancelled', 'employees' => 0, 'signup' => '2025-12-01', 'last_active' => 'منذ 45 يومًا'],
-        ];
-    }
+    private const PER_PAGE = 20;
 
     public function index(Request $request): View
     {
-        $tenants = $this->tenants();
-
-        $counts = [
-            'all' => count($tenants),
-            'pending_verification' => count(array_filter($tenants, fn ($t): bool => $t['status'] === 'pending_verification')),
-            'pending_approval' => count(array_filter($tenants, fn ($t): bool => $t['status'] === 'pending_approval')),
-            'active' => count(array_filter($tenants, fn ($t): bool => $t['status'] === 'active')),
-            'suspended' => count(array_filter($tenants, fn ($t): bool => $t['status'] === 'suspended')),
-            'cancelled' => count(array_filter($tenants, fn ($t): bool => $t['status'] === 'cancelled')),
-        ];
-
         $tabs = [
             'all' => 'الكل',
-            'pending_verification' => 'بانتظار التحقق',
-            'pending_approval' => 'بانتظار الموافقة',
-            'active' => 'نشط',
-            'suspended' => 'موقوف',
-            'cancelled' => 'ملغى',
+            TenantStatus::PendingApproval->value => 'بانتظار الموافقة',
+            TenantStatus::PendingVerification->value => 'بانتظار التحقق',
+            TenantStatus::Active->value => 'نشط',
+            TenantStatus::Rejected->value => 'مرفوض',
+            TenantStatus::Suspended->value => 'موقوف',
+            TenantStatus::Cancelled->value => 'ملغى',
         ];
 
-        $activeTab = $request->query('status', 'pending_approval');
+        $activeTab = (string) $request->query('status', TenantStatus::PendingApproval->value);
 
         if (! array_key_exists($activeTab, $tabs)) {
-            $activeTab = 'pending_approval';
+            $activeTab = TenantStatus::PendingApproval->value;
         }
 
-        $filtered = $activeTab === 'all'
-            ? $tenants
-            : array_values(array_filter($tenants, fn ($t): bool => $t['status'] === $activeTab));
+        $search = trim((string) $request->query('q', ''));
+        $planId = $request->query('plan');
+        $planId = is_numeric($planId) ? (int) $planId : null;
+
+        /*
+         * Search and plan narrow the counts as well as the rows. A tab reading
+         * "12" above a single filtered result would look like the filter had
+         * silently failed, so the badge has to describe the same population the
+         * table is drawn from — only the status facet differs between them.
+         */
+        $filtered = fn () => Tenant::query()
+            ->when($search !== '', function ($query) use ($search): void {
+                $like = '%'.str_replace(['%', '_'], ['\%', '\_'], $search).'%';
+
+                $query->where(function ($inner) use ($like): void {
+                    $inner->where('name', 'like', $like)
+                        ->orWhere('slug', 'like', $like)
+                        // Matches any user on the tenant, not only the Owner:
+                        // support is usually handed the address of whoever
+                        // wrote in, who is often not the registering account.
+                        ->orWhereHas('users', fn ($users) => $users->where('email', 'like', $like));
+                });
+            })
+            ->when($planId !== null, fn ($query) => $query->where('plan_id', $planId));
+
+        $counts = ['all' => $filtered()->count()];
+
+        foreach (TenantStatus::cases() as $status) {
+            $counts[$status->value] = $filtered()->where('status', $status->value)->count();
+        }
+
+        $tenants = $filtered()
+            ->with('plan')
+            ->when($activeTab !== 'all', fn ($query) => $query->where('status', $activeTab))
+            // Oldest application first: a review queue is worked front to back,
+            // so the tenant that has waited longest must surface first.
+            ->orderByRaw('case when status = ? then 0 else 1 end', [TenantStatus::PendingApproval->value])
+            ->orderBy('created_at')
+            ->paginate(self::PER_PAGE)
+            // withQueryString, or paging away from page 1 would silently drop
+            // the active tab and search and show an unfiltered page 2.
+            ->withQueryString()
+            ->through(fn (Tenant $tenant): array => $this->summarize($tenant));
 
         return view('admin.tenants.index', [
-            'tenants' => $filtered,
+            'tenants' => $tenants,
             'tabs' => $tabs,
             'counts' => $counts,
             'activeTab' => $activeTab,
+            'search' => $search,
+            'planFilter' => $planId,
+            'plans' => Plan::query()->where('is_active', true)->orderBy('sort_order')->get(),
         ]);
     }
 
-    public function show(string $tenant): View
+    public function show(string $tenant, TenantPlanResolver $resolver): View
     {
-        $base = collect($this->tenants())->firstWhere('slug', $tenant)
-            ?? collect($this->tenants())->firstWhere('status', 'active');
+        $record = Tenant::query()->with('plan', 'reviewer', 'suspender')->where('slug', $tenant)->firstOrFail();
 
-        $record = Tenant::query()->where('slug', $base['slug'])->first();
+        $owner = $this->ownerOf($record);
+        $employees = $this->employeeCount($record);
+        $departments = DB::table('departments')
+            ->where('tenant_id', $record->id)
+            ->whereNull('deleted_at')
+            ->count();
 
         $detail = [
-            ...$base,
-            'projects' => 24,
-            'member_since' => '2 مايو 2026',
+            ...$this->summarize($record),
+            'departments' => $departments,
+            'member_since' => $record->created_at?->translatedFormat('j F Y') ?? '—',
             'owner' => [
-                'name' => $base['owner'],
-                'email' => $base['email'],
-                'verified' => $base['status'] !== 'pending_verification',
-                'last_login' => $base['status'] === 'active' ? 'منذ 10 دقائق' : 'منذ 3 أيام',
+                'name' => $owner?->name ?? '—',
+                'email' => $owner?->email ?? '—',
+                'verified' => $owner?->email_verified_at !== null,
+                'last_login' => $this->lastActivity($record) ?? '—',
             ],
-            'usage' => [
-                ['label' => 'الموظفون', 'used' => $base['employees'], 'limit' => 100],
-                ['label' => 'المشاريع النشطة', 'used' => 24, 'limit' => 50],
-                ['label' => 'المساحة التخزينية (GB)', 'used' => 41, 'limit' => 50],
-                ['label' => 'مقاعد المستخدمين', 'used' => 62, 'limit' => 100],
-            ],
-            'audit' => [
-                ['action' => 'سجّل الدخول', 'actor' => $base['owner'], 'time' => 'منذ 10 دقائق'],
-                ['action' => 'أضاف موظفًا جديدًا', 'actor' => 'مدير الموارد البشرية', 'time' => 'منذ ساعتين'],
-                ['action' => 'أنشأ مشروعًا', 'actor' => $base['owner'], 'time' => 'أمس'],
-                ['action' => 'حدّث إعدادات الشركة', 'actor' => $base['owner'], 'time' => 'قبل 3 أيام'],
-                ['action' => 'فُعّل الحساب بواسطة مشرف المنصّة', 'actor' => 'مشرف المنصّة', 'time' => $base['signup']],
-            ],
+            'usage' => $this->usage($record, $resolver, $employees, $departments),
+            'audit' => $this->recentAudit($record),
+            /*
+             * Null unless the tenant is currently suspended — the columns are
+             * cleared on reactivation, so this block renders only while the
+             * suspension actually stands rather than as stale history beside a
+             * green badge.
+             */
+            'suspension' => $record->suspended_at !== null ? [
+                'reason' => $record->suspension_reason,
+                'at' => $record->suspended_at->translatedFormat('j F Y — H:i'),
+                'by' => $record->suspender?->name ?? 'النظام',
+            ] : null,
             'marketing' => [
-                'persistable' => $record !== null,
-                'show_on_marketing' => $record?->show_on_marketing ?? false,
-                'logo_url' => $record?->image('logo')->first()?->url()
-                    ?? $record?->image('marketing_logo')->first()?->url(),
+                'persistable' => true,
+                'show_on_marketing' => $record->show_on_marketing,
+                'logo_url' => $record->image('logo')->first()?->url()
+                    ?? $record->image('marketing_logo')->first()?->url(),
             ],
         ];
 
         return view('admin.tenants.show', [
             'tenant' => $detail,
             'tenantRecord' => $record,
+            'plans' => Plan::query()->where('is_active', true)->orderBy('sort_order')->get(),
         ]);
+    }
+
+    public function approve(Request $request, string $tenant, ApproveTenantAction $action): RedirectResponse
+    {
+        $record = Tenant::query()->where('slug', $tenant)->firstOrFail();
+
+        $validated = $request->validate([
+            'plan_id' => ['nullable', 'integer', 'exists:plans,id'],
+        ]);
+
+        try {
+            $action->handle($record, $request->user(), $validated['plan_id'] ?? null);
+        } catch (TenantReviewException $exception) {
+            flash()->error($exception->getMessage());
+
+            return back();
+        }
+
+        flash()->success("تم تفعيل حساب «{$record->name}» وإشعار المالك بالبريد الإلكتروني.");
+
+        return redirect()->route('admin.tenants.show', $record->slug);
+    }
+
+    public function reject(RejectTenantRequest $request, string $tenant, RejectTenantAction $action): RedirectResponse
+    {
+        $record = Tenant::query()->where('slug', $tenant)->firstOrFail();
+
+        try {
+            $action->handle($record, $request->user(), (string) $request->validated('rejection_reason'));
+        } catch (TenantReviewException $exception) {
+            flash()->error($exception->getMessage());
+
+            return back();
+        }
+
+        // `warning`, not `success`: a refusal is not an achievement, and the
+        // toast tone has to match the outcome (DESIGN_SYSTEM.md §9).
+        flash()->warning("تم رفض طلب «{$record->name}» وإشعار مقدّم الطلب بالسبب.");
+
+        return redirect()->route('admin.tenants.show', $record->slug);
+    }
+
+    public function suspend(SuspendTenantRequest $request, string $tenant, SuspendTenantAction $action): RedirectResponse
+    {
+        $record = Tenant::query()->where('slug', $tenant)->firstOrFail();
+
+        try {
+            $action->handle($record, $request->user(), (string) $request->validated('suspension_reason'));
+        } catch (TenantReviewException $exception) {
+            flash()->error($exception->getMessage());
+
+            return back();
+        }
+
+        // `warning`, not `success`: locking a paying customer out of the
+        // product is not an achievement, and the toast tone has to match the
+        // outcome (DESIGN_SYSTEM.md §9).
+        flash()->warning("تم إيقاف حساب «{$record->name}» وإشعار المالك بالسبب.");
+
+        return redirect()->route('admin.tenants.show', $record->slug);
+    }
+
+    public function reactivate(Request $request, string $tenant, ReactivateTenantAction $action): RedirectResponse
+    {
+        $record = Tenant::query()->where('slug', $tenant)->firstOrFail();
+
+        try {
+            $action->handle($record, $request->user());
+        } catch (TenantReviewException $exception) {
+            flash()->error($exception->getMessage());
+
+            return back();
+        }
+
+        flash()->success("تم إعادة تفعيل حساب «{$record->name}» وإشعار المالك بالبريد الإلكتروني.");
+
+        return redirect()->route('admin.tenants.show', $record->slug);
     }
 
     public function updateMarketing(
@@ -157,5 +282,111 @@ class TenantController extends Controller
         flash()->info('تم تحديث إعدادات التسويق للمستأجر بنجاح.');
 
         return redirect()->route('admin.tenants.show', $record->slug);
+    }
+
+    /**
+     * The row shape both views consume. Kept as an array so the existing Blade
+     * markup needed no rewrite when the data behind it became real.
+     *
+     * @return array<string, mixed>
+     */
+    private function summarize(Tenant $tenant): array
+    {
+        $owner = $this->ownerOf($tenant);
+
+        return [
+            'id' => $tenant->id,
+            'name' => $tenant->name,
+            'slug' => $tenant->slug,
+            'owner' => $owner?->name ?? '—',
+            'email' => $owner?->email ?? '—',
+            'plan' => $tenant->currentPlan()?->name ?? '—',
+            'plan_id' => $tenant->plan_id,
+            'status' => $tenant->status->value,
+            'employees' => $this->employeeCount($tenant),
+            'signup' => $tenant->created_at?->toDateString() ?? '—',
+            'last_active' => $this->lastActivity($tenant) ?? '—',
+            'rejection_reason' => $tenant->rejection_reason,
+        ];
+    }
+
+    private function ownerOf(Tenant $tenant): ?User
+    {
+        return User::query()
+            ->where('tenant_id', $tenant->id)
+            ->oldest('id')
+            ->first();
+    }
+
+    private function employeeCount(Tenant $tenant): int
+    {
+        return Employee::query()->withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->whereNull('deleted_at')
+            ->count();
+    }
+
+    /**
+     * Real last activity, taken from the tenant's audit log.
+     *
+     * Returns null rather than inventing a plausible "منذ ساعتين" when the
+     * tenant has never done anything — a fabricated timestamp on a Super Admin
+     * review screen is worse than an honest dash.
+     */
+    private function lastActivity(Tenant $tenant): ?string
+    {
+        $latest = DB::table('audit_logs')
+            ->where('tenant_id', $tenant->id)
+            ->max('created_at');
+
+        return $latest !== null
+            ? Carbon::parse($latest)->diffForHumans()
+            : null;
+    }
+
+    /**
+     * Capacity meters, read through {@see TenantPlanResolver} so this screen
+     * and the tenant's own subscription page cannot disagree about the limit.
+     *
+     * @return list<array{label: string, used: int, limit: int}>
+     */
+    private function usage(Tenant $tenant, TenantPlanResolver $resolver, int $employees, int $departments): array
+    {
+        $rows = [
+            ['key' => 'max_employees', 'label' => 'الموظفون', 'used' => $employees],
+            ['key' => 'max_departments', 'label' => 'الأقسام', 'used' => $departments],
+            ['key' => 'max_users', 'label' => 'مقاعد المستخدمين', 'used' => User::query()->where('tenant_id', $tenant->id)->count()],
+        ];
+
+        return collect($rows)->map(function (array $row) use ($resolver, $tenant): array {
+            $limit = $resolver->limitFor($row['key'], $tenant);
+
+            return [
+                'label' => $row['label'],
+                'used' => $row['used'],
+                // The meter renders a bar, so an uncapped plan reports its own
+                // usage as the denominator rather than a fake ceiling.
+                'limit' => $limit === TenantPlanResolver::UNLIMITED ? max($row['used'], 1) : $limit,
+            ];
+        })->all();
+    }
+
+    /**
+     * @return list<array{action: string, actor: string, time: string}>
+     */
+    private function recentAudit(Tenant $tenant): array
+    {
+        return DB::table('audit_logs')
+            ->leftJoin('users', 'users.id', '=', 'audit_logs.user_id')
+            ->where('audit_logs.tenant_id', $tenant->id)
+            ->orderByDesc('audit_logs.created_at')
+            ->limit(8)
+            ->get(['audit_logs.action', 'audit_logs.created_at', 'users.name as actor'])
+            ->map(fn ($row): array => [
+                'action' => (string) $row->action,
+                'actor' => (string) ($row->actor ?? 'النظام'),
+                'time' => Carbon::parse($row->created_at)->diffForHumans(),
+            ])
+            ->all();
     }
 }

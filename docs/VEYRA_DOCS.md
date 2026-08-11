@@ -5,10 +5,11 @@
 | Field | Value |
 |---|---|
 | Document | Veyra ERP — Software Design Document (Master Reference) |
-| Version | 1.2 (Foundation Architecture + Employee Workspace & Appearance Strategy + Super Admin Platform Console) |
+| Version | 1.3 (Foundation Architecture + Employee Workspace & Appearance Strategy + Super Admin Platform Console + Finance Phase 2A Foundations) |
 | Status | **Binding — treat as the system's constitution** |
 | Owner | Product/Engineering (CTO function) |
 | Date | 2026-07-20 |
+| Last amended | 2026-08-10 — Super Admin suspension and reactivation implemented, closing the Phase 1 exit criterion (BR-206 amended to match enforcement, BR-209 added, `tenants.manage` separated from `tenants.update`). Previously 2026-08-09 — tenant lifecycle gains a sixth `rejected` state with a mandatory reason, and `tenants.plan_id` becomes the plan source of truth (ADR-04 amended, BR-203/204/205 revised, BR-207/BR-208 added). EOSB rules made tenant-configurable and snapshot per settlement (ADR-23, BR-624–BR-627). Previously 2026-08-06 — Finance delivery split (ADR-18), pay basis axis (ADR-19), monetary precision (ADR-20), Work Ledger materialization (ADR-21), tax/VAT reservation (ADR-22) |
 | Applies to | All engineering, design, and QA work on Veyra ERP, in all future sessions |
 
 **Precedence rule:** This document (and the rest of `docs/`) is the single source of truth. No code, migration, or UI change may contradict a rule defined here. If a new requirement isn't covered, it must be added here first — as a new numbered rule — before being implemented. Every AI session working on this repository must read all files in `docs/` before proposing or making changes.
@@ -59,9 +60,14 @@ Full detail: see `PROJECT_VISION.md`.
 | Employee | A tenant-scoped `User` with an `employee` profile and a `contract`. |
 | Billable Hours | Timesheet hours chargeable to a client via an invoice. |
 | Payable Hours | Timesheet/attendance hours used to compute an employee's wage. Tracked independently of billable hours. |
-| Approval | A generic, polymorphic request awaiting a decision from an authorized role. |
+| Approval | A generic, polymorphic request awaiting a decision from an authorized role. Materialized as the `approvals` table (ADR-08). |
 | Work Calendar | Tenant-level configuration of working days, holidays, and timezone. |
-| Work Ledger | The reconciled record of workdays vs. attendance vs. approved leave, used as the single source for absence deductions. |
+| Work Ledger | The reconciled record of workdays vs. attendance vs. approved leave, used as the single source for absence deductions. Materialized as `work_ledger_entries` (ADR-21) — a derived projection, not a source record. |
+| Pay Basis | *How* an employee is paid — `salaried`, `hourly`, or `unpaid`. Independent of Contract Type, which describes the employment *form* (ADR-19). |
+| Contract Type | The employment form — `full_time`, `part_time`, `fixed_term`, `freelance`. Carries no pay semantics. |
+| Minor Units | The integer smallest denomination of a currency (halalas, cents, fils). **All monetary values in Veyra are stored as minor units** (ADR-20). |
+| Maker / Checker | The two distinct users required to prepare and to approve a payroll run. They may never be the same user (ADR-09). |
+| Adjustment Entry | A correction to a locked payroll run, recorded as a new line item in a *subsequent* run — never an edit to the locked one (BR-603). |
 | Platform Setting | A platform-wide (never tenant-scoped) configuration value — branding, SMTP, payment gateway keys, registration auto-approval toggle — managed only by Super Admin. |
 | Support Thread | A conversation initiated by a tenant Owner/CEO with Veyra support, handled by Super Admin via the Platform Console; not part of the generic Approval Engine. |
 
@@ -74,12 +80,12 @@ Full detail: see `PROJECT_VISION.md`.
 | **ADR-01** | Frontend stack is **Blade + Livewire 3 + Alpine.js + Tailwind CSS**. | Kanban drag-and-drop, live drawers, wizards, and inline approve/reject actions need server-rendered reactivity without a separate JSON API layer. Livewire ships with Alpine built in. |
 | **ADR-02** | Multi-tenancy is **single database, shared schema, row-level `tenant_id`**, enforced via one global scope + one `TenantContext` service bound per request. No per-tenant databases in v1. | Correct lean-SaaS default; abstracted so a future hybrid (dedicated DB for large accounts) is possible without an app-wide rewrite. |
 | **ADR-03** | Spatie Permission runs with the **Teams feature enabled, `tenant_id` as the team key.** Roles/permissions are tenant-scoped. | Prevents role name collisions/bleed across tenants. Non-negotiable. |
-| **ADR-04** | Tenant status lifecycle is a 5-state machine: `pending_verification → pending_approval → active → suspended → cancelled`. | Represents unverified signups and voluntary cancellation, which a 3-state model cannot. |
+| **ADR-04** | Tenant status lifecycle is a **6-state** machine: `pending_verification → pending_approval → active → suspended → cancelled`, plus `rejected`. *Amended 2026-08-09: `rejected` added.* | Represents unverified signups and voluntary cancellation, which a 3-state model cannot. The sixth state separates a Super Admin **refusing** an application from a customer **cancelling** their own account — previously both landed in `cancelled`, which made "how many applicants did we turn away" unanswerable and attached `rejection_reason` to records nobody rejected. |
 | **ADR-05** | Email verification is **required before a tenant record leaves `pending_verification`**, before any dashboard/setup access. | Prevents fake-tenant creation and storage abuse via the setup wizard prior to verification. |
-| **ADR-06** | Absence-based payroll deductions come from a **reconciled Work Ledger** = Work Calendar workdays − Attendance − Approved Time Off, never from raw Attendance gaps. | Prevents double-penalizing an employee on approved leave. |
+| **ADR-06** | Absence-based payroll deductions come from a **reconciled Work Ledger** = Work Calendar workdays − Attendance − Approved Time Off, never from raw Attendance gaps. Materialization and rebuild rules: ADR-21. | Prevents double-penalizing an employee on approved leave. |
 | **ADR-07** | Timesheets carry two independent flags: **`is_billable`** (feeds Invoicing) and the employee's **contract type** (feeds Payroll). Never derived from one another. | A task can be non-billable to a client while still counting toward an hourly employee's pay, and vice versa. |
-| **ADR-08** | All approval-driven workflows (Leave, Payroll finalization, Job Offers, Expense claims) run on **one generic, polymorphic Approval engine**. | Eliminates duplicated approval logic; unified audit trail. |
-| **ADR-09** | Payroll uses a **maker-checker model**: Finance prepares a run → CEO/Finance Manager approves → run is locked/immutable. No auto-disbursement. | Standard ERP financial control. |
+| **ADR-08** | All approval-driven workflows (Leave, Payroll finalization, Offboarding settlement, Job Offers, Expense claims) run on **one generic, polymorphic Approval engine**, materialized as the `approvals` table. Leave Requests are **backfilled onto it in Phase 2A**: the bespoke `approval_level` / `current_approval_level` / `requires_manager_escalation` columns on `leave_requests` are migrated into `approvals` and dropped. Polymorphic references use a **morph map** of short string aliases, never fully-qualified class names. The map is registered non-enforcing (`Relation::morphMap()`) in Phase 2A; promoting it to `enforceMorphMap()` is a **separate, later step** that must first map every already-polymorphic model and backfill `notifications.notifiable_type`, which currently stores FQCNs. | Eliminates duplicated approval logic; unified audit trail. A second bespoke workflow would have to be untangled later, so the engine is built before its second consumer, not after. The morph map keeps a class rename from corrupting stored financial references. Enforcement is staged because `enforceMorphMap()` throws on *write* for any unmapped model — switching it on with only approval subjects mapped would break every new notification. |
+| **ADR-09** | Payroll uses a **maker-checker model**: Finance prepares a run → Owner/CEO approves → run is locked/immutable. No auto-disbursement. **Maker and checker must be two different users**, asserted at the model layer — a permission check alone cannot enforce this, because the Owner `Gate::before` bypass grants Owners the `prepare` permission implicitly (BR-615). | Standard ERP financial control. The bypass makes permission-only separation of duties unenforceable, so the constraint has to live in the domain. |
 | **ADR-10** | The platform is **bilingual from v1: Arabic (primary) and English**, with Tailwind logical spacing (`ms-`/`me-`) used everywhere so RTL is a first-class layout mode. | Target market (MENA) and Arabic-first business spec make this a day-1 requirement. |
 | **ADR-11** | MVP (Phase 1) excludes Payroll, Invoicing, and Recruitment/ATS. Full module list ships across 4 phases. | De-risks the first release; validates tenancy/RBAC and the HR+Projects daily-use loop first. |
 | **ADR-12** | Strategic Hierarchy (Goals → Programs) is **optional per tenant**, off by default; Projects → Tasks is the mandatory core model. | Avoids enterprise-OKR setup friction for small tenants. |
@@ -88,6 +94,12 @@ Full detail: see `PROJECT_VISION.md`.
 | **ADR-15** | **Appearance Strategy:** the Design System natively supports Dark Mode and Light Mode via Tailwind's class-based `dark:` strategy (not media-query-only), with the user's explicit choice persisted. Every shared component ships with both variants from the moment it is built. | Dark mode is a Phase 1 requirement for every component, not a later retrofit — consistent with building a real commercial product, not a prototype. |
 | **ADR-16** | Platform secrets (SMTP credentials, payment gateway keys) stored in `platform_settings` use Laravel encrypted casts and are never re-displayed in plaintext after the initial save — only a "configured / not configured" state is shown. | These are platform-wide, highest-blast-radius secrets; plaintext exposure risk must be closed by design, not by admin-console access control alone. |
 | **ADR-17** | Tenant Support Inquiries run on a dedicated `support_threads`/`support_messages` model, **not** the generic Approval Engine (ADR-08). | A support inquiry is an open-ended conversation, not an approve/reject decision — forcing it through the Approval Engine would corrupt that engine's single, clean semantic. |
+| **ADR-18** | **Finance ships as a payroll-first split.** Phase 2 divides into **Phase 2A — Payroll** (Approval Engine, Work Ledger, contract pay fields, Payroll Runs, Payslips, Expenses, Offboarding settlement, cost-side Financial Dashboard) and **Phase 2B — Revenue** (Clients, Invoicing, VAT, revenue-side dashboard). **Phase 2B is blocked on the Projects & Timesheets module**, which is unbuilt Phase 1 scope. | BR-604 sources invoices from billable timesheets, and no `projects`, `timesheets`, or `clients` table exists. Invoicing has no source data, so pairing it with payroll would block the entire module on unrelated work. Splitting delivers the payroll half against data the system already holds (attendance, leave, calendars, contracts) and proves the maker-checker discipline on one workflow before a second multiplies the surface area. |
+| **ADR-19** | **Contract Type and Pay Basis are two independent axes on `employee_contracts`.** `contract_type` (`full_time`/`part_time`/`fixed_term`/`freelance`) describes the employment *form* and carries no pay semantics. A new `pay_basis` (`salaried`/`hourly`/`unpaid`) is the **sole input to pay computation** (BR-301). Neither is ever derived from the other. | The two answer different questions and cross freely — a part-time employee may be salaried or hourly; a freelancer may be hourly or unpaid. Collapsing them into one enum forces a false choice and makes the pay branch unrepresentable. This is the same reasoning ADR-07 already applies to `is_billable` vs. contract type, one level up. |
+| **ADR-20** | **All monetary values are stored as `bigInteger` minor units** (halalas, cents, fils) — never `float`, `double`, or `decimal`. Rates are unsigned; amounts that can legitimately be negative (deductions, adjustments) are signed. Rounding happens **once, at the payslip total**, never per line item. Every monetary column is accompanied by an explicit currency, frozen on the record. | A payroll run aggregates dozens of line items per employee; float round-trips through Eloquent casts produce drift, and drift inside a locked, permanently-retained financial record (NFR-10/11) is unrecoverable. Integer arithmetic is exact by construction. `decimal(10,2)` additionally caps at ~99M, too small for an aggregate. |
+| **ADR-21** | **The Work Ledger is materialized** as `work_ledger_entries` — one row per employee per date, rebuilt idempotently per period. It is a **derived projection**, fully reconstructible from Work Calendar + Attendance + approved Leave, and is therefore the one **documented exception to the soft-delete rule (NFR-10)**: rebuilds hard-delete and re-insert the period. A period covered by an `approved` or `paid` payroll run **cannot be rebuilt**. | A live query cannot be frozen, audited, or explained after the fact. Payroll must snapshot *why* a deduction happened, auditors must be able to read it back, and the same table answers the HR dashboard's absence question that is currently computed ad hoc. Soft-deleting a derived row would collide with the `(tenant_id, employee_id, date)` unique key on every rebuild, and preserving it has no value — the source records are already soft-deleted and the payslip snapshot already froze the result. |
+| **ADR-22** | **Tax/VAT is reserved, not built.** No tax fields ship in Phase 2A. Phase 2B's invoicing schema **must** carry line-level tax (rate, tax amount, tax-exclusive and tax-inclusive totals) plus a tenant-level tax registration number, designed before the first invoice migration is written. | The primary market is MENA, where KSA and UAE operate VAT regimes; an invoicing module that cannot express VAT is not sellable there. Payroll carries no VAT, so reserving rather than building keeps Phase 2A clean — but retrofitting tax onto issued, immutable invoices later is materially harder than designing it in. |
+| **ADR-23** | **End-of-service (EOSB) rules are tenant configuration, not code.** The tier boundary, both accrual rates, the resignation taper bands and the nominal working month live in `finance_settings` (one row per tenant) and reach the pure `OffboardingCalculator` as an `EosbPolicy` value object — the calculator never reads them itself. Every settlement **snapshots the policy it was computed under** into `offboarding_settlements.eosb_policy`. A tenant with no row computes on `EosbPolicy::default()`, which reproduces the previously hardcoded GCC/Saudi constants exactly. Rates are stored in **basis points** (integers), never floats or percentages. Managed by the Owner and Finance Manager only (`finance.settings.manage`). | EOSB is a **statutory** entitlement whose rules differ by jurisdiction, and it is the largest single payment most employees ever receive. Shipping one country's rates as constants made the assumption visible but uncorrectable — a tenant outside the GCC had no way to be right. Passing the policy in rather than looking it up preserves the calculator's purity (no Eloquent, no tenant context), which is what makes it testable at all. The snapshot is the other half: without it, editing a rate would silently invalidate the explanation of every settlement already approved and paid, since a locked record must render from its own columns alone (BR-608). |
 
 ---
 
@@ -203,8 +215,9 @@ Full state rules (BR-201–BR-206): see `ARCHITECTURE.md`.
 
 - **HR & Recruitment:** Departments, Work Calendar, Employees/Contracts (salaried/hourly/volunteer), Attendance, Time Off, Recruitment/ATS (Phase 3).
 - **Operations & Projects:** optional Goals/Programs, Projects, Tasks, Timesheets (`is_billable` flag).
-- **Finance:** Clients, Payroll (maker-checker, flexible line items), Offboarding/final settlement, Invoicing & Expenses, Financial Dashboard.
-- **Platform Services:** generic Approval engine, Notifications, Activity/Audit Log, Document Storage, Org Settings.
+- **Finance — Phase 2A:** Payroll (maker-checker, flexible line items, Work Ledger deductions), Expenses, Offboarding/final settlement, cost-side Financial Dashboard.
+- **Finance — Phase 2B:** Clients, Invoicing, VAT/tax, revenue-side Financial Dashboard (blocked on Projects & Timesheets — ADR-18).
+- **Platform Services:** generic Approval engine (`approvals`), Work Ledger (`work_ledger_entries`), Notifications, Activity/Audit Log, Document Storage, Org Settings.
 - **Super Admin / Platform Console:** Tenant Management & Detail (approve/suspend/reactivate), Plans & Feature Limits, Platform Settings, Notifications Console, Support Inquiries, Super Admin User Management (invite-only operator accounts) — see `MODULES.md` §6.
 
 ---
@@ -232,9 +245,17 @@ Navigation is rendered per-role. A plain Employee sees only "My Space" (Check-In
 | Log timesheets | — | ✅ | — | — | ✅ | ✅ (own tasks) |
 | Check-In / Check-Out | — | ✅ | ✅ | ✅ | ✅ | ✅ |
 | View/filter own tasks only | — | — | — | — | — | ✅ |
-| Prepare/approve payroll | — | ✅ (approve) | — | ✅ (prepare) | — | — |
+| Prepare payroll run | — | ⚠️ implicit | — | ✅ | — | — |
+| Approve payroll run (lock) | — | ✅ | — | — | — | — |
+| Mark payroll run paid | — | ✅ | — | ✅ | — | — |
+| Manage expense claims | — | ✅ | — | ✅ | — | — |
+| Approve expense claims | — | ✅ | — | ✅ | — | — |
+| Submit expense claim | — | ✅ | ✅ | ✅ | ✅ | ✅ |
 | View financial dashboard | — | ✅ | — | ✅ | — | — |
+| Manage clients / invoices *(Phase 2B)* | — | ✅ | — | ✅ | — | — |
 | View own payslip/attendance/leave | — | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+⚠️ **Owner "implicit" on Prepare:** the Owner role holds every permission through the `Gate::before` bypass, so it passes `finance.payroll.prepare` without the permission being granted. Separation of duties is therefore **not** enforceable by the permission matrix alone — the approve action must additionally assert `approver_id !== maker_id` at the model layer (ADR-09, BR-615). An Owner may prepare a run; they simply cannot also be the one who approves it.
 
 ---
 
@@ -286,7 +307,8 @@ resources/views/
 | Phase | Scope |
 |---|---|
 | Phase 1 — Core & MVP Operations | Tenancy/Auth/Onboarding, RBAC, Org Settings, Employees/Contracts, Attendance, Time Off, Projects/Tasks/Kanban, Timesheets, Employee Workspace (BR-701), Dark/Light mode (ADR-15), basic Notifications, Activity Log, **Super Admin Platform Console** (Dashboard, Tenant Management/Detail, Plans reference, Platform Settings baseline, Notifications Console, Support Inquiries, Super Admin User Management — `MODULES.md` §6) |
-| Phase 2 — Finance & Payroll | Clients, Payroll (maker-checker), Offboarding, Invoicing & Expenses, Financial Dashboard, payment gateway keys in Platform Settings go live |
+| **Phase 2A — Payroll** (ADR-18) | Approval Engine (`approvals`, Leave backfilled onto it), Work Ledger (`work_ledger_entries`), contract pay fields (`pay_basis`/`base_rate`/`billing_rate`/`pay_currency`), Payroll Runs + Payslips + line items (maker-checker, locked/immutable), Expenses, Offboarding settlement, employee read-only payslip, **cost-side** Financial Dashboard |
+| **Phase 2B — Revenue** (ADR-18, blocked on Projects & Timesheets) | Clients, Invoicing from billable timesheets, **VAT/tax** (ADR-22), revenue-side Financial Dashboard, payment gateway keys in Platform Settings go live |
 | Phase 3 — ATS & Recruitment | Public Careers pages, ATS Kanban, CV viewer, auto-employee conversion |
 | Phase 4 — Platform Maturity & SaaS Limits | Strategic Hierarchy, feature-gating enforcement (activates the plan-limit-warning Notifications Console category), global search, reports/export, Super Admin impersonation, real-time notifications |
 
@@ -309,9 +331,12 @@ resources/views/
 
 ## 16. Open Items for Future Revisions
 
-- Payment gateway selection for tenant subscription billing (Phase 2 dependency).
+- Payment gateway selection for tenant subscription billing (**Phase 2B** dependency — ADR-18 moved this off the Phase 2A critical path).
 - Whether the Applicant status-check portal requires magic-link auth or stays fully anonymous — decide before Phase 3.
-- Multi-currency support beyond a single tenant-level currency setting — deferred past Phase 4.
+- Multi-currency support beyond a single tenant-level currency setting — deferred past Phase 4. Note that `employee_contracts.pay_currency` (ADR-19/ADR-20) freezes a currency **per contract**; this is a correctness guard against a tenant changing its org currency mid-history, **not** a multi-currency feature.
+- **Projects & Timesheets module** — unbuilt Phase 1 scope (`projects`, `tasks.project_id`, `task_statuses`, `timesheets`, `clients`). Phase 2B cannot start until it lands. The existing `tasks` table is an HR line-manager assignment tool (`manager_id`/`employee_id` → `employees`) and does **not** satisfy this; reconciling the two shapes is part of that work.
+- **VAT/tax model** — reserved by ADR-22, to be fully specified before the first Phase 2B invoicing migration.
+- **Payroll disbursement** is recorded, not executed — marking a run `paid` records the fact of payment. Bank-file export or payment-rail integration for employee pay is unscoped and not committed.
 
 ---
 

@@ -21,7 +21,7 @@
                 <div class="space-y-4">
                     @foreach ($modules as $index => $module)
                         <div class="flex items-center gap-4 rounded-xl border border-mist-200 bg-ink-50/50 p-4 dark:border-ink-800 dark:bg-ink-900">
-                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-400/15 font-display text-sm font-bold text-emerald-600 dark:text-emerald-400">{{ $index + 1 }}</span>
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-400/15 font-display text-sm font-bold text-emerald-800 dark:text-emerald-400">{{ $index + 1 }}</span>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $module->title }}</p>
                                 <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-mist-200 dark:bg-ink-700">

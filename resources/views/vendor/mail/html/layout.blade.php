@@ -1,5 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{--
+    Hardcoded ar/rtl rather than following app()->getLocale().
+
+    Every transactional message this application sends is written in Arabic —
+    the Mailables and their markdown views carry Arabic copy directly, with no
+    translation layer. The app locale is `en` (the authenticated shell), so
+    deriving direction from it would render every message left-to-right with
+    Arabic content in it. This mirrors how the public marketing layout pins its
+    direction, and ADR-10 still governs the day a locale switcher exists.
+--}}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ar" dir="rtl">
 <head>
 <title>{{ config('app.name') }}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />

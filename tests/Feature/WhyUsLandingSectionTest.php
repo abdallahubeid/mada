@@ -13,7 +13,7 @@ test('setting seeder persists why us section chrome', function () {
 
     expect(Setting::getValue('why_us_badge_text'))->toBe('لماذا Veyra')
         ->and(Setting::getValue('why_us_title'))->toBe('ما الذي يميّزنا عن غيرنا')
-        ->and(Setting::getValue('why_us_sub_title'))->toBe('لم نبنِ مجرد أداة أخرى، بل منصّة تفهم طبيعة المؤسسات في منطقتنا.');
+        ->and(Setting::getValue('why_us_sub_title'))->toBe('أربعة قرارات هندسية تفصل بين نظام يصمد أمام المدقّق وآخر يبدو جميلاً في العرض التقديمي فقط.');
 });
 
 test('feature seeder persists the four why us cards', function () {
@@ -23,12 +23,12 @@ test('feature seeder persists the four why us cards', function () {
 
     expect($features)->toHaveCount(4)
         ->and($features->pluck('icon')->all())->toBe([
-            'ph:translate-bold',
+            'ph:file-text-bold',
             'ph:shield-check-bold',
-            'ph:arrow-down-bold',
-            'ph:chat-dots-bold',
+            'ph:translate-bold',
+            'ph:rocket-launch-bold',
         ])
-        ->and($features->first()->title)->toBe('عربي أولاً');
+        ->and($features->first()->title)->toBe('مبني ليصمد أمام التدقيق');
 });
 
 test('the landing page why us section renders seeded settings and cards', function () {
@@ -39,11 +39,11 @@ test('the landing page why us section renders seeded settings and cards', functi
         ->assertOk()
         ->assertSee('لماذا Veyra', false)
         ->assertSee('ما الذي يميّزنا عن غيرنا', false)
-        ->assertSee('لم نبنِ مجرد أداة أخرى، بل منصّة تفهم طبيعة المؤسسات في منطقتنا.', false)
-        ->assertSee('عربي أولاً', false)
+        ->assertSee('أربعة قرارات هندسية تفصل بين نظام يصمد أمام المدقّق وآخر يبدو جميلاً في العرض التقديمي فقط.', false)
+        ->assertSee('مبني ليصمد أمام التدقيق', false)
         ->assertSee('أمان بمعايير المؤسسات', false)
-        ->assertSee('إعداد سريع', false)
-        ->assertSee('دعم يتحدث لغتك', false)
+        ->assertSee('عربية أصيلة لا ترجمة', false)
+        ->assertSee('جاهز في نفس اليوم', false)
         ->assertSee('ph:translate-bold', false)
         ->assertSee('ph:shield-check-bold', false);
 });

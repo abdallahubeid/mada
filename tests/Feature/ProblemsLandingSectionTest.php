@@ -12,8 +12,8 @@ test('setting seeder persists problems section chrome', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('problems_badge_text'))->toBe('التحديات')
-        ->and(Setting::getValue('problems_title'))->toBe('هل تبدو هذه المشاكل مألوفة؟')
-        ->and(Setting::getValue('problems_sub_title'))->toBe('معظم المؤسسات تُدار عبر أدوات متفرقة تخلق فوضى تشغيلية بدل أن تحلّها.');
+        ->and(Setting::getValue('problems_title'))->toBe('أين تتسرّب كفاءة مؤسستك اليوم؟')
+        ->and(Setting::getValue('problems_sub_title'))->toBe('المشكلة نادراً ما تكون في الأدوات نفسها، بل في المسافة بينها — وهذه هي الفجوات التي تكلّف وقتاً ومالاً وثقة.');
 });
 
 test('problem seeder persists the four challenge cards', function () {
@@ -38,8 +38,8 @@ test('the landing page problems section renders seeded settings and cards', func
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('التحديات', false)
-        ->assertSee('هل تبدو هذه المشاكل مألوفة؟', false)
-        ->assertSee('معظم المؤسسات تُدار عبر أدوات متفرقة تخلق فوضى تشغيلية بدل أن تحلّها.', false)
+        ->assertSee('أين تتسرّب كفاءة مؤسستك اليوم؟', false)
+        ->assertSee('المشكلة نادراً ما تكون في الأدوات نفسها، بل في المسافة بينها — وهذه هي الفجوات التي تكلّف وقتاً ومالاً وثقة.', false)
         ->assertSee('أنظمة متفرقة لا تتحدث معًا', false)
         ->assertSee('عمليات يدوية تستنزف الفرق', false)
         ->assertSee('غياب الرؤية المالية اللحظية', false)

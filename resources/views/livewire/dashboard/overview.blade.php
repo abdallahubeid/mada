@@ -1,24 +1,67 @@
-<div>
-    <h1>Welcome back, {{ auth()->user()->name }}</h1>
-    <p>{{ auth()->user()->tenant?->name }} &middot; {{ auth()->user()->tenant?->status->label() }}</p>
+@php
+    $user = auth()->user();
+    $tenant = $user?->tenant;
+    $statusLabel = match ($tenant?->status?->value) {
+        'active' => 'نشط',
+        'pending_approval' => 'بانتظار الموافقة',
+        'pending_verification' => 'بانتظار التحقق',
+        'suspended' => 'موقوف',
+        'cancelled' => 'ملغى',
+        default => $tenant?->status?->label() ?? '—',
+    };
+@endphp
 
+<div class="space-y-6">
     <div>
-        <div>
-            <p>Employees</p>
-            <p>0</p>
+        <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">
+            مرحباً بعودتك، {{ $user?->name }}
+        </h2>
+        <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
+            <span class="font-medium text-ink-700 dark:text-mist-200">{{ $tenant?->name }}</span>
+            <span class="mx-1.5 text-mist-300 dark:text-mist-600">·</span>
+            {{ $statusLabel }}
+        </p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <p class="text-sm font-medium text-mist-500 dark:text-mist-400">الموظفون</p>
+            <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50">0</p>
         </div>
-        <div>
-            <p>Active Projects</p>
-            <p>0</p>
+        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <p class="text-sm font-medium text-mist-500 dark:text-mist-400">المشاريع النشطة</p>
+            <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50">0</p>
         </div>
-        <div>
-            <p>Open Leave Requests</p>
-            <p>0</p>
+        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <p class="text-sm font-medium text-mist-500 dark:text-mist-400">طلبات الإجازة</p>
+            <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50">0</p>
         </div>
     </div>
 
-    <div>
-        <p>Your workspace is ready</p>
-        <p>Org Settings, Departments, and Employees are the next Phase 1 slices — this dashboard will fill in as each module ships.</p>
+    <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6">
+        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">مساحة عملك جاهزة</h3>
+        <p class="mt-2 text-sm leading-relaxed text-mist-500 dark:text-mist-400">
+            ابدأ من إعدادات المؤسسة والأقسام — ستظهر مؤشرات لوحة التحكم هنا مع كل موديول جديد.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-3">
+            @can('tenant.settings.view')
+                <a
+                    href="{{ route('settings.company') }}"
+                    wire:navigate
+                    class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300"
+                >
+                    إعدادات المؤسسة
+                </a>
+            @endcan
+            @can('hr.departments.view_any')
+                <a
+                    href="{{ route('hr.departments.index') }}"
+                    wire:navigate
+                    class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:text-mist-200 dark:hover:border-emerald-400 dark:hover:text-emerald-400"
+                >
+                    الأقسام
+                </a>
+            @endcan
+        </div>
     </div>
 </div>

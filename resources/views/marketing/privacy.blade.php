@@ -16,7 +16,7 @@
             <article class="prose-marketing mx-auto max-w-3xl space-y-10 px-4 text-sm leading-relaxed text-mist-600 sm:px-6 lg:px-8 dark:text-mist-300">
                 <div>
                     <h2 class="font-display text-xl font-bold text-ink-900 dark:text-ink-50">1. من نحن</h2>
-                    <p class="mt-3">Veyra ERP منصة SaaS متعددة المستأجرين لإدارة الموارد البشرية والمشاريع والرواتب. عند إنشاء حساب، تصبح مؤسستك «مستأجراً» معزولاً عن بقية العملاء.</p>
+                    <p class="mt-3">Veyra ERP منصة SaaS متعددة المستأجرين لإدارة التوظيف والموارد البشرية والرواتب. عند إنشاء حساب، تصبح مؤسستك «مستأجراً» معزولاً عن بقية العملاء.</p>
                 </div>
 
                 <div>

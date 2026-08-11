@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Tenancy\Middleware\BindTenantContext;
 use App\Domain\Tenancy\Middleware\EnsureTenantActive;
 use App\Http\Middleware\EnsurePlatformOperator;
 use Illuminate\Foundation\Application;
@@ -22,10 +23,16 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->prefix('admin')
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
+
+            // Tenant app (auth) + public company portal share routes/tenant.php.
+            // Auth middleware is applied inside the file so /companies/{slug} stays public.
+            Route::middleware('web')
+                ->group(base_path('routes/tenant.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
+            'tenant.context' => BindTenantContext::class,
             'tenant.active' => EnsureTenantActive::class,
             'platform.operator' => EnsurePlatformOperator::class,
             'role' => RoleMiddleware::class,

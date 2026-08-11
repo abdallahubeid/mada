@@ -43,7 +43,9 @@ class PlatformNotificationPublisher
         return $this->publish([
             'category' => PlatformNotification::CATEGORY_APPROVAL,
             'title' => 'مستأجر جديد بانتظار المراجعة',
-            'body' => 'قدّمت «'.$tenant->name.'» طلب تسجيل ('.$tenant->status->label().') وتنتظر مراجعتك.',
+            // arabicLabel(), not label(): label() is the English enum name and
+            // was rendering "Pending Approval" mid-sentence in an Arabic body.
+            'body' => 'قدّمت «'.$tenant->name.'» طلب تسجيل ('.$tenant->status->arabicLabel().') وتنتظر مراجعتك.',
             'target_url' => Route::has('admin.tenants.show')
                 ? route('admin.tenants.show', $tenant)
                 : route('admin.tenants'),
@@ -56,7 +58,7 @@ class PlatformNotificationPublisher
         return $this->publish([
             'category' => PlatformNotification::CATEGORY_APPROVAL,
             'title' => 'تغيير حالة مستأجر',
-            'body' => 'تم نقل «'.$tenant->name.'» من '.$from->label().' إلى '.$to->label().'.',
+            'body' => 'تم نقل «'.$tenant->name.'» من '.$from->arabicLabel().' إلى '.$to->arabicLabel().'.',
             'target_url' => Route::has('admin.tenants.show')
                 ? route('admin.tenants.show', $tenant)
                 : route('admin.tenants'),

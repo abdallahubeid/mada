@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Events\Tenancy;
+
+use App\Domain\Tenancy\Models\LeaveRequest;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class LeaveRequestSubmitted
+{
+    use Dispatchable, SerializesModels;
+
+    public function __construct(
+        public LeaveRequest $leaveRequest,
+        public ?int $actorUserId = null,
+    ) {}
+}

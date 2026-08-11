@@ -13,7 +13,16 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    /*
+     * The brand name, and therefore the name customers actually read.
+     *
+     * The fallback is the product name rather than Laravel's default because
+     * this value is not merely cosmetic: it is the wordmark in every
+     * transactional email header, the copyright holder in the email footer,
+     * and the sign-off on every message. An unset APP_NAME used to render
+     * "© 2026 Laravel. جميع الحقوق محفوظة." into customer inboxes.
+     */
+    'name' => env('APP_NAME', 'Veyra ERP'),
 
     /*
     |--------------------------------------------------------------------------

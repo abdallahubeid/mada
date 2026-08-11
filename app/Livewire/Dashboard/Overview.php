@@ -14,7 +14,7 @@ use Livewire\Component;
  * owning module (HR, Projects) is built, per docs/DEVELOPMENT_ROADMAP.md.
  */
 #[Layout('components.layouts.app')]
-#[Title('Dashboard — Veyra ERP')]
+#[Title('لوحة التحكم')]
 class Overview extends Component
 {
     public function render()

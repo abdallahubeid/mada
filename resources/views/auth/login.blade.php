@@ -16,6 +16,12 @@
     </div>
 
     <div class="rounded-3xl border border-mist-200 bg-white p-6 shadow-sm backdrop-blur-xl dark:border-ink-600 dark:bg-ink-700/90 sm:p-8">
+        @if (session('status'))
+            <div class="mb-5 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
+                {{ session('status') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('login') }}" class="space-y-5" novalidate>
             @csrf
 
@@ -31,7 +37,7 @@
             <div>
                 <div class="flex items-center justify-between">
                     <label for="password" class="{{ $labelClasses }}">كلمة المرور</label>
-                    <a href="/forgot-password" class="text-xs font-medium text-emerald-600 hover:underline dark:text-emerald-400">نسيت كلمة المرور؟</a>
+                    <a href="{{ route('password.request') }}" class="text-xs font-medium text-emerald-600 hover:underline dark:text-emerald-400">نسيت كلمة المرور؟</a>
                 </div>
                 <input
                     id="password" name="password" type="password" autocomplete="current-password"
@@ -71,7 +77,9 @@
                     كل أدوات مؤسستك، في مكان واحد أنيق
                 </h2>
                 <p class="mt-4 text-sm leading-relaxed text-mist-400">
-                    الموارد البشرية، المشاريع، والرواتب — بأمان تام وعزل بيانات كامل لكل عميل على المنصة.
+                    {{-- "المشاريع" (module does not exist) and "أمان تام / عزل كامل"
+                         (ADR-02 is row-level, not database-per-tenant) removed 2026-08-10. --}}
+                    التوظيف، الموارد البشرية، والرواتب — بعزل بيانات على مستوى الصف وسجل تدقيق لكل مؤسسة.
                 </p>
             </div>
 

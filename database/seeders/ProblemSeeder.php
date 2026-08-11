@@ -13,24 +13,31 @@ class ProblemSeeder extends Seeder
     public function run(): void
     {
         $items = [
+            /*
+             * "المشاريع" removed from the first card on 2026-08-10 — the module
+             * does not exist (see ModuleSeeder). The pain points below are
+             * deliberately concrete rather than generic: each one names a
+             * failure a finance or HR director has actually lived through, and
+             * each maps to a capability that is genuinely built.
+             */
             [
                 'title' => 'أنظمة متفرقة لا تتحدث معًا',
-                'description' => 'بيانات الموارد البشرية في مكان، والرواتب في آخر، والمشاريع في جداول منفصلة — ما يعني ازدواجية وأخطاء وضياع للوقت.',
+                'description' => 'ملف الموظف في نظام، وعقده في ملف، وحضوره في جدول ثالث. كل رقم يُعاد إدخاله يدوياً هو خطأ ينتظر أن يظهر في مسيّرة الرواتب.',
                 'icon_key' => 'ph:link-bold',
             ],
             [
                 'title' => 'عمليات يدوية تستنزف الفرق',
-                'description' => 'الموافقات والمتابعات عبر البريد والورق تبطئ اتخاذ القرار وتُنهك موظفيك في مهام متكررة بلا قيمة.',
+                'description' => 'طلب إجازة ينتظر رداً في بريد، ومصروف يُطارَد في مجموعة محادثة. القرار يتأخر، والمسؤولية تضيع بين الأطراف.',
                 'icon_key' => 'ph:clock-bold',
             ],
             [
                 'title' => 'غياب الرؤية المالية اللحظية',
-                'description' => 'بدون لوحة تحكم موحّدة تفقد القدرة على قراءة صحة أعمالك في الوقت المناسب لاتخاذ قرارات دقيقة.',
+                'description' => 'تكلفة الرواتب والمصروفات لا تتضح إلا بعد إقفال الشهر — أي بعد أن يكون وقت التصحيح قد فات.',
                 'icon_key' => 'ph:chart-bar-bold',
             ],
             [
                 'title' => 'مخاوف أمنية على البيانات',
-                'description' => 'مشاركة البيانات الحساسة عبر أدوات غير آمنة تعرّض مؤسستك لمخاطر تسريب وفقدان للثقة.',
+                'description' => 'من اطّلع على الرواتب؟ ومن عدّل العقد؟ بلا صلاحيات دقيقة وسجل تدقيق، لا توجد إجابة تصلح لتقديمها في مراجعة.',
                 'icon_key' => 'ph:warning-bold',
             ],
         ];
