@@ -60,7 +60,16 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             ->name('dashboard.setup.update');
     });
 
-    Route::middleware(['tenant.active'])->prefix('app')->group(function (): void {
+    /*
+     * `presence.touch` sits on the whole tenant app, not on the messenger.
+     *
+     * "متصل الآن" has to mean "using Veyra", not "has the chat tab open" — a
+     * colleague deep in payroll is reachable and should not read as offline.
+     * The middleware is cache-throttled to one write per 55 seconds, so the
+     * cost of it being here rather than on four messenger routes is a cache
+     * lookup per request.
+     */
+    Route::middleware(['tenant.active', 'presence.touch'])->prefix('app')->group(function (): void {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->middleware('permission:tenant.dashboard.view')
             ->name('dashboard');
@@ -91,6 +100,14 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 ->name('send');
 
             /*
+             * Presence + read state for the open thread. Polled, because it
+             * has to keep working with Reverb down — see the controller.
+             */
+            Route::get('/{conversation}/pulse', [ConversationController::class, 'pulse'])
+                ->whereNumber('conversation')
+                ->name('pulse');
+
+            /*
              * Group creation is the ONE messaging capability behind a
              * permission. Everything else here is gated by participant
              * membership inside the controller — see the note above.
@@ -106,6 +123,20 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             Route::post('/messages/{message}/pin', [ConversationController::class, 'pin'])
                 ->whereNumber('message')
                 ->name('pin');
+
+            /*
+             * Attachment serving. These two routes are the ONLY way the bytes
+             * on the `chat` disk can be read — that disk registers no route of
+             * its own and exposes no URL. Both re-check conversation
+             * membership per request; see findAttachmentFor().
+             */
+            Route::get('/attachments/{attachment}', [ConversationController::class, 'previewAttachment'])
+                ->whereNumber('attachment')
+                ->name('attachments.preview');
+
+            Route::get('/attachments/{attachment}/download', [ConversationController::class, 'downloadAttachment'])
+                ->whereNumber('attachment')
+                ->name('attachments.download');
 
             // Author-only, enforced in the action — no role overrides it.
             Route::delete('/messages/{message}', [ConversationController::class, 'destroyMessage'])

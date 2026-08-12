@@ -38,6 +38,22 @@ final class DeleteMessageAction
             $message->forceFill(['pinned_at' => null, 'pinned_by' => null])->save();
         }
 
+        /*
+         * Attachments go with the message.
+         *
+         * Soft-deleted, and the FILE IS KEPT — same retention rationale as the
+         * message row. What changes is reachability: the download endpoint
+         * resolves attachments through the default scope, so a soft-deleted
+         * row 404s. Deleting a message therefore revokes access to its files
+         * without destroying evidence.
+         *
+         * Without this the row would survive the message and its file would
+         * stay downloadable by anyone who had already seen the id — deleting a
+         * message would visibly remove it while quietly leaving the document
+         * it carried available.
+         */
+        $message->attachments()->delete();
+
         $message->delete();
     }
 }

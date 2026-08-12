@@ -38,6 +38,39 @@ return [
             'report' => false,
         ],
 
+        /*
+         |----------------------------------------------------------------
+         | Messenger attachments — private, and unreachable by URL
+         |----------------------------------------------------------------
+         |
+         | A dedicated disk rather than `local`, for two reasons:
+         |
+         | 1. `local` sets `serve => true`, which registers the framework's
+         |    `GET storage/{path}` route (`storage.local`). That route gates a
+         |    private disk behind a SIGNED URL — which is bearer-style
+         |    authorisation: whoever holds the link gets the file. Chat files
+         |    must be authorised per REQUEST against conversation membership,
+         |    which a signature cannot express.
+         |
+         | 2. No `url` key and `serve => false` means no route is registered
+         |    for this disk at all, and `Storage::disk('chat')->url()` throws
+         |    instead of quietly returning a working public link. The failure
+         |    mode for "someone renders the path into a Blade view" is now an
+         |    exception in development rather than a silent leak in
+         |    production — see the note on MessageAttachment.
+         |
+         | Files are served only by ConversationController::previewAttachment
+         | / downloadAttachment, both of which resolve the row through
+         | `visibleTo($user)`.
+         */
+        'chat' => [
+            'driver' => 'local',
+            'root' => storage_path('app/chat'),
+            'serve' => false,
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

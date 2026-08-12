@@ -5,6 +5,7 @@ use App\Domain\Messaging\Actions\StartDirectConversationAction;
 use App\Domain\Messaging\EmployeeDirectory;
 use App\Domain\Messaging\Exceptions\MessagingException;
 use App\Domain\Messaging\Models\Conversation;
+use App\Domain\Messaging\Support\MessageAttachmentStorage;
 use App\Domain\Tenancy\Actions\SeedDefaultTenantRoles;
 use App\Domain\Tenancy\Enums\EmployeeStatus;
 use App\Domain\Tenancy\Models\Employee;
@@ -14,7 +15,9 @@ use App\Domain\Tenancy\TenantPermissionCatalog;
 use App\Events\Messaging\MessageSent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -232,11 +235,43 @@ test('the broadcast payload carries no user model fields', function () {
     $payload = (new MessageSent($message))->broadcastWith();
 
     // Broadcasting bypasses Eloquent, so a serialised model would ship whatever
-    // columns it happened to hold.
+    // columns it happened to hold. This list is a whitelist on purpose —
+    // widening it should require editing this test.
     expect(array_keys($payload))->toBe([
         'id', 'conversation_id', 'sender_id', 'sender_name',
-        'type', 'body', 'parent_id', 'sent_at',
+        'type', 'body', 'parent_id', 'sent_at', 'attachments',
     ]);
+});
+
+test('the broadcast payload describes attachments without leaking where they live', function () {
+    [$tenant, $owner] = messagingTenant();
+    Employee::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $owner->id]);
+    $alice = staffMember($tenant, 'أليس');
+    $bob = staffMember($tenant, 'بوب');
+
+    Storage::fake(MessageAttachmentStorage::DISK);
+
+    $thread = app(StartDirectConversationAction::class)->handle($alice, $bob->id);
+    $message = app(SendMessageAction::class)->handle($thread, $alice, 'المرفق', null, [
+        UploadedFile::fake()->create('contract.pdf', 12, 'application/pdf'),
+    ]);
+
+    $payload = (new MessageSent($message))->broadcastWith();
+
+    expect($payload['attachments'])->toHaveCount(1);
+
+    /*
+     * Metadata and route URLs only. `path` and `disk` must never travel: the
+     * URLs re-check membership when they are requested, whereas a path is the
+     * one thing the private disk exists to keep secret.
+     */
+    expect(array_keys($payload['attachments'][0]))
+        ->toBe(['id', 'kind', 'name', 'size', 'preview_url', 'download_url']);
+
+    $encoded = json_encode($payload);
+
+    expect($encoded)->not->toContain($message->attachments->first()->path)
+        ->and($encoded)->not->toContain('"disk"');
 });
 
 test('the sender does not see their own message as unread', function () {

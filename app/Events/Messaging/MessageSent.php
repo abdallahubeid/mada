@@ -3,6 +3,7 @@
 namespace App\Events\Messaging;
 
 use App\Domain\Messaging\Models\Message;
+use App\Domain\Messaging\Models\MessageAttachment;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -84,6 +85,26 @@ class MessageSent implements ShouldBroadcastNow
             'body' => $message->body,
             'parent_id' => $message->parent_id,
             'sent_at' => $message->sent_at?->toIso8601String(),
+            /*
+             * Attachment METADATA only — id, label, size and the two route
+             * URLs. Never `path`, never `disk`.
+             *
+             * The URLs are safe to broadcast because they are not credentials:
+             * both endpoints re-check conversation membership when they are
+             * requested, so a payload that somehow reached the wrong subscriber
+             * would still yield 404s. Shipping the path instead would hand out
+             * the one piece of information the private disk is meant to hide.
+             */
+            'attachments' => $message->attachments->map(fn (MessageAttachment $attachment): array => [
+                'id' => $attachment->id,
+                'kind' => $attachment->kind,
+                'name' => $attachment->original_name,
+                'size' => $attachment->humanSize(),
+                'preview_url' => $attachment->isImage()
+                    ? route('tenant.messenger.attachments.preview', $attachment->id)
+                    : null,
+                'download_url' => route('tenant.messenger.attachments.download', $attachment->id),
+            ])->all(),
         ];
     }
 }
