@@ -11,8 +11,8 @@ uses(RefreshDatabase::class);
 test('setting seeder persists why us section chrome', function () {
     $this->seed(SettingSeeder::class);
 
-    expect(Setting::getValue('why_us_badge_text'))->toBe('لماذا Veyra')
-        ->and(Setting::getValue('why_us_title'))->toBe('ما الذي يميّزنا عن غيرنا')
+    expect(Setting::getValue('why_us_badge_text'))->toBe('لماذا مدى')
+        ->and(Setting::getValue('why_us_title'))->toBe('ما الذي **يميّزنا** عن غيرنا')
         ->and(Setting::getValue('why_us_sub_title'))->toBe('أربعة قرارات هندسية تفصل بين نظام يصمد أمام المدقّق وآخر يبدو جميلاً في العرض التقديمي فقط.');
 });
 
@@ -37,13 +37,13 @@ test('the landing page why us section renders seeded settings and cards', functi
 
     $this->get(route('landing'))
         ->assertOk()
-        ->assertSee('لماذا Veyra', false)
-        ->assertSee('ما الذي يميّزنا عن غيرنا', false)
+        ->assertSee('لماذا مدى', false)
+        ->assertSee('يميّزنا', false)->assertSee('عن غيرنا', false)
         ->assertSee('أربعة قرارات هندسية تفصل بين نظام يصمد أمام المدقّق وآخر يبدو جميلاً في العرض التقديمي فقط.', false)
         ->assertSee('مبني ليصمد أمام التدقيق', false)
         ->assertSee('أمان بمعايير المؤسسات', false)
         ->assertSee('عربية أصيلة لا ترجمة', false)
         ->assertSee('جاهز في نفس اليوم', false)
-        ->assertSee('ph:translate-bold', false)
-        ->assertSee('ph:shield-check-bold', false);
+        ->assertSee('m10.5 21 5.25-11.25L21 21', false)
+        ->assertSee('M9 12.75 11.25 15 15 9.75m-3-7.036', false);
 });

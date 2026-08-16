@@ -2,7 +2,7 @@
     use App\Domain\Tenancy\Enums\AssetStatus;
 
     $statusBadges = [
-        'available' => 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
+        'available' => 'bg-brand-500/10 text-brand-700 dark:text-brand-300',
         'assigned' => 'bg-sky-500/10 text-sky-700 dark:text-sky-300',
         'under_maintenance' => 'bg-amber-500/10 text-amber-800 dark:text-amber-300',
         'retired' => 'bg-mist-100 text-mist-600 dark:bg-ink-700 dark:text-mist-300',
@@ -27,32 +27,32 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إدارة العُهد والأصول</h1>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إدارة العُهد والأصول</h1>
                 <p class="mt-1 text-sm text-mist-500">تتبّع أصول الشركة وإسنادها للموظفين مع سجل العهدة.</p>
             </div>
             @if ($canManage)
-                <button type="button" @click="createOpen = true" class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-300">
+                <button type="button" @click="createOpen = true" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600">
                     إضافة أصل
                 </button>
             @endif
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm text-mist-500">إجمالي الأصول</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-assets-total">{{ $kpis['total'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-assets-total">{{ $kpis['total'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm text-mist-500">مُسندة</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-assets-assigned">{{ $kpis['assigned'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-assets-assigned">{{ $kpis['assigned'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm text-mist-500">متاحة</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-assets-available">{{ $kpis['available'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-assets-available">{{ $kpis['available'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm text-mist-500">تحت الصيانة</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-assets-maintenance">{{ $kpis['maintenance'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-assets-maintenance">{{ $kpis['maintenance'] }}</p>
             </div>
         </div>
 
@@ -71,7 +71,7 @@
                         <option value="{{ $status->value }}" @selected($filters['status'] === $status->value)>{{ $status->label() }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="rounded-xl bg-emerald-400 px-3 py-2 text-sm font-semibold text-emerald-900">تصفية</button>
+                <button type="submit" class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white">تصفية</button>
             </div>
         </form>
 
@@ -80,13 +80,13 @@
                 <table class="w-full min-w-max text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs text-mist-500 dark:border-ink-700">
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">رمز الأصل</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الاسم</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الفئة</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الحالة</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الموظف</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">رمز الأصل</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الاسم</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الفئة</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الحالة</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الموظف</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -117,27 +117,27 @@
                                 ];
                             @endphp
                             <tr class="hover:bg-mist-50 dark:hover:bg-ink-700/40">
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration + ($assets->currentPage() - 1) * $assets->perPage() }}</td>
-                                <td class="px-4 py-3 font-mono text-xs text-ink-800 dark:text-ink-100 text-start"><x-ui.ltr>{{ $asset->asset_code }}</x-ui.ltr></td>
-                                <td class="px-4 py-3 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $asset->name }}</td>
-                                <td class="px-4 py-3 text-start">
-                                    <span class="rounded-full bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $asset->category->label() }}</span>
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration + ($assets->currentPage() - 1) * $assets->perPage() }}</td>
+                                <td class="px-3 py-2 font-mono text-xs text-ink-800 dark:text-ink-100 text-start"><x-ui.ltr>{{ $asset->asset_code }}</x-ui.ltr></td>
+                                <td class="px-3 py-2 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $asset->name }}</td>
+                                <td class="px-3 py-2 text-start">
+                                    <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $asset->category->label() }}</span>
                                 </td>
-                                <td class="px-4 py-3 text-center">
-                                    <span @class(['rounded-full px-2 py-0.5 text-xs font-semibold', $statusBadges[$asset->status->value] ?? ''])>
+                                <td class="px-3 py-2 text-center">
+                                    <span @class(['rounded-md px-2 py-0.5 text-xs font-semibold', $statusBadges[$asset->status->value] ?? ''])>
                                         {{ $asset->status->label() }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-start">
+                                <td class="px-3 py-2 text-start">
                                     @if ($asset->currentAssignment?->employee)
-                                        <a href="{{ route('hr.employees.show', [$asset->currentAssignment->employee, 'tab' => 'assets']) }}" class="font-medium text-emerald-700 hover:underline dark:text-emerald-300">
+                                        <a href="{{ route('hr.employees.show', [$asset->currentAssignment->employee, 'tab' => 'assets']) }}" class="font-medium text-brand-700 hover:underline dark:text-brand-300">
                                             {{ $asset->currentAssignment->employee->full_name }}
                                         </a>
                                     @else
                                         <span class="text-mist-400">—</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-3 py-2 text-center">
                                     @if ($canManage)
                                         <div class="flex flex-wrap justify-end gap-2">
                                             @if ($asset->status === AssetStatus::Available)
@@ -152,7 +152,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-ui.table-empty :colspan="7" icon="💼" message="لا توجد أصول بعد." />
+                            <x-ui.table-empty :colspan="7" icon="archive" message="لا توجد أصول بعد." />
                         @endforelse
                     </tbody>
                 </table>
@@ -165,7 +165,7 @@
         @if ($canManage)
             {{-- Create --}}
             <div x-show="createOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4">
-                <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl dark:bg-ink-800" @click.outside="createOpen = false">
+                <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-4 shadow-xl dark:bg-ink-800" @click.outside="createOpen = false">
                     <h3 class="font-semibold">إضافة أصل</h3>
                     <form method="POST" action="{{ route('tenant.assets.store') }}" class="mt-4 space-y-3">
                         @csrf
@@ -188,7 +188,7 @@
                         </select>
                         <textarea name="notes" rows="2" placeholder="ملاحظات" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"></textarea>
                         <div class="flex gap-2">
-                            <button type="submit" class="flex-1 rounded-xl bg-emerald-400 py-2 text-sm font-semibold text-emerald-900">حفظ</button>
+                            <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">حفظ</button>
                             <button type="button" @click="createOpen = false" class="rounded-xl border border-mist-200 px-4 py-2 text-sm dark:border-ink-600">إلغاء</button>
                         </div>
                     </form>
@@ -197,7 +197,7 @@
 
             {{-- Edit --}}
             <div x-show="editOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4">
-                <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl dark:bg-ink-800" @click.outside="editOpen = false">
+                <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-4 shadow-xl dark:bg-ink-800" @click.outside="editOpen = false">
                     <h3 class="font-semibold">تعديل أصل</h3>
                     <form method="POST" class="mt-4 space-y-3" :action="editing?.action">
                         @csrf
@@ -221,7 +221,7 @@
                         </select>
                         <textarea name="notes" rows="2" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.notes || ''"></textarea>
                         <div class="flex gap-2">
-                            <button type="submit" class="flex-1 rounded-xl bg-emerald-400 py-2 text-sm font-semibold text-emerald-900">تحديث</button>
+                            <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">تحديث</button>
                             <button type="button" @click="editOpen = false" class="rounded-xl border border-mist-200 px-4 py-2 text-sm dark:border-ink-600">إلغاء</button>
                         </div>
                     </form>
@@ -230,7 +230,7 @@
 
             {{-- Assign --}}
             <div x-show="assignOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4">
-                <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl dark:bg-ink-800" @click.outside="assignOpen = false">
+                <div class="w-full max-w-md rounded-2xl bg-white p-4 shadow-xl dark:bg-ink-800" @click.outside="assignOpen = false">
                     <h3 class="font-semibold">إسناد أصل</h3>
                     <p class="mt-1 text-sm text-mist-500" x-text="assigning?.label"></p>
                     <form method="POST" class="mt-4 space-y-3" :action="assigning?.action">
@@ -249,7 +249,7 @@
                         </select>
                         <textarea name="notes" rows="2" placeholder="ملاحظات الإسناد" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"></textarea>
                         <div class="flex gap-2">
-                            <button type="submit" class="flex-1 rounded-xl bg-emerald-400 py-2 text-sm font-semibold text-emerald-900">إسناد</button>
+                            <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">إسناد</button>
                             <button type="button" @click="assignOpen = false" class="rounded-xl border border-mist-200 px-4 py-2 text-sm dark:border-ink-600">إلغاء</button>
                         </div>
                     </form>
@@ -258,7 +258,7 @@
 
             {{-- Return --}}
             <div x-show="returnOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4">
-                <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl dark:bg-ink-800" @click.outside="returnOpen = false">
+                <div class="w-full max-w-md rounded-2xl bg-white p-4 shadow-xl dark:bg-ink-800" @click.outside="returnOpen = false">
                     <h3 class="font-semibold">إعادة أصل</h3>
                     <p class="mt-1 text-sm text-mist-500">
                         <span x-text="returning?.label"></span>
@@ -281,7 +281,7 @@
                         </select>
                         <textarea name="notes" rows="2" placeholder="ملاحظات الإعادة" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"></textarea>
                         <div class="flex gap-2">
-                            <button type="submit" class="flex-1 rounded-xl bg-emerald-400 py-2 text-sm font-semibold text-emerald-900">تأكيد الإعادة</button>
+                            <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">تأكيد الإعادة</button>
                             <button type="button" @click="returnOpen = false" class="rounded-xl border border-mist-200 px-4 py-2 text-sm dark:border-ink-600">إلغاء</button>
                         </div>
                     </form>

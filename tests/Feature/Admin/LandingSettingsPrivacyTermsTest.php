@@ -27,9 +27,9 @@ test('settings update persists privacy terms and social keys', function () {
         'terms_title' => 'الشروط والأحكام',
         'terms_btn_link' => '/terms',
         'social_btn1_text' => 'Twitter',
-        'social_btn1_link' => 'https://x.com/veyra',
+        'social_btn1_link' => 'https://x.com/mada',
         'social_btn2_text' => 'LinkedIn',
-        'social_btn2_link' => 'https://linkedin.com/company/veyra',
+        'social_btn2_link' => 'https://linkedin.com/company/mada',
     ])->assertRedirect(route('admin.landing.settings.edit'));
 
     expect(Setting::getValue('privacy_title'))->toBe('سياسة الخصوصية')
@@ -37,7 +37,7 @@ test('settings update persists privacy terms and social keys', function () {
         ->and(Setting::getValue('terms_title'))->toBe('الشروط والأحكام')
         ->and(Setting::getValue('terms_btn_link'))->toBe('/terms')
         ->and(Setting::getValue('social_btn1_text'))->toBe('Twitter')
-        ->and(Setting::getValue('social_btn1_link'))->toBe('https://x.com/veyra')
+        ->and(Setting::getValue('social_btn1_link'))->toBe('https://x.com/mada')
         ->and(Setting::getValue('social_btn2_text'))->toBe('LinkedIn')
         ->and(session('flasher.type'))->toBe('info');
 });

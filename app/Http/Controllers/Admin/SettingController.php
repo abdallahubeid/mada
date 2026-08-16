@@ -25,8 +25,17 @@ class SettingController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        $fileKeys = ['site_logo', 'site_favicon', 'previews_img', 'previews_video'];
+
+        /*
+             * `is_video_section_active` is excluded from the generic text rules
+             * and handled explicitly below — an unchecked checkbox submits
+             * NOTHING, so it can never be validated or written by the loop that
+             * follows. Left to the default path, switching the section OFF would
+             * appear to save and then silently do nothing.
+             */
         $textKeys = collect(Setting::landingKeys())
-            ->reject(fn (string $key): bool => in_array($key, ['site_logo', 'site_favicon', 'previews_img', 'previews_video'], true))
+            ->reject(fn (string $key): bool => in_array($key, [...$fileKeys, 'is_video_section_active'], true))
             ->all();
 
         $rules = [
@@ -34,6 +43,9 @@ class SettingController extends Controller
             'site_favicon' => ['nullable', 'file', 'mimes:png,svg,ico', 'max:2048'],
             'previews_img' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp,svg', 'max:8192'],
             'previews_video' => ['nullable', 'file', 'mimes:mp4,webm,ogg', 'max:51200'],
+            // A pasted CDN link, or blank to fall back to the uploaded file.
+            'video_url' => ['nullable', 'string', 'url', 'max:2048'],
+            'is_video_section_active' => ['nullable', 'boolean'],
         ];
 
         foreach ($textKeys as $key) {
@@ -42,7 +54,10 @@ class SettingController extends Controller
 
         $validated = $request->validate($rules);
 
-        foreach (['site_logo', 'site_favicon', 'previews_img', 'previews_video'] as $fileKey) {
+        // Absent means unchecked, which is a real value ('0'), not "leave alone".
+        $validated['is_video_section_active'] = $request->boolean('is_video_section_active') ? '1' : '0';
+
+        foreach ($fileKeys as $fileKey) {
             if ($request->hasFile($fileKey)) {
                 /** @var UploadedFile $file */
                 $file = $request->file($fileKey);

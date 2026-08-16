@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 test('the login page renders for guests', function () {
     $this->get('/login')
         ->assertOk()
-        ->assertSee('مرحباً بعودتك');
+        ->assertSee('أهلاً بعودتك');
 });
 
 test('authenticated users are redirected away from login', function () {

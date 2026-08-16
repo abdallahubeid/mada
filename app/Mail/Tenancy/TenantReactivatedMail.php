@@ -28,7 +28,7 @@ class TenantReactivatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "إعادة تفعيل حساب «{$this->tenant->name}» على Veyra",
+            subject: "إعادة تفعيل حساب «{$this->tenant->name}» على مدى",
         );
     }
 

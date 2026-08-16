@@ -34,7 +34,7 @@
     open the menu too — a right-click handler on the bubble cannot reach a
     sibling's scope, and `$dispatch` bubbles upward, never sideways.
 
-    The row must also be inside the `veyraMessenger` scope, which supplies
+    The row must also be inside the `madaMessenger` scope, which supplies
     placeMenu / react / pin / startReply / openForward / copyMessage /
     deleteMessage.
     ────────────────────────────────────────────────────────────────────────
@@ -52,7 +52,7 @@
             @click="menu = false; up = placeMenu($event.currentTarget); quick = ! quick"
             :aria-expanded="quick ? 'true' : 'false'"
             aria-haspopup="true"
-            class="rounded-full p-1.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
+            class="rounded-full p-1.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
             aria-label="تفاعل"
             title="تفاعل"
         >
@@ -63,7 +63,7 @@
             x-show="quick"
             x-cloak
             x-transition
-            x-effect="quick && $nextTick(() => window.veyraClampX($el))"
+            x-effect="quick && $nextTick(() => window.madaClampX($el))"
             @click.outside="quick = false"
             @keydown.escape.stop="quick = false"
             role="menu"
@@ -76,7 +76,7 @@
                     type="button"
                     role="menuitem"
                     @click="react({{ $id }}, @js($emoji)); quick = false"
-                    class="rounded-full px-1.5 py-0.5 text-base transition duration-150 hover:scale-125 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    class="rounded-md px-1.5 py-0.5 text-base transition duration-150 hover:scale-125 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50"
                     aria-label="{{ $emoji }}"
                 >{{ $emoji }}</button>
             @endforeach
@@ -90,7 +90,7 @@
             @click="quick = false; up = placeMenu($event.currentTarget); menu = ! menu"
             :aria-expanded="menu ? 'true' : 'false'"
             aria-haspopup="menu"
-            class="rounded-full p-1.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
+            class="rounded-full p-1.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
             aria-label="خيارات الرسالة"
             title="خيارات الرسالة"
             data-testid="messenger-message-menu"
@@ -115,7 +115,7 @@
             {{-- Vertical side is chosen by `placeMenu`; this handles the
                  horizontal, which on a phone can still run off the pane even
                  when the anchoring side is right. --}}
-            x-effect="menu && $nextTick(() => window.veyraClampX($el))"
+            x-effect="menu && $nextTick(() => window.madaClampX($el))"
             @click.outside="menu = false"
             @keydown.escape.stop="menu = false"
             role="menu"

@@ -1,5 +1,5 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 @endphp
@@ -7,13 +7,13 @@
 <x-layouts.app title="إعداد تسوية نهاية خدمة">
     <div class="mx-auto max-w-2xl space-y-6">
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إعداد تسوية نهاية خدمة</h1>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إعداد تسوية نهاية خدمة</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                 تُحتسب المكافأة وبدل الإجازات وراتب الشهر الأخير آلياً من العقد وسجل العمل.
             </p>
         </div>
 
-        <form method="POST" action="{{ route('finance.offboarding.store') }}" class="space-y-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <form method="POST" action="{{ route('finance.offboarding.store') }}" class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
             @csrf
 
             <div>
@@ -79,7 +79,7 @@
 
             <div class="flex justify-end gap-3 pt-2">
                 <a href="{{ route('finance.offboarding.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600">إلغاء</a>
-                <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">احتساب التسوية</button>
+                <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">احتساب التسوية</button>
             </div>
         </form>
     </div>

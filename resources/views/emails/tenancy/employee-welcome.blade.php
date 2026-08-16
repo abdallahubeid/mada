@@ -1,7 +1,7 @@
 <x-mail::message>
 # مرحباً {{ $userName }}
 
-تم إنشاء حسابك في مؤسسة **{{ $tenantName }}** على Veyra بدور **{{ $roleLabel }}**.
+تم إنشاء حسابك في مؤسسة **{{ $tenantName }}** على مدى بدور **{{ $roleLabel }}**.
 
 **بيانات الدخول:**
 

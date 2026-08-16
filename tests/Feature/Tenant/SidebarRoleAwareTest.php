@@ -14,7 +14,7 @@ test('owner sees hr management collapsed into a single dropdown', function () {
     expect($html)->toContain('قسم الموارد البشرية');
     // Flat HR item labels should NOT appear as standalone top-level rows —
     // they only exist inside the dropdown's children list now.
-    expect(substr_count($html, '🏢 الأقسام'))->toBe(1);
+    expect(substr_count($html, 'الأقسام'))->toBe(1);
 });
 
 test('hr manager sees hr management as flat top-level items', function () {
@@ -25,8 +25,8 @@ test('hr manager sees hr management as flat top-level items', function () {
     $html = $this->followingRedirects()->get('/app/dashboard')->assertOk()->getContent();
 
     expect($html)->not->toContain('قسم الموارد البشرية');
-    expect($html)->toContain('🏢 الأقسام');
-    expect($html)->toContain('👥 الموظفين');
+    expect($html)->toContain('الأقسام');
+    expect($html)->toContain('الموظفين');
 });
 
 test('employee sees flat self-service links and no hr management group', function () {
@@ -38,5 +38,5 @@ test('employee sees flat self-service links and no hr management group', functio
     expect($html)->toContain('تسجيل الحضور والانصراف');
     expect($html)->toContain('طلبات الإجازة');
     expect($html)->not->toContain('قسم الموارد البشرية');
-    expect($html)->not->toContain('🏢 الأقسام');
+    expect($html)->not->toContain('الأقسام');
 });

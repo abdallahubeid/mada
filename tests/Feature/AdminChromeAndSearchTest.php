@@ -48,7 +48,7 @@ test('chrome poll message badge drops after customer messages are read', functio
 test('admin topbar includes live search and badge poll wiring', function () {
     $this->get(route('admin.dashboard'))
         ->assertOk()
-        ->assertSee('veyraAdminChrome', false)
+        ->assertSee('madaAdminChrome', false)
         ->assertSee('بحث في المنصّة', false)
         ->assertSee('aria-label="الرسائل"', false)
         ->assertSee('aria-label="الإشعارات"', false)
@@ -217,7 +217,7 @@ test('search suggestion links point at entity destinations with highlight anchor
     $items = collect($payload['groups'])->flatMap(fn (array $g) => $g['items']);
 
     expect($items->pluck('url'))->toContain(route('admin.tenants.show', $tenant))
-        ->and($items->firstWhere('title', 'محادثة رواد')['anchor'] ?? null)->toBe('veyra-search-thread-'.$thread->id)
+        ->and($items->firstWhere('title', 'محادثة رواد')['anchor'] ?? null)->toBe('mada-search-thread-'.$thread->id)
         ->and($items->firstWhere('title', 'محادثة رواد')['mode'] ?? null)->toBe('scroll');
 
     $newsletterPayload = $this->getJson(route('admin.search.suggest', ['q' => 'ruwwad@']))->json();
@@ -226,7 +226,7 @@ test('search suggestion links point at entity destinations with highlight anchor
         ->firstWhere('title', $subscriber->email);
 
     expect($newsletterItem)->not->toBeNull()
-        ->and($newsletterItem['anchor'])->toBe('veyra-search-subscriber-'.$subscriber->id)
+        ->and($newsletterItem['anchor'])->toBe('mada-search-subscriber-'.$subscriber->id)
         ->and($newsletterItem['url'])->toContain('highlight=subscriber-'.$subscriber->id);
 });
 
@@ -242,12 +242,12 @@ test('newsletter and messages pages expose in-page search anchors', function () 
 
     $this->get(route('admin.newsletter.index'))
         ->assertOk()
-        ->assertSee('veyra-search-subscriber-'.$subscriber->id, false)
-        ->assertSee('data-veyra-search="subscriber-'.$subscriber->id.'"', false);
+        ->assertSee('mada-search-subscriber-'.$subscriber->id, false)
+        ->assertSee('data-mada-search="subscriber-'.$subscriber->id.'"', false);
 
     $this->get(route('admin.messages', ['status' => 'open']))
         ->assertOk()
-        ->assertSee('veyra-search-thread-'.$thread->id, false)
-        ->assertSee('data-veyra-search="thread-'.$thread->id.'"', false)
-        ->assertSee('veyra-search-flash', false);
+        ->assertSee('mada-search-thread-'.$thread->id, false)
+        ->assertSee('data-mada-search="thread-'.$thread->id.'"', false)
+        ->assertSee('mada-search-flash', false);
 });

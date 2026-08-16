@@ -109,7 +109,7 @@ return [
          * Change this if you want to use the teams feature and your related model's
          * foreign key is other than `team_id`.
          *
-         * Veyra uses `tenant_id` as the team key so that every role/permission
+         * Mada uses `tenant_id` as the team key so that every role/permission
          * assignment is natively scoped per tenant. See docs/ARCHITECTURE.md §2 (ADR-03).
          */
 
@@ -150,7 +150,7 @@ return [
      * add 'team_foreign_key' to 'roles', 'model_has_roles', and 'model_has_permissions'
      * (view the latest version of this package's migration file)
      *
-     * Enabled for Veyra: every role/permission is scoped to a tenant (the "team"),
+     * Enabled for Mada: every role/permission is scoped to a tenant (the "team"),
      * which is how we prevent role-name collisions and role bleed across tenants
      * (docs/ARCHITECTURE.md §2, ADR-03). The active team id is kept in sync with
      * the resolved tenant by App\Domain\Tenancy\TenantContext::setTenant().

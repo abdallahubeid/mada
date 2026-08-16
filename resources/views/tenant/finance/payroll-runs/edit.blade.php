@@ -1,7 +1,7 @@
 <x-layouts.app title="تعديل مسيرة الرواتب">
     <div class="mx-auto max-w-4xl space-y-6">
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">
                 تعديل مسيرة الرواتب
                 <x-ui.ltr class="text-mist-500">{{ $run->period }}</x-ui.ltr>
             </h1>

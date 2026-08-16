@@ -1,7 +1,7 @@
 <x-layouts.app title="تعديل تصنيف">
     <div class="mx-auto max-w-2xl space-y-6">
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">تعديل تصنيف مصروفات</h1>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">تعديل تصنيف مصروفات</h1>
         </div>
 
         @include('tenant.finance.expense-categories._form', [

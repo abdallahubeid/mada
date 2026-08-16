@@ -117,7 +117,7 @@ class GlobalSearch
                 'subtitle' => $tenant->slug,
                 'url' => route('admin.tenants.show', $tenant),
                 'scope' => 'tenants',
-                'anchor' => 'veyra-search-tenant-'.$tenant->id,
+                'anchor' => 'mada-search-tenant-'.$tenant->id,
                 'mode' => 'scroll',
             ])->values()->all(),
         ];
@@ -144,7 +144,7 @@ class GlobalSearch
             'key' => 'messages',
             'label' => 'الرسائل والدعم',
             'items' => $threads->map(function (SupportThread $thread): array {
-                $anchor = 'veyra-search-thread-'.$thread->id;
+                $anchor = 'mada-search-thread-'.$thread->id;
 
                 return [
                     'title' => $thread->subject,
@@ -181,7 +181,7 @@ class GlobalSearch
             'key' => 'newsletter',
             'label' => 'مشتركو النشرة',
             'items' => $subscribers->map(function (NewsletterSubscriber $subscriber): array {
-                $anchor = 'veyra-search-subscriber-'.$subscriber->id;
+                $anchor = 'mada-search-subscriber-'.$subscriber->id;
 
                 return [
                     'title' => $subscriber->email,
@@ -219,7 +219,7 @@ class GlobalSearch
             'key' => 'newsletter_campaigns',
             'label' => 'الحملات البريدية',
             'items' => $campaigns->map(function (NewsletterCampaign $campaign): array {
-                $anchor = 'veyra-search-campaign-'.$campaign->id;
+                $anchor = 'mada-search-campaign-'.$campaign->id;
 
                 return [
                     'title' => $campaign->subject,

@@ -27,7 +27,7 @@
 >
     <div class="flex items-center justify-between border-b border-mist-100 px-6 py-4 dark:border-ink-700">
         <div>
-            <h2 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">الإشعارات</h2>
+            <h2 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">الإشعارات</h2>
             {{--
                 Counts the rows still rendered unread in THIS view, not the
                 badge. The badge is zeroed the moment the drawer opens, so
@@ -85,13 +85,13 @@
                         class="block rounded-xl border px-3 py-3 transition hover:bg-mist-50 dark:hover:bg-ink-700"
                         :class="item.read_at
                             ? 'border-mist-100 dark:border-ink-700'
-                            : 'border-emerald-400/40 bg-emerald-400/5 dark:border-emerald-500/30'"
+                            : 'border-brand-500/40 bg-brand-500/5 dark:border-brand-500/30'"
                     >
                         <div class="flex items-start justify-between gap-2">
                             <p class="text-sm font-semibold text-ink-900 dark:text-ink-50" x-text="item.title"></p>
                             <span
                                 x-show="! item.read_at"
-                                class="mt-1 h-2 w-2 shrink-0 rounded-full bg-emerald-400"
+                                class="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-500"
                             ></span>
                         </div>
                         <p class="mt-1 text-xs leading-5 text-mist-500 dark:text-mist-400" x-text="item.message"></p>

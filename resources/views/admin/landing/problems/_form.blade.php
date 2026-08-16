@@ -1,12 +1,12 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $image = $problem->relationLoaded('images')
         ? $problem->images->firstWhere('collection', 'icon')
         : $problem->image('icon')->first();
 @endphp
 
-<form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="space-y-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+<form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
     @csrf
     @if ($method !== 'POST')
         @method($method)
@@ -35,7 +35,7 @@
     </div>
 
     <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
-        <input type="checkbox" name="is_published" value="1" @checked(old('is_published', $problem->is_published)) class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400">
+        <input type="checkbox" name="is_published" value="1" @checked(old('is_published', $problem->is_published)) class="rounded border-mist-300 text-brand-500 focus:ring-brand-500">
         منشور على الموقع
     </label>
 
@@ -53,6 +53,6 @@
 
     <div class="flex justify-end gap-3 pt-2">
         <a href="{{ route('admin.problems.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow">حفظ</button>
+        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow">حفظ</button>
     </div>
 </form>

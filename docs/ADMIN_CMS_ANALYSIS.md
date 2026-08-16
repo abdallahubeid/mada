@@ -1,6 +1,6 @@
-# Veyra ERP — Super Admin Landing CMS & Control Analysis
+# Mada ERP — Super Admin Landing CMS & Control Analysis
 
-> Part of the Veyra ERP documentation set. Complements `MARKETING_CMS.md` (public read model), `MODULES.md` §6 (Platform Console), `DATABASE_ROADMAP.md`, and `ARCHITECTURE.md` (tenancy).
+> Part of the Mada ERP documentation set. Complements `MARKETING_CMS.md` (public read model), `MODULES.md` §6 (Platform Console), `DATABASE_ROADMAP.md`, and `ARCHITECTURE.md` (tenancy).
 >
 > **Status:** Binding design analysis for Super Admin → marketing/platform data. **As-built Landing CMS CRUD** is logged in `docs/LANDING_CMS_IMPLEMENTATION.md` (prefer that file for current table/view/route truth when it diverges from proposals below).
 >
@@ -10,7 +10,7 @@
 
 ## 1. Multi-Tenancy Context (important correction)
 
-### 1.1 Veyra does **not** use `stancl/tenancy`
+### 1.1 Mada does **not** use `stancl/tenancy`
 
 This repository implements **single-database, shared-schema, row-level multi-tenancy** via:
 
@@ -24,7 +24,7 @@ There is **no** `stancl/tenancy` package in `composer.json`, no landlord/tenant 
 
 For marketing CMS purposes, treat the following as the **central / platform layer** (Stancl analogy only):
 
-| Stancl idea | Veyra equivalent |
+| Stancl idea | Mada equivalent |
 |---|---|
 | Central database / central app | Platform-global tables with **no `tenant_id`** (or nullable attribution only) |
 | Tenant app data | Rows filtered by `TenantContext` / `TenantScope` |

@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Veyra ERP' }}</title>
+    <title>{{ $title ?? 'مدى' }}</title>
 
     <x-site-favicon />
 
@@ -17,10 +17,16 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="flex min-h-dvh w-full items-center justify-center bg-[#0B132B] px-4 py-12 font-sans text-ink-50 antialiased dark:bg-[#0F172A]">
+{{--
+    Was a hardcoded `bg-[#0B132B]` navy — the last always-dark surface left in
+    the product, and an off-palette literal rather than a token. It now paints
+    the same `mist-50` canvas as every other page, so the setup wizard no
+    longer drops the visitor onto a dark screen mid-onboarding.
+--}}
+<body class="flex min-h-dvh w-full items-center justify-center bg-mist-50 px-4 py-12 font-sans text-ink-900 antialiased">
     <div class="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-        <div class="absolute -top-32 start-1/4 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl"></div>
-        <div class="absolute -bottom-24 end-0 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"></div>
+        <div class="absolute -top-32 start-1/4 h-96 w-96 rounded-full bg-brand-500/8 blur-3xl"></div>
+        <div class="absolute -bottom-24 end-0 h-80 w-80 rounded-full bg-marker-500/8 blur-3xl"></div>
     </div>
 
     <div class="relative z-10 w-full {{ $maxWidth }}">
@@ -36,7 +42,7 @@
                 Swal.fire({
                     icon: @js(session('flasher.type', 'success')),
                     title: @js(session('flasher.message')),
-                    confirmButtonColor: '#4edea3',
+                    confirmButtonColor: '#714b67',
                     confirmButtonText: 'حسنًا',
                     timer: 4200,
                     timerProgressBar: true,

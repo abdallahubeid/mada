@@ -1,6 +1,6 @@
 <x-layouts.app title="إعدادات المؤسسة">
     @php
-        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-mist-500 disabled:cursor-not-allowed disabled:opacity-60';
+        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-mist-500 disabled:cursor-not-allowed disabled:opacity-60';
         $labelClasses = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
         $errorClasses = 'mt-1.5 text-xs text-danger-solid';
         $selectedWorkingDays = collect(old('working_days', $calendar?->working_days ?? [0, 1, 2, 3, 4]))
@@ -14,7 +14,7 @@
 
     <div class="mx-auto max-w-3xl space-y-6">
         <div>
-            <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إعدادات المؤسسة</h2>
+            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إعدادات المؤسسة</h2>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                 العملة، المنطقة الزمنية، وتقويم العمل لـ
                 <span class="font-medium text-ink-700 dark:text-mist-200">{{ $tenant?->name }}</span>
@@ -25,13 +25,13 @@
             method="POST"
             action="{{ route('settings.company.update') }}"
             x-data="{ holidays: @js($holidayRows) }"
-            class="space-y-6 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
+            class="space-y-6 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
         >
             @csrf
             @method('PUT')
 
             <fieldset @disabled(! $canUpdate) class="space-y-4">
-                <legend class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">العملة والمنطقة الزمنية</legend>
+                <legend class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">العملة والمنطقة الزمنية</legend>
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>
@@ -77,18 +77,18 @@
             </fieldset>
 
             <fieldset @disabled(! $canUpdate) class="space-y-4 border-t border-mist-200 pt-6 dark:border-ink-600">
-                <legend class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">تقويم العمل</legend>
+                <legend class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">تقويم العمل</legend>
 
                 <div>
                     <p class="{{ $labelClasses }}">أيام العمل</p>
                     <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         @foreach ($weekdayLabels as $value => $label)
-                            <label class="flex items-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm text-ink-700 transition hover:border-emerald-400/50 dark:border-ink-600 dark:text-mist-200">
+                            <label class="flex items-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm text-ink-700 transition hover:border-brand-500/50 dark:border-ink-600 dark:text-mist-200">
                                 <input
                                     type="checkbox"
                                     name="working_days[]"
                                     value="{{ $value }}"
-                                    class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400"
+                                    class="rounded border-mist-300 text-brand-500 focus:ring-brand-500"
                                     @checked(in_array($value, $selectedWorkingDays, true))
                                     @disabled(! $canUpdate)
                                 >
@@ -105,7 +105,7 @@
                     <div class="flex items-center justify-between gap-3">
                         <p class="{{ $labelClasses }} mb-0">العطل الرسمية</p>
                         @if ($canUpdate)
-                            <button type="button" @click="holidays.push({ date: '', name: '' })" class="text-sm font-semibold text-emerald-600 transition hover:text-emerald-500 dark:text-emerald-400">
+                            <button type="button" @click="holidays.push({ date: '', name: '' })" class="text-sm font-semibold text-brand-600 transition hover:text-brand-500 dark:text-brand-300">
                                 إضافة عطلة
                             </button>
                         @endif
@@ -119,7 +119,7 @@
                                 <button
                                     type="button"
                                     @click="holidays.length === 1 ? holidays[0] = { date: '', name: '' } : holidays.splice(index, 1)"
-                                    class="rounded-xl border border-mist-200 px-4 py-2.5 text-sm font-semibold text-ink-700 transition hover:border-mist-300 hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-900"
+                                    class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition hover:border-mist-300 hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-900"
                                 >
                                     حذف
                                 </button>
@@ -133,7 +133,7 @@
                 <div class="flex justify-end border-t border-mist-200 pt-4 dark:border-ink-600">
                     <button
                         type="submit"
-                        class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300 active:scale-[0.98]"
+                        class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-[0.98]"
                     >
                         حفظ الإعدادات
                     </button>

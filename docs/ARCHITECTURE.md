@@ -1,12 +1,12 @@
-# Veyra ERP — Architecture
+# Mada ERP — Architecture
 
-> Part of the Veyra ERP documentation set. See `VEYRA_DOCS.md` for the full Software Design Document. Read alongside `MODULES.md` (business rules) and `DATABASE_ROADMAP.md` (schema conventions).
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full Software Design Document. Read alongside `MODULES.md` (business rules) and `DATABASE_ROADMAP.md` (schema conventions).
 
 ## 1. Multi-Tenancy Model
 
 ### 1.1 Decision
 
-Veyra uses **single database, shared schema, row-level multi-tenancy** via a `tenant_id` column present on every tenant-scoped table (ADR-02). This is the correct default for a lean, cost-efficient SaaS at this stage — it is *not* a shortcut; it is a deliberate architecture that must be implemented with strict discipline, because the cost of a mistake (cross-tenant data leak) is severe.
+Mada uses **single database, shared schema, row-level multi-tenancy** via a `tenant_id` column present on every tenant-scoped table (ADR-02). This is the correct default for a lean, cost-efficient SaaS at this stage — it is *not* a shortcut; it is a deliberate architecture that must be implemented with strict discipline, because the cost of a mistake (cross-tenant data leak) is severe.
 
 ### 1.2 Enforcement Points (all four are mandatory, not optional)
 
@@ -131,7 +131,7 @@ Each subscription Plan defines feature limits (e.g., max employees, max projects
 
 ## 7. Cross-Module Communication
 
-No module reads or writes another module's tables directly. All cross-module effects are implemented via **Events + Listeners** (e.g., `ApplicantAccepted`, `LeaveApproved`, `TimesheetLogged`, `PayrollRunApproved`), keeping module boundaries real in code, not just in documentation. See `VEYRA_DOCS.md` §13 for the backend layering convention (Controllers/Livewire → Actions → Models).
+No module reads or writes another module's tables directly. All cross-module effects are implemented via **Events + Listeners** (e.g., `ApplicantAccepted`, `LeaveApproved`, `TimesheetLogged`, `PayrollRunApproved`), keeping module boundaries real in code, not just in documentation. See `MADA_DOCS.md` §13 for the backend layering convention (Controllers/Livewire → Actions → Models).
 
 **Phase 2A event surface.** The Approval Engine is deliberately module-agnostic: it emits a generic decision event and each subject's own listener applies the domain effect (`MODULES.md` BR-906). Finance therefore introduces:
 
@@ -286,7 +286,7 @@ Work Ledger and dashboard aggregates are cached under `tenant:{tenant_id}:...` k
 | Bootstrap | `routes/tenant.php` loaded with `web` only; auth/verified applied inside the file so the portal stays public |
 | Controller | `Tenant\PublicPortalController` — portal CMS + careers apply + contact ingest into `TenantContactInbox` |
 | Views | `tenant/settings/portal.blade.php`; `tenant/portal/{layout,index,careers,job-detail,contact}.blade.php` |
-| UI | Arabic RTL shell; dark/light via `veyra-theme`; ambient grid/glass cards; homepage sections + dedicated contact page |
+| UI | Arabic RTL shell; dark/light via `mada-theme`; ambient grid/glass cards; homepage sections + dedicated contact page |
 | Sidebar | «الموقع العام» under الإعدادات (`tenant.settings.view`); «رسائل التواصل» for inbox |
 | Tests | `tests/Feature/Tenant/PublicPortalUiTest.php`, `ContactChatTest.php` |
 
@@ -389,7 +389,7 @@ Work Ledger and dashboard aggregates are cached under `tenant:{tenant_id}:...` k
 
 | Area | Notes |
 |---|---|
-| Theme | Tenant/Admin/Auth FOUC scripts default `dark` when `veyra-theme` unset; toggle persists `dark`/`light` |
+| Theme | Tenant/Admin/Auth FOUC scripts default `dark` when `mada-theme` unset; toggle persists `dark`/`light` |
 | Topbar search | Visual search input in tenant topbar (`بحث في المنصة...`) — chrome parity with admin |
 | Profile | `/app/profile` → `profile.edit` / `profile.update`; Cropper.js + `custom` disk `images` avatar |
 | Controller | `Tenant\ProfileController` (mirrors admin profile pattern) |
@@ -522,7 +522,7 @@ Work Ledger and dashboard aggregates are cached under `tenant:{tenant_id}:...` k
 | Approvals | **ADR-08 extended** — `approvals` table built now, before its second consumer. Leave's three bespoke escalation columns migrate in and are dropped (BR-901). Morph-map aliases, never FQCNs (BR-902) |
 | Tax | **ADR-22** — VAT reserved, not built. `DATABASE_ROADMAP.md` §5 specifies what Phase 2B's invoicing schema must carry for MENA compliance |
 | New rules | BR-301a/b, BR-403–BR-407 (Work Ledger), BR-608–BR-617 (Finance), BR-901–BR-906 (Approval Engine) |
-| Docs touched | `VEYRA_DOCS.md` (v1.2 → v1.3), `MODULES.md`, `DATABASE_ROADMAP.md`, `ARCHITECTURE.md` (§6, §7, new §9), `DEVELOPMENT_ROADMAP.md` |
+| Docs touched | `MADA_DOCS.md` (v1.2 → v1.3), `MODULES.md`, `DATABASE_ROADMAP.md`, `ARCHITECTURE.md` (§6, §7, new §9), `DEVELOPMENT_ROADMAP.md` |
 
 **Outstanding documentation debt (pre-existing, not from this session):** the implementation log has no entries for the 2026-08-05 session — role-aware sidebar, Task/Scrum module, split role dashboards, the `TenantNotifier` rebuild, My Space retirement, and the DESIGN_SYSTEM §8 table standard all shipped without a log entry, contrary to `.cursor/rules/documentation-logging.mdc`. Backfilling this is tracked separately.
 
@@ -543,7 +543,7 @@ Work Ledger and dashboard aggregates are cached under `tenant:{tenant_id}:...` k
 | Area | Notes |
 |---|---|
 | Migrations | `payslip_line_item_types`, `payroll_runs`, `payslips`, `payslip_line_items` |
-| Namespaces | Models/Enums/Support/Exceptions under `App\Domain\Finance\*`; services under `App\Services\Finance\*` — mirrors the existing `Domain\Tenancy` + `Services\Tenancy` split rather than `VEYRA_DOCS.md` §13's single `Domain/Finance` folder |
+| Namespaces | Models/Enums/Support/Exceptions under `App\Domain\Finance\*`; services under `App\Services\Finance\*` — mirrors the existing `Domain\Tenancy` + `Services\Tenancy` split rather than `MADA_DOCS.md` §13's single `Domain/Finance` folder |
 | **BR-611 enforcement** | `payroll_runs.active_period` is a **stored generated column**: `if(deleted_at is null and status <> 'cancelled', period, null)`, unique with `tenant_id`. A plain unique on `(tenant_id, period)` would permanently burn a period once a draft is cancelled; putting `deleted_at` in the key fails outright because MySQL/MariaDB treat NULLs as distinct, so two live rows would both pass. NULL-distinctness is exactly what makes the sentinel work — many dead runs may coexist, only one live run holds a period |
 | **Sign convention** | Every monetary column is signed minor units expressed as **effect on net pay**: `net = base + absence_deduction + allowances_total + deductions_total`, with the last two `<= 0`. One rule for the whole module; the display layer negates for presentation |
 | Rounding | `PayslipCalculator::proportion()` does exact integer half-up via `intdiv` + remainder — **no float touches money at any point**, not even in rounding (ADR-20) |

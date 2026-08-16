@@ -28,7 +28,7 @@ function validRegistrationPayload(array $overrides = []): array
 test('the registration page renders for guests', function () {
     $this->get('/register')
         ->assertOk()
-        ->assertSee('ابدأ تجربتك المجانية');
+        ->assertSee('ابدأ مجاناً');
 });
 
 test('a new tenant and its owner user can be registered', function () {

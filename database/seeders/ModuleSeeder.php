@@ -20,7 +20,7 @@ class ModuleSeeder extends Seeder
             ],
             /*
              * "الفوترة" removed on 2026-08-10 — client invoicing is Phase 2B and
-             * blocked (ADR-18). `tenant_invoices` is Veyra billing the tenant,
+             * blocked (ADR-18). `tenant_invoices` is Mada billing the tenant,
              * not the tenant billing its own customers.
              */
             [

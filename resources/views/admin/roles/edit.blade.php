@@ -13,7 +13,7 @@
 @section('content')
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">{{ $roleLabel }}</h2>
+            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $roleLabel }}</h2>
             <p class="mt-1 font-mono text-xs text-mist-500">{{ $role->name }}</p>
         </div>
         <a href="{{ route('admin.roles.index') }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">رجوع</a>
@@ -27,7 +27,7 @@
 
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.roles.index') }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">إلغاء</a>
-            <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">حفظ الصلاحيات</button>
+            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">حفظ الصلاحيات</button>
         </div>
     </form>
 @endsection

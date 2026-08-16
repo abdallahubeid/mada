@@ -1,5 +1,5 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
     $isEdit = ($method ?? 'POST') !== 'POST';
@@ -48,7 +48,7 @@
         @method($method)
     @endif
 
-    <div class="space-y-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
         <div>
             <label for="name" class="{{ $labelClass }}">الاسم الكامل</label>
             <input id="name" type="text" name="name" value="{{ old('name', $member->name) }}" required class="{{ $inputClass }}">
@@ -120,10 +120,10 @@
             <div class="grid gap-4 lg:grid-cols-2">
                 @foreach ($permissionGroups as $domain => $group)
                     <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-900/40">
-                        <h3 class="mb-3 font-display text-sm font-bold text-ink-900 dark:text-ink-50">{{ $group['label'] }}</h3>
+                        <h3 class="mb-3 font-display text-sm font-medium text-ink-900 dark:text-ink-50">{{ $group['label'] }}</h3>
                         <div class="space-y-2">
                             @foreach ($group['permissions'] as $permission => $permissionLabel)
-                                <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-mist-200 px-3 py-2.5 transition hover:border-emerald-300 dark:border-ink-600 dark:hover:border-emerald-500/40">
+                                <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-mist-200 px-3 py-2 transition hover:border-brand-300 dark:border-ink-600 dark:hover:border-brand-500/40">
                                     <span class="text-sm text-ink-700 dark:text-mist-200">{{ $permissionLabel }}</span>
                                     <span class="relative inline-flex shrink-0">
                                         <input
@@ -133,8 +133,8 @@
                                             class="peer sr-only"
                                             x-model="selectedPermissions"
                                         >
-                                        <span class="h-6 w-11 rounded-full bg-mist-200 transition peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-400/40 dark:bg-ink-700"></span>
-                                        <span class="pointer-events-none absolute start-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-5 rtl:peer-checked:-translate-x-5"></span>
+                                        <span class="h-6 w-11 rounded-md bg-mist-200 transition peer-checked:bg-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500/40 dark:bg-ink-700"></span>
+                                        <span class="pointer-events-none absolute start-0.5 top-0.5 h-5 w-5 rounded-md bg-white shadow transition peer-checked:translate-x-5 rtl:peer-checked:-translate-x-5"></span>
                                     </span>
                                 </label>
                             @endforeach
@@ -151,11 +151,11 @@
         </div>
     </div>
 
-    <div class="space-y-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
         @if ($isEdit)
-            <label class="flex items-center gap-2 rounded-xl border border-mist-200 px-3 py-2.5 text-sm text-ink-700 dark:border-ink-600 dark:text-mist-200">
+            <label class="flex items-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm text-ink-700 dark:border-ink-600 dark:text-mist-200">
                 <input type="hidden" name="reset_password" value="0">
-                <input type="checkbox" name="reset_password" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" x-model="resetPassword">
+                <input type="checkbox" name="reset_password" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" x-model="resetPassword">
                 إعادة تعيين كلمة المرور وإرسالها بالبريد
             </label>
         @else
@@ -165,7 +165,7 @@
         <div class="space-y-3" x-show="! {{ $isEdit ? 'true' : 'false' }} || resetPassword" x-cloak>
             <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                 <input type="hidden" name="auto_generate_password" value="0">
-                <input type="checkbox" name="auto_generate_password" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" x-model="autoGenerate">
+                <input type="checkbox" name="auto_generate_password" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" x-model="autoGenerate">
                 توليد كلمة مرور تلقائياً
             </label>
 
@@ -187,6 +187,6 @@
 
     <div class="flex justify-end gap-3">
         <a href="{{ route('team.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">حفظ</button>
+        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">حفظ</button>
     </div>
 </form>

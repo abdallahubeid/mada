@@ -1,8 +1,8 @@
 <x-layouts.app title="الموقع العام">
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 disabled:cursor-not-allowed disabled:opacity-60';
+        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 disabled:cursor-not-allowed disabled:opacity-60';
         $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
-        $cardClass = 'rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6';
+        $cardClass = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6';
         $errorClass = 'mt-1.5 text-xs text-danger-solid';
         $val = fn (string $key, mixed $default = '') => old($key, $portalSettings->{$key} ?? $default);
         $tabs = [
@@ -34,7 +34,7 @@
     }">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الموقع العام</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الموقع العام</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     تحكم بمحتوى بوابة التوظيف العامة لـ
                     <span class="font-medium text-ink-700 dark:text-mist-200">{{ $tenant?->name }}</span>
@@ -46,7 +46,7 @@
                         href="{{ $previewUrl }}"
                         target="_blank"
                         rel="noopener"
-                        class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:text-mist-200 dark:hover:border-emerald-400 dark:hover:text-emerald-400"
+                        class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200 dark:hover:border-brand-500 dark:hover:text-brand-300"
                     >
                         معاينة الموقع
                     </a>
@@ -65,9 +65,9 @@
                         type="button"
                         @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}'
-                            ? 'border-emerald-400 text-emerald-600 dark:text-emerald-400'
+                            ? 'border-brand-500 text-brand-600 dark:text-brand-300'
                             : 'border-transparent text-mist-500 hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200'"
-                        class="whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition"
+                        class="whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium transition"
                     >{{ $label }}</button>
                 @endforeach
             </div>
@@ -80,14 +80,14 @@
             <fieldset @disabled(! $canUpdate) class="space-y-6">
                 {{-- General --}}
                 <div x-show="tab === 'general'" x-cloak class="{{ $cardClass }} space-y-4">
-                    <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الإعدادات العامة</h3>
+                    <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الإعدادات العامة</h3>
                     <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-mist-200 px-3 py-3 dark:border-ink-600">
                         <div>
                             <span class="block text-sm font-medium text-ink-700 dark:text-mist-200">تفعيل الموقع العام</span>
                             <span class="mt-0.5 block text-xs text-mist-500">عند الإيقاف تظهر صفحة صيانة للزوار (404).</span>
                         </div>
                         <input type="hidden" name="is_portal_enabled" value="0">
-                        <input type="checkbox" name="is_portal_enabled" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_portal_enabled', true))>
+                        <input type="checkbox" name="is_portal_enabled" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_portal_enabled', true))>
                     </label>
                     <p class="text-xs text-mist-500">استخدم تبويبات الأقسام لتعديل النصوص والتفعيل لكل قسم على حدة.</p>
                 </div>
@@ -95,10 +95,10 @@
                 {{-- Hero --}}
                 <div x-show="tab === 'hero'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">قسم البطل</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">قسم البطل</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_hero_active" value="0">
-                            <input type="checkbox" name="is_hero_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_hero_active', true))>
+                            <input type="checkbox" name="is_hero_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_hero_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -137,10 +137,10 @@
                 {{-- About --}}
                 <div x-show="tab === 'about'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">من نحن والقيم</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">من نحن والقيم</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_about_active" value="0">
-                            <input type="checkbox" name="is_about_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_about_active', true))>
+                            <input type="checkbox" name="is_about_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_about_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -168,7 +168,7 @@
                         <div class="flex items-center justify-between">
                             <p class="{{ $labelClass }} mb-0">القيم</p>
                             @if ($canUpdate)
-                                <button type="button" @click="values.push({ title: '', desc: '' })" class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">إضافة قيمة</button>
+                                <button type="button" @click="values.push({ title: '', desc: '' })" class="text-sm font-semibold text-brand-600 dark:text-brand-300">إضافة قيمة</button>
                             @endif
                         </div>
                         <template x-for="(row, index) in values" :key="'v'+index">
@@ -186,10 +186,10 @@
                 {{-- Services --}}
                 <div x-show="tab === 'services'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الخدمات</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الخدمات</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_services_active" value="0">
-                            <input type="checkbox" name="is_services_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_services_active', true))>
+                            <input type="checkbox" name="is_services_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_services_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -207,7 +207,7 @@
                         <div class="flex items-center justify-between">
                             <p class="{{ $labelClass }} mb-0">بطاقات الخدمات</p>
                             @if ($canUpdate)
-                                <button type="button" @click="services.push({ title: '', description: '', icon: 'ops' })" class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">إضافة خدمة</button>
+                                <button type="button" @click="services.push({ title: '', description: '', icon: 'ops' })" class="text-sm font-semibold text-brand-600 dark:text-brand-300">إضافة خدمة</button>
                             @endif
                         </div>
                         <template x-for="(row, index) in services" :key="'s'+index">
@@ -226,10 +226,10 @@
                 {{-- Culture --}}
                 <div x-show="tab === 'culture'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">بيئة العمل والمزايا</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">بيئة العمل والمزايا</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_culture_active" value="0">
-                            <input type="checkbox" name="is_culture_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_culture_active', true))>
+                            <input type="checkbox" name="is_culture_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_culture_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -247,7 +247,7 @@
                         <div class="flex items-center justify-between">
                             <p class="{{ $labelClass }} mb-0">المزايا</p>
                             @if ($canUpdate)
-                                <button type="button" @click="culture.push({ title: '', description: '' })" class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">إضافة ميزة</button>
+                                <button type="button" @click="culture.push({ title: '', description: '' })" class="text-sm font-semibold text-brand-600 dark:text-brand-300">إضافة ميزة</button>
                             @endif
                         </div>
                         <template x-for="(row, index) in culture" :key="'c'+index">
@@ -265,10 +265,10 @@
                 {{-- Stats --}}
                 <div x-show="tab === 'stats'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الإحصائيات</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الإحصائيات</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_stats_active" value="0">
-                            <input type="checkbox" name="is_stats_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_stats_active', true))>
+                            <input type="checkbox" name="is_stats_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_stats_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -280,7 +280,7 @@
                         <div class="flex items-center justify-between">
                             <p class="{{ $labelClass }} mb-0">العدادات</p>
                             @if ($canUpdate)
-                                <button type="button" @click="stats.push({ label: '', value: '', suffix: '' })" class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">إضافة رقم</button>
+                                <button type="button" @click="stats.push({ label: '', value: '', suffix: '' })" class="text-sm font-semibold text-brand-600 dark:text-brand-300">إضافة رقم</button>
                             @endif
                         </div>
                         <template x-for="(row, index) in stats" :key="'st'+index">
@@ -299,10 +299,10 @@
                 {{-- Careers --}}
                 <div x-show="tab === 'careers'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">قسم الوظائف</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">قسم الوظائف</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_careers_active" value="0">
-                            <input type="checkbox" name="is_careers_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_careers_active', true))>
+                            <input type="checkbox" name="is_careers_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_careers_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -323,10 +323,10 @@
                 {{-- FAQ --}}
                 <div x-show="tab === 'faq'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الأسئلة الشائعة</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الأسئلة الشائعة</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_faq_active" value="0">
-                            <input type="checkbox" name="is_faq_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_faq_active', true))>
+                            <input type="checkbox" name="is_faq_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_faq_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -344,7 +344,7 @@
                         <div class="flex items-center justify-between">
                             <p class="{{ $labelClass }} mb-0">الأسئلة والأجوبة</p>
                             @if ($canUpdate)
-                                <button type="button" @click="faqs.push({ question: '', answer: '' })" class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">إضافة سؤال</button>
+                                <button type="button" @click="faqs.push({ question: '', answer: '' })" class="text-sm font-semibold text-brand-600 dark:text-brand-300">إضافة سؤال</button>
                             @endif
                         </div>
                         <template x-for="(row, index) in faqs" :key="'f'+index">
@@ -362,10 +362,10 @@
                 {{-- CTA --}}
                 <div x-show="tab === 'cta'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">شريط الدعوة للإجراء</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">شريط الدعوة للإجراء</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_cta_active" value="0">
-                            <input type="checkbox" name="is_cta_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_cta_active', true))>
+                            <input type="checkbox" name="is_cta_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_cta_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -386,10 +386,10 @@
                 {{-- Contact --}}
                 <div x-show="tab === 'contact'" x-cloak class="{{ $cardClass }} space-y-4">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">التواصل والخريطة</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">التواصل والخريطة</h3>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="hidden" name="is_contact_active" value="0">
-                            <input type="checkbox" name="is_contact_active" value="1" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400" @checked((bool) $val('is_contact_active', true))>
+                            <input type="checkbox" name="is_contact_active" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500" @checked((bool) $val('is_contact_active', true))>
                             ظاهر
                         </label>
                     </div>
@@ -421,7 +421,7 @@
 
             @can('tenant.settings.update')
                 <div class="flex justify-end">
-                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300 active:scale-[0.98]">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-[0.98]">
                         حفظ إعدادات الموقع
                     </button>
                 </div>

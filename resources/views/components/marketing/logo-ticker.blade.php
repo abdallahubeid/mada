@@ -7,7 +7,7 @@
     $brands ??= ['TechNova', 'Al-Manar', 'Global Corp', 'Saudi Vision', 'Emirates Lux', 'Nova Bank', 'Riyadh Tech'];
 @endphp
 
-<section class="border-y border-mist-200 bg-white py-8 dark:border-ink-800 dark:bg-ink-900">
+<section class="border-y border-mist-200 bg-mist-50 py-8 dark:border-ink-800">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p class="text-center text-xs font-semibold uppercase tracking-wider text-mist-400">{{ $eyebrow }}</p>
 

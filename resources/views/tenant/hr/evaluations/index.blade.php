@@ -1,6 +1,6 @@
 <x-layouts.app title="تقييمات الأداء">
     @php
-        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
         $modeLabel = match ($viewerMode) {
             'owner' => 'نظرة المالك / الإدارة العليا',
             'hr' => 'عرض الموارد البشرية حسب الأقسام',
@@ -11,7 +11,7 @@
     <div class="space-y-6" x-data="{ periodType: @js($periodType->value) }">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">تقييمات الأداء</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">تقييمات الأداء</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     {{ $modeLabel }} · الفترة: <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $periodLabel }}</span>
                 </p>
@@ -34,7 +34,7 @@
                     <button
                         type="submit"
                         @disabled($periodLocked)
-                        class="inline-flex items-center rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="inline-flex items-center rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         إعتماد التقييم
                     </button>
@@ -83,11 +83,11 @@
                                 @if ($group['head'])
                                     <p class="text-xs text-mist-500">
                                         رئيس القسم:
-                                        <span class="font-medium text-emerald-600 dark:text-emerald-400">{{ $group['head']->full_name }}</span>
+                                        <span class="font-medium text-brand-600 dark:text-brand-300">{{ $group['head']->full_name }}</span>
                                     </p>
                                 @endif
                             </div>
-                            <span class="rounded-full bg-emerald-400/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+                            <span class="rounded-md bg-brand-500/15 px-2.5 py-0.5 text-xs font-bold text-brand-700 dark:text-brand-300">
                                 {{ $group['employees']->count() }} موظف
                             </span>
                         </div>
@@ -96,11 +96,11 @@
                             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                                 <thead class="bg-white text-mist-500 dark:bg-ink-800 dark:text-mist-400">
                                     <tr>
-                                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الموظف</th>
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">التقييم (0–5)</th>
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">ملاحظات</th>
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الحالة</th>
+                                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الموظف</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">التقييم (0–5)</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">ملاحظات</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الحالة</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -112,20 +112,20 @@
                                             $rowName = "rows[{$employee->id}]";
                                         @endphp
                                         <tr @class([
-                                            'bg-emerald-400/[0.06]' => $isHead,
+                                            'bg-brand-500/[0.06]' => $isHead,
                                         ])>
-                                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                            <td class="px-4 py-3 text-start">
+                                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                            <td class="px-3 py-2 text-start">
                                                 <input type="hidden" name="{{ $rowName }}[employee_id]" value="{{ $employee->id }}">
                                                 <p class="font-medium text-ink-900 dark:text-ink-50">
                                                     {{ $employee->full_name }}
                                                     @if ($isHead)
-                                                        <span class="ms-1 rounded-full bg-emerald-400 px-2 py-0.5 text-[10px] font-bold text-emerald-950">رئيس القسم</span>
+                                                        <span class="ms-1 rounded-md bg-brand-500 px-2 py-0.5 text-xs font-bold text-white">رئيس القسم</span>
                                                     @endif
                                                 </p>
                                                 <p class="text-xs text-mist-500">{{ $employee->job_title }}</p>
                                             </td>
-                                            <td class="px-4 py-3 w-36 text-start">
+                                            <td class="px-3 py-2 w-36 text-start">
                                                 <input
                                                     type="number"
                                                     step="0.01"
@@ -137,7 +137,7 @@
                                                     class="{{ $inputClasses }}"
                                                 >
                                             </td>
-                                            <td class="px-4 py-3 text-start">
+                                            <td class="px-3 py-2 text-start">
                                                 <input
                                                     type="text"
                                                     name="{{ $rowName }}[notes]"
@@ -147,8 +147,8 @@
                                                     class="{{ $inputClasses }}"
                                                 >
                                             </td>
-                                            <td class="px-4 py-3 text-center">
-                                                <span class="rounded-full bg-mist-100 px-2 py-0.5 text-[10px] font-semibold text-mist-600 dark:bg-ink-700 dark:text-mist-300">
+                                            <td class="px-3 py-2 text-center">
+                                                <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-600 dark:bg-ink-700 dark:text-mist-300">
                                                     {{ $evaluation?->status->label() ?? '—' }}
                                                 </span>
                                             </td>
@@ -166,7 +166,7 @@
                             type="submit"
                             name="intent"
                             value="draft"
-                            class="rounded-xl border border-mist-200 px-4 py-2.5 text-sm font-semibold text-ink-700 transition hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-700"
+                            class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-700"
                         >
                             حفظ كمسودة
                         </button>
@@ -174,7 +174,7 @@
                             type="submit"
                             name="intent"
                             value="submit"
-                            class="rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300"
+                            class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
                         >
                             إرسال التقييمات
                         </button>

@@ -15,8 +15,8 @@ test('setting seeder persists product previews section chrome', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('product_previews_badge_text'))->toBe('جولة في المنتج')
-        ->and(Setting::getValue('product_previews_title'))->toBe('واجهة أنيقة تجعل العمل متعة')
-        ->and(Setting::getValue('product_previews_sub_title'))->toBe('تصميم عصري يركّز على الوضوح والسرعة، بدعم كامل للعربية والوضعين الفاتح والداكن.');
+        ->and(Setting::getValue('product_previews_title'))->toBe('شاهد النظام **قبل أن تسجّل**')
+        ->and(Setting::getValue('product_previews_sub_title'))->toBe('واجهة عربية بالكامل، مبنية من اليمين لليسار — لا ترجمة مقلوبة ولا شاشات نصفها إنجليزي.');
 });
 
 test('product preview stats use database counts with fallbacks when empty', function () {
@@ -49,8 +49,8 @@ test('the landing page product previews section renders seeded settings and stat
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('جولة في المنتج', false)
-        ->assertSee('واجهة أنيقة تجعل العمل متعة', false)
-        ->assertSee('تصميم عصري يركّز على الوضوح والسرعة، بدعم كامل للعربية والوضعين الفاتح والداكن.', false)
+        ->assertSee('شاهد النظام', false)->assertSee('قبل أن تسجّل', false)
+        ->assertSee('واجهة عربية بالكامل، مبنية من اليمين لليسار — لا ترجمة مقلوبة ولا شاشات نصفها إنجليزي.', false)
         ->assertSee('المستأجرون', false)
         ->assertSee('الموظفون', false)
         ->assertSee('الإيرادات', false)

@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * approved -> paid (BR-603).
  *
- * Records the FACT of disbursement. Veyra does not move money: bank-file export
- * and payment-rail integration are explicitly unscoped (VEYRA_DOCS.md §16).
+ * Records the FACT of disbursement. Mada does not move money: bank-file export
+ * and payment-rail integration are explicitly unscoped (MADA_DOCS.md §16).
  *
  * This is the only mutation of a locked run the observer permits, and only
  * because it touches no figure — status and paid_at, nothing else.

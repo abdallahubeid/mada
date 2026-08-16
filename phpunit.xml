@@ -18,6 +18,18 @@
         </include>
     </source>
     <php>
+        <!--
+            The suite exhausts PHP's default 128MB before it finishes: ~780
+            tests each rendering full Blade view trees accumulate component
+            state faster than the limit allows, and it dies mid-run in
+            ManagesComponents.
+
+            This has to live here rather than being passed as `php -d
+            memory_limit=...` on the command line, because Pest runs the tests
+            in child processes that do not inherit the parent's -d flags —
+            they re-read php.ini and get 128MB again.
+        -->
+        <ini name="memory_limit" value="1G"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

@@ -4,7 +4,7 @@
     $statusClasses = [
         ExpenseStatus::Draft->value => 'bg-mist-200 text-mist-700 dark:bg-ink-700 dark:text-mist-300',
         ExpenseStatus::PendingApproval->value => 'bg-amber-400/15 text-amber-700 dark:text-amber-300',
-        ExpenseStatus::Approved->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        ExpenseStatus::Approved->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         ExpenseStatus::Rejected->value => 'bg-danger-solid/10 text-danger-solid',
         ExpenseStatus::Paid->value => 'bg-sky-400/15 text-sky-700 dark:text-sky-300',
     ];
@@ -18,8 +18,8 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
                 <div class="flex items-center gap-3">
-                    <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">{{ $expense->title }}</h1>
-                    <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$expense->status->value] ?? ''])>
+                    <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $expense->title }}</h1>
+                    <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$expense->status->value] ?? ''])>
                         {{ $expense->status->label() }}
                     </span>
                 </div>
@@ -33,7 +33,7 @@
             <div class="flex flex-wrap items-center gap-2">
                 @can('finance.expenses.manage')
                     @if ($expense->status->isEditable())
-                        <a href="{{ route('finance.expenses.edit', $expense) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">تعديل</a>
+                        <a href="{{ route('finance.expenses.edit', $expense) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تعديل</a>
                         <form method="POST" action="{{ route('finance.expenses.submit', $expense) }}"
                               data-swal-confirm
                               data-swal-variant="info"
@@ -41,7 +41,7 @@
                               data-swal-text="سيُرسل المصروف للمراجعة، ولن تتمكن من تعديله حتى يتم اعتماده أو إعادته إليك."
                               data-swal-confirm-button="نعم، ارفع للاعتماد">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">رفع للاعتماد</button>
+                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">رفع للاعتماد</button>
                         </form>
                     @endif
                 @endcan
@@ -54,7 +54,7 @@
                           data-swal-text="سيصبح المصروف معتمداً ويُحتسب ضمن تكاليف المؤسسة، ولن يمكن تعديله بعد ذلك."
                           data-swal-confirm-button="نعم، اعتمد المصروف">
                         @csrf
-                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">اعتماد</button>
+                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">اعتماد</button>
                     </form>
                 @endif
 
@@ -73,7 +73,7 @@
                 @endcan
 
                 @if ($expense->receipt_path)
-                    <a href="{{ Storage::disk('custom')->url($expense->receipt_path) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">الإيصال</a>
+                    <a href="{{ Storage::disk('custom')->url($expense->receipt_path) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">الإيصال</a>
                 @endif
             </div>
         </div>
@@ -90,7 +90,7 @@
                 @csrf
                 <label for="rejection_reason" class="mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200">رفض المصروف</label>
                 <div class="flex flex-col gap-2 sm:flex-row">
-                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
                     <button type="submit" class="rounded-xl border border-danger-solid px-4 py-2 text-sm font-semibold text-danger-solid">رفض</button>
                 </div>
                 @error('rejection_reason')
@@ -108,7 +108,7 @@
             ] as $tile)
                 <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
-                    <p class="mt-2 font-display text-lg font-bold text-ink-900 dark:text-ink-50">
+                    <p class="mt-2 font-display text-lg font-medium text-ink-900 dark:text-ink-50">
                         @if ($tile['money'])
                             <x-ui.money :amount="$tile['value']" :currency="$expense->currency" />
                         @else
@@ -131,19 +131,19 @@
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">القرار</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">بواسطة</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">التاريخ</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">القرار</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">بواسطة</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">التاريخ</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                         @foreach ($expense->approvals as $approval)
                             <tr>
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $approval->status->label() }}</td>
-                                <td class="px-4 py-3 text-start text-mist-500">{{ $approval->decidedBy?->name ?? '—' }}</td>
-                                <td class="px-4 py-3 text-start text-mist-500"><x-ui.ltr>{{ $approval->decided_at?->format('Y-m-d H:i') ?? '—' }}</x-ui.ltr></td>
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $approval->status->label() }}</td>
+                                <td class="px-3 py-2 text-start text-mist-500">{{ $approval->decidedBy?->name ?? '—' }}</td>
+                                <td class="px-3 py-2 text-start text-mist-500"><x-ui.ltr>{{ $approval->decided_at?->format('Y-m-d H:i') ?? '—' }}</x-ui.ltr></td>
                             </tr>
                         @endforeach
                     </tbody>

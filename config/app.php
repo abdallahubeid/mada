@@ -22,7 +22,7 @@ return [
      * and the sign-off on every message. An unset APP_NAME used to render
      * "© 2026 Laravel. جميع الحقوق محفوظة." into customer inboxes.
      */
-    'name' => env('APP_NAME', 'Veyra ERP'),
+    'name' => env('APP_NAME', 'مدى'),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # Landing CMS — Implementation Log
 
-> Part of the Veyra ERP documentation set. Complements `MARKETING_CMS.md` (read model / cutover plan) and `ADMIN_CMS_ANALYSIS.md` (admin write path).  
+> Part of the Mada ERP documentation set. Complements `MARKETING_CMS.md` (read model / cutover plan) and `ADMIN_CMS_ANALYSIS.md` (admin write path).  
 > **Status:** Implemented (2026-07-22). Update this file when Landing CMS schema, admin CRUD, views, or conventions change.
 
 ---
@@ -89,7 +89,7 @@ Public Blade: `resources/views/components/marketing/solution.blade.php`.
 |---|---|
 | `solutions_badge_text` | الحل |
 | `solutions_title` | منصّة واحدة تدير كل شيء بسلاسة |
-| `solutions_sub_title` | يوحّد Veyra ERP كل عمليات مؤسستك في نظام واحد متكامل، فتختفي الفوضى ويحلّ محلّها الوضوح. |
+| `solutions_sub_title` | يوحّد Mada ERP كل عمليات مؤسستك في نظام واحد متكامل، فتختفي الفوضى ويحلّ محلّها الوضوح. |
 | `solutions_btn_text` | اكتشف كل المميزات |
 | `solutions_btn_link` | `#modules` |
 
@@ -165,7 +165,7 @@ Public Blade: `resources/views/components/marketing/ai-capabilities.blade.php`.
 |---|---|
 | `ai_badge_text` | قريباً · خارطة الطريق |
 | `ai_title` | ذكاء اصطناعي يعمل لصالحك |
-| `ai_sub_title` | قدرات ذكية قيد التطوير ضمن خارطة طريق Veyra — نشاركك رؤيتنا القادمة بشفافية. |
+| `ai_sub_title` | قدرات ذكية قيد التطوير ضمن خارطة طريق Mada — نشاركك رؤيتنا القادمة بشفافية. |
 
 Key renamed from `ai_sup_title` → `ai_sub_title` via migration `update_ai_features_table_and_settings_keys`.
 
@@ -179,7 +179,7 @@ Public Blade: `resources/views/components/marketing/differentiators.blade.php`.
 
 | Key | Seeded value |
 |---|---|
-| `why_us_badge_text` | لماذا Veyra |
+| `why_us_badge_text` | لماذا Mada |
 | `why_us_title` | ما الذي يميّزنا عن غيرنا |
 | `why_us_sub_title` | لم نبنِ مجرد أداة أخرى، بل منصّة تفهم طبيعة المؤسسات في منطقتنا. |
 
@@ -196,7 +196,7 @@ Public Blade: `resources/views/components/marketing/testimonials.blade.php`.
 | Key | Seeded value |
 |---|---|
 | `testimonials_badge_text` | قصص نجاح |
-| `testimonials_title` | مؤسسات تنمو مع Veyra |
+| `testimonials_title` | مؤسسات تنمو مع Mada |
 | `testimonials_sub_title` | لا تأخذ كلامنا فقط — استمع لمن اختبروا الفرق بأنفسهم. |
 
 Key renamed from `testimonials_sup_title` → `testimonials_sub_title` via migration `rename_testimonials_setting_keys_to_sub_title`.
@@ -276,7 +276,7 @@ Admin tab **Footer & Social** (`resources/views/admin/landing/settings/index.bla
 | Column 3 (القانونية) | `footer_title3`, `footer_btn8_*`, `footer_btn9_*` | سياسة الخصوصية → `/privacy`, … |
 | Social | `social_btn1_text` / `social_btn1_link` … `social_btn5_*` | X/Twitter, LinkedIn, Facebook, GitHub, YouTube URLs |
 
-Migration `register_footer_newsletter_setting_keys` registers footer nav + newsletter keys; `SettingSeeder` seeds all footer/social copy. `MarketingContent::footer()` mirrors the same settings map for cached home payload. Social icons render only when `social_btnN_link` is non-empty. Copyright line remains from `config/marketing.php` (`© {year} Veyra ERP…`).
+Migration `register_footer_newsletter_setting_keys` registers footer nav + newsletter keys; `SettingSeeder` seeds all footer/social copy. `MarketingContent::footer()` mirrors the same settings map for cached home payload. Social icons render only when `social_btnN_link` is non-empty. Copyright line remains from `config/marketing.php` (`© {year} Mada ERP…`).
 
 ### 1.6 Settings keys — privacy, terms & social (2026-07-23)
 
@@ -451,14 +451,14 @@ Admin `/admin/newsletter` (sidebar dropdown تحت التواصل → المشت
 Platform console TopBar (`layouts/partials/admin-topbar.blade.php`):
 
 - **Messages icon** + **notifications bell** with red unread badges.
-- **Chrome poll** `GET /admin/chrome/poll` (`admin.chrome.poll`) via `AdminChromeBadges` every ~7s (Alpine `veyraAdminChrome`).
+- **Chrome poll** `GET /admin/chrome/poll` (`admin.chrome.poll`) via `AdminChromeBadges` every ~7s (Alpine `madaAdminChrome`).
   - `messages_unread` = distinct `SupportThread` rows with unread customer messages (`read_at` null).
   - `notifications_unread` = unread count from `PlatformNotifications` (shared with notifications page; still mocked until Phase 4 persistence).
 - **Dual-mode global search** (`GlobalSearch` + `AdminNavigationCatalog`):
   1. **Navigation** — `صفحات النظام` group matches sidebar page titles/keywords (Arabic + English, diacritic-insensitive) and links to admin routes.
   2. **Entities** — tenants, support threads, newsletter subscribers, campaigns via case-insensitive `LOWER(column) LIKE %q%`.
   3. **Context** — TopBar sends `context` (e.g. `newsletter`, `messages`); matching entity group is ranked after navigation.
-  4. **In-page highlight** — entity results include `anchor` / `highlight` query; on the active page Alpine `scrollIntoView` + `.veyra-search-flash`. Rows expose `id="veyra-search-…"` + `data-veyra-search`.
+  4. **In-page highlight** — entity results include `anchor` / `highlight` query; on the active page Alpine `scrollIntoView` + `.mada-search-flash`. Rows expose `id="mada-search-…"` + `data-mada-search`.
 - Enter/submit → `/admin/search?q=…` results page with category tabs.
 
 | Piece | Location |
@@ -487,7 +487,7 @@ Dual-delivery Super Admin alerts (`docs/MODULES.md` BR-804):
 | Event / Listener | `PlatformNotificationCreated`, `RecordFailedJobNotification` |
 | Channel | `routes/channels.php` → `admin.notifications` |
 | Controllers | `Admin\NotificationController`, chrome poll |
-| Frontend | `resources/js/echo.js`, TopBar `veyraAdminChrome.listenForRealtimeNotifications` |
+| Frontend | `resources/js/echo.js`, TopBar `madaAdminChrome.listenForRealtimeNotifications` |
 | Tests | `tests/Feature/PlatformNotificationsTest.php` |
 
 ### 1.5t Soft Deletes (system-wide) — 2026-07-27
@@ -532,7 +532,7 @@ Mandatory SoftDeletes on all core Eloquent models/tables. Hard delete only via e
 | Area | Notes |
 |---|---|
 | Catalog | `App\Domain\Platform\PlatformPermissionCatalog` — granular perms by domain (`tenants`, `plans`, `cms`, `faqs`, `settings`, `support`, `notifications`, `newsletters`, `audit_logs`, `admins`, `roles`, `account`) |
-| Seeders | `PlatformRolesAndPermissionsSeeder` then `UserSeeder` (single owner `owner@veyra.com` / `super_admin`); roles global (`roles.tenant_id` null), assignments use platform team sentinel `0` |
+| Seeders | `PlatformRolesAndPermissionsSeeder` then `UserSeeder` (single owner `owner@mada.com` / `super_admin`); roles global (`roles.tenant_id` null), assignments use platform team sentinel `0` |
 | Gate | `Gate::before` → `User::isPlatformSuperAdmin()` **or** `User::isTenantOwner()` bypass; else `null` |
 | Middleware | `platform.operator` + Spatie `permission:` on every `/admin/*` route; binds Spatie team to `PlatformPermissionCatalog::TEAM_ID` (0) |
 | Console UI | Roles: create/delete + users_count + `#`; Admins: `#` + avatar column (upload thumbnail or initial badge) + soft delete; form Alpine preselects role permissions into toggles |
@@ -623,7 +623,7 @@ Mandatory SoftDeletes on all core Eloquent models/tables. Hard delete only via e
 
 | Area | Notes |
 |---|---|
-| Theme | `veyra-theme` localStorage; FOUC default dark on app/guest/auth-split/admin |
+| Theme | `mada-theme` localStorage; FOUC default dark on app/guest/auth-split/admin |
 | Routes | `profile.edit`, `profile.update`; `password.request/email/reset/update` |
 | Avatar | Cropper.js → `custom` disk → polymorphic `images` (`collection=avatar`) |
 | Controllers | `Tenant\ProfileController`, `Auth\{Forgot,Reset}PasswordController` |

@@ -120,7 +120,7 @@ test('admin messages view renders avatars and receipt indicators', function () {
         ->assertSee($avatarUrl, false)
         ->assertSee('h-10 w-10 shrink-0 rounded-full border border-slate-700 object-cover', false)
         ->assertSee('تمت القراءة', false)
-        ->assertSee('veyra-relative-time', false);
+        ->assertSee('mada-relative-time', false);
 });
 
 test('admin can update thread status', function () {

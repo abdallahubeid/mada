@@ -5,7 +5,7 @@
         this string is the default meta description on every marketing page —
         it was the single most widely-published fabricated claim on the site.
     --}}
-    'description' => 'منصة Veyra ERP لإدارة الموارد البشرية والتوظيف والرواتب — دورة حياة الموظف كاملة في نظام واحد، بعزل بيانات وسجل تدقيق لكل مؤسسة.',
+    'description' => 'منصة مدى لإدارة الموارد البشرية والتوظيف والرواتب — دورة حياة الموظف كاملة في نظام واحد، بعزل بيانات وسجل تدقيق لكل مؤسسة.',
 ])
 <!DOCTYPE html>
 {{--
@@ -20,35 +20,34 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Veyra ERP' }}</title>
+    <title>{{ $title ?? 'مدى' }}</title>
 
     <x-site-favicon />
 
     {{-- SEO & Open Graph (docs/MARKETING.md §5.4) --}}
     <meta name="description" content="{{ $description }}">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Veyra ERP">
-    <meta property="og:title" content="{{ $title ?? 'Veyra ERP' }}">
+    <meta property="og:site_name" content="مدى">
+    <meta property="og:title" content="{{ $title ?? 'مدى' }}">
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $title ?? 'Veyra ERP' }}">
+    <meta name="twitter:title" content="{{ $title ?? 'مدى' }}">
     <meta name="twitter:description" content="{{ $description }}">
 
     <x-theme-script />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
     @livewireStyles
 </head>
-<body class="h-full bg-ink-100 font-sans text-ink-600 antialiased dark:bg-ink-950 dark:text-mist-300">
+<body class="h-full bg-mist-50 font-sans text-mist-500 antialiased dark:bg-ink-950 dark:text-mist-300">
     {{ $slot }}
 
     {{-- Animated marketing stat counters (x-marketing.stat-counter). Registered
          before Livewire boots Alpine so alpine:init listeners are ready. --}}
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('veyraStatCounter', (config) => ({
+            Alpine.data('madaStatCounter', (config) => ({
                 value: Number(config.value) || 0,
                 prefix: config.prefix || '',
                 suffix: config.suffix || '',
@@ -133,7 +132,7 @@
                 Swal.fire({
                     icon: @js(session('flasher.type', 'success')),
                     title: @js(session('flasher.message')),
-                    confirmButtonColor: '#4edea3',
+                    confirmButtonColor: '#714b67',
                     confirmButtonText: 'حسنًا',
                     timer: 4200,
                     timerProgressBar: true,

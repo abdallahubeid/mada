@@ -11,23 +11,23 @@
 @section('content')
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">آراء العملاء</h2>
+            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">آراء العملاء</h2>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة شهادات العملاء الظاهرة في صفحة الهبوط.</p>
         </div>
-        <a href="{{ route('admin.testimonials.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">إضافة شهادة</a>
+        <a href="{{ route('admin.testimonials.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">إضافة شهادة</a>
     </div>
 
     <div class="mt-6 overflow-x-auto w-full rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
         <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
             <thead class="bg-mist-50 dark:bg-ink-900">
                 <tr>
-                    <th class="px-4 py-3 text-start font-semibold text-mist-500">الصورة</th>
-                    <th class="px-4 py-3 text-start font-semibold text-mist-500">الترتيب</th>
-                    <th class="px-4 py-3 text-start font-semibold text-mist-500">العميل</th>
-                    <th class="px-4 py-3 text-start font-semibold text-mist-500">المؤسسة</th>
-                    <th class="px-4 py-3 text-start font-semibold text-mist-500">التقييم</th>
-                    <th class="px-4 py-3 text-start font-semibold text-mist-500">النشر</th>
-                    <th class="px-4 py-3 text-end font-semibold text-mist-500">إجراءات</th>
+                    <th class="px-3 py-2 text-start font-medium text-mist-500">الصورة</th>
+                    <th class="px-3 py-2 text-start font-medium text-mist-500">الترتيب</th>
+                    <th class="px-3 py-2 text-start font-medium text-mist-500">العميل</th>
+                    <th class="px-3 py-2 text-start font-medium text-mist-500">المؤسسة</th>
+                    <th class="px-3 py-2 text-start font-medium text-mist-500">التقييم</th>
+                    <th class="px-3 py-2 text-start font-medium text-mist-500">النشر</th>
+                    <th class="px-3 py-2 text-end font-medium text-mist-500">إجراءات</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -37,25 +37,25 @@
                             ?? $testimonial->images->firstWhere('collection', 'logo');
                     @endphp
                     <tr>
-                        <td class="px-4 py-3">
+                        <td class="px-3 py-2">
                             @if ($avatar)
                                 <img src="{{ $avatar->url() }}" alt="{{ $avatar->alt_text }}" class="h-10 w-10 rounded-full object-cover ring-1 ring-mist-200 dark:ring-ink-600">
                             @else
-                                <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-mist-100 text-xs text-mist-400 dark:bg-ink-900">—</span>
+                                <span class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-mist-100 text-xs text-mist-400 dark:bg-ink-900">—</span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-mist-500">{{ $testimonial->sort_order }}</td>
-                        <td class="px-4 py-3 font-medium text-ink-900 dark:text-ink-50">{{ $testimonial->client_name }}</td>
-                        <td class="px-4 py-3">{{ $testimonial->organization_name }}</td>
-                        <td class="px-4 py-3 text-mist-500">{{ $testimonial->rate ?? '—' }}</td>
-                        <td class="px-4 py-3">
+                        <td class="px-3 py-2 text-mist-500">{{ $testimonial->sort_order }}</td>
+                        <td class="px-3 py-2 font-medium text-ink-900 dark:text-ink-50">{{ $testimonial->client_name }}</td>
+                        <td class="px-3 py-2">{{ $testimonial->organization_name }}</td>
+                        <td class="px-3 py-2 text-mist-500">{{ $testimonial->rate ?? '—' }}</td>
+                        <td class="px-3 py-2">
                             <span @class([
-                                'rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                                'bg-emerald-500/10 text-emerald-600' => $testimonial->is_published,
+                                'rounded-md px-2 py-0.5 text-xs font-semibold',
+                                'bg-brand-500/10 text-brand-600' => $testimonial->is_published,
                                 'bg-mist-100 text-mist-500' => ! $testimonial->is_published,
                             ])>{{ $testimonial->is_published ? 'منشور' : 'مسودة' }}</span>
                         </td>
-                        <td class="px-4 py-3">
+                        <td class="px-3 py-2">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('admin.testimonials.edit', $testimonial) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600">تعديل</a>
                                 <form method="POST" action="{{ route('admin.testimonials.destroy', $testimonial) }}" data-swal-confirm data-swal-title="حذف هذه الشهادة؟">

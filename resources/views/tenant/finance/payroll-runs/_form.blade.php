@@ -1,5 +1,5 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
@@ -7,7 +7,7 @@
     $lineItems = $lineItems ?? collect();
 @endphp
 
-<form method="POST" action="{{ $action }}" class="space-y-5 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+<form method="POST" action="{{ $action }}" class="space-y-5 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
     @csrf
     @if ($method !== 'POST')
         @method($method)
@@ -41,21 +41,21 @@
                     <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                         <thead class="bg-mist-50 dark:bg-ink-900">
                             <tr>
-                                <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                                <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الموظف</th>
-                                <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">البند</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">النوع</th>
-                                <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">القيمة</th>
+                                <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                                <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">الموظف</th>
+                                <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">البند</th>
+                                <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">النوع</th>
+                                <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">القيمة</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                             @foreach ($lineItems as $lineItem)
                                 <tr>
-                                    <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $lineItem->payslip?->employee_name ?? '—' }}</td>
-                                    <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $lineItem->label }}</td>
-                                    <td class="px-4 py-3 text-center text-mist-500">{{ $lineItem->kind->label() }}</td>
-                                    <td class="px-4 py-3 text-end">
+                                    <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                    <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $lineItem->payslip?->employee_name ?? '—' }}</td>
+                                    <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $lineItem->label }}</td>
+                                    <td class="px-3 py-2 text-center text-mist-500">{{ $lineItem->kind->label() }}</td>
+                                    <td class="px-3 py-2 text-end">
                                         <input
                                             type="number"
                                             step="0.01"
@@ -87,7 +87,7 @@
 
     <div class="flex justify-end gap-3 pt-2">
         <a href="{{ $isCreate ? route('finance.payroll-runs.index') : route('finance.payroll-runs.show', $run) }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">
+        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">
             {{ $isCreate ? 'إنشاء المسودة' : 'حفظ التعديلات' }}
         </button>
     </div>

@@ -1,6 +1,6 @@
-# Veyra ERP — Database Roadmap
+# Mada ERP — Database Roadmap
 
-> Part of the Veyra ERP documentation set. Conceptual schema reference — no DDL/code by design (per project convention). See `ARCHITECTURE.md` for tenancy enforcement and `MODULES.md` for the business rules these entities support.
+> Part of the Mada ERP documentation set. Conceptual schema reference — no DDL/code by design (per project convention). See `ARCHITECTURE.md` for tenancy enforcement and `MODULES.md` for the business rules these entities support.
 
 ## 1. Global Conventions (apply to every table below)
 
@@ -23,7 +23,7 @@
 - `users` — nullable `tenant_id` (null for Super Admin), role assignment via Spatie Teams.
 - `roles` / `permissions` / team pivot — Spatie Permission tables, Teams-scoped by `tenant_id` (ADR-03).
 - `plans` / `plan_features` — SaaS subscription plan definitions and feature limits, referenced by tenant. Also powers public pricing (`MARKETING_CMS.md` maps from current `config/plans.php`).
-- `subscriptions` — tenant's own billing relationship to Veyra (Phase 2 dependency).
+- `subscriptions` — tenant's own billing relationship to Mada (Phase 2 dependency).
 - `platform_settings` — singleton / key-value platform-wide configuration (branding, SMTP, payment gateway keys, registration auto-approval toggle, legal documents, **and marketing CMS JSON groups** `marketing.*` — see `MARKETING_CMS.md`). **No `tenant_id`** — never queried through the tenant global scope. Sensitive fields encrypted at rest (`ARCHITECTURE.md` §8, `MODULES.md` BR-801/BR-802).
 - `faqs` — platform-global FAQ rows for the marketing site (`category`, `question`, `answer`, `sort_order`, `is_published`). **No `tenant_id`.** See `MARKETING_CMS.md`.
 - `testimonials` — curated marketing success stories (`quote`, client attribution fields, `sort_order`, `is_published`, optional nullable `tenant_id` for attribution only). **Not tenant-scoped via global scope.** See `MARKETING_CMS.md`.
@@ -72,7 +72,7 @@
 **Phase 2B — Revenue (ADR-18, blocked on Projects & Timesheets):**
 
 - `clients` — per tenant, linked from `projects` for invoicing (BR-604).
-- `client_invoices` / `client_invoice_line_items` — generated from billable timesheets, grouped by client/project (BR-604). **Named `client_invoices`, not `invoices`** — `tenant_invoices` already means Veyra billing the tenant, the opposite money direction (BR-616). Per-tenant gapless numbering sequence, number assigned at **issue**, never at draft. Must carry line-level tax from the first migration (ADR-22, §5).
+- `client_invoices` / `client_invoice_line_items` — generated from billable timesheets, grouped by client/project (BR-604). **Named `client_invoices`, not `invoices`** — `tenant_invoices` already means Mada billing the tenant, the opposite money direction (BR-616). Per-tenant gapless numbering sequence, number assigned at **issue**, never at draft. Must carry line-level tax from the first migration (ADR-22, §5).
 - `client_invoice_payments` — an invoice may be settled in instalments; a single `paid` flag cannot express partial payment.
 
 ### 2.5 Platform Services (cross-cutting)

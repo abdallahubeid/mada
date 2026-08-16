@@ -1,10 +1,10 @@
 ================================================================================
-SESSION BRIEFING - VEYRA ERP
+SESSION BRIEFING - MADA ERP
 Role-aware navigation, task management, split dashboards, a role-aware
 notification system, My Space retirement, and a system-wide table standard
 ================================================================================
 
-Repo:             veyra
+Repo:             mada
 Date:             2026-08-05
 Area:             Tenant app — navigation, HR module, dashboards, notifications, UI
 Tasks completed:  5

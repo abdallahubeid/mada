@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 {{--
     Tenant app shell — mirrors Platform Console chrome (layouts/admin.blade.php):
-    Arabic RTL, emerald design system, dark/light (ADR-15), logical spacing (ADR-10).
+    Arabic RTL, Mada plum design system, dark/light (ADR-15), logical spacing (ADR-10).
 --}}
 <html lang="ar" dir="rtl" class="h-full scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'لوحة التحكم' }} · Veyra</title>
+    <title>{{ $title ?? 'لوحة التحكم' }} · مدى</title>
 
     <x-site-favicon />
 
@@ -25,7 +25,7 @@
 @endphp
 <body
     class="h-full overflow-hidden bg-neutral-50 font-sans text-ink-600 antialiased dark:bg-ink-950 dark:text-mist-300"
-    x-data="veyraTenantNotificationsShell(@js([
+    x-data="madaTenantNotificationsShell(@js([
         'indexUrl' => route('tenant.notifications.index'),
         'readAllUrl' => route('tenant.notifications.read-all'),
         'readUrlTemplate' => route('tenant.notifications.read', ['notification' => '__ID__']),
@@ -70,12 +70,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function veyraTenantNotificationsShell(config) {
+        function madaTenantNotificationsShell(config) {
             return {
                 sidebarOpen: false,
                 profileOpen: false,
                 notificationsOpen: false,
-                sidebarCollapsed: localStorage.getItem('veyra-tenant-sidebar-collapsed') === 'true',
+                sidebarCollapsed: localStorage.getItem('mada-tenant-sidebar-collapsed') === 'true',
                 unreadCount: Number(config.unreadCount || 0),
                 notifications: [],
                 notificationsLoading: false,
@@ -88,7 +88,7 @@
 
                 toggleSidebar() {
                     this.sidebarCollapsed = ! this.sidebarCollapsed;
-                    localStorage.setItem('veyra-tenant-sidebar-collapsed', this.sidebarCollapsed);
+                    localStorage.setItem('mada-tenant-sidebar-collapsed', this.sidebarCollapsed);
                 },
 
                 closeSidebarDrawer() {
@@ -234,8 +234,8 @@
                         this.notifications = [item, ...this.notifications].slice(0, 30);
                     }
 
-                    if (payload.sound && typeof window.veyraPlayNotificationSound === 'function') {
-                        window.veyraPlayNotificationSound();
+                    if (payload.sound && typeof window.madaPlayNotificationSound === 'function') {
+                        window.madaPlayNotificationSound();
                     }
 
                     if (window.Swal) {
@@ -260,8 +260,8 @@
                     };
                     window.addEventListener('resize', this._onResize);
 
-                    if (this.echoEnabled && typeof window.veyraListenTenantNotifications === 'function') {
-                        window.veyraListenTenantNotifications({
+                    if (this.echoEnabled && typeof window.madaListenTenantNotifications === 'function') {
+                        window.madaListenTenantNotifications({
                             tenantId: this.tenantId,
                             userId: this.userId,
                             onNotification: (payload) => this.handleRealtimeNotification(payload),
@@ -305,13 +305,13 @@
             const swalVariants = {
                 danger: {
                     icon: 'warning',
-                    color: '#ef4444',
+                    color: '#b42318',
                     confirm: 'نعم، احذف',
                     text: 'سيتم الحذف الناعم ويمكن الاستعادة من سلة المحذوفات.',
                 },
-                warning: { icon: 'warning', color: '#f59e0b', confirm: 'نعم، تابع', text: '' },
-                success: { icon: 'question', color: '#10b981', confirm: 'نعم، تابع', text: '' },
-                info: { icon: 'question', color: '#0ea5e9', confirm: 'نعم، تابع', text: '' },
+                warning: { icon: 'warning', color: '#b45309', confirm: 'نعم، تابع', text: '' },
+                success: { icon: 'question', color: '#0f7b3d', confirm: 'نعم، تابع', text: '' },
+                info: { icon: 'question', color: '#0369a1', confirm: 'نعم، تابع', text: '' },
             };
 
             const variant = swalVariants[form.dataset.swalVariant] || swalVariants.danger;
@@ -324,7 +324,7 @@
                 confirmButtonText: form.dataset.swalConfirmButton || variant.confirm,
                 cancelButtonText: form.dataset.swalCancelButton || 'إلغاء',
                 confirmButtonColor: variant.color,
-                cancelButtonColor: '#64748b',
+                cancelButtonColor: '#5a5262',
                 reverseButtons: true,
             }).then((result) => {
                 if (! result.isConfirmed) {
@@ -349,7 +349,7 @@
                     title: flasher.message,
                     showConfirmButton: hasUndo,
                     confirmButtonText: flasher.undo_label || 'تراجع',
-                    confirmButtonColor: '#4edea3',
+                    confirmButtonColor: '#714b67',
                     showCancelButton: false,
                     timer: hasUndo ? 8000 : 3200,
                     timerProgressBar: true,

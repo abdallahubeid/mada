@@ -1,11 +1,11 @@
 <x-layouts.app title="سلة المحذوفات">
     <div
-        x-data="veyraTrashManager()"
+        x-data="madaTrashManager()"
         class="space-y-6"
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">سلة المحذوفات</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">سلة المحذوفات</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     العناصر المحذوفة ناعماً (Soft Delete). يمكنك استعادتها أو حذفها نهائياً.
                     <span class="font-semibold text-ink-700 dark:text-mist-200">({{ $items->count() }} / {{ $totalCount }})</span>
@@ -41,8 +41,8 @@
             <a
                 href="{{ route('tenant.trash.index') }}"
                 @class([
-                    'shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition',
-                    'bg-emerald-400 text-emerald-900' => blank($activeType),
+                    'shrink-0 rounded-md px-3 py-1.5 text-xs font-semibold transition',
+                    'bg-brand-500 text-white' => blank($activeType),
                     'bg-mist-100 text-mist-600 hover:bg-mist-200 dark:bg-ink-700 dark:text-mist-300' => filled($activeType),
                 ])
             >الكل</a>
@@ -50,8 +50,8 @@
                 <a
                     href="{{ route('tenant.trash.index', ['type' => $key]) }}"
                     @class([
-                        'shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition',
-                        'bg-emerald-400 text-emerald-900' => $activeType === $key,
+                        'shrink-0 rounded-md px-3 py-1.5 text-xs font-semibold transition',
+                        'bg-brand-500 text-white' => $activeType === $key,
                         'bg-mist-100 text-mist-600 hover:bg-mist-200 dark:bg-ink-700 dark:text-mist-300' => $activeType !== $key,
                     ])
                 >{{ $config['label'] }}</a>
@@ -68,7 +68,7 @@
                     @if ($activeType)
                         <input type="hidden" name="type" value="{{ $activeType }}">
                     @endif
-                    <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                         استعادة المحدد (<span x-text="selected.length"></span>)
                     </button>
                 </form>
@@ -102,21 +102,21 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">
                             <input
                                 type="checkbox"
-                                class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400"
+                                class="rounded border-mist-300 text-brand-500 focus:ring-brand-500"
                                 @change="toggleAll($event.target.checked)"
                                 :checked="allSelected"
                                 :indeterminate="partialSelected"
                             >
                         </th>
                         {{-- The selection checkbox is a control, not data, so it keeps column 1 and # follows it. --}}
-                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">النوع</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">العنصر</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">تاريخ الحذف</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
+                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">النوع</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">العنصر</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">تاريخ الحذف</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -125,36 +125,36 @@
                             $token = $item['type'].':'.$item['id'];
                         @endphp
                         <tr>
-                            <td class="px-4 py-3 text-start">
+                            <td class="px-3 py-2 text-start">
                                 <input
                                     type="checkbox"
-                                    class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400"
+                                    class="rounded border-mist-300 text-brand-500 focus:ring-brand-500"
                                     value="{{ $token }}"
                                     @change="toggle('{{ $token }}', $event.target.checked)"
                                     :checked="selected.includes('{{ $token }}')"
                                 >
                             </td>
-                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-3 text-start">
-                                <span class="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                            <td class="px-3 py-2 text-start">
+                                <span class="rounded-md bg-brand-500/10 px-2 py-0.5 text-xs font-semibold text-brand-600 dark:text-brand-300">
                                     {{ $item['type_label'] }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-start">
+                            <td class="px-3 py-2 text-start">
                                 <p class="font-medium text-ink-900 dark:text-ink-50">{{ $item['title'] }}</p>
                                 @if ($item['subtitle'])
                                     <p class="text-xs text-mist-500">{{ $item['subtitle'] }}</p>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-mist-500 text-start">
+                            <td class="px-3 py-2 text-mist-500 text-start">
                                 {{ $item['deleted_at']?->timezone(config('app.timezone'))->format('Y-m-d H:i') }}
                             </td>
-                            <td class="px-4 py-3 text-center">
+                            <td class="px-3 py-2 text-center">
                                 <div class="flex items-center justify-end gap-2">
                                     @can('tenant.trash.restore')
                                         <form method="POST" action="{{ $item['restore_url'] }}">
                                             @csrf
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:border-ink-600 dark:text-emerald-400">استعادة</button>
+                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-brand-600 dark:border-ink-600 dark:text-brand-300">استعادة</button>
                                         </form>
                                     @endcan
                                     @can('tenant.trash.force_delete')
@@ -178,7 +178,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-ui.table-empty :colspan="6" icon="🗑️" message="لا توجد عناصر في سلة المحذوفات." />
+                        <x-ui.table-empty :colspan="6" icon="trash" message="لا توجد عناصر في سلة المحذوفات." />
                     @endforelse
                 </tbody>
             </table>
@@ -188,7 +188,7 @@
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('veyraTrashManager', () => ({
+                Alpine.data('madaTrashManager', () => ({
                     selected: [],
                     allTokens: @js($items->map(fn ($item) => $item['type'].':'.$item['id'])->values()->all()),
 

@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'لوحة تحكم المنصّة') · Veyra</title>
+    <title>@yield('title', 'لوحة تحكم المنصّة') · مدى</title>
 
     <x-site-favicon />
 
@@ -27,10 +27,10 @@
         sidebarOpen: false,
         profileOpen: false,
         impersonating: false,
-        sidebarCollapsed: localStorage.getItem('veyra-admin-sidebar-collapsed') === 'true',
+        sidebarCollapsed: localStorage.getItem('mada-admin-sidebar-collapsed') === 'true',
         toggleSidebar() {
             this.sidebarCollapsed = ! this.sidebarCollapsed;
-            localStorage.setItem('veyra-admin-sidebar-collapsed', this.sidebarCollapsed);
+            localStorage.setItem('mada-admin-sidebar-collapsed', this.sidebarCollapsed);
         },
         closeSidebarDrawer() {
             this.sidebarOpen = false;
@@ -77,7 +77,7 @@
 
             <main class="min-h-0 w-full min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-3 sm:p-6 lg:p-8">
                 @if (session('status'))
-                    <div class="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                    <div class="mb-4 rounded-xl border border-brand-500/40 bg-brand-500/10 px-4 py-3 text-sm font-medium text-brand-700 dark:text-brand-300">
                         {{ session('status') }}
                     </div>
                 @endif
@@ -131,13 +131,13 @@
             const swalVariants = {
                 danger: {
                     icon: 'warning',
-                    color: '#ef4444',
+                    color: '#b42318',
                     confirm: 'نعم، احذف',
                     text: 'سيتم الحذف الناعم ويمكن الاستعادة من سلة المحذوفات.',
                 },
-                warning: { icon: 'warning', color: '#f59e0b', confirm: 'نعم، تابع', text: '' },
-                success: { icon: 'question', color: '#10b981', confirm: 'نعم، تابع', text: '' },
-                info: { icon: 'question', color: '#0ea5e9', confirm: 'نعم، تابع', text: '' },
+                warning: { icon: 'warning', color: '#b45309', confirm: 'نعم، تابع', text: '' },
+                success: { icon: 'question', color: '#0f7b3d', confirm: 'نعم، تابع', text: '' },
+                info: { icon: 'question', color: '#0369a1', confirm: 'نعم، تابع', text: '' },
             };
 
             const variant = swalVariants[form.dataset.swalVariant] || swalVariants.danger;
@@ -150,7 +150,7 @@
                 confirmButtonText: form.dataset.swalConfirmButton || variant.confirm,
                 cancelButtonText: form.dataset.swalCancelButton || 'إلغاء',
                 confirmButtonColor: variant.color,
-                cancelButtonColor: '#64748b',
+                cancelButtonColor: '#5a5262',
                 reverseButtons: true,
             }).then((result) => {
                 if (! result.isConfirmed) {
@@ -175,7 +175,7 @@
                     title: flasher.message,
                     showConfirmButton: hasUndo,
                     confirmButtonText: flasher.undo_label || 'تراجع',
-                    confirmButtonColor: '#4edea3',
+                    confirmButtonColor: '#714b67',
                     showCancelButton: false,
                     timer: hasUndo ? 8000 : 3200,
                     timerProgressBar: true,

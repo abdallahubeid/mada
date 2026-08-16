@@ -16,14 +16,14 @@
         @keydown.escape.window="closeDetails()"
     >
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">سجل النشاط</h1>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">سجل النشاط</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تتبع الإجراءات الحساسة داخل المؤسسة بلغة واضحة للإدارة (المالك فقط).</p>
         </div>
 
         <form method="GET" action="{{ route('tenant.audit-logs.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-3 dark:border-ink-600 dark:bg-ink-800">
             <div>
                 <label class="mb-1.5 block text-xs font-medium text-mist-500">الوحدة</label>
-                <select name="module" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select name="module" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
                     <option value="all" @selected($filters['module'] === 'all')>الكل</option>
                     @foreach ($modules as $moduleKey => $moduleLabel)
                         <option value="{{ $moduleKey }}" @selected($filters['module'] === $moduleKey)>{{ $moduleLabel }}</option>
@@ -38,9 +38,9 @@
                         name="q"
                         value="{{ $filters['q'] }}"
                         placeholder="ابحث عن إجراء أو وحدة..."
-                        class="min-w-0 flex-1 rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                        class="min-w-0 flex-1 rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                     >
-                    <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-300">تصفية</button>
+                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600">تصفية</button>
                 </div>
             </div>
         </form>
@@ -50,13 +50,13 @@
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs uppercase tracking-wide text-mist-500 dark:border-ink-700 dark:text-mist-400">
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">التوقيت</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">المستخدم</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الإجراء</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الوحدة</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">IP</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">التغييرات</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">التوقيت</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">المستخدم</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الإجراء</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الوحدة</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">IP</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">التغييرات</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -81,27 +81,27 @@
                                 ];
                             @endphp
                             <tr class="transition hover:bg-mist-50 dark:hover:bg-ink-700/40">
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration + ($logs->currentPage() - 1) * $logs->perPage() }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-ink-900 dark:text-ink-50 text-start"><x-ui.ltr>{{ $log->created_at?->format('Y-m-d H:i') }}</x-ui.ltr></td>
-                                <td class="px-4 py-3 text-ink-700 dark:text-mist-200 text-start">{{ $log->user?->name ?? 'النظام' }}</td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration + ($logs->currentPage() - 1) * $logs->perPage() }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-ink-900 dark:text-ink-50 text-start"><x-ui.ltr>{{ $log->created_at?->format('Y-m-d H:i') }}</x-ui.ltr></td>
+                                <td class="px-3 py-2 text-ink-700 dark:text-mist-200 text-start">{{ $log->user?->name ?? 'النظام' }}</td>
+                                <td class="px-3 py-2 text-center">
                                     <p class="font-medium text-ink-900 dark:text-ink-50">{{ $view['summary'] }}</p>
                                 </td>
-                                <td class="px-4 py-3 text-start">
-                                    <span class="rounded-full bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $view['module_label'] }}</span>
+                                <td class="px-3 py-2 text-start">
+                                    <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $view['module_label'] }}</span>
                                 </td>
-                                <td class="px-4 py-3 font-mono text-xs text-mist-500 text-start"><x-ui.ltr>{{ $log->ip_address ?? '—' }}</x-ui.ltr></td>
-                                <td class="px-4 py-3 align-middle text-start">
+                                <td class="px-3 py-2 font-mono text-xs text-mist-500 text-start"><x-ui.ltr>{{ $log->ip_address ?? '—' }}</x-ui.ltr></td>
+                                <td class="px-3 py-2 align-middle text-start">
                                     @if ($view['rows'] !== [])
                                         <div class="flex max-w-sm flex-col gap-2">
                                             <div class="flex flex-wrap gap-1.5">
                                                 @foreach (array_slice($view['badges'], 0, 2) as $badge)
-                                                    <span class="inline-flex max-w-full truncate rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300" title="{{ $badge }}">
+                                                    <span class="inline-flex max-w-full truncate rounded-md bg-brand-500/10 px-2 py-0.5 text-xs font-semibold text-brand-700 dark:text-brand-300" title="{{ $badge }}">
                                                         {{ $badge }}
                                                     </span>
                                                 @endforeach
                                                 @if (count($view['rows']) > 2)
-                                                    <span class="inline-flex rounded-full bg-mist-100 px-2 py-0.5 text-[11px] font-semibold text-mist-500 dark:bg-ink-700 dark:text-mist-400">
+                                                    <span class="inline-flex rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-500 dark:bg-ink-700 dark:text-mist-400">
                                                         +{{ count($view['rows']) - 2 }}
                                                     </span>
                                                 @endif
@@ -109,7 +109,7 @@
                                             <button
                                                 type="button"
                                                 @click="openDetails(@js($detailEntry))"
-                                                class="inline-flex w-fit items-center gap-1 rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold text-ink-700 transition hover:border-emerald-400 hover:text-emerald-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:border-emerald-400 dark:hover:text-emerald-400"
+                                                class="inline-flex w-fit items-center gap-1 rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:border-brand-500 dark:hover:text-brand-300"
                                             >
                                                 معاينة التفاصيل
                                             </button>
@@ -120,7 +120,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-ui.table-empty :colspan="7" icon="🕘" message="لا توجد سجلات نشاط بعد." />
+                            <x-ui.table-empty :colspan="7" icon="clock" message="لا توجد سجلات نشاط بعد." />
                         @endforelse
                     </tbody>
                 </table>
@@ -161,7 +161,7 @@
             >
                 <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
                     <div>
-                        <h3 id="audit-details-title" class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">معاينة التفاصيل</h3>
+                        <h3 id="audit-details-title" class="font-display text-base font-medium text-ink-900 dark:text-ink-50">معاينة التفاصيل</h3>
                         <p class="mt-0.5 text-sm text-mist-500" x-text="entry?.summary || ''"></p>
                     </div>
                     <button
@@ -174,7 +174,7 @@
                     </button>
                 </div>
 
-                <div class="flex-1 space-y-5 overflow-y-auto p-5" x-show="entry">
+                <div class="flex-1 space-y-5 overflow-y-auto p-4" x-show="entry">
                     <dl class="grid gap-3 text-sm sm:grid-cols-2">
                         <div class="rounded-xl border border-mist-100 px-3 py-2 dark:border-ink-700">
                             <dt class="text-xs text-mist-500">المستخدم</dt>
@@ -196,7 +196,7 @@
 
                     <div>
                         <div class="mb-2 flex items-center justify-between gap-2">
-                            <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">القيم السابقة ↔ القيم الجديدة</p>
+                            <p class="text-xs font-semibold uppercase text-mist-500">القيم السابقة ↔ القيم الجديدة</p>
                             <span class="text-xs text-mist-400" x-text="entry?.action_label || ''"></span>
                         </div>
 
@@ -204,20 +204,20 @@
                             <table class="w-full text-sm">
                                 <thead>
                                     <tr class="bg-mist-50 text-xs text-mist-500 dark:bg-ink-900/60 dark:text-mist-400">
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الحقل</th>
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">القيمة السابقة</th>
-                                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">القيمة الجديدة</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الحقل</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">القيمة السابقة</th>
+                                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">القيمة الجديدة</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                                     <template x-for="(row, index) in (entry?.rows || [])" :key="index">
                                         <tr>
-                                            <td class="px-4 py-3.5 font-medium text-ink-900 dark:text-ink-50 text-start" x-text="row.field"></td>
-                                            <td class="px-4 py-3.5 text-start">
+                                            <td class="px-3 py-2 font-medium text-ink-900 dark:text-ink-50 text-start" x-text="row.field"></td>
+                                            <td class="px-3 py-2 text-start">
                                                 <span class="inline-flex rounded-md bg-danger-solid/10 px-2 py-0.5 text-xs font-medium text-danger-solid" x-text="row.before"></span>
                                             </td>
-                                            <td class="px-4 py-3.5 text-start">
-                                                <span class="inline-flex rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-300" x-text="row.after"></span>
+                                            <td class="px-3 py-2 text-start">
+                                                <span class="inline-flex rounded-md bg-brand-500/10 px-2 py-0.5 text-xs font-medium text-brand-700 dark:text-brand-300" x-text="row.after"></span>
                                             </td>
                                         </tr>
                                     </template>

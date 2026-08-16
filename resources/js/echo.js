@@ -33,7 +33,7 @@ if (key) {
  *   onNotification: (payload: Record<string, unknown>) => void,
  * }} options
  */
-window.veyraListenTenantNotifications = function veyraListenTenantNotifications(options) {
+window.madaListenTenantNotifications = function madaListenTenantNotifications(options) {
     if (! window.Echo || ! options?.tenantId || ! options?.userId) {
         return null;
     }
@@ -47,7 +47,7 @@ window.veyraListenTenantNotifications = function veyraListenTenantNotifications(
         options.onNotification?.(data);
 
         // DOM fallback for any non-Alpine listeners.
-        window.dispatchEvent(new CustomEvent('veyra:tenant-notification', { detail: data }));
+        window.dispatchEvent(new CustomEvent('mada:tenant-notification', { detail: data }));
     });
 };
 
@@ -60,7 +60,7 @@ window.veyraListenTenantNotifications = function veyraListenTenantNotifications(
  *   onMessage: (payload: Record<string, unknown>) => void,
  * }} options
  */
-window.veyraListenTenantContactMessages = function veyraListenTenantContactMessages(options) {
+window.madaListenTenantContactMessages = function madaListenTenantContactMessages(options) {
     if (! window.Echo || ! options?.tenantId || ! options?.userId) {
         return null;
     }
@@ -70,11 +70,11 @@ window.veyraListenTenantContactMessages = function veyraListenTenantContactMessa
     return window.Echo.private(channelName).listen('.NewContactMessageReceived', (payload) => {
         const data = payload || {};
         options.onMessage?.(data);
-        window.dispatchEvent(new CustomEvent('veyra:tenant-contact-message', { detail: data }));
+        window.dispatchEvent(new CustomEvent('mada:tenant-contact-message', { detail: data }));
     });
 };
 
-window.veyraPlayNotificationSound = function veyraPlayNotificationSound() {
+window.madaPlayNotificationSound = function madaPlayNotificationSound() {
     try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (! AudioCtx) {

@@ -11,7 +11,7 @@
 
     ── SELF-CONTAINED ON PURPOSE ───────────────────────────────────────────
     It owns its own fetch rather than borrowing `post()` from the enclosing
-    `veyraMessenger` scope. A modal is rendered at the end of the page, outside
+    `madaMessenger` scope. A modal is rendered at the end of the page, outside
     the two-pane layout, so depending on an ancestor scope would make its
     placement in the document part of its contract — move the tag and it
     silently stops working.
@@ -30,7 +30,7 @@
     picking twice.
 --}}
 <div
-    x-data="veyraForwardModal(@js([
+    x-data="madaForwardModal(@js([
         'conversations' => $conversations,
         'urlTemplate' => route('tenant.messenger.forward', ['message' => '__ID__']),
     ]))"
@@ -48,13 +48,13 @@
 
     <div class="relative flex max-h-[80vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-xl dark:border-ink-600 dark:bg-ink-800">
         <div class="border-b border-mist-100 px-6 pb-4 pt-5 dark:border-ink-700">
-            <h3 id="forward-modal-title" class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">إعادة توجيه الرسالة</h3>
+            <h3 id="forward-modal-title" class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">إعادة توجيه الرسالة</h3>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">اختر المحادثة التي تريد إرسال نسخة من الرسالة إليها.</p>
 
             {{-- What is actually being forwarded. Without it the picker asks
                  you to choose a destination for a message you can no longer
                  see, because the modal covers the thread. --}}
-            <div x-show="excerpt" x-cloak class="mt-3 rounded-xl border-s-2 border-emerald-400 bg-mist-50 px-3 py-2 dark:bg-ink-900">
+            <div x-show="excerpt" x-cloak class="mt-3 rounded-xl border-s-2 border-brand-500 bg-mist-50 px-3 py-2 dark:bg-ink-900">
                 <p class="line-clamp-2 text-xs leading-relaxed text-ink-700 dark:text-mist-200" x-text="excerpt"></p>
             </div>
         </div>
@@ -67,7 +67,7 @@
                 x-model="query"
                 type="search"
                 placeholder="ابحث في محادثاتك..."
-                class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
             >
         </div>
 
@@ -77,12 +77,12 @@
                     type="button"
                     @click="submit(thread)"
                     :disabled="busy"
-                    class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start transition duration-150 hover:bg-mist-50 focus-visible:bg-mist-50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-ink-700/50 dark:focus-visible:bg-ink-700/50"
+                    class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-start transition duration-150 hover:bg-mist-50 focus-visible:bg-mist-50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-ink-700/50 dark:focus-visible:bg-ink-700/50"
                 >
                     <span
-                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold"
+                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md font-display text-sm font-medium"
                         :class="thread.is_group
-                            ? 'bg-emerald-400/15 text-emerald-800 dark:text-emerald-400'
+                            ? 'bg-brand-500/15 text-brand-700 dark:text-brand-300'
                             : 'bg-mist-100 text-mist-600 dark:bg-ink-700 dark:text-mist-300'"
                         x-text="thread.initial"
                     ></span>
@@ -94,7 +94,7 @@
                     {{-- Spinner on the row being sent to, not a page-wide
                          overlay: the modal stays readable and it is obvious
                          which destination is in flight. --}}
-                    <svg x-show="busy === thread.id" x-cloak class="h-4 w-4 shrink-0 animate-spin text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none">
+                    <svg x-show="busy === thread.id" x-cloak class="h-4 w-4 shrink-0 animate-spin text-brand-600 dark:text-brand-300" viewBox="0 0 24 24" fill="none">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v3a5 5 0 0 0-5 5H4Z"></path>
                     </svg>
@@ -110,7 +110,7 @@
             <button
                 type="button"
                 @click="close()"
-                class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:text-mist-300 dark:hover:bg-ink-700"
+                class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:text-mist-300 dark:hover:bg-ink-700"
             >
                 إلغاء
             </button>
@@ -121,7 +121,7 @@
 @once
     @push('scripts')
         <script>
-            function veyraForwardModal(config) {
+            function madaForwardModal(config) {
                 return {
                     open: false,
                     /* The message being forwarded, and a copy of its text for

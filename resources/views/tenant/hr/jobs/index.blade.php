@@ -3,7 +3,7 @@
 
     $statusClasses = [
         JobPostingStatus::Draft->value => 'bg-mist-200 text-mist-700 dark:bg-ink-700 dark:text-mist-300',
-        JobPostingStatus::Published->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        JobPostingStatus::Published->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         JobPostingStatus::Closed->value => 'bg-danger-solid/10 text-danger-solid',
     ];
 @endphp
@@ -12,11 +12,11 @@
     <div class="space-y-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الوظائف والتوظيف</h1>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الوظائف والتوظيف</h1>
                 <p class="mt-1 text-sm text-mist-500">إدارة الشواغر ونشرها على الموقع العام.</p>
             </div>
             @can('hr.jobs.create')
-                <a href="{{ route('hr.jobs.create') }}" class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                <a href="{{ route('hr.jobs.create') }}" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                     إضافة وظيفة
                 </a>
             @endcan
@@ -45,33 +45,33 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
-                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">المسمى</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">القسم</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">النوع</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الحالة</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الطلبات</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
+                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">المسمى</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">القسم</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">النوع</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الحالة</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الطلبات</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                     @forelse ($jobs as $job)
                         <tr class="transition hover:bg-mist-50/80 dark:hover:bg-ink-900/40">
-                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-3 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $job->title }}</td>
-                            <td class="px-4 py-3 text-mist-500 text-start">{{ $job->department?->name ?? '—' }}</td>
-                            <td class="px-4 py-3 text-mist-500 text-start">{{ $job->employment_type->label() }}</td>
-                            <td class="px-4 py-3 text-center">
-                                <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$job->status->value] ?? ''])>
+                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                            <td class="px-3 py-2 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $job->title }}</td>
+                            <td class="px-3 py-2 text-mist-500 text-start">{{ $job->department?->name ?? '—' }}</td>
+                            <td class="px-3 py-2 text-mist-500 text-start">{{ $job->employment_type->label() }}</td>
+                            <td class="px-3 py-2 text-center">
+                                <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$job->status->value] ?? ''])>
                                     {{ $job->status->label() }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-start">
-                                <a href="{{ route('hr.applications.index', ['job_posting_id' => $job->id]) }}" class="inline-flex min-w-8 items-center justify-center rounded-full bg-emerald-400/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                            <td class="px-3 py-2 text-start">
+                                <a href="{{ route('hr.applications.index', ['job_posting_id' => $job->id]) }}" class="inline-flex min-w-8 items-center justify-center rounded-md bg-brand-500/15 px-2.5 py-0.5 text-xs font-semibold text-brand-700 dark:text-brand-300">
                                     {{ $job->applications_count }}
                                 </a>
                             </td>
-                            <td class="px-4 py-3 text-center">
+                            <td class="px-3 py-2 text-center">
                                 <div class="flex flex-wrap items-center justify-end gap-2">
                                     @can('hr.jobs.update')
                                         <form method="POST" action="{{ route('hr.jobs.status', $job) }}">
@@ -79,13 +79,13 @@
                                             @method('PATCH')
                                             @if ($job->status !== JobPostingStatus::Published)
                                                 <input type="hidden" name="status" value="published">
-                                                <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold hover:border-emerald-400 dark:border-ink-600">نشر</button>
+                                                <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold hover:border-brand-500 dark:border-ink-600">نشر</button>
                                             @else
                                                 <input type="hidden" name="status" value="closed">
                                                 <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold hover:border-amber-400 dark:border-ink-600">إغلاق</button>
                                             @endif
                                         </form>
-                                        <a href="{{ route('hr.jobs.edit', $job) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold hover:border-emerald-400 dark:border-ink-600">تعديل</a>
+                                        <a href="{{ route('hr.jobs.edit', $job) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold hover:border-brand-500 dark:border-ink-600">تعديل</a>
                                     @endcan
                                     @can('hr.jobs.delete')
                                         <form method="POST" action="{{ route('hr.jobs.destroy', $job) }}" data-swal-confirm data-swal-title="حذف هذه الوظيفة؟">
@@ -98,7 +98,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-ui.table-empty :colspan="7" icon="📢" message="لا توجد وظائف بعد." />
+                        <x-ui.table-empty :colspan="7" icon="megaphone" message="لا توجد وظائف بعد." />
                     @endforelse
                 </tbody>
             </table>

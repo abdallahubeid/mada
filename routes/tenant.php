@@ -63,7 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     /*
      * `presence.touch` sits on the whole tenant app, not on the messenger.
      *
-     * "متصل الآن" has to mean "using Veyra", not "has the chat tab open" — a
+     * "متصل الآن" has to mean "using Mada", not "has the chat tab open" — a
      * colleague deep in payroll is reachable and should not read as offline.
      * The middleware is cache-throttled to one write per 55 seconds, so the
      * cost of it being here rather than on four messenger routes is a cache

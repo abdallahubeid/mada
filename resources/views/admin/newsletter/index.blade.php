@@ -10,7 +10,7 @@
 
 @section('content')
     <div
-        x-data="veyraNewsletterDashboard({
+        x-data="madaNewsletterDashboard({
             pollUrl: @js(route('admin.newsletter.poll')),
             csrf: @js(csrf_token()),
             status: @js($status),
@@ -26,7 +26,7 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">النشرة البريدية</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">النشرة البريدية</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة المشتركين وإرسال الحملات مع إمكانية استثناء مستلمين محددين.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -39,7 +39,7 @@
                 <button
                     type="button"
                     @click="campaignOpen = true"
-                    class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300"
+                    class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
                 >
                     إرسال حملة
                 </button>
@@ -47,17 +47,17 @@
         </div>
 
         <div class="grid gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-                <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">إجمالي المشتركين</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" x-text="stats.total" data-stat="total">{{ $stats['total'] }}</p>
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <p class="text-xs font-semibold uppercase text-mist-500">إجمالي المشتركين</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" x-text="stats.total" data-stat="total">{{ $stats['total'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-                <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">نشط</p>
-                <p class="mt-2 font-display text-3xl font-bold text-emerald-600 dark:text-emerald-400" x-text="stats.active" data-stat="active">{{ $stats['active'] }}</p>
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <p class="text-xs font-semibold uppercase text-mist-500">نشط</p>
+                <p class="mt-2 font-display text-3xl font-medium text-brand-600 dark:text-brand-300" x-text="stats.active" data-stat="active">{{ $stats['active'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-                <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">ملغى الاشتراك</p>
-                <p class="mt-2 font-display text-3xl font-bold text-amber-600 dark:text-amber-400" x-text="stats.unsubscribed" data-stat="unsubscribed">{{ $stats['unsubscribed'] }}</p>
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <p class="text-xs font-semibold uppercase text-mist-500">ملغى الاشتراك</p>
+                <p class="mt-2 font-display text-3xl font-medium text-amber-600 dark:text-amber-400" x-text="stats.unsubscribed" data-stat="unsubscribed">{{ $stats['unsubscribed'] }}</p>
             </div>
         </div>
 
@@ -71,8 +71,8 @@
                     <a
                         href="{{ route('admin.newsletter.index', ['status' => $key, 'q' => $search ?: null]) }}"
                         @class([
-                            'rounded-full px-3 py-1.5 text-xs font-semibold transition',
-                            'bg-emerald-400/15 text-emerald-700 dark:text-emerald-400' => $status === $key,
+                            'rounded-md px-3 py-1.5 text-xs font-semibold transition',
+                            'bg-brand-500/15 text-brand-700 dark:text-brand-300' => $status === $key,
                             'bg-mist-100 text-mist-600 hover:bg-mist-200 dark:bg-ink-700 dark:text-mist-300' => $status !== $key,
                         ])
                     >{{ $label }}</a>
@@ -85,7 +85,7 @@
                     name="q"
                     value="{{ $search }}"
                     placeholder="بحث بالبريد..."
-                    class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                    class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                 >
             </form>
         </div>
@@ -94,38 +94,38 @@
             <table class="min-w-full table-fixed divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>
-                        <th class="w-14 border-e border-mist-100 px-6 py-4 text-center font-semibold dark:border-ink-700">#</th>
-                        <th class="w-[32%] border-e border-mist-100 px-6 py-4 text-start font-semibold dark:border-ink-700" dir="ltr">البريد</th>
-                        <th class="w-[20%] border-e border-mist-100 px-6 py-4 text-center font-semibold dark:border-ink-700">تاريخ الاشتراك</th>
-                        <th class="w-[16%] border-e border-mist-100 px-6 py-4 text-center font-semibold dark:border-ink-700">الحالة</th>
-                        <th class="w-[22%] px-6 py-4 text-end font-semibold">إجراءات</th>
+                        <th class="w-14 border-e border-mist-100 px-3 py-2 text-center font-medium dark:border-ink-700">#</th>
+                        <th class="w-[32%] border-e border-mist-100 px-3 py-2 text-start font-medium dark:border-ink-700" dir="ltr">البريد</th>
+                        <th class="w-[20%] border-e border-mist-100 px-3 py-2 text-center font-medium dark:border-ink-700">تاريخ الاشتراك</th>
+                        <th class="w-[16%] border-e border-mist-100 px-3 py-2 text-center font-medium dark:border-ink-700">الحالة</th>
+                        <th class="w-[22%] px-3 py-2 text-end font-medium">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700" data-subscriber-tbody x-ref="subscriberTbody">
                     @forelse ($subscriberRows as $row)
                         <tr
-                            id="veyra-search-subscriber-{{ $row['id'] }}"
+                            id="mada-search-subscriber-{{ $row['id'] }}"
                             data-subscriber-id="{{ $row['id'] }}"
-                            data-veyra-search="subscriber-{{ $row['id'] }}"
+                            data-mada-search="subscriber-{{ $row['id'] }}"
                         >
-                            <td class="border-e border-mist-100 px-6 py-4 text-center text-mist-500 dark:border-ink-700">{{ $row['index'] }}</td>
-                            <td class="max-w-0 border-e border-mist-100 px-6 py-4 text-start dark:border-ink-700" dir="ltr">
+                            <td class="border-e border-mist-100 px-3 py-2 text-center text-mist-500 dark:border-ink-700">{{ $row['index'] }}</td>
+                            <td class="max-w-0 border-e border-mist-100 px-3 py-2 text-start dark:border-ink-700" dir="ltr">
                                 <span class="block truncate font-mono text-sm font-medium text-ink-900 dark:text-ink-50" title="{{ $row['email'] }}">{{ $row['email'] }}</span>
                             </td>
-                            <td class="border-e border-mist-100 px-6 py-4 text-center text-mist-500 dark:border-ink-700" dir="rtl" lang="ar">
+                            <td class="border-e border-mist-100 px-3 py-2 text-center text-mist-500 dark:border-ink-700" dir="rtl" lang="ar">
                                 <span
-                                    class="veyra-relative-time inline-block"
+                                    class="mada-relative-time inline-block"
                                     data-timestamp="{{ $row['subscribed_at'] }}"
                                 >{{ $row['subscribed_at_human'] }}</span>
                             </td>
-                            <td class="border-e border-mist-100 px-6 py-4 text-center dark:border-ink-700">
+                            <td class="border-e border-mist-100 px-3 py-2 text-center dark:border-ink-700">
                                 <span @class([
-                                    'inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-semibold',
-                                    'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' => $row['is_subscribed'],
+                                    'inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold',
+                                    'bg-brand-500/10 text-brand-600 dark:text-brand-300' => $row['is_subscribed'],
                                     'bg-amber-500/10 text-amber-600 dark:text-amber-400' => ! $row['is_subscribed'],
                                 ])>{{ $row['status_label'] }}</span>
                             </td>
-                            <td class="px-6 py-4 text-end">
+                            <td class="px-3 py-2 text-end">
                                 <div class="flex flex-wrap items-center justify-end gap-2">
                                     <form method="POST" action="{{ $row['toggle_url'] }}">
                                         @csrf
@@ -170,7 +170,7 @@
             <div class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-mist-200 bg-white p-6 shadow-xl dark:border-ink-600 dark:bg-ink-800">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <h3 class="font-display text-xl font-bold text-ink-900 dark:text-ink-50">إرسال حملة بريدية</h3>
+                        <h3 class="font-display text-xl font-medium text-ink-900 dark:text-ink-50">إرسال حملة بريدية</h3>
                         <p class="mt-1 text-sm text-mist-500">اختر مستلمين للاستثناء قبل الإرسال إلى المشتركين النشطين.</p>
                     </div>
                     <button type="button" @click="campaignOpen = false" class="rounded-lg p-2 text-mist-400 hover:bg-mist-100 dark:hover:bg-ink-700" aria-label="إغلاق">
@@ -194,7 +194,7 @@
                             value="{{ old('subject') }}"
                             required
                             maxlength="255"
-                            class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                         >
                         @error('subject')
                             <p class="mt-1 text-xs text-danger-solid">{{ $message }}</p>
@@ -208,7 +208,7 @@
                             name="body"
                             rows="8"
                             required
-                            class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                         >{{ old('body') }}</textarea>
                         @error('body')
                             <p class="mt-1 text-xs text-danger-solid">{{ $message }}</p>
@@ -229,7 +229,7 @@
                                                 type="checkbox"
                                                 name="exclude_ids[]"
                                                 :value="active.id"
-                                                class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400"
+                                                class="rounded border-mist-300 text-brand-500 focus:ring-brand-500"
                                                 :checked="excludeIds.includes(active.id)"
                                                 @change="toggleExclude(active.id)"
                                             >
@@ -246,7 +246,7 @@
                         <button type="button" @click="campaignOpen = false" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">إلغاء</button>
                         <button
                             type="submit"
-                            class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+                            class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
                             :disabled="activeSubscribers.length === 0"
                         >
                             إرسال الحملة
@@ -261,7 +261,7 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('veyraNewsletterDashboard', (config) => ({
+            Alpine.data('madaNewsletterDashboard', (config) => ({
                 pollUrl: config.pollUrl,
                 csrf: config.csrf,
                 status: config.status,
@@ -316,8 +316,8 @@
                         showCancelButton: true,
                         confirmButtonText: 'نعم، احذف',
                         cancelButtonText: 'إلغاء',
-                        confirmButtonColor: '#ef4444',
-                        cancelButtonColor: '#64748b',
+                        confirmButtonColor: '#b42318',
+                        cancelButtonColor: '#5a5262',
                         reverseButtons: true,
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -337,8 +337,8 @@
                         showCancelButton: true,
                         confirmButtonText: 'إرسال',
                         cancelButtonText: 'إلغاء',
-                        confirmButtonColor: '#4edea3',
-                        cancelButtonColor: '#64748b',
+                        confirmButtonColor: '#714b67',
+                        cancelButtonColor: '#5a5262',
                         reverseButtons: true,
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -387,7 +387,7 @@
                 },
 
                 refreshRelativeTimes() {
-                    this.$el.querySelectorAll('.veyra-relative-time[data-timestamp]').forEach((node) => {
+                    this.$el.querySelectorAll('.mada-relative-time[data-timestamp]').forEach((node) => {
                         const iso = node.getAttribute('data-timestamp');
                         if (iso) {
                             node.textContent = this.formatRelative(iso);
@@ -413,22 +413,22 @@
 
                     return subscribers.map((row) => {
                         const badge = row.is_subscribed
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                            ? 'bg-brand-500/10 text-brand-600 dark:text-brand-300'
                             : 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
                         const toggleLabel = row.is_subscribed ? 'إلغاء الاشتراك' : 'تفعيل';
 
-                        return `<tr id="veyra-search-subscriber-${row.id}" data-subscriber-id="${row.id}" data-veyra-search="subscriber-${row.id}">
-                            <td class="border-e border-mist-100 px-6 py-4 text-center text-mist-500 dark:border-ink-700">${row.index ?? ''}</td>
-                            <td class="max-w-0 border-e border-mist-100 px-6 py-4 text-start dark:border-ink-700" dir="ltr">
+                        return `<tr id="mada-search-subscriber-${row.id}" data-subscriber-id="${row.id}" data-mada-search="subscriber-${row.id}">
+                            <td class="border-e border-mist-100 px-3 py-2 text-center text-mist-500 dark:border-ink-700">${row.index ?? ''}</td>
+                            <td class="max-w-0 border-e border-mist-100 px-3 py-2 text-start dark:border-ink-700" dir="ltr">
                                 <span class="block truncate font-mono text-sm font-medium text-ink-900 dark:text-ink-50" title="${this.escapeHtml(row.email)}">${this.escapeHtml(row.email)}</span>
                             </td>
-                            <td class="border-e border-mist-100 px-6 py-4 text-center text-mist-500 dark:border-ink-700" dir="rtl" lang="ar">
-                                <span class="veyra-relative-time inline-block" data-timestamp="${this.escapeHtml(row.subscribed_at || '')}">${this.escapeHtml(this.formatRelative(row.subscribed_at))}</span>
+                            <td class="border-e border-mist-100 px-3 py-2 text-center text-mist-500 dark:border-ink-700" dir="rtl" lang="ar">
+                                <span class="mada-relative-time inline-block" data-timestamp="${this.escapeHtml(row.subscribed_at || '')}">${this.escapeHtml(this.formatRelative(row.subscribed_at))}</span>
                             </td>
-                            <td class="border-e border-mist-100 px-6 py-4 text-center dark:border-ink-700">
-                                <span class="inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${badge}">${this.escapeHtml(row.status_label)}</span>
+                            <td class="border-e border-mist-100 px-3 py-2 text-center dark:border-ink-700">
+                                <span class="inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold ${badge}">${this.escapeHtml(row.status_label)}</span>
                             </td>
-                            <td class="px-6 py-4 text-end">
+                            <td class="px-3 py-2 text-end">
                                 <div class="flex flex-wrap items-center justify-end gap-2">
                                     <form method="POST" action="${this.escapeHtml(row.toggle_url)}">
                                         <input type="hidden" name="_token" value="${this.escapeHtml(this.csrf)}">

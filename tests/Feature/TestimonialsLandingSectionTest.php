@@ -12,8 +12,8 @@ test('setting seeder persists testimonials section chrome', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('testimonials_badge_text'))->toBe('قصص نجاح')
-        ->and(Setting::getValue('testimonials_title'))->toBe('مؤسسات تنمو مع Veyra')
-        ->and(Setting::getValue('testimonials_sub_title'))->toBe('لا تأخذ كلامنا فقط — استمع لمن اختبروا الفرق بأنفسهم.');
+        ->and(Setting::getValue('testimonials_title'))->toBe('مؤسسات تنمو مع مدى')
+        ->and(Setting::getValue('testimonials_sub_title'))->toBe('مؤسسات تشغّل رواتبها وحضورها على مدى كل شهر.');
 });
 
 test('testimonial seeder persists the three success story cards', function () {
@@ -34,8 +34,8 @@ test('the landing page testimonials section renders seeded settings and cards', 
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('قصص نجاح', false)
-        ->assertSee('مؤسسات تنمو مع Veyra', false)
-        ->assertSee('لا تأخذ كلامنا فقط — استمع لمن اختبروا الفرق بأنفسهم.', false)
+        ->assertSee('مؤسسات تنمو مع مدى', false)
+        ->assertSee('مؤسسات تشغّل رواتبها وحضورها على مدى كل شهر.', false)
         ->assertSee('سارة المطيري', false)
         ->assertSee('عبدالله الشمري', false)
         ->assertSee('ريم الدوسري', false)

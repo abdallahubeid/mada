@@ -4,7 +4,7 @@
     $statusClasses = [
         SettlementStatus::Draft->value => 'bg-mist-200 text-mist-700 dark:bg-ink-700 dark:text-mist-300',
         SettlementStatus::PendingApproval->value => 'bg-amber-400/15 text-amber-700 dark:text-amber-300',
-        SettlementStatus::Approved->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        SettlementStatus::Approved->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         SettlementStatus::Paid->value => 'bg-sky-400/15 text-sky-700 dark:text-sky-300',
         SettlementStatus::Cancelled->value => 'bg-danger-solid/10 text-danger-solid',
     ];
@@ -23,8 +23,8 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
                 <div class="flex items-center gap-3">
-                    <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">{{ $settlement->employee_name }}</h1>
-                    <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$settlement->status->value] ?? ''])>
+                    <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $settlement->employee_name }}</h1>
+                    <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$settlement->status->value] ?? ''])>
                         {{ $settlement->status->label() }}
                     </span>
                 </div>
@@ -37,7 +37,7 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-                <a href="{{ route('finance.offboarding.print', $settlement) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">نسخة للطباعة</a>
+                <a href="{{ route('finance.offboarding.print', $settlement) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">نسخة للطباعة</a>
 
                 @can('finance.offboarding.manage')
                     @if ($settlement->status->isEditable())
@@ -48,7 +48,7 @@
                               data-swal-text="ستُرسل التسوية للمراجعة، ولن تتمكن من تعديل مبالغها حتى يتم اعتمادها."
                               data-swal-confirm-button="نعم، ارفع للاعتماد">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">رفع للاعتماد</button>
+                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">رفع للاعتماد</button>
                         </form>
                     @endif
                 @endcan
@@ -62,7 +62,7 @@
                               data-swal-text="سيتم قفل التسوية نهائياً ولن يمكن تعديل أي مبلغ فيها. الخطوة التالية هي الصرف وإنهاء الخدمة."
                               data-swal-confirm-button="نعم، اعتمد التسوية">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">اعتماد</button>
+                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">اعتماد</button>
                         </form>
                     @endif
 
@@ -102,7 +102,7 @@
             ] as $tile)
                 <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
-                    <p class="mt-2 font-display text-lg font-bold text-ink-900 dark:text-ink-50">
+                    <p class="mt-2 font-display text-lg font-medium text-ink-900 dark:text-ink-50">
                         @if ($tile['ltr'] ?? false)
                             <x-ui.ltr>{{ $tile['value'] }}</x-ui.ltr>
                         @else
@@ -117,16 +117,16 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
-                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                        <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">البند</th>
-                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">القيمة</th>
+                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                        <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">البند</th>
+                        <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">القيمة</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                     @foreach ($lines as $line)
                         <tr>
-                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $line['label'] }}</td>
+                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                            <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $line['label'] }}</td>
                             <td @class([
                                 'px-4 py-3 text-end',
                                 'text-danger-solid' => $line['value'] < 0,
@@ -139,8 +139,8 @@
                 </tbody>
                 <tfoot class="bg-mist-50 dark:bg-ink-900">
                     <tr>
-                        <td colspan="2" class="px-4 py-3 text-end font-display text-base font-bold text-ink-900 dark:text-ink-50">صافي التسوية</td>
-                        <td class="px-4 py-3 text-end font-display text-base font-bold text-ink-900 dark:text-ink-50">
+                        <td colspan="2" class="px-3 py-2 text-end font-display text-base font-medium text-ink-900 dark:text-ink-50">صافي التسوية</td>
+                        <td class="px-3 py-2 text-end font-display text-base font-medium text-ink-900 dark:text-ink-50">
                             <x-ui.money :amount="$settlement->total_amount" :currency="$settlement->currency" />
                         </td>
                     </tr>

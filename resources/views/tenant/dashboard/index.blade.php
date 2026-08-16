@@ -8,7 +8,7 @@
     <div class="space-y-6">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">
                     مرحباً بعودتك، {{ $user?->name }}
                 </h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
@@ -20,7 +20,7 @@
             @can('tenant.reports.view')
                 <a
                     href="{{ route('tenant.reports.index') }}"
-                    class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:text-mist-200 dark:hover:border-emerald-400 dark:hover:text-emerald-400"
+                    class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200 dark:hover:border-brand-500 dark:hover:text-brand-300"
                 >
                     التقارير والتصدير
                 </a>
@@ -29,34 +29,34 @@
 
         {{-- KPI cards --}}
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm font-medium text-mist-500 dark:text-mist-400">إجمالي الموظفين</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-total-employees">{{ $kpis['total_employees'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-total-employees">{{ $kpis['total_employees'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm font-medium text-mist-500 dark:text-mist-400">العقود النشطة</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-active-contracts">{{ $kpis['active_contracts'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-active-contracts">{{ $kpis['active_contracts'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm font-medium text-mist-500 dark:text-mist-400">طلبات إجازة معلّقة</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-pending-leaves">{{ $kpis['pending_leaves'] }}</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-pending-leaves">{{ $kpis['pending_leaves'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <p class="text-sm font-medium text-mist-500 dark:text-mist-400">نسبة الحضور الشهرية</p>
-                <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-attendance-rate">{{ $kpis['attendance_rate'] }}%</p>
+                <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-attendance-rate">{{ $kpis['attendance_rate'] }}%</p>
             </div>
         </div>
 
         {{-- Charts --}}
         <div class="grid gap-4 xl:grid-cols-3">
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 xl:col-span-2">
-                <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الحضور مقابل الغياب (شهري)</h3>
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 xl:col-span-2">
+                <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الحضور مقابل الغياب (شهري)</h3>
                 <div class="mt-4 h-72">
                     <canvas id="attendanceChart" aria-label="Attendance chart"></canvas>
                 </div>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-                <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">توزيع الموظفين حسب القسم</h3>
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">توزيع الموظفين حسب القسم</h3>
                 <div class="mt-4 h-72">
                     <canvas id="departmentChart" aria-label="Department chart"></canvas>
                 </div>
@@ -64,8 +64,8 @@
         </div>
 
         <div class="grid gap-4 lg:grid-cols-3">
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-                <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">التوظيف والاستقالات</h3>
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">التوظيف والاستقالات</h3>
                 <dl class="mt-4 space-y-3 text-sm">
                     <div class="flex items-center justify-between gap-3">
                         <dt class="text-mist-500 dark:text-mist-400">وظائف مفتوحة</dt>
@@ -83,17 +83,17 @@
             </div>
 
             {{-- Quick approvals --}}
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 lg:col-span-2">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 lg:col-span-2">
                 <div class="flex items-center justify-between gap-3">
-                    <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">إجراءات سريعة للاعتماد</h3>
+                    <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">إجراءات سريعة للاعتماد</h3>
                     @can('hr.leaves.view_any')
-                        <a href="{{ route('hr.leaves.index') }}" class="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">كل الطلبات</a>
+                        <a href="{{ route('hr.leaves.index') }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">كل الطلبات</a>
                     @endcan
                 </div>
 
                 <div class="mt-4 grid gap-4 md:grid-cols-2">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">طلبات إجازة معلّقة</p>
+                        <p class="text-xs font-semibold uppercase text-mist-500">طلبات إجازة معلّقة</p>
                         <ul class="mt-2 space-y-2">
                             @forelse ($pendingLeaves as $leave)
                                 <li class="rounded-xl border border-mist-100 px-3 py-2 dark:border-ink-700">
@@ -110,7 +110,7 @@
                                         @can('hr.leaves.approve')
                                             <form method="POST" action="{{ route('hr.leaves.approve', $leave) }}">
                                                 @csrf
-                                                <button type="submit" class="rounded-lg bg-emerald-400 px-2.5 py-1 text-xs font-semibold text-emerald-900 hover:bg-emerald-300">
+                                                <button type="submit" class="rounded-lg bg-brand-500 px-2.5 py-1 text-xs font-semibold text-white hover:bg-brand-600">
                                                     اعتماد
                                                 </button>
                                             </form>
@@ -124,7 +124,7 @@
                     </div>
 
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">عقود تنتهي خلال 30 يوماً</p>
+                        <p class="text-xs font-semibold uppercase text-mist-500">عقود تنتهي خلال 30 يوماً</p>
                         <ul class="mt-2 space-y-2">
                             @forelse ($expiringContracts as $contract)
                                 <li class="rounded-xl border border-mist-100 px-3 py-2 dark:border-ink-700">
@@ -136,7 +136,7 @@
                                         @can('hr.contracts.update')
                                             <a
                                                 href="{{ route('hr.contracts.edit', $contract) }}"
-                                                class="rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold text-ink-700 hover:border-emerald-400 dark:border-ink-600 dark:text-mist-200"
+                                                class="rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold text-ink-700 hover:border-brand-500 dark:border-ink-600 dark:text-mist-200"
                                             >
                                                 تجديد
                                             </a>

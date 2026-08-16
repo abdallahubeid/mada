@@ -1,8 +1,8 @@
 @php
     use App\Domain\Tenancy\Enums\TaskStatus;
 
-    $card = 'rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800';
-    $heading = 'font-display text-lg font-semibold text-ink-900 dark:text-ink-50';
+    $card = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $heading = 'font-display text-lg font-medium text-ink-900 dark:text-ink-50';
     $emptyRow = 'rounded-xl border border-dashed border-mist-200 px-3 py-4 text-center text-xs text-mist-400 dark:border-ink-700';
 
     $hour = (int) now()->format('H');
@@ -12,7 +12,7 @@
         TaskStatus::Todo->value => 'bg-mist-100 text-mist-700 dark:bg-ink-700 dark:text-mist-200',
         TaskStatus::InProgress->value => 'bg-sky-400/15 text-sky-800 dark:text-sky-300',
         TaskStatus::Review->value => 'bg-amber-400/15 text-amber-800 dark:text-amber-300',
-        TaskStatus::Completed->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-400',
+        TaskStatus::Completed->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
     ];
 @endphp
 
@@ -20,8 +20,8 @@
     @if ($employee === null)
         <div class="mx-auto max-w-2xl">
             <div class="{{ $card }} text-center">
-                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/15 text-2xl">👤</div>
-                <h1 class="mt-4 font-display text-2xl font-bold text-ink-900 dark:text-ink-50">لوحتي</h1>
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/15 text-mist-400 dark:text-mist-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg></div>
+                <h1 class="mt-4 font-display text-2xl font-medium text-ink-900 dark:text-ink-50">لوحتي</h1>
                 <p class="mt-2 text-sm text-mist-500">
                     حسابك غير مرتبط بملف موظف، لذا لا تتوفر بيانات شخصية لعرضها. تواصل مع إدارة الموارد البشرية لربط حسابك.
                 </p>
@@ -30,13 +30,13 @@
     @else
         <div class="space-y-6">
             {{-- Hero + check in/out --}}
-            <section class="relative overflow-hidden rounded-2xl border border-mist-200 bg-gradient-to-br from-emerald-400/20 via-white to-sky-400/10 p-5 shadow-sm dark:border-ink-600 dark:from-emerald-400/10 dark:via-ink-800 dark:to-ink-800 sm:p-6">
+            <section class="relative overflow-hidden rounded-2xl border border-mist-200 bg-gradient-to-br from-brand-500/20 via-white to-sky-400/10 p-4 shadow-sm dark:border-ink-600 dark:from-brand-500/10 dark:via-ink-800 dark:to-ink-800 sm:p-6">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div class="flex items-start gap-4">
                         <img src="{{ $employee->avatarUrl() }}" alt="" class="h-16 w-16 rounded-full object-cover ring-2 ring-white shadow-sm dark:ring-ink-600">
                         <div>
-                            <p class="text-sm font-medium text-emerald-700 dark:text-emerald-300">{{ $greeting }}</p>
-                            <h1 class="mt-1 font-display text-2xl font-bold text-ink-900 dark:text-ink-50">{{ $employee->full_name }}</h1>
+                            <p class="text-sm font-medium text-brand-700 dark:text-brand-300">{{ $greeting }}</p>
+                            <h1 class="mt-1 font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $employee->full_name }}</h1>
                             <p class="mt-1 text-sm text-mist-500">
                                 {{ $employee->job_title }}
                                 @if ($employee->department)
@@ -51,7 +51,7 @@
                             @if ($todayAttendance?->check_in === null)
                                 <form method="POST" action="{{ route('tenant.hr.my-attendance.check-in') }}">
                                     @csrf
-                                    <button type="submit" class="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">تسجيل حضور</button>
+                                    <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">تسجيل حضور</button>
                                 </form>
                             @elseif ($todayAttendance->check_out === null)
                                 <form method="POST" action="{{ route('tenant.hr.my-attendance.check-out') }}">
@@ -72,31 +72,31 @@
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <div class="{{ $card }}">
                     <p class="text-sm font-medium text-mist-500 dark:text-mist-400">رصيد الإجازات المتبقي</p>
-                    <p class="mt-2 font-display text-3xl font-bold text-emerald-600 dark:text-emerald-400" data-testid="kpi-leave-balance">{{ $remainingLeaveDays }}</p>
+                    <p class="mt-2 font-display text-3xl font-medium text-brand-600 dark:text-brand-300" data-testid="kpi-leave-balance">{{ $remainingLeaveDays }}</p>
                     <p class="mt-1 text-xs text-mist-500">يوم · {{ now()->year }}</p>
                 </div>
                 <div class="{{ $card }}">
                     <p class="text-sm font-medium text-mist-500 dark:text-mist-400">مهامي المفتوحة</p>
-                    <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-open-tasks">{{ $tasks['open'] }}</p>
+                    <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-open-tasks">{{ $tasks['open'] }}</p>
                     <p class="mt-1 text-xs {{ $tasks['overdue'] > 0 ? 'font-semibold text-danger-solid' : 'text-mist-500' }}" data-testid="kpi-overdue-tasks">
                         {{ $tasks['overdue'] > 0 ? $tasks['overdue'].' متأخرة' : 'لا مهام متأخرة' }}
                     </p>
                 </div>
                 <div class="{{ $card }}">
                     <p class="text-sm font-medium text-mist-500 dark:text-mist-400">حضوري هذا الشهر</p>
-                    <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-month-attendance">{{ $monthAttendance['total'] }}</p>
+                    <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-month-attendance">{{ $monthAttendance['total'] }}</p>
                     <p class="mt-1 text-xs text-mist-500">يوم مسجّل · {{ $monthAttendance['late'] }} تأخير</p>
                 </div>
                 <div class="{{ $card }}">
                     <p class="text-sm font-medium text-mist-500 dark:text-mist-400">آخر تقييم</p>
                     @if ($latestEvaluation)
-                        <p class="mt-2 font-display text-3xl font-bold text-ink-900 dark:text-ink-50" data-testid="kpi-latest-rating">
+                        <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" data-testid="kpi-latest-rating">
                             {{ $latestEvaluation['evaluation']->rating !== null ? number_format((float) $latestEvaluation['evaluation']->rating, 1) : '—' }}
                             <span class="text-base font-medium text-mist-400">/ 5</span>
                         </p>
                         <p class="mt-1 text-xs text-mist-500">{{ $latestEvaluation['period_label'] }}</p>
                     @else
-                        <p class="mt-2 font-display text-3xl font-bold text-mist-400">—</p>
+                        <p class="mt-2 font-display text-3xl font-medium text-mist-400">—</p>
                         <p class="mt-1 text-xs text-mist-500">لا يوجد تقييم منشور</p>
                     @endif
                 </div>
@@ -107,13 +107,13 @@
                 <div class="{{ $card }} lg:col-span-2">
                     <div class="flex items-center justify-between">
                         <h3 class="{{ $heading }}">مهامي</h3>
-                        <a href="{{ route('tenant.hr.my-tasks') }}" class="text-xs font-semibold text-emerald-600 hover:underline dark:text-emerald-400">فتح اللوحة</a>
+                        <a href="{{ route('tenant.hr.my-tasks') }}" class="text-xs font-semibold text-brand-600 hover:underline dark:text-brand-300">فتح اللوحة</a>
                     </div>
                     <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         @foreach (TaskStatus::cases() as $status)
                             <div class="rounded-xl bg-mist-50 p-4 dark:bg-ink-900/40">
-                                <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold {{ $taskColumnStyles[$status->value] }}">{{ $status->label() }}</span>
-                                <p class="mt-2 font-display text-2xl font-bold text-ink-900 dark:text-ink-50" data-testid="my-tasks-{{ $status->value }}">
+                                <span class="inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold {{ $taskColumnStyles[$status->value] }}">{{ $status->label() }}</span>
+                                <p class="mt-2 font-display text-2xl font-medium text-ink-900 dark:text-ink-50" data-testid="my-tasks-{{ $status->value }}">
                                     {{ $tasks['by_status'][$status->value] }}
                                 </p>
                             </div>
@@ -131,7 +131,7 @@
                 <div class="{{ $card }}">
                     <div class="flex items-center justify-between">
                         <h3 class="{{ $heading }}">أرصدة الإجازات</h3>
-                        <a href="{{ route('tenant.hr.my-leaves') }}" class="text-xs font-semibold text-emerald-600 hover:underline dark:text-emerald-400">طلب إجازة</a>
+                        <a href="{{ route('tenant.hr.my-leaves') }}" class="text-xs font-semibold text-brand-600 hover:underline dark:text-brand-300">طلب إجازة</a>
                     </div>
                     <ul class="mt-4 space-y-3 text-sm" data-testid="leave-balances">
                         @forelse ($leaveBalances as $balance)
@@ -141,7 +141,7 @@
                                     <span class="font-semibold tabular-nums">{{ $balance['remaining'] }}/{{ $balance['annual'] }}</span>
                                 </div>
                                 <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-mist-100 dark:bg-ink-700">
-                                    <div class="h-full rounded-full bg-emerald-400" style="width: {{ $balance['annual'] > 0 ? min(100, ($balance['remaining'] / $balance['annual']) * 100) : 0 }}%"></div>
+                                    <div class="h-full rounded-full bg-brand-500" style="width: {{ $balance['annual'] > 0 ? min(100, ($balance['remaining'] / $balance['annual']) * 100) : 0 }}%"></div>
                                 </div>
                             </li>
                         @empty
@@ -207,7 +207,7 @@
                             <li class="rounded-xl bg-mist-50 px-4 py-3 dark:bg-ink-900/40">
                                 <div class="flex items-center gap-2">
                                     @if ($announcement->is_pinned)
-                                        <span class="text-xs">📌</span>
+                                        <span class="text-xs"><svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" /></svg></span>
                                     @endif
                                     <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $announcement->title }}</p>
                                 </div>

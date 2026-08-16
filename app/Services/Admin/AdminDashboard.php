@@ -141,11 +141,11 @@ class AdminDashboard
             ->map(fn ($count): int => (int) $count);
 
         $segments = [
-            ['key' => TenantStatus::Active->value, 'label' => 'نشط', 'color' => '#4edea3'],
-            ['key' => TenantStatus::PendingApproval->value, 'label' => 'بانتظار الموافقة', 'color' => '#f59e0b'],
-            ['key' => TenantStatus::PendingVerification->value, 'label' => 'بانتظار التحقق', 'color' => '#38bdf8'],
-            ['key' => TenantStatus::Suspended->value, 'label' => 'موقوف', 'color' => '#fc7c78'],
-            ['key' => TenantStatus::Cancelled->value, 'label' => 'ملغى', 'color' => '#9db0a4'],
+            ['key' => TenantStatus::Active->value, 'label' => 'نشط', 'color' => '#0f7b3d'],
+            ['key' => TenantStatus::PendingApproval->value, 'label' => 'بانتظار الموافقة', 'color' => '#b45309'],
+            ['key' => TenantStatus::PendingVerification->value, 'label' => 'بانتظار التحقق', 'color' => '#0369a1'],
+            ['key' => TenantStatus::Suspended->value, 'label' => 'موقوف', 'color' => '#b42318'],
+            ['key' => TenantStatus::Cancelled->value, 'label' => 'ملغى', 'color' => '#948b9e'],
         ];
 
         return array_map(fn (array $segment): array => [

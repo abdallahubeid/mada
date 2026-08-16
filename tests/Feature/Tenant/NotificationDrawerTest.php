@@ -187,7 +187,7 @@ test('the shell subscribes to the tenant scoped private channel', function () {
      */
     expect($html)->toContain('tenantId')
         ->and($html)->toContain('userId')
-        ->and($html)->toContain('veyraListenTenantNotifications')
+        ->and($html)->toContain('madaListenTenantNotifications')
         ->and($html)->toContain('this.echoEnabled');
 });
 

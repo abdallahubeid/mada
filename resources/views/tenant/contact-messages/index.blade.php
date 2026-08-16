@@ -4,7 +4,7 @@
 
 <x-layouts.app title="رسائل التواصل">
     <div
-        x-data="veyraTenantContactInbox({
+        x-data="madaTenantContactInbox({
             search: @js($search),
             threads: @js($threads),
             counts: @js($counts),
@@ -19,7 +19,7 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">رسائل التواصل</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">رسائل التواصل</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     رسائل نموذج الموقع العام — محادثة واحدة لكل بريد إلكتروني، مع تحديث مباشر عبر Reverb.
                 </p>
@@ -40,8 +40,8 @@
                         >
                             الرسائل النشطة
                             <span
-                                class="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
-                                :class="folder === 'active' ? 'bg-emerald-400/15 text-emerald-600 dark:text-emerald-400' : 'bg-mist-200/80 text-mist-500 dark:bg-ink-700 dark:text-mist-400'"
+                                class="rounded-md px-1.5 py-0.5 text-xs font-bold"
+                                :class="folder === 'active' ? 'bg-brand-500/15 text-brand-600 dark:text-brand-300' : 'bg-mist-200/80 text-mist-500 dark:bg-ink-700 dark:text-mist-400'"
                                 x-text="counts.active ?? 0"
                             >{{ $counts['active'] ?? 0 }}</span>
                         </button>
@@ -55,8 +55,8 @@
                         >
                             الأرشيف
                             <span
-                                class="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
-                                :class="folder === 'archived' ? 'bg-emerald-400/15 text-emerald-600 dark:text-emerald-400' : 'bg-mist-200/80 text-mist-500 dark:bg-ink-700 dark:text-mist-400'"
+                                class="rounded-md px-1.5 py-0.5 text-xs font-bold"
+                                :class="folder === 'archived' ? 'bg-brand-500/15 text-brand-600 dark:text-brand-300' : 'bg-mist-200/80 text-mist-500 dark:bg-ink-700 dark:text-mist-400'"
                                 x-text="counts.archived ?? 0"
                             >{{ $counts['archived'] ?? 0 }}</span>
                         </button>
@@ -69,7 +69,7 @@
                             name="q"
                             x-model="search"
                             placeholder="ابحث بالاسم أو البريد أو الموضوع..."
-                            class="w-full rounded-xl border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="w-full rounded-xl border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                         >
                     </form>
                 </div>
@@ -98,7 +98,7 @@
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('veyraTenantContactInbox', (config) => ({
+                Alpine.data('madaTenantContactInbox', (config) => ({
                     search: config.search || '',
                     threads: config.threads || [],
                     counts: config.counts || { active: 0, archived: 0 },
@@ -219,7 +219,7 @@
                         row.className = 'group relative flex gap-3 border-b border-mist-100 p-4 transition duration-150 dark:border-ink-700 hover:bg-mist-50 dark:hover:bg-ink-700/40';
 
                         if (thread.is_selected || Number(this.selectedThreadId) === Number(thread.id)) {
-                            row.classList.add('bg-emerald-400/[0.06]', 'border-s-2', 'border-s-emerald-400');
+                            row.classList.add('bg-brand-500/[0.06]', 'border-s-2', 'border-s-brand-500');
                             row.classList.remove('hover:bg-mist-50', 'dark:hover:bg-ink-700/40');
                         }
 
@@ -229,7 +229,7 @@
                         openBtn.addEventListener('click', () => this.selectThread(thread.id, thread.show_url));
 
                         const unreadHtml = thread.unread
-                            ? `<span data-thread-unread class="inline-flex min-w-5 items-center justify-center rounded-full bg-emerald-400 px-1.5 text-[10px] font-bold text-emerald-950">${Math.max(1, Number(thread.unread_count || 1))}</span>`
+                            ? `<span data-thread-unread class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-500 px-1.5 text-xs font-bold text-white">${Math.max(1, Number(thread.unread_count || 1))}</span>`
                             : '';
 
                         openBtn.innerHTML = `
@@ -237,7 +237,7 @@
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-2 pe-8">
                                     <p class="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">${this.escapeHtml(thread.display_name || '')}</p>
-                                    <span class="shrink-0 text-[11px] text-mist-400 dark:text-mist-500">${thread.last_message_at ? 'الآن' : ''}</span>
+                                    <span class="shrink-0 text-xs text-mist-400 dark:text-mist-500">${thread.last_message_at ? 'الآن' : ''}</span>
                                 </div>
                                 <p class="mt-0.5 truncate text-sm font-medium text-ink-700 dark:text-mist-200">${this.escapeHtml(thread.subject || '')}</p>
                                 <p class="mt-0.5 truncate text-xs text-mist-500 dark:text-mist-400" data-thread-snippet>${this.escapeHtml(thread.snippet || '')}</p>
@@ -340,8 +340,8 @@
                             showCancelButton: true,
                             confirmButtonText: 'نعم، احذف',
                             cancelButtonText: 'إلغاء',
-                            confirmButtonColor: '#ef4444',
-                            cancelButtonColor: '#64748b',
+                            confirmButtonColor: '#b42318',
+                            cancelButtonColor: '#5a5262',
                             reverseButtons: true,
                         }).then(async (result) => {
                             if (! result.isConfirmed) {
@@ -494,13 +494,13 @@
                                         rows="1"
                                         required
                                         placeholder="اكتب ردًا يُرسل بالبريد ويُحفظ في المحادثة..."
-                                        class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                                        class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                                     ></textarea>
-                                    <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-400 text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95" aria-label="إرسال">
+                                    <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95" aria-label="إرسال">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
                                     </button>
                                 </form>
-                                <p class="mt-1.5 px-1 text-[11px] text-mist-400 dark:text-mist-500">Esc أو × لإغلاق العرض دون إعادة تحميل الصفحة.</p>
+                                <p class="mt-1.5 px-1 text-xs text-mist-400 dark:text-mist-500">Esc أو × لإغلاق العرض دون إعادة تحميل الصفحة.</p>
                             </div>
                         ` : (this.canManage ? `
                             <div class="border-t border-mist-100 p-3 dark:border-ink-700">
@@ -514,7 +514,7 @@
                                     <div class="flex min-w-0 items-center gap-3">
                                         <img src="${this.escapeAttr(thread.avatar_url || '')}" alt="" class="h-10 w-10 shrink-0 rounded-full border border-slate-700 object-cover">
                                         <div class="min-w-0">
-                                            <p class="truncate font-display text-base font-semibold text-ink-900 dark:text-ink-50">${this.escapeHtml(thread.subject || '')}</p>
+                                            <p class="truncate font-display text-base font-medium text-ink-900 dark:text-ink-50">${this.escapeHtml(thread.subject || '')}</p>
                                             <p class="truncate text-xs text-mist-500 dark:text-mist-400">
                                                 ${this.escapeHtml(thread.display_name || '')} · <span dir="ltr">${this.escapeHtml(thread.email || '')}</span>
                                             </p>
@@ -603,11 +603,11 @@
                                 <img src="${this.escapeAttr(message.avatar_url || '')}" alt="" class="h-8 w-8 shrink-0 rounded-full border border-slate-700 object-cover">
                                 <div class="max-w-[80%]">
                                     <div class="rounded-2xl px-4 py-3 text-sm shadow-sm ${isStaff
-                                        ? 'bg-emerald-400 text-emerald-900 rounded-se-none'
-                                        : 'border border-mist-200 bg-white text-ink-700 rounded-ss-none dark:border-ink-700 dark:bg-ink-800 dark:text-mist-100'}">
+                                        ? 'bg-brand-500 text-white rounded-se-none'
+                                        : 'border border-mist-200 bg-white text-white rounded-ss-none dark:border-ink-700 dark:bg-ink-800 dark:text-mist-100'}">
                                         ${this.escapeHtml(message.body || '')}
                                     </div>
-                                    <div class="mt-1 flex items-center gap-1.5 px-1 text-[11px] text-mist-400 dark:text-mist-500 ${isStaff ? 'justify-end' : 'justify-start'}">
+                                    <div class="mt-1 flex items-center gap-1.5 px-1 text-xs text-mist-400 dark:text-mist-500 ${isStaff ? 'justify-end' : 'justify-start'}">
                                         <span>${this.escapeHtml(message.sender_name || '')} · الآن</span>
                                         ${receipt}
                                     </div>
@@ -619,7 +619,7 @@
                     receiptHtml(status, onDark) {
                         const color = status === 'read'
                             ? 'text-sky-500'
-                            : (onDark ? 'text-emerald-900/70' : 'text-mist-400');
+                            : (onDark ? 'text-white/70' : 'text-mist-400');
 
                         if (status === 'pending') {
                             return `<span class="inline-flex ${color}" title="تم الحفظ">✓</span>`;
@@ -635,13 +635,13 @@
                             return;
                         }
 
-                        row.classList.add('bg-emerald-400/[0.06]', 'border-s-2', 'border-s-emerald-400');
+                        row.classList.add('bg-brand-500/[0.06]', 'border-s-2', 'border-s-brand-500');
                         row.classList.remove('hover:bg-mist-50', 'dark:hover:bg-ink-700/40');
                     },
 
                     clearThreadHighlight() {
                         this.$refs.threadList?.querySelectorAll('[data-thread-id]').forEach((row) => {
-                            row.classList.remove('bg-emerald-400/[0.06]', 'border-s-2', 'border-s-emerald-400');
+                            row.classList.remove('bg-brand-500/[0.06]', 'border-s-2', 'border-s-brand-500');
                             row.classList.add('hover:bg-mist-50', 'dark:hover:bg-ink-700/40');
                         });
                     },
@@ -670,11 +670,11 @@
                     },
 
                     listenLive() {
-                        if (typeof window.veyraListenTenantContactMessages !== 'function') {
+                        if (typeof window.madaListenTenantContactMessages !== 'function') {
                             return;
                         }
 
-                        this.echoChannel = window.veyraListenTenantContactMessages({
+                        this.echoChannel = window.madaListenTenantContactMessages({
                             tenantId: this.tenantId,
                             userId: this.userId,
                             onMessage: (payload) => this.handleIncoming(payload || {}),
@@ -702,8 +702,8 @@
                             this.clearUnreadBadge(payload.thread_id);
                         }
 
-                        if (window.veyraPlayNotificationSound) {
-                            window.veyraPlayNotificationSound();
+                        if (window.madaPlayNotificationSound) {
+                            window.madaPlayNotificationSound();
                         }
                     },
 
@@ -736,7 +736,7 @@
                                 if (! badge) {
                                     badge = document.createElement('span');
                                     badge.dataset.threadUnread = '';
-                                    badge.className = 'inline-flex min-w-5 items-center justify-center rounded-full bg-emerald-400 px-1.5 text-[10px] font-bold text-emerald-950';
+                                    badge.className = 'inline-flex min-w-5 items-center justify-center rounded-full bg-brand-500 px-1.5 text-xs font-bold text-white';
                                     badge.textContent = '1';
                                     existing.querySelector('.mt-1\\.5')?.appendChild(badge);
                                 } else {
@@ -859,7 +859,7 @@
                             title: message,
                             showConfirmButton: Boolean(undoUrl),
                             confirmButtonText: options.undoLabel || 'تراجع',
-                            confirmButtonColor: '#4edea3',
+                            confirmButtonColor: '#714b67',
                             showCancelButton: false,
                             timer: undoUrl ? 8000 : 2800,
                             timerProgressBar: true,

@@ -69,10 +69,10 @@ test('the sidebar lists the four self-service items and no my space link', funct
 
     $html = $this->get(route('tenant.hr.my-attendance'))->assertOk()->getContent();
 
-    expect($html)->toContain('🕒 تسجيل الحضور والانصراف')
-        ->toContain('📝 طلبات الإجازة')
-        ->toContain('⭐ تقييماتي')
-        ->toContain('🗂️ مهامي')
+    expect($html)->toContain('تسجيل الحضور والانصراف')
+        ->toContain('طلبات الإجازة')
+        ->toContain('تقييماتي')
+        ->toContain('مهامي')
         ->not->toContain('مساحتي الخاصة');
 
     // Each item points at its own route, not a ?tab= query on a shared hub.
@@ -95,8 +95,9 @@ test('each self-service page highlights only its own sidebar item', function () 
     $activeLinkFor = function (string $route) {
         $html = $this->get(route($route))->assertOk()->getContent();
 
+        // Active-item classes moved from emerald to the Mada plum brand ramp.
         preg_match_all(
-            '/<a[^>]*href="([^"]*)"[^>]*class="[^"]*border-emerald-400 bg-emerald-400\/10[^"]*"/',
+            '/<a[^>]*href="([^"]*)"[^>]*class="[^"]*border-brand-500 bg-brand-500\/10[^"]*"/',
             $html,
             $matches
         );

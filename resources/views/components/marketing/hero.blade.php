@@ -3,119 +3,191 @@
 ])
 
 @php
-    $hero ??= [
-        'resolved_metrics' => [
-            ['value' => 8500, 'prefix' => '+', 'suffix' => '', 'decimals' => 0, 'label' => 'مستخدم نشط'],
-            ['value' => 99.9, 'prefix' => '%', 'suffix' => '', 'decimals' => 1, 'label' => 'نسبة الجاهزية'],
-            ['value' => 1200, 'prefix' => '+', 'suffix' => '', 'decimals' => 0, 'label' => 'مؤسسة تثق بنا'],
-        ],
-    ];
+    /*
+     * Hero, built to Odoo's structure.
+     *
+     * ─────────────────────────────────────────────────────────────────────
+     * THE HEADLINE IS SET IN A HANDWRITTEN FACE, NOT A SANS
+     *
+     * Odoo runs its entire hero headline in Caveat — a handwriting face — at
+     * 88px, against an otherwise plain Inter page. That single choice is what
+     * makes the page read as human rather than as a template, and it applies
+     * to the WHOLE line, not to a highlighted fragment of it.
+     *
+     * Caveat has no Arabic glyphs, so the equivalent here is Marhey (loaded via
+     * `--font-hand`): a rounded, informal Arabic display face that still sets
+     * real Arabic letterforms and holds up at 700 weight. Cairo — a geometric
+     * corporate sans — is explicitly NOT used for this headline.
+     *
+     * ─────────────────────────────────────────────────────────────────────
+     * THREE DECORATION MARKERS, PARSED FROM THE CMS STRING
+     *
+     *   **phrase**   orange marker swash behind the words
+     *   ((phrase))   teal hand-drawn circle around the words
+     *   __phrase__   blue double swash underline
+     *
+     * All three are optional; a plain title renders plain, so every existing
+     * CMS value keeps working. Splitting in one pass with alternation keeps
+     * the fragments in source order, which matters in RTL — a per-marker
+     * str_replace would reorder them.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    $hero ??= [];
     $metrics = $hero['resolved_metrics'] ?? [];
+
+    $rawTitle = $settings['hero_title'] ?? 'كل ما تحتاجه لإدارة فريقك، **في مكان واحد**';
+
+    $titleParts = preg_split(
+        '/(\*\*.+?\*\*|\(\(.+?\)\)|__.+?__)/u',
+        $rawTitle,
+        -1,
+        PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+    );
+
+    /*
+     * The headline is assembled here and echoed as ONE string rather than
+     * looped over in the template.
+     *
+     * A `@foreach` emitting `{{ $part }}` puts the template's own newlines and
+     * indentation between fragments, and HTML collapses each run to a real
+     * space. With `((فريقك))،` in the source that rendered as «فريقك ،» — a
+     * space wedged between the word and its comma, which in Arabic is a plain
+     * typographic error rather than a subtle spacing issue.
+     *
+     * Concatenating with no separator keeps the punctuation attached to the
+     * word it belongs to. Every fragment is escaped individually, so CMS text
+     * is still treated as untrusted.
+     */
+    $renderedTitle = collect($titleParts)
+        ->map(function (string $part): string {
+            $classes = match (true) {
+                str_starts_with($part, '**') => 'mada-marker sm:whitespace-nowrap',
+                str_starts_with($part, '((') => 'mada-circle sm:whitespace-nowrap',
+                str_starts_with($part, '__') => 'mada-underline-double sm:whitespace-nowrap',
+                default => null,
+            };
+
+            if ($classes === null) {
+                return e($part);
+            }
+
+            return '<span class="'.$classes.'">'.e(trim($part, '*()_')).'</span>';
+        })
+        ->implode('');
 @endphp
 
-<section class="relative overflow-hidden bg-ink-100 py-20 sm:py-28 dark:bg-ink-950">
+{{--
+    Bottom padding is deliberately small: the product-video section that
+    follows pulls up into this one so the app preview reads as part of the hero
+    fold rather than as the next section down.
+--}}
+<section class="relative overflow-hidden bg-mist-50 pt-14 pb-10 sm:pt-20 sm:pb-14">
     <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div class="absolute -top-40 start-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-emerald-400/15 blur-3xl dark:bg-emerald-400/25"></div>
-        <div class="absolute bottom-0 end-0 h-72 w-72 translate-x-1/3 rounded-full bg-emerald-500/10 blur-3xl dark:bg-emerald-500/20"></div>
+        <div class="absolute -top-56 start-1/2 h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-marker-500/10 blur-3xl"></div>
     </div>
 
-    <div class="relative mx-auto grid max-w-7xl gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-8">
-        <div>
-            <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.5.04.703.662.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345l2.125-5.111Z" /></svg>
-                {{ $settings['hero_badge_text'] ?? '' }}
-            </span>
+    <div class="relative mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+        @if (! empty($settings['hero_badge_text']))
+            <div class="flex items-center justify-center">
+                <span class="inline-flex items-center gap-2 rounded-full border border-mist-200 bg-white px-4 py-1.5 text-xs font-semibold text-mist-600 shadow-xs">
+                    <span class="relative flex h-1.5 w-1.5">
+                        <span class="absolute inline-flex h-full w-full rounded-full bg-success-500 opacity-75"></span>
+                        <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-success-500"></span>
+                    </span>
+                    {{ $settings['hero_badge_text'] }}
+                </span>
+            </div>
+        @endif
 
-            <h1 class="mt-6 font-display text-4xl font-bold leading-[1.15] text-ink-900 sm:text-5xl lg:text-6xl dark:text-ink-50">
-                {{ $settings['hero_title'] ?? '' }}
-            </h1>
+        {{--
+            `leading-[1.3]` — noticeably looser than a sans headline would take.
+            Marhey has tall ascenders and deep descenders, and the circle and
+            underline decorations both draw OUTSIDE the text box, so a tight
+            line-height would have line two clipping line one's doodles.
+        --}}
+        <h1 class="mt-7 font-hand text-[2.6rem] leading-[1.3] font-bold tracking-normal text-ink-900 sm:text-6xl lg:text-[4.5rem]">{!! $renderedTitle !!}</h1>
 
-            <p class="mt-6 max-w-xl text-lg leading-relaxed text-mist-600 dark:text-mist-300">
-                {{ $settings['hero_description'] ?? '' }}
-            </p>
+        <p class="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-mist-600 sm:text-xl">
+            {{ $settings['hero_description'] ?? '' }}
+        </p>
 
-            <div class="mt-8 flex flex-wrap items-center gap-4">
+        {{--
+            CTA block. `relative` here is what anchors the arrow and the
+            annotation: both are positioned against THIS container, not against
+            the section, so they track the buttons at every breakpoint instead
+            of drifting as the headline above them rewraps.
+        --}}
+        {{--
+            `w-full` on mobile, `inline-flex` only from `sm`. As a bare
+            `inline-flex` this wrapper is shrink-to-fit, so it sized itself to
+            the button labels and the `w-full` on the buttons resolved to that
+            same narrow width — full-bleed mobile CTAs that were not actually
+            full bleed. It has to be block-level before its children can fill it.
+        --}}
+        <div class="relative mt-10 flex w-full flex-col items-center sm:inline-flex sm:w-auto">
+            <div class="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
                 <a
-                    href="{{ $settings['hero_btn1_link'] ?? '#' }}"
-                    class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-ink-950 shadow-glow transition duration-200 ease-in-out hover:bg-emerald-400 active:scale-[0.98]"
+                    href="{{ $settings['hero_btn1_link'] ?? route('register') }}"
+                    class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-500 px-8 py-4 text-base font-semibold text-white transition duration-150 ease-in-out hover:bg-brand-600 active:translate-y-px sm:w-auto"
                 >
-                    {{ $settings['hero_btn1_text'] ?? '' }}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
-                    </svg>
+                    {{ $settings['hero_btn1_text'] ?? 'ابدأ الآن — مجاناً' }}
                 </a>
+
                 <a
-                    href="{{ $settings['hero_btn2_link'] ?? '#' }}"
-                    class="inline-flex items-center gap-2 rounded-full border border-mist-300 px-6 py-3 text-sm font-semibold text-ink-700 transition duration-200 ease-in-out hover:border-emerald-400 hover:text-emerald-600 active:scale-[0.98] dark:border-ink-700 dark:text-mist-200 dark:hover:border-emerald-400 dark:hover:text-emerald-400"
+                    href="{{ $settings['hero_btn2_link'] ?? route('marketing.contact') }}"
+                    class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-mist-100 px-8 py-4 text-base font-semibold text-brand-600 transition duration-150 ease-in-out hover:bg-mist-200 active:translate-y-px sm:w-auto"
                 >
-                    {{ $settings['hero_btn2_text'] ?? '' }}
+                    {{ $settings['hero_btn2_text'] ?? 'تواصل مع مستشار' }}
                 </a>
             </div>
 
-            <div class="mt-12 grid grid-cols-1 gap-6 border-t border-mist-200 pt-8 sm:grid-cols-3 dark:border-ink-800">
+            {{--
+                Handwritten annotation + arrow, anchored to the CTA row above.
+
+                Positioned with `start-full` so it sits past the row's inline
+                start edge — which is the RIGHT in Arabic and the LEFT in
+                English, correct in both without a `rtl:` override. The arrow
+                itself is mirrored inside its own component.
+
+                Hidden below `lg`: at narrow widths the buttons go full-width
+                and stack, leaving no gutter for an annotation to live in
+                without overlapping them.
+            --}}
+            <div class="pointer-events-none absolute top-1/2 start-full ms-4 hidden -translate-y-1/2 items-center gap-1 lg:flex" aria-hidden="true">
+                {{--
+                    `:mirror="false"` — the wrapper above is placed with
+                    `start-full`, so it already swaps sides under RTL. Letting
+                    the arrow flip itself as well double-mirrors it and points
+                    the head away from the button.
+                --}}
+                <x-marketing.doodle-arrow variant="curve" :mirror="false" class="h-12 w-20 -rotate-6" />
+                <span class="font-hand max-w-[9rem] text-start text-base leading-snug font-bold text-marker-700 -rotate-3">
+                    مجاني بالكامل بدون بطاقة إلكترونية
+                </span>
+            </div>
+        </div>
+
+        {{-- Same reassurance, readable and non-decorative, for the widths where the annotation is hidden. --}}
+        <p class="mt-6 text-base text-mist-500 lg:hidden">
+            مجاني بالكامل بدون بطاقة إلكترونية
+        </p>
+
+        @if (! empty($metrics))
+            <div class="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-3">
                 @foreach ($metrics as $metric)
-                    <div>
-                        <p class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">
+                    <div class="text-center">
+                        <p class="font-hand text-4xl font-bold text-ink-900 tabular">
                             <x-marketing.stat-counter
                                 :value="$metric['value']"
-                                :prefix="$metric['prefix']"
-                                :suffix="$metric['suffix']"
-                                :decimals="$metric['decimals']"
+                                :prefix="$metric['prefix'] ?? ''"
+                                :suffix="$metric['suffix'] ?? ''"
+                                :decimals="$metric['decimals'] ?? 0"
                             />
                         </p>
-                        <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">{{ $metric['label'] }}</p>
+                        <p class="mt-1.5 text-base text-mist-600">{{ $metric['label'] }}</p>
                     </div>
                 @endforeach
             </div>
-        </div>
-
-        <div class="relative">
-            <div class="relative rounded-3xl border border-mist-200 bg-white/60 p-2 shadow-2xl backdrop-blur-xl dark:border-ink-800 dark:bg-ink-800/60">
-                <div class="overflow-hidden rounded-2xl bg-ink-900">
-                    <div class="flex items-center gap-2 border-b border-ink-800 px-4 py-3">
-                        <span class="h-2.5 w-2.5 rounded-full bg-danger-solid"></span>
-                        <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
-                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-                        <span class="ms-3 text-xs text-mist-500">app.veyra.com/dashboard</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-4 p-6">
-                        <div class="col-span-2 rounded-xl bg-ink-800 p-4">
-                            <p class="text-xs text-mist-400">اتجاهات النمو السنوي</p>
-                            <div class="mt-4 flex h-28 items-end gap-2">
-                                <span class="h-[40%] w-full rounded-t-md bg-emerald-400/30"></span>
-                                <span class="h-[65%] w-full rounded-t-md bg-emerald-400/40"></span>
-                                <span class="h-[45%] w-full rounded-t-md bg-emerald-400/30"></span>
-                                <span class="h-[80%] w-full rounded-t-md bg-emerald-400/60"></span>
-                                <span class="h-[60%] w-full rounded-t-md bg-emerald-400/40"></span>
-                                <span class="h-full w-full rounded-t-md bg-emerald-400"></span>
-                            </div>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="rounded-xl bg-ink-800 p-3 text-center">
-                                <p class="text-xs text-mist-400">الإيرادات</p>
-                                <p class="mt-1 font-display text-lg font-bold text-emerald-400">
-                                    <x-marketing.stat-counter :value="458200" />
-                                </p>
-                            </div>
-                            <div class="rounded-xl bg-ink-800 p-3 text-center">
-                                <p class="text-xs text-mist-400">المؤسسات</p>
-                                <p class="mt-1 font-display text-lg font-bold text-ink-50">
-                                    <x-marketing.stat-counter :value="1284" />
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="animate-hero-float absolute -bottom-6 -start-6 flex max-w-[15rem] items-center gap-3 rounded-2xl border border-mist-200 bg-white/90 p-4 shadow-glow backdrop-blur-xl dark:border-ink-800 dark:bg-ink-800/90">
-                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-600 dark:text-emerald-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09l2.846.813-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
-                    </svg>
-                </span>
-                <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">مستقبل الأعمال يبدأ هنا</p>
-            </div>
-        </div>
+        @endif
     </div>
 </section>

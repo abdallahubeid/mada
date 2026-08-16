@@ -7,10 +7,10 @@
     Read receipt for one of my own messages.
 
     ── TWO STATES, NOT THREE ───────────────────────────────────────────────
-    One tick = sent. Two emerald ticks = read by everyone else in the thread.
+    One tick = sent. Two brand ticks = read by everyone else in the thread.
 
     There is deliberately no grey double tick. In every other messenger that
-    means "delivered to the device", and Veyra has no delivery signal to base
+    means "delivered to the device", and مدى has no delivery signal to base
     it on — there is no per-recipient ack, only a read watermark. Rendering the
     middle state would be inventing a fact, so the jump is straight from sent
     to read.
@@ -45,13 +45,13 @@
     </svg>
 
     {{-- Read. Emerald on both bubble colours: the recipient bubble is neutral
-         and the sender bubble is emerald-400, and emerald-900 keeps contrast
+         and the sender bubble is brand-500, and white keeps contrast
          on the latter without going grey on the former. --}}
     <svg
         x-show="isRead({{ $id }})"
         x-cloak
         xmlns="http://www.w3.org/2000/svg"
-        class="h-3.5 w-3.5 text-emerald-900 dark:text-emerald-900"
+        class="h-3.5 w-3.5 text-white dark:text-white"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

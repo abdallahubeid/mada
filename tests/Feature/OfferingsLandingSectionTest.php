@@ -42,6 +42,6 @@ test('the landing page offerings section renders seeded settings and cards', fun
         ->assertSee('التوظيف وإدارة الموارد البشرية', false)
         ->assertSee('محرّك الموافقات وسجل التدقيق', false)
         ->assertSee('الرواتب والمصروفات', false)
-        ->assertSee('ph:shield-check-bold', false)
-        ->assertSee('ph:credit-card-bold', false);
+        ->assertSee('M9 12.75 11.25 15 15 9.75m-3-7.036', false)
+        ->assertSee('M2.25 8.25h19.5M2.25 9h19.5', false);
 });

@@ -85,7 +85,7 @@ test('admins index shows uploaded avatar thumbnail when present', function () {
     $other = User::factory()->create([
         'tenant_id' => null,
         'name' => 'Avatar Admin',
-        'email' => 'avatar-admin@veyra.test',
+        'email' => 'avatar-admin@mada.test',
     ]);
     PlatformPermissionCatalog::bindTeam();
     $other->assignRole(PlatformPermissionCatalog::ROLE_SUPPORT_AGENT);
@@ -131,7 +131,7 @@ test('admin soft deletes via destroy action', function () {
     $other = User::factory()->create([
         'tenant_id' => null,
         'name' => 'Disposable Admin',
-        'email' => 'disposable@veyra.test',
+        'email' => 'disposable@mada.test',
     ]);
     PlatformPermissionCatalog::bindTeam();
     $other->assignRole(PlatformPermissionCatalog::ROLE_SUPPORT_AGENT);

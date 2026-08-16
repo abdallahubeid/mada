@@ -33,7 +33,7 @@
             'security' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />',
         ];
         $activityTone = [
-            'approval' => 'bg-emerald-400/15 text-emerald-500 dark:text-emerald-400',
+            'approval' => 'bg-brand-500/15 text-brand-500 dark:text-brand-300',
             'signup' => 'bg-sky-500/15 text-sky-500',
             'suspension' => 'bg-danger-solid/15 text-danger-solid',
             'security' => 'bg-amber-500/15 text-amber-500',
@@ -43,7 +43,7 @@
 
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">مرحبًا، مشرف المنصّة</h2>
+            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">مرحبًا، مشرف المنصّة</h2>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">نظرة حيّة على صحّة المنصّة والإجراءات المطلوبة اليوم.</p>
         </div>
 
@@ -53,7 +53,7 @@
                     href="{{ route('admin.dashboard', ['range' => $key]) }}"
                     @class([
                         'rounded-lg px-3 py-1.5 font-medium transition duration-200',
-                        'bg-emerald-400 text-emerald-900 shadow-sm' => $range === $key,
+                        'bg-brand-500 text-white shadow-sm' => $range === $key,
                         'text-mist-500 hover:text-ink-700 dark:hover:text-mist-200' => $range !== $key,
                     ])
                 >{{ $label }}</a>
@@ -102,21 +102,21 @@
         <div class="rounded-2xl border border-mist-200 bg-white shadow-sm lg:col-span-2 dark:border-ink-600 dark:bg-ink-800">
             <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
                 <div class="flex items-center gap-2">
-                    <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">بانتظار موافقتك</h3>
-                    <span class="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400">{{ count($approvalQueue) }}</span>
+                    <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">بانتظار موافقتك</h3>
+                    <span class="rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400">{{ count($approvalQueue) }}</span>
                 </div>
-                <a href="{{ route('admin.tenants', ['status' => 'pending_approval']) }}" class="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">عرض الكل</a>
+                <a href="{{ route('admin.tenants', ['status' => 'pending_approval']) }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">عرض الكل</a>
             </div>
 
             <ul class="divide-y divide-mist-100 dark:divide-ink-700">
                 @forelse ($approvalQueue as $item)
                     <li class="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex items-center gap-3">
-                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mist-100 font-display text-sm font-bold text-mist-500 dark:bg-ink-700 dark:text-mist-300">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mist-100 font-display text-sm font-medium text-mist-500 dark:bg-ink-700 dark:text-mist-300">
                                 {{ mb_substr($item['company'], 0, 1) }}
                             </span>
                             <div class="min-w-0">
-                                <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="truncate text-sm font-semibold text-ink-900 hover:text-emerald-600 dark:text-ink-50 dark:hover:text-emerald-400">{{ $item['company'] }}</a>
+                                <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="truncate text-sm font-semibold text-ink-900 hover:text-brand-600 dark:text-ink-50 dark:hover:text-brand-300">{{ $item['company'] }}</a>
                                 <p class="truncate text-xs text-mist-500 dark:text-mist-400">{{ $item['owner'] }} · {{ $item['email'] }}</p>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                         <div class="flex items-center gap-2 ps-13 sm:ps-0">
                             <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-medium text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $item['plan'] }}</span>
                             <span class="hidden text-xs text-mist-400 sm:inline dark:text-mist-500">{{ $item['waiting'] }}</span>
-                            <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">مراجعة</a>
+                            <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">مراجعة</a>
                         </div>
                     </li>
                 @empty
@@ -133,13 +133,13 @@
             </ul>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-            <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">توزيع حالات المستأجرين</h3>
+        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">توزيع حالات المستأجرين</h3>
 
             <div class="mt-4 flex items-center justify-center">
-                <div class="relative h-40 w-40 rounded-full" style="background: {{ $gradient }};">
-                    <div class="absolute inset-[14px] flex flex-col items-center justify-center rounded-full bg-white dark:bg-ink-800">
-                        <span class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">{{ $total }}</span>
+                <div class="relative h-40 w-40 rounded-md" style="background: {{ $gradient }};">
+                    <div class="absolute inset-[14px] flex flex-col items-center justify-center rounded-md bg-white dark:bg-ink-800">
+                        <span class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $total }}</span>
                         <span class="text-xs text-mist-500 dark:text-mist-400">مستأجر</span>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                 @foreach ($distribution as $d)
                     <li class="flex items-center justify-between text-sm">
                         <span class="flex items-center gap-2 text-mist-600 dark:text-mist-300">
-                            <span class="h-2.5 w-2.5 rounded-full" style="background: {{ $d['color'] }};"></span>
+                            <span class="h-2.5 w-2.5 rounded-md" style="background: {{ $d['color'] }};"></span>
                             {{ $d['label'] }}
                         </span>
                         <span class="font-medium text-ink-900 dark:text-ink-50">{{ $d['count'] }}</span>
@@ -160,8 +160,8 @@
     </div>
 
     <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-            <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">توزيع الخطط</h3>
+        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">توزيع الخطط</h3>
             <ul class="mt-4 space-y-4">
                 @forelse ($planBreakdown as $plan)
                     <li>
@@ -170,7 +170,7 @@
                             <span class="text-mist-500">{{ $plan['count'] }} · {{ $plan['percent'] }}%</span>
                         </div>
                         <div class="mt-2 h-2 overflow-hidden rounded-full bg-mist-100 dark:bg-ink-700">
-                            <div class="h-full rounded-full bg-emerald-400 transition-all" style="width: {{ ($plan['count'] / $planMax) * 100 }}%"></div>
+                            <div class="h-full rounded-full bg-brand-500 transition-all" style="width: {{ ($plan['count'] / $planMax) * 100 }}%"></div>
                         </div>
                     </li>
                 @empty
@@ -181,14 +181,14 @@
 
         <div class="rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
             <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">أحدث التسجيلات</h3>
-                <a href="{{ route('admin.tenants', ['status' => 'all']) }}" class="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">الكل</a>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">أحدث التسجيلات</h3>
+                <a href="{{ route('admin.tenants', ['status' => 'all']) }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">الكل</a>
             </div>
             <ul class="divide-y divide-mist-100 dark:divide-ink-700">
                 @forelse ($recentSignups as $signup)
                     <li class="flex items-center justify-between gap-3 px-5 py-3">
                         <div class="min-w-0">
-                            <a href="{{ route('admin.tenants.show', $signup['slug']) }}" class="truncate text-sm font-semibold text-ink-900 hover:text-emerald-600 dark:text-ink-50">{{ $signup['name'] }}</a>
+                            <a href="{{ route('admin.tenants.show', $signup['slug']) }}" class="truncate text-sm font-semibold text-ink-900 hover:text-brand-600 dark:text-ink-50">{{ $signup['name'] }}</a>
                             <p class="text-xs text-mist-500">{{ $signup['plan'] }} · {{ $signup['created'] }}</p>
                         </div>
                         <x-admin.status-badge :status="$signup['status']" />
@@ -199,11 +199,11 @@
             </ul>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-            <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">حالة النظام</h3>
+        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">حالة النظام</h3>
             <ul class="mt-4 space-y-3">
                 @foreach ($systemStatus as $item)
-                    <li class="flex items-start justify-between gap-3 rounded-xl border border-mist-100 px-3 py-2.5 dark:border-ink-700">
+                    <li class="flex items-start justify-between gap-3 rounded-xl border border-mist-100 px-3 py-2 dark:border-ink-700">
                         <div>
                             <p class="text-sm font-medium text-ink-700 dark:text-mist-200">{{ $item['label'] }}</p>
                             @if ($item['hint'])
@@ -211,10 +211,10 @@
                             @endif
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="font-display text-sm font-bold text-ink-900 dark:text-ink-50">{{ $item['value'] }}</span>
+                            <span class="font-display text-sm font-medium text-ink-900 dark:text-ink-50">{{ $item['value'] }}</span>
                             <span @class([
                                 'h-2.5 w-2.5 rounded-full',
-                                'bg-emerald-400' => $item['ok'],
+                                'bg-brand-500' => $item['ok'],
                                 'bg-amber-500' => ! $item['ok'],
                             ])></span>
                         </div>
@@ -226,8 +226,8 @@
 
     <div class="mt-6 rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
         <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
-            <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">آخر نشاطات المنصّة</h3>
-            <a href="{{ route('admin.audit-log') }}" class="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">سجل النشاط</a>
+            <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">آخر نشاطات المنصّة</h3>
+            <a href="{{ route('admin.audit-log') }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">سجل النشاط</a>
         </div>
 
         <ul class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -242,7 +242,7 @@
                         <p class="text-sm text-ink-700 dark:text-mist-200">
                             <span class="font-semibold text-ink-900 dark:text-ink-50">{{ $event['actor'] }}</span>
                             {{ $event['action'] }}
-                            <span class="font-medium text-emerald-600 dark:text-emerald-400">{{ $event['target'] }}</span>
+                            <span class="font-medium text-brand-600 dark:text-brand-300">{{ $event['target'] }}</span>
                         </p>
                     </div>
                     <span class="shrink-0 text-xs text-mist-400 dark:text-mist-500">{{ $event['time'] }}</span>

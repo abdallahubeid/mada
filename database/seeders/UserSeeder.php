@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             $user = User::query()->create([
                 'tenant_id' => null,
                 'name' => 'Super Admin',
-                'email' => 'owner@veyra.com',
+                'email' => 'owner@mada.com',
                 'password' => 'owner123456789',
                 'email_verified_at' => now(),
             ]);

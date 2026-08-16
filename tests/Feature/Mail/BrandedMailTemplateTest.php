@@ -47,13 +47,13 @@ test('no Laravel branding reaches a customer inbox', function () {
         ->and($html)->not->toContain('laravel.com');
 });
 
-test('the mail shell carries Veyra identity and the legal footer', function () {
+test('the mail shell carries مدى identity and the legal footer', function () {
     [$tenant, $owner] = mailFixtures();
 
     $html = (new TenantReactivatedMail($tenant, $owner))->render();
 
-    expect($html)->toContain('Veyra ERP')
-        ->toContain('© '.date('Y').' Veyra ERP. جميع الحقوق محفوظة.')
+    expect($html)->toContain('مدى')
+        ->toContain('© '.date('Y').' مدى. جميع الحقوق محفوظة.')
         // Identity tagline and the support/site links.
         ->toContain('منصّة إدارة موارد المؤسسات')
         ->toContain(route('marketing.contact'))
@@ -71,17 +71,19 @@ test('messages render right-to-left', function () {
         ->toContain('lang="ar"');
 });
 
-test('the primary button uses the brand emerald with readable dark text', function () {
+test('the primary button uses the brand plum with a readable white label', function () {
     [$tenant, $owner] = mailFixtures();
 
     $html = (new TenantReactivatedMail($tenant, $owner))->render();
 
     /*
-     * Dark ink on emerald, not white. White on #4EDEA3 measures 1.7:1; ink
-     * measures 10.8:1, and it matches the product's own button treatment.
+     * White on the plum fill, which inverted when the palette moved from
+     * emerald to Mada plum: white on #714B67 measures 7.3:1, where white on the
+     * old #4EDEA3 mint measured 1.7:1 and forced a dark label instead.
      * Laravel's default primary was #18181b, an off-brand near-black.
      */
-    expect($html)->toContain('4edea3')
+    expect($html)->toContain('714b67')
+        ->and($html)->not->toContain('4edea3')
         ->and($html)->not->toContain('#18181b');
 });
 

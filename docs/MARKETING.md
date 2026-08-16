@@ -1,6 +1,6 @@
-# Veyra ERP — Public Marketing Site
+# Mada ERP — Public Marketing Site
 
-> Part of the Veyra ERP documentation set. See `VEYRA_DOCS.md` for the full Software Design Document, `DESIGN_SYSTEM.md` for tokens/components, and `ARCHITECTURE.md` (ADR-10 RTL, ADR-15 theming) for foundations referenced below. Backend/CMS persistence for this site is specified in `MARKETING_CMS.md` (no migrations until that schema is implemented).
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full Software Design Document, `DESIGN_SYSTEM.md` for tokens/components, and `ARCHITECTURE.md` (ADR-10 RTL, ADR-15 theming) for foundations referenced below. Backend/CMS persistence for this site is specified in `MARKETING_CMS.md` (no migrations until that schema is implemented).
 >
 > **Scope:** the public, unauthenticated marketing website (Arabic-first, `ar`/`rtl`). It is distinct from the authenticated tenant app (`/app/*`) and the Super Admin console (`/admin/*`). It reuses `resources/views/components/layouts/marketing.blade.php`.
 
@@ -65,7 +65,7 @@ Reordered from the original proposal so features/modules are established **befor
 1. **Hero** — value proposition + dual CTAs: "ابدأ التجربة المجانية" (`/register`) & "احجز عرضًا توضيحيًا" (`/contact`).
 2. **Trusted By / Social Proof** — logo ticker.
 3. **Problems** — pain points of organizations without a modern ERP.
-4. **Solution** — how Veyra resolves them.
+4. **Solution** — how Mada resolves them.
 5. **Core Features Highlight** — key features overview.
 6. **Modules Breakdown** — grid: HR, Finance, Projects/Operations, Support, Tenancy, Security.
 7. **Dashboard Preview / Product Showcase** — high-res UI preview (lazy-loaded).

@@ -1,7 +1,7 @@
 {{-- Features page — CMS feature headings + shared sections. --}}
 <x-layouts.marketing
-    title="المميزات — Veyra ERP"
-    description="اكتشف قدرات Veyra ERP: أمان متعدد المستأجرين، موارد بشرية وتوظيف، مشاريع وعمليات، ورواتب وتحليلات مالية في منصة واحدة."
+    title="المميزات — مدى"
+    description="اكتشف قدرات مدى: أمان متعدد المستأجرين، موارد بشرية وتوظيف، مشاريع وعمليات، ورواتب وتحليلات مالية في منصة واحدة."
 >
     <x-marketing.nav />
 

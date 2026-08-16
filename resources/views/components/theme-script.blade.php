@@ -1,71 +1,53 @@
 {{--
-    Theme bootstrap — the single definition of "dark is the default" (ADR-15,
-    DESIGN_SYSTEM.md §2).
-
-    MUST be rendered inside <head> BEFORE the stylesheet. It is deliberately a
-    blocking inline script: the `dark` class has to be on <html> before first
-    paint, or the page flashes light and then snaps dark.
+    Theme bootstrap — now a single-theme guarantee.
 
     ─────────────────────────────────────────────────────────────────────────
-    WHY THIS IS A COMPONENT AND NOT SEVEN COPIES
+    DARK MODE HAS BEEN RETIRED (supersedes ADR-15 / DESIGN_SYSTEM.md §2)
 
-    This logic previously lived inline in six separate layouts. The seventh
-    surface that needed it — the disabled company-portal page — was written
-    without it, so it rendered light for everyone regardless of their stored
-    preference. That is the failure mode duplication guarantees eventually:
-    every new page that owns its own <html> is one oversight away from the same
-    bug. One component means a page either has the behaviour or visibly does
-    not include it.
+    The product previously shipped a user-toggled dark theme, defaulting to
+    dark, persisted in localStorage. It has been withdrawn: the marketing
+    surface, the auth screens and the app now share one light canvas, so the
+    site no longer switches tone from section to section.
 
-    Exempt by design: reports/print/* and finance/*/print.blade.php render in a
-    fixed light theme because printed output must not follow screen settings
-    (DESIGN_SYSTEM.md §2.2), and errors/403 + errors/404 are always-dark brand
-    surfaces with no `dark:` variants to switch.
+    This file is deliberately KEPT rather than deleted, and it deliberately
+    still runs on every page, for two reasons:
+
+      1. Returning visitors have `mada-theme: "dark"` sitting in their
+         browser from before the change. Nothing reads that key any more, but
+         leaving it there means a later feature that reintroduces a stored
+         preference would silently inherit a choice made against a palette that
+         no longer exists. It is cleared once, here.
+
+      2. `wire:navigate` copies the incoming document's <html> attributes over
+         the live element (livewire.js `swapCurrentPageWithNewHtml`). Any
+         `dark` class left on <html> by a cached page, an extension, or a
+         browser restoring a bfcache entry would survive that swap. Stripping
+         it after every navigation is what makes "light only" actually true at
+         runtime rather than only true in the templates.
+
+    The `dark:` variants still present throughout the markup are now inert:
+    nothing ever adds the class that activates them. They are left in place so
+    the change is reversible in one file, and are removed opportunistically as
+    each view is next touched.
     ─────────────────────────────────────────────────────────────────────────
-
-    Storage holds ONLY an explicit user choice. A visitor who has never touched
-    the toggle has no key at all, which is what keeps the default a property of
-    this file rather than something already burned into every existing
-    visitor's browser — change the fallback here and it takes effect for
-    everyone who never expressed a preference.
 --}}
 <script>
     (function () {
-        function applyTheme() {
-            var stored = null;
-
-            // Private-mode and blocked-storage browsers throw on access rather
-            // than returning null. Losing the preference is acceptable; taking
-            // the whole page down before it paints is not.
-            try {
-                stored = localStorage.getItem('veyra-theme');
-            } catch (e) {}
-
-            document.documentElement.classList.toggle('dark', stored !== 'light');
+        function forceLightTheme() {
+            document.documentElement.classList.remove('dark');
         }
 
-        applyTheme();
+        forceLightTheme();
 
-        /*
-         * ─────────────────────────────────────────────────────────────────
-         * RE-APPLY AFTER EVERY wire:navigate
-         *
-         * The tenant sidebar and top bar navigate with `wire:navigate`, and
-         * Livewire's page swap calls `replaceHtmlAttributes()` — it copies the
-         * incoming document's <html> attributes onto the live element and
-         * REMOVES any the new document does not have (livewire.js v3.8.2,
-         * `swapCurrentPageWithNewHtml`).
-         *
-         * The server renders `class="h-full scroll-smooth"` with no `dark`,
-         * because `dark` is added here, client-side, from localStorage. So
-         * every sidebar click stripped it and the dashboard fell back to
-         * light — permanently, until a full reload, since Livewire also does
-         * not re-run an unchanged inline <head> script.
-         *
-         * The listener is registered on `document`, which survives the body
-         * swap, so one registration covers every subsequent navigation.
-         * ─────────────────────────────────────────────────────────────────
-         */
-        document.addEventListener('livewire:navigated', applyTheme);
+        // Private-mode and blocked-storage browsers throw on access rather than
+        // returning null. Losing the cleanup is acceptable; taking the whole
+        // page down before it paints is not.
+        try {
+            localStorage.removeItem('mada-theme');
+        } catch (e) {}
+
+        // Registered on `document`, which survives the body swap, so one
+        // registration covers every subsequent Livewire navigation.
+        document.addEventListener('livewire:navigated', forceLightTheme);
     })();
 </script>

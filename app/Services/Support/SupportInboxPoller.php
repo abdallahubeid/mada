@@ -17,18 +17,18 @@ class SupportInboxPoller
     public const STATUS_META = [
         SupportThread::STATUS_OPEN => [
             'label' => 'مفتوح',
-            'badge' => 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-            'dot' => 'bg-amber-500',
+            'badge' => 'bg-warning-500/10 text-warning-500 dark:text-warning-400',
+            'dot' => 'bg-warning-500',
         ],
         SupportThread::STATUS_IN_PROGRESS => [
             'label' => 'قيد المعالجة',
-            'badge' => 'bg-sky-500/10 text-sky-600 dark:text-sky-400',
-            'dot' => 'bg-sky-500',
+            'badge' => 'bg-accent-500/10 text-accent-500 dark:text-accent-400',
+            'dot' => 'bg-accent-500',
         ],
         SupportThread::STATUS_RESOLVED => [
             'label' => 'تم الحل',
-            'badge' => 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-            'dot' => 'bg-emerald-400',
+            'badge' => 'bg-success-500/10 text-success-500 dark:text-success-400',
+            'dot' => 'bg-success-500',
         ],
         SupportThread::STATUS_ARCHIVED => [
             'label' => 'مؤرشف',

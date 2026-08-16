@@ -1,8 +1,8 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
-    $sectionClass = 'space-y-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $sectionClass = 'space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
     $isEdit = ($method ?? 'POST') !== 'POST';
     $hasLinkedUser = $isEdit && filled($employee->user_id);
 @endphp
@@ -24,7 +24,7 @@
 
     <section class="{{ $sectionClass }}">
         <div>
-            <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">البيانات الشخصية</h2>
+            <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">البيانات الشخصية</h2>
             <p class="mt-1 text-xs text-mist-500">الاسم وبيانات التواصل الأساسية.</p>
         </div>
 
@@ -73,7 +73,7 @@
 
     <section class="{{ $sectionClass }}">
         <div>
-            <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">بيانات الوظيفة</h2>
+            <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">بيانات الوظيفة</h2>
             <p class="mt-1 text-xs text-mist-500">المسمى، القسم، المدير المباشر، وحالة التوظيف.</p>
         </div>
 
@@ -146,7 +146,7 @@
 
     <section class="{{ $sectionClass }}">
         <div>
-            <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">المستندات المرفقة</h2>
+            <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">المستندات المرفقة</h2>
             <p class="mt-1 text-xs text-mist-500">الصورة الشخصية والسيرة الذاتية.</p>
         </div>
 
@@ -174,7 +174,7 @@
                 <label for="cv" class="{{ $labelClass }}">السيرة الذاتية</label>
                 @if ($isEdit && $employee->cv_path)
                     <div class="mb-3 flex flex-wrap items-center gap-3 text-xs">
-                        <a href="{{ $employee->cvUrl() }}" target="_blank" rel="noopener" class="font-semibold text-emerald-600 hover:underline dark:text-emerald-400">عرض الملف الحالي</a>
+                        <a href="{{ $employee->cvUrl() }}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:underline dark:text-brand-300">عرض الملف الحالي</a>
                         <label class="inline-flex items-center gap-2 text-mist-500">
                             <input type="hidden" name="remove_cv" value="0">
                             <input type="checkbox" name="remove_cv" value="1" @checked((bool) old('remove_cv'))>
@@ -194,12 +194,12 @@
 
     <section class="{{ $sectionClass }}">
         <div>
-            <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">حساب النظام</h2>
+            <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">حساب النظام</h2>
             <p class="mt-1 text-xs text-mist-500">اختياري — إنشاء مستخدم مرتبط بملف الموظف للدخول إلى المنصة.</p>
         </div>
 
         @if ($hasLinkedUser)
-            <p class="rounded-xl bg-emerald-400/10 px-3 py-2 text-sm text-emerald-800 dark:text-emerald-300">
+            <p class="rounded-xl bg-brand-500/10 px-3 py-2 text-sm text-brand-700 dark:text-brand-300">
                 مرتبط بحساب: <span dir="ltr">{{ $employee->user?->email }}</span>
             </p>
             <input type="hidden" name="create_user_account" value="0">
@@ -249,6 +249,6 @@
 
     <div class="flex justify-end gap-3">
         <a href="{{ route('hr.employees.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">حفظ</button>
+        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">حفظ</button>
     </div>
 </form>

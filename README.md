@@ -1,4 +1,4 @@
-# Veyra ERP
+# Mada ERP
 
 Multi-tenant ERP platform with an integrated **Landing Page CMS** for managing the public marketing site from the Super Admin console.
 
@@ -6,7 +6,7 @@ Multi-tenant ERP platform with an integrated **Landing Page CMS** for managing t
 
 ## Overview
 
-Veyra combines core ERP capabilities with a modular CMS that powers the marketing landing page. Admins manage section chrome (badges, titles, CTAs), repeatable content cards, and media through a dedicated admin UI — without editing Blade templates by hand.
+Mada combines core ERP capabilities with a modular CMS that powers the marketing landing page. Admins manage section chrome (badges, titles, CTAs), repeatable content cards, and media through a dedicated admin UI — without editing Blade templates by hand.
 
 ---
 
@@ -50,8 +50,8 @@ Veyra combines core ERP capabilities with a modular CMS that powers the marketin
 
 ```bash
 # Clone the repository
-git clone https://github.com/abdallahubeid/veyra-erp.git
-cd veyra-erp
+git clone https://github.com/abdallahubeid/mada-erp.git
+cd mada-erp
 
 # Install PHP dependencies
 composer install

@@ -14,7 +14,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Veyra ERP' }}</title>
+    <title>{{ $title ?? 'Mada ERP' }}</title>
 
     <x-site-favicon />
 

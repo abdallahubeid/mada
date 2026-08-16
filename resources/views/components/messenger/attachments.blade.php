@@ -48,20 +48,20 @@
                         :href="file.download_url"
                         class="flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition duration-200"
                         :class="{{ $mine }}
-                            ? 'bg-emerald-900/10 hover:bg-emerald-900/20'
+                            ? 'bg-brand-900/10 hover:bg-brand-900/20'
                             : 'bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10'"
                     >
                         <span
                             class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-                            :class="{{ $mine }} ? 'bg-emerald-900/15 text-emerald-900' : 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-400'"
+                            :class="{{ $mine }} ? 'bg-brand-900/15 text-white' : 'bg-brand-500/15 text-brand-700 dark:text-brand-300'"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
                         </span>
                         <span class="min-w-0 flex-1">
-                            <span class="block truncate text-xs font-semibold" :class="{{ $mine }} ? 'text-emerald-950' : 'text-ink-900 dark:text-ink-50'" x-text="file.name"></span>
-                            <span class="block text-[10px]" :class="{{ $mine }} ? 'text-emerald-900' : 'text-mist-500 dark:text-mist-400'" x-text="file.size"></span>
+                            <span class="block truncate text-xs font-semibold" :class="{{ $mine }} ? 'text-white' : 'text-ink-900 dark:text-ink-50'" x-text="file.name"></span>
+                            <span class="block text-xs" :class="{{ $mine }} ? 'text-white' : 'text-mist-500 dark:text-mist-400'" x-text="file.size"></span>
                         </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" :class="{{ $mine }} ? 'text-emerald-900' : 'text-mist-500 dark:text-mist-400'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" :class="{{ $mine }} ? 'text-white' : 'text-mist-500 dark:text-mist-400'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
                     </a>
                 </template>
             </div>
@@ -90,33 +90,33 @@
                     href="{{ route('tenant.messenger.attachments.download', $file->id) }}"
                     @class([
                         'flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition duration-200',
-                        'bg-emerald-900/10 hover:bg-emerald-900/20' => $mine === 'true',
+                        'bg-brand-900/10 hover:bg-brand-900/20' => $mine === 'true',
                         'bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10' => $mine !== 'true',
                     ])
                     data-testid="messenger-attachment-file"
                 >
                     <span @class([
                         'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
-                        'bg-emerald-900/15 text-emerald-900' => $mine === 'true',
-                        'bg-emerald-400/15 text-emerald-700 dark:text-emerald-400' => $mine !== 'true',
+                        'bg-brand-900/15 text-white' => $mine === 'true',
+                        'bg-brand-500/15 text-brand-700 dark:text-brand-300' => $mine !== 'true',
                     ])>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
                     </span>
                     <span class="min-w-0 flex-1">
                         <span @class([
                             'block truncate text-xs font-semibold',
-                            'text-emerald-950' => $mine === 'true',
+                            'text-white' => $mine === 'true',
                             'text-ink-900 dark:text-ink-50' => $mine !== 'true',
                         ])>{{ $file->original_name }}</span>
                         <span @class([
-                            'block text-[10px]',
-                            'text-emerald-900' => $mine === 'true',
+                            'block text-xs',
+                            'text-white' => $mine === 'true',
                             'text-mist-500 dark:text-mist-400' => $mine !== 'true',
                         ])>{{ $file->humanSize() }}</span>
                     </span>
                     <svg xmlns="http://www.w3.org/2000/svg" @class([
                         'h-4 w-4 shrink-0',
-                        'text-emerald-900' => $mine === 'true',
+                        'text-white' => $mine === 'true',
                         'text-mist-500 dark:text-mist-400' => $mine !== 'true',
                     ]) viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
                 </a>

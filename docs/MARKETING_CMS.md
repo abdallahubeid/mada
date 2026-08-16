@@ -1,6 +1,6 @@
-# Veyra ERP — Marketing CMS Database Architecture
+# Mada ERP — Marketing CMS Database Architecture
 
-> Part of the Veyra ERP documentation set. See `MARKETING.md` for the public site sitemap and section flow, `DATABASE_ROADMAP.md` for global schema conventions, `MODULES.md` BR-801–BR-803 / ADR-16 for `platform_settings`, and `ARCHITECTURE.md` for tenancy boundaries.
+> Part of the Mada ERP documentation set. See `MARKETING.md` for the public site sitemap and section flow, `DATABASE_ROADMAP.md` for global schema conventions, `MODULES.md` BR-801–BR-803 / ADR-16 for `platform_settings`, and `ARCHITECTURE.md` for tenancy boundaries.
 >
 > **Status:** Binding design for the marketing backend cutover. **No migrations or application code in this document** — implement only after this schema is approved.
 >
@@ -161,7 +161,7 @@ Sensitive ops values use encrypted casts (ADR-16). Marketing JSON is **not** sec
   "title_line_1": "مستقبل إدارة",
   "title_accent": "المؤسسات",
   "title_line_2": "بذكاء وفخامة",
-  "subtitle": "منصة Veyra ERP الشاملة...",
+  "subtitle": "منصة Mada ERP الشاملة...",
   "primary_cta": { "label": "ابدأ التجربة المجانية", "url": "/register" },
   "secondary_cta": { "label": "احجز عرضًا توضيحيًا", "url": "/contact" },
   "metrics": {
@@ -280,7 +280,7 @@ Tab *visual mocks* may remain presentational in Blade for v1; CMS owns labels/co
 
 ```json
 {
-  "eyebrow": "لماذا Veyra",
+  "eyebrow": "لماذا Mada",
   "title": "...",
   "subtitle": "...",
   "pillars": [
@@ -305,10 +305,10 @@ Tab *visual mocks* may remain presentational in Blade for v1; CMS owns labels/co
 ```json
 {
   "blurb": "نظام إدارة الموارد المؤسسي الذكي...",
-  "copyright": "© {year} Veyra ERP. جميع الحقوق محفوظة.",
+  "copyright": "© {year} Mada ERP. جميع الحقوق محفوظة.",
   "social": [
-    { "platform": "x", "label": "X", "url": "https://x.com/veyra" },
-    { "platform": "linkedin", "label": "LinkedIn", "url": "https://linkedin.com/company/veyra" }
+    { "platform": "x", "label": "X", "url": "https://x.com/mada" },
+    { "platform": "linkedin", "label": "LinkedIn", "url": "https://linkedin.com/company/mada" }
   ],
   "columns": [
     {

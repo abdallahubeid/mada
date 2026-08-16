@@ -176,7 +176,7 @@ test('admin sidebar uses site_logo when set and links to the public home route',
         ->assertOk()
         ->assertSee(Setting::assetUrl($logoPath), false)
         ->assertSee('href="'.route('landing').'"', false)
-        ->assertSee('aria-label="الصفحة الرئيسية — Veyra ERP"', false);
+        ->assertSee('aria-label="الصفحة الرئيسية — مدى"', false);
 });
 
 test('admin sidebar falls back to the default brand mark when site_logo is empty', function () {
@@ -187,7 +187,7 @@ test('admin sidebar falls back to the default brand mark when site_logo is empty
 
     $this->get(route('admin.dashboard'))
         ->assertOk()
-        ->assertSee('Veyra', false)
+        ->assertSee('مدى', false)
         ->assertSee('Platform Console', false)
         ->assertSee('href="'.route('landing').'"', false)
         ->assertDontSee('uploads/settings/', false);

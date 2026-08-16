@@ -1,6 +1,6 @@
-# Veyra ERP — Development Roadmap
+# Mada ERP — Development Roadmap
 
-> Part of the Veyra ERP documentation set. Phase boundaries are binding per ADR-11 (`VEYRA_DOCS.md`). Re-scoping a phase requires updating this document first, not a side conversation mid-implementation.
+> Part of the Mada ERP documentation set. Phase boundaries are binding per ADR-11 (`MADA_DOCS.md`). Re-scoping a phase requires updating this document first, not a side conversation mid-implementation.
 
 ## Phase 1 — Core & MVP Operations
 
@@ -55,7 +55,7 @@
 - Invoicing: `client_invoices` generated from billable timesheets (BR-604, BR-616), per-tenant gapless numbering, number assigned at issue.
 - **VAT/tax (ADR-22):** line-level tax designed in from the first migration, per `DATABASE_ROADMAP.md` §5 — not retrofitted onto issued invoices.
 - Revenue-side Financial Dashboard: revenue and net-profit tiles activate.
-- Tenant's own subscription billing (payment gateway integration — selection is an open item, see `VEYRA_DOCS.md` §16). This is when the payment gateway key fields already present in Phase 1's Platform Settings page (`/admin/settings`) become live/functional.
+- Tenant's own subscription billing (payment gateway integration — selection is an open item, see `MADA_DOCS.md` §16). This is when the payment gateway key fields already present in Phase 1's Platform Settings page (`/admin/settings`) become live/functional.
 
 **Exit criteria:** a full client invoice can be produced end-to-end from real timesheet data, with tax correctly applied and the Financial Dashboard reflecting only finalized data.
 
@@ -88,7 +88,7 @@ Tracked explicitly rather than left implicit, because Phase 2B and Phase 3 both 
 
 ## Phase 4 — Platform Maturity & SaaS Limits
 
-**Goal:** make Veyra enterprise-defensible, not just functional — the features that support scale, trust, and plan-based monetization.
+**Goal:** make Mada enterprise-defensible, not just functional — the features that support scale, trust, and plan-based monetization.
 
 **Scope:**
 - Strategic Hierarchy (Goals/Programs) as an opt-in tenant feature (ADR-12).
@@ -97,13 +97,13 @@ Tracked explicitly rather than left implicit, because Phase 2B and Phase 3 both 
 - Reports/export (PDF/Excel) for payroll, financial dashboard, attendance.
 - Super Admin "impersonate tenant" for support, with mandatory audit logging of every impersonation session (NFR-05).
 - Real-time notifications (upgrade from Phase 1's basic list to live push/slide-over updates).
-- Revisit open items from `VEYRA_DOCS.md` §16 (multi-currency evaluation, applicant portal auth model) if commercially justified by then.
+- Revisit open items from `MADA_DOCS.md` §16 (multi-currency evaluation, applicant portal auth model) if commercially justified by then.
 
-**Exit criteria:** Veyra operates safely at multi-hundred-tenant scale with enforced plan limits, auditable support access, and reporting/search parity with the enterprise tools it competes against.
+**Exit criteria:** Mada operates safely at multi-hundred-tenant scale with enforced plan limits, auditable support access, and reporting/search parity with the enterprise tools it competes against.
 
 ---
 
 ## Roadmap Governance
 
 - No phase may begin before the prior phase's exit criteria are met and verified, unless explicitly re-approved by updating this document.
-- Any request to build a Phase 2+ feature "early" must be evaluated against the risk noted in `VEYRA_DOCS.md` §15 ("Scope creep re-bundling Phase 2/3 into MVP") before proceeding.
+- Any request to build a Phase 2+ feature "early" must be evaluated against the risk noted in `MADA_DOCS.md` §15 ("Scope creep re-bundling Phase 2/3 into MVP") before proceeding.

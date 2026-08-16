@@ -61,7 +61,7 @@ test('user seeder creates a single owner super admin', function () {
     $owner = $users->first();
 
     expect($owner->name)->toBe('Super Admin')
-        ->and($owner->email)->toBe('owner@veyra.com')
+        ->and($owner->email)->toBe('owner@mada.com')
         ->and($owner->email_verified_at)->not->toBeNull()
         ->and($owner->hasRole(PlatformPermissionCatalog::ROLE_SUPER_ADMIN))->toBeTrue();
 });
@@ -111,7 +111,7 @@ test('custom platform role grants console access login redirect and route permis
     $user = User::factory()->create([
         'tenant_id' => null,
         'password' => 'correct-password',
-        'email' => 'cms-editor@veyra.test',
+        'email' => 'cms-editor@mada.test',
     ]);
 
     PlatformPermissionCatalog::bindTeam();

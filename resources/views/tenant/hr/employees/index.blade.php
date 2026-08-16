@@ -2,7 +2,7 @@
     use App\Domain\Tenancy\Enums\EmployeeStatus;
 
     $statusClasses = [
-        EmployeeStatus::Active->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        EmployeeStatus::Active->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         EmployeeStatus::OnLeave->value => 'bg-amber-400/15 text-amber-800 dark:text-amber-300',
         EmployeeStatus::Resigned->value => 'bg-mist-200 text-mist-700 dark:bg-ink-700 dark:text-mist-300',
         EmployeeStatus::Suspended->value => 'bg-danger-solid/10 text-danger-solid',
@@ -13,13 +13,13 @@
     <div class="space-y-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الموظفون</h1>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الموظفون</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">ملفات الموظفين والهيكل الوظيفي (بدون بيانات الرواتب).</p>
             </div>
             @can('hr.employees.create')
                 <a
                     href="{{ route('hr.employees.create') }}"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
                 >
                     إضافة موظف
                 </a>
@@ -66,20 +66,20 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
-                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الاسم</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">المسمى الوظيفي</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">القسم</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الحالة</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">تاريخ الالتحاق</th>
-                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
+                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الاسم</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">المسمى الوظيفي</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">القسم</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الحالة</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">تاريخ الالتحاق</th>
+                        <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                     @forelse ($employees as $employee)
                         <tr class="transition hover:bg-mist-50/80 dark:hover:bg-ink-900/40">
-                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-3 text-start">
+                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                            <td class="px-3 py-2 text-start">
                                 <div class="flex items-center gap-3">
                                     <img
                                         src="{{ $employee->avatarUrl() }}"
@@ -94,23 +94,23 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-mist-600 dark:text-mist-300 text-start">{{ $employee->job_title }}</td>
-                            <td class="px-4 py-3 text-mist-500 text-start">{{ $employee->department?->name ?? '—' }}</td>
-                            <td class="px-4 py-3 text-center">
+                            <td class="px-3 py-2 text-mist-600 dark:text-mist-300 text-start">{{ $employee->job_title }}</td>
+                            <td class="px-3 py-2 text-mist-500 text-start">{{ $employee->department?->name ?? '—' }}</td>
+                            <td class="px-3 py-2 text-center">
                                 <span @class([
-                                    'inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                                    'inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold',
                                     $statusClasses[$employee->status->value] ?? 'bg-mist-100 text-mist-600',
                                 ])>
                                     {{ $employee->status->label() }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 tabular-nums text-mist-500 text-start"><x-ui.ltr>{{ $employee->joining_date?->format('Y-m-d') ?? '—' }}</x-ui.ltr></td>
-                            <td class="px-4 py-3 text-center">
+                            <td class="px-3 py-2 tabular-nums text-mist-500 text-start"><x-ui.ltr>{{ $employee->joining_date?->format('Y-m-d') ?? '—' }}</x-ui.ltr></td>
+                            <td class="px-3 py-2 text-center">
                                 <div class="flex items-center justify-end gap-2">
                                     @can('hr.employees.view')
                                         <a
                                             href="{{ route('hr.employees.show', $employee) }}"
-                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:hover:border-emerald-400"
+                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:hover:border-brand-500"
                                         >
                                             عرض
                                         </a>
@@ -118,7 +118,7 @@
                                     @can('hr.employees.update')
                                         <a
                                             href="{{ route('hr.employees.edit', $employee) }}"
-                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:hover:border-emerald-400"
+                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:hover:border-brand-500"
                                         >
                                             تعديل
                                         </a>
@@ -142,7 +142,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-ui.table-empty :colspan="7" icon="👥" message="لا يوجد موظفون بعد." />
+                        <x-ui.table-empty :colspan="7" icon="users" message="لا يوجد موظفون بعد." />
                     @endforelse
                 </tbody>
             </table>

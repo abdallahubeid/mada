@@ -61,6 +61,28 @@ class Setting extends Model
             'product_previews_sub_title',
             'previews_img',
             'previews_video',
+            /*
+             * Video section (Super Admin → Landing Settings → "Video Section").
+             *
+             * Stored as key/value rows like every other CMS field rather than as
+             * new columns on `settings`. The table is a key/value store — it has
+             * exactly `id, key, value, timestamps` — so columns would need a
+             * parallel read path and would bypass `Setting::map()`, the CMS
+             * screen and `MarketingCache` all at once. No migration is required.
+             *
+             * `video_url` and the uploaded `previews_video` are alternatives:
+             * the URL wins when both are set, so an admin can point at a CDN
+             * without deleting the file they uploaded earlier.
+             *
+             * `is_video_section_active` is stored as the string '1' / '0'
+             * because `value` is a text column; read it through
+             * `Setting::isVideoSectionActive()` rather than casting at each
+             * call site.
+             */
+            'video_url',
+            'video_title',
+            'video_description',
+            'is_video_section_active',
             'ai_badge_text',
             'ai_title',
             'ai_sub_title',
@@ -166,6 +188,48 @@ class Setting extends Model
     public static function deletableBrandingKeys(): array
     {
         return ['site_logo', 'site_favicon'];
+    }
+
+    /**
+     * Is the public landing video section switched on?
+     *
+     * `value` is a text column, so the toggle round-trips as '1' / '0' rather
+     * than as a real boolean. Reading it through here keeps the string-to-bool
+     * coercion in one place instead of at every call site, and means a NULL row
+     * (key never saved) is treated as ON — the section should be visible by
+     * default rather than silently missing on a fresh install.
+     */
+    public static function isVideoSectionActive(): bool
+    {
+        $value = static::getValue('is_video_section_active');
+
+        if ($value === null) {
+            return true;
+        }
+
+        return filter_var($value, FILTER_VALIDATE_BOOL);
+    }
+
+    /**
+     * Resolved source for the landing video: external URL wins over upload.
+     *
+     * The two are deliberately alternatives rather than one field. An admin
+     * moving to a CDN can paste a URL without first deleting the file they
+     * uploaded months ago, and can fall back by clearing the URL — the upload
+     * is still there. Returning null means "no video", which the component
+     * treats as "render nothing" rather than as an error.
+     */
+    public static function videoSource(): ?string
+    {
+        $url = static::getValue('video_url');
+
+        if (filled($url)) {
+            return $url;
+        }
+
+        $upload = static::getValue('previews_video');
+
+        return filled($upload) ? static::assetUrl($upload) : null;
     }
 
     /**

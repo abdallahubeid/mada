@@ -4,7 +4,7 @@
     $statusClasses = [
         PayrollRunStatus::Draft->value => 'bg-mist-200 text-mist-700 dark:bg-ink-700 dark:text-mist-300',
         PayrollRunStatus::PendingApproval->value => 'bg-amber-400/15 text-amber-700 dark:text-amber-300',
-        PayrollRunStatus::Approved->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        PayrollRunStatus::Approved->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         PayrollRunStatus::Paid->value => 'bg-sky-400/15 text-sky-700 dark:text-sky-300',
         PayrollRunStatus::Cancelled->value => 'bg-danger-solid/10 text-danger-solid',
     ];
@@ -16,11 +16,11 @@
     <div class="space-y-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">لوحة التحكم المالية</h1>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">لوحة التحكم المالية</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">ملخص تكاليف الرواتب المعتمدة والمصروفة.</p>
             </div>
             @can('finance.payroll.prepare')
-                <a href="{{ route('finance.payroll-runs.create') }}" class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                <a href="{{ route('finance.payroll-runs.create') }}" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                     إنشاء مسيرة جديدة
                 </a>
             @endcan
@@ -44,7 +44,7 @@
             ] as $tile)
                 <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
-                    <p @class(['mt-2 font-display text-xl font-bold', $tile['tone']])>
+                    <p @class(['mt-2 font-display text-xl font-medium', $tile['tone']])>
                         @if ($tile['money'])
                             <x-ui.money :amount="$tile['value']" :currency="$currency" />
                         @else
@@ -84,7 +84,7 @@
             ] as $tile)
                 <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
-                    <p @class(['mt-2 font-display text-xl font-bold', $tile['tone']])>
+                    <p @class(['mt-2 font-display text-xl font-medium', $tile['tone']])>
                         <x-ui.money :amount="$tile['value']" :currency="$currency" />
                     </p>
                 </div>
@@ -115,7 +115,7 @@
         @endif
 
         <div class="grid gap-6 lg:grid-cols-2">
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">تكلفة الرواتب الشهرية</h2>
                 <p class="mt-1 text-xs text-mist-500 dark:text-mist-400">المسيرات المعتمدة والمصروفة فقط.</p>
 
@@ -129,37 +129,37 @@
                                 </span>
                             </div>
                             <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-mist-100 dark:bg-ink-900">
-                                <div class="h-full rounded-full bg-emerald-400" style="width: {{ $peak > 0 ? max(2, (int) round($month['total'] / $peak * 100)) : 2 }}%"></div>
+                                <div class="h-full rounded-full bg-brand-500" style="width: {{ $peak > 0 ? max(2, (int) round($month['total'] / $peak * 100)) : 2 }}%"></div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
 
-            <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">توزيع المسيرات حسب الحالة</h2>
 
                 <div class="mt-4 w-full overflow-x-auto">
                     <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                         <thead class="bg-mist-50 dark:bg-ink-900">
                             <tr>
-                                <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                                <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الحالة</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">العدد</th>
-                                <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الصافي</th>
+                                <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                                <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">الحالة</th>
+                                <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">العدد</th>
+                                <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">الصافي</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                             @foreach ($statusBreakdown as $row)
                                 <tr>
-                                    <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-3 text-start">
-                                        <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$row['status']->value] ?? ''])>
+                                    <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                    <td class="px-3 py-2 text-start">
+                                        <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$row['status']->value] ?? ''])>
                                             {{ $row['status']->label() }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 text-center text-mist-500"><x-ui.ltr>{{ $row['count'] }}</x-ui.ltr></td>
-                                    <td class="px-4 py-3 text-end text-ink-700 dark:text-mist-200"><x-ui.money :amount="$row['total']" /></td>
+                                    <td class="px-3 py-2 text-center text-mist-500"><x-ui.ltr>{{ $row['count'] }}</x-ui.ltr></td>
+                                    <td class="px-3 py-2 text-end text-ink-700 dark:text-mist-200"><x-ui.money :amount="$row['total']" /></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -168,36 +168,36 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
             <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">المصروفات حسب التصنيف</h2>
 
             <div class="mt-4 w-full overflow-x-auto">
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">التصنيف</th>
-                            <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">العدد</th>
-                            <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الإجمالي</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">التصنيف</th>
+                            <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">العدد</th>
+                            <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">الإجمالي</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                         @forelse ($expenses['by_category'] as $row)
                             <tr>
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $row['name'] }}</td>
-                                <td class="px-4 py-3 text-center text-mist-500"><x-ui.ltr>{{ $row['count'] }}</x-ui.ltr></td>
-                                <td class="px-4 py-3 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$row['total']" :currency="$currency" /></td>
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $row['name'] }}</td>
+                                <td class="px-3 py-2 text-center text-mist-500"><x-ui.ltr>{{ $row['count'] }}</x-ui.ltr></td>
+                                <td class="px-3 py-2 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$row['total']" :currency="$currency" /></td>
                             </tr>
                         @empty
-                            <x-ui.table-empty :colspan="4" icon="🧾" message="لا توجد مصروفات معتمدة بعد." />
+                            <x-ui.table-empty :colspan="4" icon="receipt" message="لا توجد مصروفات معتمدة بعد." />
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
             <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">أعلى الأقسام تكلفة</h2>
             <p class="mt-1 text-xs text-mist-500 dark:text-mist-400">من بيانات القسائم المجمّدة، لا من سجل الموظفين الحالي.</p>
 
@@ -205,22 +205,22 @@
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">القسم</th>
-                            <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">عدد القسائم</th>
-                            <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">التكلفة</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">القسم</th>
+                            <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">عدد القسائم</th>
+                            <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">التكلفة</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                         @forelse ($topCosts as $cost)
                             <tr>
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $cost['department'] }}</td>
-                                <td class="px-4 py-3 text-center text-mist-500"><x-ui.ltr>{{ $cost['headcount'] }}</x-ui.ltr></td>
-                                <td class="px-4 py-3 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$cost['total']" :currency="$currency" /></td>
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $cost['department'] }}</td>
+                                <td class="px-3 py-2 text-center text-mist-500"><x-ui.ltr>{{ $cost['headcount'] }}</x-ui.ltr></td>
+                                <td class="px-3 py-2 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$cost['total']" :currency="$currency" /></td>
                             </tr>
                         @empty
-                            <x-ui.table-empty :colspan="4" icon="🏢" message="لا توجد مسيرات معتمدة بعد." />
+                            <x-ui.table-empty :colspan="4" icon="building" message="لا توجد مسيرات معتمدة بعد." />
                         @endforelse
                     </tbody>
                 </table>
@@ -231,30 +231,30 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
-                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                        <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الفترة</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الحالة</th>
-                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الصافي</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">إجراءات</th>
+                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                        <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">الفترة</th>
+                        <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">الحالة</th>
+                        <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">الصافي</th>
+                        <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                     @forelse ($recentRuns as $run)
                         <tr class="transition hover:bg-mist-50/80 dark:hover:bg-ink-900/40">
-                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-3 text-start font-medium text-ink-900 dark:text-ink-50"><x-ui.ltr>{{ $run->period }}</x-ui.ltr></td>
-                            <td class="px-4 py-3 text-center">
-                                <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$run->status->value] ?? ''])>
+                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                            <td class="px-3 py-2 text-start font-medium text-ink-900 dark:text-ink-50"><x-ui.ltr>{{ $run->period }}</x-ui.ltr></td>
+                            <td class="px-3 py-2 text-center">
+                                <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$run->status->value] ?? ''])>
                                     {{ $run->status->label() }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$run->total_net" :currency="$run->currency" /></td>
-                            <td class="px-4 py-3 text-center">
-                                <a href="{{ route('finance.payroll-runs.show', $run) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">عرض</a>
+                            <td class="px-3 py-2 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$run->total_net" :currency="$run->currency" /></td>
+                            <td class="px-3 py-2 text-center">
+                                <a href="{{ route('finance.payroll-runs.show', $run) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">عرض</a>
                             </td>
                         </tr>
                     @empty
-                        <x-ui.table-empty :colspan="5" icon="💰" message="لا توجد مسيرات رواتب بعد." />
+                        <x-ui.table-empty :colspan="5" icon="banknotes" message="لا توجد مسيرات رواتب بعد." />
                     @endforelse
                 </tbody>
             </table>

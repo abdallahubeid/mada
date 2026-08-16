@@ -8,7 +8,7 @@
         thread and into the list without any state to keep in sync.
     --}}
     <div
-        x-data="veyraMessenger(@js([
+        x-data="madaMessenger(@js([
             'conversationId' => $activeConversation?->id,
             'tenantId' => auth()->user()->tenant_id,
             'userId' => auth()->id(),
@@ -36,7 +36,7 @@
         ])>
             <div class="flex items-start justify-between gap-2 border-b border-mist-100 px-4 py-3.5 dark:border-ink-700">
                 <div>
-                    <h2 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">المراسلات</h2>
+                    <h2 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">المراسلات</h2>
                     <p class="mt-0.5 text-xs text-mist-500 dark:text-mist-400">محادثات خاصة بينك وبين زملائك</p>
                 </div>
                 <button
@@ -59,7 +59,7 @@
                     <button
                         type="button"
                         @click="open = ! open"
-                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-[0.98]"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-[0.98]"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                         محادثة جديدة
@@ -73,7 +73,7 @@
                         <button
                             type="button"
                             @click="$dispatch('open-group-modal')"
-                            class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition duration-200 hover:border-emerald-400 hover:text-emerald-700 dark:border-ink-600 dark:text-mist-200 dark:hover:text-emerald-400"
+                            class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition duration-200 hover:border-brand-500 hover:text-brand-700 dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300"
                             data-testid="messenger-new-group"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" /></svg>
@@ -86,7 +86,7 @@
                             type="search"
                             x-model="q"
                             placeholder="ابحث عن زميل..."
-                            class="w-full border-b border-mist-100 bg-transparent px-3 py-2.5 text-sm text-ink-700 placeholder:text-mist-400 focus:outline-none dark:border-ink-700 dark:text-ink-50"
+                            class="w-full border-b border-mist-100 bg-transparent px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:outline-none dark:border-ink-700 dark:text-ink-50"
                         >
                         <div class="max-h-64 overflow-y-auto">
                             @forelse ($directory as $person)
@@ -94,8 +94,8 @@
                                      ends in Livewire.navigate, so opening a new
                                      thread does not repaint the console. --}}
                                 <div x-show="q === '' || @js($person['name']).includes(q) || @js((string) ($person['department'] ?? '')).includes(q)">
-                                    <button type="button" @click="open = false; startThread({{ $person['user_id'] }})" class="flex w-full items-center gap-3 px-3 py-2.5 text-start transition hover:bg-mist-50 dark:hover:bg-ink-800">
-                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-xs font-bold text-emerald-800 dark:text-emerald-400">{{ $person['initial'] }}</span>
+                                    <button type="button" @click="open = false; startThread({{ $person['user_id'] }})" class="flex w-full items-center gap-3 px-3 py-2 text-start transition hover:bg-mist-50 dark:hover:bg-ink-800">
+                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand-500/15 text-xs font-bold text-brand-700 dark:text-brand-300">{{ $person['initial'] }}</span>
                                         <span class="min-w-0">
                                             <span class="block truncate text-sm font-medium text-ink-900 dark:text-ink-50">{{ $person['name'] }}</span>
                                             <span class="block truncate text-xs text-mist-500 dark:text-mist-400">{{ $person['job_title'] ?? $person['department'] ?? '—' }}</span>
@@ -121,7 +121,7 @@
                          `relative` so its dropdown anchors to the card. --}}
                     <div data-card="{{ $thread['id'] }}" @class([
                         'group/card relative flex items-center gap-2 border-b border-mist-100 pe-2 transition duration-200 dark:border-ink-700/60',
-                        'bg-emerald-400/10' => $activeConversation?->id === $thread['id'],
+                        'bg-brand-500/10' => $activeConversation?->id === $thread['id'],
                         'hover:bg-mist-50 dark:hover:bg-ink-700/40' => $activeConversation?->id !== $thread['id'],
                     ])>
                         {{-- wire:navigate: switching threads swaps the body
@@ -130,7 +130,7 @@
                         <a href="{{ route('tenant.messenger.show', $thread['id']) }}" wire:navigate class="flex min-w-0 flex-1 items-center gap-3 px-4 py-3">
                             {{-- `relative` hosts the presence dot. --}}
                             <span class="relative shrink-0">
-                                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-mist-100 font-display text-sm font-bold text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $thread['initial'] }}</span>
+                                <span class="flex h-10 w-10 items-center justify-center rounded-md bg-mist-100 font-display text-sm font-medium text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $thread['initial'] }}</span>
                                 @if ($thread['peer_online'] === true)
                                     {{-- Rendered only for a definite yes. A peer
                                          who hid their presence returns null and
@@ -138,7 +138,7 @@
                                          simply offline — which is the promise
                                          the privacy toggle makes. --}}
                                     <span
-                                        class="absolute bottom-0 end-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 dark:border-ink-800"
+                                        class="absolute bottom-0 end-0 h-3 w-3 rounded-full border-2 border-white bg-brand-500 dark:border-ink-800"
                                         title="متصل الآن"
                                         aria-label="متصل الآن"
                                         data-testid="messenger-online-dot"
@@ -149,7 +149,7 @@
                                 <span class="flex items-center justify-between gap-2">
                                     <span class="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $thread['title'] }}</span>
                                     @if ($thread['unread'] > 0)
-                                        <span class="shrink-0 rounded-full bg-emerald-400 px-1.5 py-0.5 text-[10px] font-bold text-emerald-950">{{ $thread['unread'] }}</span>
+                                        <span class="shrink-0 rounded-md bg-brand-500 px-1.5 py-0.5 text-xs font-bold text-white">{{ $thread['unread'] }}</span>
                                     @endif
                                 </span>
                                 <span class="mt-0.5 block truncate text-xs text-mist-500 dark:text-mist-400">{{ $thread['last_message_at'] ?? 'لم تبدأ المحادثة بعد' }}</span>
@@ -173,15 +173,15 @@
                             </button>
 
                             <div x-show="open" x-cloak @click.outside="open = false" class="absolute end-0 top-full z-30 mt-1 w-56 overflow-hidden rounded-xl border border-mist-200 bg-white shadow-xl dark:border-ink-600 dark:bg-ink-900">
-                                <button type="button" @click.stop="archive({{ $thread['id'] }}); open = false" class="flex w-full items-center gap-2 px-4 py-2.5 text-start text-sm text-ink-700 transition hover:bg-mist-50 dark:text-mist-200 dark:hover:bg-ink-800">
+                                <button type="button" @click.stop="archive({{ $thread['id'] }}); open = false" class="flex w-full items-center gap-2 px-3 py-2 text-start text-sm text-ink-700 transition hover:bg-mist-50 dark:text-mist-200 dark:hover:bg-ink-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" /></svg>
                                     أرشفة المحادثة
                                 </button>
-                                <button type="button" @click.stop="hideThread({{ $thread['id'] }}); open = false" class="flex w-full items-center gap-2 border-t border-mist-100 px-4 py-2.5 text-start text-sm text-danger-solid transition hover:bg-danger-solid/10 dark:border-ink-700">
+                                <button type="button" @click.stop="hideThread({{ $thread['id'] }}); open = false" class="flex w-full items-center gap-2 border-t border-mist-100 px-3 py-2 text-start text-sm text-danger-solid transition hover:bg-danger-solid/10 dark:border-ink-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>
                                     حذف المحادثة
                                 </button>
-                                <p class="border-t border-mist-100 px-4 py-2 text-[10px] leading-relaxed text-mist-500 dark:border-ink-700 dark:text-mist-400">
+                                <p class="border-t border-mist-100 px-4 py-2 text-xs leading-relaxed text-mist-500 dark:border-ink-700 dark:text-mist-400">
                                     الحذف يزيلها من قائمتك أنت فقط — لا تُحذف نسخة الطرف الآخر.
                                 </p>
                             </div>
@@ -204,7 +204,7 @@
                     <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-mist-100 text-mist-400 dark:bg-ink-700 dark:text-mist-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" /></svg>
                     </span>
-                    <h3 class="mt-4 font-display text-base font-semibold text-ink-900 dark:text-ink-50">اختر محادثة للبدء</h3>
+                    <h3 class="mt-4 font-display text-base font-medium text-ink-900 dark:text-ink-50">اختر محادثة للبدء</h3>
                     <p class="mt-1 max-w-sm text-sm text-mist-500 dark:text-mist-400">
                         محادثاتك خاصة بينك وبين المشاركين فيها فقط — لا يطّلع عليها المدير أو إدارة الموارد البشرية.
                     </p>
@@ -215,16 +215,16 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
                     </a>
                     <span class="relative shrink-0">
-                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-400/15 font-display text-sm font-bold text-emerald-800 dark:text-emerald-400">{{ mb_substr($activeTitle, 0, 1) }}</span>
+                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-500/15 font-display text-sm font-medium text-brand-700 dark:text-brand-300">{{ mb_substr($activeTitle, 0, 1) }}</span>
                         <span
                             x-show="peer.visible && peer.online"
                             x-cloak
-                            class="absolute bottom-0 end-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500 dark:border-ink-800"
+                            class="absolute bottom-0 end-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-brand-500 dark:border-ink-800"
                             aria-hidden="true"
                         ></span>
                     </span>
                     <div class="min-w-0 flex-1">
-                        <p class="truncate font-display text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $activeTitle }}</p>
+                        <p class="truncate font-display text-sm font-medium text-ink-900 dark:text-ink-50">{{ $activeTitle }}</p>
                         {{--
                             Presence line. Three states, and the fallback is the
                             honest one: when the peer has hidden their presence
@@ -238,7 +238,7 @@
                         <p
                             class="truncate text-xs"
                             :class="peer.visible && peer.online
-                                ? 'font-medium text-emerald-700 dark:text-emerald-400'
+                                ? 'font-medium text-brand-700 dark:text-brand-300'
                                 : 'text-mist-500 dark:text-mist-400'"
                             x-text="peer.visible && peer.label ? peer.label : @js($activeConversation->isGroup() ? 'مجموعة' : 'محادثة خاصة')"
                             data-testid="messenger-presence"
@@ -266,13 +266,13 @@
                     data-pinned-bar
                     data-pinned-id="{{ $pinnedMessage?->id }}"
                     @class([
-                        'flex items-start gap-2 border-b border-emerald-400/30 bg-emerald-400/10 px-4 py-2',
+                        'flex items-start gap-2 border-b border-brand-500/30 bg-brand-500/10 px-4 py-2',
                         'hidden' => $pinnedMessage === null,
                     ])
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-emerald-700 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2Z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-brand-700 dark:text-brand-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2Z" /></svg>
                     <div class="min-w-0 flex-1">
-                        <p class="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">رسالة مثبّتة</p>
+                        <p class="text-xs font-semibold text-brand-700 dark:text-brand-300">رسالة مثبّتة</p>
                         <p data-pinned-text class="truncate text-xs text-ink-700 dark:text-mist-200">{{ $pinnedMessage?->body }}</p>
                     </div>
                     <button type="button" @click="unpin()" class="shrink-0 rounded p-1 text-mist-500 transition hover:text-danger-solid" aria-label="إلغاء التثبيت" title="إلغاء التثبيت">
@@ -295,7 +295,7 @@
                         @if ($message->isSystem())
                             {{-- The thread narrating itself: centred, no bubble,
                                  no reactions, no reply affordance. --}}
-                            <p class="py-1 text-center text-[11px] text-mist-500 dark:text-mist-400">{{ $message->body }}</p>
+                            <p class="py-1 text-center text-xs text-mist-500 dark:text-mist-400">{{ $message->body }}</p>
                         @else
                             {{-- `quick`/`menu`/`up` live on the ROW, not inside
                                  the action cluster, so the bubble's right-click
@@ -315,12 +315,12 @@
                                     @contextmenu.prevent="quick = false; up = placeMenu($event.currentTarget); menu = true"
                                     @class([
                                         'relative max-w-[75%] rounded-2xl px-3.5 pb-3 pt-2 text-sm leading-relaxed',
-                                        'bg-emerald-400 text-emerald-950' => $mine,
+                                        'bg-brand-500 text-white' => $mine,
                                         'bg-mist-100 text-ink-800 dark:bg-ink-700 dark:text-mist-100' => ! $mine,
                                     ])
                                 >
                                     {{-- Quote block. Colours are per bubble and
-                                         carry NO text opacity: the emerald
+                                         carry NO text opacity: the brand
                                          bubble is already a mid tone, and
                                          fading text on it was how the 55 AA
                                          failures on the landing page happened.
@@ -331,19 +331,19 @@
                                             @click="jumpTo({{ $parent->id }})"
                                             @class([
                                                 'mb-1.5 block w-full rounded-lg border-s-2 px-2 py-1 text-start transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
-                                                'border-emerald-900 bg-emerald-900/10 hover:bg-emerald-900/20 focus-visible:ring-emerald-900 focus-visible:ring-offset-emerald-400' => $mine,
-                                                'border-emerald-500 bg-black/5 hover:bg-black/10 focus-visible:ring-emerald-500 dark:bg-white/5 dark:hover:bg-white/10' => ! $mine,
+                                                'border-brand-900 bg-brand-900/10 hover:bg-brand-900/20 focus-visible:ring-brand-900 focus-visible:ring-offset-brand-500' => $mine,
+                                                'border-brand-500 bg-black/5 hover:bg-black/10 focus-visible:ring-brand-500 dark:bg-white/5 dark:hover:bg-white/10' => ! $mine,
                                             ])
                                             title="الانتقال إلى الرسالة الأصلية"
                                         >
                                             <span @class([
-                                                'block truncate text-[10px] font-bold',
-                                                'text-emerald-900' => $mine,
-                                                'text-emerald-700 dark:text-emerald-400' => ! $mine,
+                                                'block truncate text-xs font-bold',
+                                                'text-white' => $mine,
+                                                'text-brand-700 dark:text-brand-300' => ! $mine,
                                             ])>{{ $parent->sender?->name ?? 'مستخدم محذوف' }}</span>
                                             <span @class([
                                                 'block truncate text-xs',
-                                                'text-emerald-900' => $mine,
+                                                'text-white' => $mine,
                                                 'text-ink-700 dark:text-mist-300' => ! $mine,
                                             ])>{{ \Illuminate\Support\Str::limit((string) $parent->body, 90) }}</span>
                                         </button>
@@ -365,8 +365,8 @@
                                     />
 
                                     <p @class([
-                                        'mt-1 flex items-center gap-1 text-[10px]',
-                                        'text-emerald-900/70' => $mine,
+                                        'mt-1 flex items-center gap-1 text-xs',
+                                        'text-white/70' => $mine,
                                         'text-mist-500 dark:text-mist-400' => ! $mine,
                                     ])>
                                         <span>{{ $message->sent_at?->format('H:i') }}</span>
@@ -377,7 +377,7 @@
 
                                     {{-- Reaction pills. Floated onto the outer
                                          corner rather than boxed inside the
-                                         bubble — a light chip on an emerald
+                                         bubble — a light chip on a brand
                                          bubble read as a nested box. Dark glass
                                          reads the same on both bubble colours,
                                          so one treatment serves sender and
@@ -392,7 +392,7 @@
                                         ])
                                     >
                                         @foreach ($counts as $emoji => $total)
-                                            <span class="flex items-center gap-1 rounded-full border border-ink-600/50 bg-ink-800/90 px-1.5 py-0.5 text-xs text-mist-200 shadow-sm backdrop-blur-sm">{{ $emoji }} {{ $total }}</span>
+                                            <span class="flex items-center gap-1 rounded-md border border-ink-600/50 bg-ink-800/90 px-1.5 py-0.5 text-xs text-mist-200 shadow-sm backdrop-blur-sm">{{ $emoji }} {{ $total }}</span>
                                         @endforeach
                                     </div>
                                 </div>
@@ -429,8 +429,8 @@
                                 @contextmenu.prevent="quick = false; up = placeMenu($event.currentTarget); menu = true"
                                 class="relative max-w-[75%] rounded-2xl px-3.5 pb-3 pt-2 text-sm leading-relaxed"
                                 :class="m.sender_id === config.userId
-                                    ? 'bg-emerald-400 text-emerald-950'
-                                    : 'bg-mist-100 text-ink-800 dark:bg-ink-700 dark:text-mist-100'"
+                                    ? 'bg-brand-500 text-white'
+                                    : 'bg-mist-100 text-white dark:bg-ink-700 dark:text-mist-100'"
                             >
                                 <button
                                     x-show="m.quote"
@@ -439,18 +439,18 @@
                                     @click="jumpTo(m.parent_id)"
                                     class="mb-1.5 block w-full rounded-lg border-s-2 px-2 py-1 text-start transition duration-150 focus-visible:outline-none"
                                     :class="m.sender_id === config.userId
-                                        ? 'border-emerald-900 bg-emerald-900/10 hover:bg-emerald-900/20'
-                                        : 'border-emerald-500 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10'"
+                                        ? 'border-brand-900 bg-brand-900/10 hover:bg-brand-900/20'
+                                        : 'border-brand-500 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10'"
                                     title="الانتقال إلى الرسالة الأصلية"
                                 >
                                     <span
-                                        class="block truncate text-[10px] font-bold"
-                                        :class="m.sender_id === config.userId ? 'text-emerald-900' : 'text-emerald-700 dark:text-emerald-400'"
+                                        class="block truncate text-xs font-bold"
+                                        :class="m.sender_id === config.userId ? 'text-white' : 'text-brand-700 dark:text-brand-300'"
                                         x-text="m.quote?.author"
                                     ></span>
                                     <span
                                         class="block truncate text-xs"
-                                        :class="m.sender_id === config.userId ? 'text-emerald-900' : 'text-ink-700 dark:text-mist-300'"
+                                        :class="m.sender_id === config.userId ? 'text-white' : 'text-ink-700 dark:text-mist-300'"
                                         x-text="m.quote?.excerpt"
                                     ></span>
                                 </button>
@@ -463,8 +463,8 @@
                                 />
 
                                 <p
-                                    class="mt-1 flex items-center gap-1 text-[10px]"
-                                    :class="m.sender_id === config.userId ? 'text-emerald-900/70' : 'text-mist-500 dark:text-mist-400'"
+                                    class="mt-1 flex items-center gap-1 text-xs"
+                                    :class="m.sender_id === config.userId ? 'text-white/70' : 'text-mist-500 dark:text-mist-400'"
                                 >
                                     <span x-text="clock(m.sent_at)"></span>
                                     <template x-if="m.sender_id === config.userId">
@@ -504,15 +504,15 @@
                     <div x-show="pending.length > 0" x-cloak class="flex flex-wrap gap-2 border-b border-mist-100 px-3 py-2 dark:border-ink-700" data-testid="messenger-pending-files">
                         <template x-for="(file, index) in pending" :key="file.key">
                             <span class="flex max-w-[14rem] items-center gap-2 rounded-xl border border-mist-200 bg-mist-50 px-2.5 py-1.5 dark:border-ink-600 dark:bg-ink-900">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-emerald-700 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-brand-700 dark:text-brand-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
                                 <span class="min-w-0">
                                     <span class="block truncate text-xs font-medium text-ink-800 dark:text-mist-100" x-text="file.file.name"></span>
-                                    <span class="block text-[10px] text-mist-500 dark:text-mist-400" x-text="humanSize(file.file.size)"></span>
+                                    <span class="block text-xs text-mist-500 dark:text-mist-400" x-text="humanSize(file.file.size)"></span>
                                 </span>
                                 <button
                                     type="button"
                                     @click="pending.splice(index, 1)"
-                                    class="shrink-0 rounded p-0.5 text-mist-500 transition hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:hover:text-rose-400"
+                                    class="shrink-0 rounded p-0.5 text-mist-500 transition hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:hover:text-rose-400"
                                     :aria-label="'إزالة ' + file.file.name"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
@@ -538,7 +538,7 @@
                         type="button"
                         @click="$refs.files.click()"
                         title="إرفاق ملف"
-                        class="shrink-0 rounded-xl p-2.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
+                        class="shrink-0 rounded-xl p-2.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
                         aria-label="إرفاق ملف"
                         data-testid="messenger-attach"
                     >
@@ -576,7 +576,7 @@
                         rows="1"
                         maxlength="5000"
                         placeholder="اكتب رسالتك... (Enter للإرسال، Shift+Enter لسطر جديد)"
-                        class="max-h-32 min-h-[2.5rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                        class="max-h-32 min-h-[2.5rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                     ></textarea>
                     {{-- Icon only. The paper plane is universally understood in
                          a composer, and dropping the label keeps the control
@@ -585,7 +585,7 @@
                     <button
                         type="submit"
                         :disabled="draft.trim() === '' && pending.length === 0"
-                        class="shrink-0 rounded-xl bg-emerald-400 p-2.5 text-emerald-950 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                        class="shrink-0 rounded-xl bg-brand-500 p-2.5 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                         aria-label="إرسال"
                         title="إرسال"
                         data-testid="messenger-send"
@@ -625,17 +625,17 @@
                 {{-- Submitted over fetch. A native POST here reloaded the whole
                      console to land on the new group. --}}
                 <form @submit.prevent="createGroup($el)" class="relative w-full max-w-md rounded-2xl border border-mist-200 bg-white p-6 shadow-xl dark:border-ink-600 dark:bg-ink-800">
-                    <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">مجموعة جديدة</h3>
+                    <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">مجموعة جديدة</h3>
                     <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">أنت مسؤول المجموعة تلقائياً، ويمكن لأعضائها المشاركة دون إنشاء مجموعات جديدة.</p>
 
                     <label for="group_title" class="mt-4 block text-sm font-medium text-ink-700 dark:text-mist-200">اسم المجموعة</label>
-                    <input id="group_title" name="title" type="text" required maxlength="120" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <input id="group_title" name="title" type="text" required maxlength="120" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
 
                     <p class="mt-4 text-sm font-medium text-ink-700 dark:text-mist-200">الأعضاء</p>
                     <div class="mt-2 max-h-48 space-y-1 overflow-y-auto rounded-xl border border-mist-200 p-2 dark:border-ink-600">
                         @forelse ($directory as $person)
                             <label class="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-mist-50 dark:hover:bg-ink-700">
-                                <input type="checkbox" name="members[]" value="{{ $person['user_id'] }}" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400">
+                                <input type="checkbox" name="members[]" value="{{ $person['user_id'] }}" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500">
                                 <span class="text-sm text-ink-700 dark:text-mist-200">{{ $person['name'] }}</span>
                                 <span class="text-xs text-mist-500 dark:text-mist-400">{{ $person['job_title'] ?? '' }}</span>
                             </label>
@@ -646,7 +646,7 @@
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-950 shadow-glow transition hover:bg-emerald-300 active:scale-95">إنشاء المجموعة</button>
+                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95">إنشاء المجموعة</button>
                     </div>
                 </form>
             </div>
@@ -659,14 +659,14 @@
                  turning read receipts off clears the ticks already on screen
                  without a reload. --}}
             <form @submit.prevent="savePrivacy($el).then((ok) => { if (ok) open = false; })" class="relative w-full max-w-md rounded-2xl border border-mist-200 bg-white p-6 shadow-xl dark:border-ink-600 dark:bg-ink-800">
-                <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">خصوصية المراسلات</h3>
+                <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">خصوصية المراسلات</h3>
 
                 <label class="mt-4 flex items-start justify-between gap-4 rounded-xl border border-mist-200 px-4 py-3 dark:border-ink-600">
                     <span>
                         <span class="block text-sm font-medium text-ink-700 dark:text-mist-200">إخفاء «متصل الآن» و«آخر ظهور»</span>
                         <span class="mt-0.5 block text-xs text-mist-500 dark:text-mist-400">لن يرى زملاؤك حالتك أو وقت آخر ظهور لك.</span>
                     </span>
-                    <input type="checkbox" name="chat_hide_last_seen" value="1" @checked(auth()->user()->chat_hide_last_seen) class="mt-1 rounded border-mist-300 text-emerald-500 focus:ring-emerald-400">
+                    <input type="checkbox" name="chat_hide_last_seen" value="1" @checked(auth()->user()->chat_hide_last_seen) class="mt-1 rounded border-mist-300 text-brand-500 focus:ring-brand-500">
                 </label>
 
                 <label class="mt-3 flex items-start justify-between gap-4 rounded-xl border border-mist-200 px-4 py-3 dark:border-ink-600">
@@ -677,20 +677,20 @@
                              one side take without giving. --}}
                         <span class="mt-0.5 block text-xs text-mist-500 dark:text-mist-400">عند التفعيل لن يرى الآخرون أنك قرأت رسائلهم، ولن ترى أنت مؤشرات قراءتهم.</span>
                     </span>
-                    <input type="checkbox" name="chat_hide_read_receipts" value="1" @checked(auth()->user()->chat_hide_read_receipts) class="mt-1 rounded border-mist-300 text-emerald-500 focus:ring-emerald-400">
+                    <input type="checkbox" name="chat_hide_read_receipts" value="1" @checked(auth()->user()->chat_hide_read_receipts) class="mt-1 rounded border-mist-300 text-brand-500 focus:ring-brand-500">
                 </label>
 
                 <div class="mt-6 flex items-center justify-end gap-3">
                     <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                    <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-950 shadow-glow transition hover:bg-emerald-300 active:scale-95">حفظ</button>
+                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95">حفظ</button>
                 </div>
             </form>
         </div>
-    </div>{{-- /veyraMessenger scope --}}
+    </div>{{-- /madaMessenger scope --}}
 
     @push('scripts')
         <script>
-            function veyraMessenger(config) {
+            function madaMessenger(config) {
                 return {
                     live: [],
                     draft: '',
@@ -1127,7 +1127,7 @@
 
                         // A flash rather than a persistent highlight: it
                         // answers "which one" and then gets out of the way.
-                        const ring = ['ring-2', 'ring-emerald-400', 'rounded-2xl'];
+                        const ring = ['ring-2', 'ring-brand-500', 'rounded-2xl'];
                         target.classList.add(...ring);
                         window.setTimeout(() => target.classList.remove(...ring), 1400);
                     },
@@ -1313,8 +1313,8 @@
                             showCancelButton: true,
                             confirmButtonText: 'نعم، احذف',
                             cancelButtonText: 'إلغاء',
-                            confirmButtonColor: '#ef4444',
-                            cancelButtonColor: '#64748b',
+                            confirmButtonColor: '#b42318',
+                            cancelButtonColor: '#5a5262',
                             reverseButtons: true,
                         }).then((result) => result.isConfirmed);
                     },
@@ -1525,7 +1525,7 @@
 
                         entries.forEach(([emoji, total]) => {
                             const pill = document.createElement('span');
-                            pill.className = 'flex items-center gap-1 rounded-full border border-ink-600/50 bg-ink-800/90 px-1.5 py-0.5 text-xs text-mist-200 shadow-sm backdrop-blur-sm';
+                            pill.className = 'flex items-center gap-1 rounded-md border border-ink-600/50 bg-ink-800/90 px-1.5 py-0.5 text-xs text-mist-200 shadow-sm backdrop-blur-sm';
                             pill.textContent = `${emoji} ${total}`;
                             host.appendChild(pill);
                         });

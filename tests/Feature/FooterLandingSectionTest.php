@@ -14,7 +14,7 @@ beforeEach(function () {
 test('setting seeder persists footer and social content', function () {
     $this->seed(SettingSeeder::class);
 
-    expect(Setting::getValue('footer_description'))->toBe('نظام تخطيط موارد مؤسسي متعدد المستأجرين: توظيف، موارد بشرية، حضور وإجازات، رواتب ومصروفات — بعزل بيانات وسجل تدقيق لكل مؤسسة.')
+    expect(Setting::getValue('footer_description'))->toBe('نظام واحد يدير التوظيف والموارد البشرية والحضور والرواتب. بيانات كل مؤسسة معزولة، وكل عملية حسّاسة مسجّلة.')
         ->and(Setting::getValue('footer_newsletter_title'))->toBe('البريد الإلكتروني')
         ->and(Setting::getValue('footer_newsletter_btn_text'))->toBe('اشتراك')
         ->and(Setting::getValue('footer_title1'))->toBe('المنتج')
@@ -32,7 +32,7 @@ test('marketing content footer reads settings keys', function () {
 
     $footer = app(MarketingContent::class)->footer();
 
-    expect($footer['blurb'])->toBe('نظام تخطيط موارد مؤسسي متعدد المستأجرين: توظيف، موارد بشرية، حضور وإجازات، رواتب ومصروفات — بعزل بيانات وسجل تدقيق لكل مؤسسة.')
+    expect($footer['blurb'])->toBe('نظام واحد يدير التوظيف والموارد البشرية والحضور والرواتب. بيانات كل مؤسسة معزولة، وكل عملية حسّاسة مسجّلة.')
         ->and($footer['newsletter_title'])->toBe('البريد الإلكتروني')
         ->and($footer['newsletter_btn_text'])->toBe('اشتراك')
         ->and($footer['columns'])->toHaveCount(3)
@@ -46,7 +46,7 @@ test('landing page footer renders seeded cms content', function () {
 
     $this->get(route('landing'))
         ->assertOk()
-        ->assertSee('نظام تخطيط موارد مؤسسي متعدد المستأجرين: توظيف، موارد بشرية، حضور وإجازات، رواتب ومصروفات — بعزل بيانات وسجل تدقيق لكل مؤسسة.', false)
+        ->assertSee('نظام واحد يدير التوظيف والموارد البشرية والحضور والرواتب. بيانات كل مؤسسة معزولة، وكل عملية حسّاسة مسجّلة.', false)
         ->assertSee('المنتج', false)
         ->assertSee('المميزات', false)
         ->assertSee('الشركة', false)

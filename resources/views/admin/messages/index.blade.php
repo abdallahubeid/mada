@@ -15,7 +15,7 @@
     @endphp
 
     <div
-        x-data="veyraMessagesInbox({
+        x-data="madaMessagesInbox({
             closeUrl: @js($closeUrl),
             pollUrl: @js(route('admin.messages.poll')),
             csrf: @js(csrf_token()),
@@ -33,7 +33,7 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الرسائل والدعم الفني</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الرسائل والدعم الفني</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">استفسارات نموذج التواصل وملّاك الحسابات — محادثة واحدة لكل عميل نشط.</p>
             </div>
         </div>
@@ -45,8 +45,8 @@
                     href="{{ route('admin.messages', ['status' => $key, 'q' => $search ?: null]) }}"
                     data-status-tab="{{ $key }}"
                     @class([
-                        'flex shrink-0 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-all duration-200',
-                        'border-emerald-400 text-emerald-600 dark:text-emerald-400' => $isActive,
+                        'flex shrink-0 items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-all duration-200',
+                        'border-brand-500 text-brand-600 dark:text-brand-300' => $isActive,
                         'border-transparent text-mist-500 hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200' => ! $isActive,
                     ])
                 >
@@ -54,8 +54,8 @@
                     <span
                         data-status-count="{{ $key }}"
                         @class([
-                            'rounded-full px-2 py-0.5 text-xs font-bold',
-                            'bg-emerald-400/15 text-emerald-600 dark:text-emerald-400' => $isActive,
+                            'rounded-md px-2 py-0.5 text-xs font-bold',
+                            'bg-brand-500/15 text-brand-600 dark:text-brand-300' => $isActive,
                             'bg-mist-100 text-mist-500 dark:bg-ink-700 dark:text-mist-400' => ! $isActive,
                         ])
                     >{{ $counts[$key] }}</span>
@@ -74,7 +74,7 @@
                             name="q"
                             value="{{ $search }}"
                             placeholder="ابحث بالاسم أو البريد أو الموضوع..."
-                            class="w-full rounded-xl border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="w-full rounded-xl border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                         >
                     </form>
                 </div>
@@ -95,7 +95,7 @@
                                     class="h-10 w-10 shrink-0 rounded-full border border-slate-700 object-cover"
                                 >
                                 <div class="min-w-0">
-                                    <p class="truncate font-display text-base font-semibold text-ink-900 dark:text-ink-50">{{ $selected->subject }}</p>
+                                    <p class="truncate font-display text-base font-medium text-ink-900 dark:text-ink-50">{{ $selected->subject }}</p>
                                     <p class="truncate text-xs text-mist-500 dark:text-mist-400">
                                         {{ $selected->displayName() }} · <span dir="ltr">{{ $selected->email }}</span>
                                     </p>
@@ -111,7 +111,7 @@
                                         id="thread-status"
                                         name="status"
                                         onchange="this.form.submit()"
-                                        class="rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm font-medium text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-mist-200"
+                                        class="rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm font-medium text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-mist-200"
                                     >
                                         @foreach ($tabs as $key => $label)
                                             <option value="{{ $key }}" @selected($selected->status === $key)>{{ $label }}</option>
@@ -148,13 +148,13 @@
                                     rows="1"
                                     required
                                     placeholder="اكتب ردًا..."
-                                    class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                                    class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
                                 ></textarea>
-                                <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-400 text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95" aria-label="إرسال">
+                                <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95" aria-label="إرسال">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
                                 </button>
                             </form>
-                            <p class="mt-1.5 px-1 text-[11px] text-mist-400 dark:text-mist-500">Esc أو × لإغلاق المحادثة. الرد على محادثة مفتوحة ينقلها إلى «قيد المعالجة».</p>
+                            <p class="mt-1.5 px-1 text-xs text-mist-400 dark:text-mist-500">Esc أو × لإغلاق المحادثة. الرد على محادثة مفتوحة ينقلها إلى «قيد المعالجة».</p>
                         </div>
                     </div>
                 @else
@@ -174,7 +174,7 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('veyraMessagesInbox', (config) => ({
+            Alpine.data('madaMessagesInbox', (config) => ({
                 closeUrl: config.closeUrl,
                 pollUrl: config.pollUrl,
                 csrf: config.csrf,
@@ -289,7 +289,7 @@
                 },
 
                 refreshRelativeTimes() {
-                    this.$el.querySelectorAll('.veyra-relative-time[data-timestamp]').forEach((node) => {
+                    this.$el.querySelectorAll('.mada-relative-time[data-timestamp]').forEach((node) => {
                         const iso = node.getAttribute('data-timestamp');
                         if (iso) {
                             node.textContent = this.formatRelative(iso);
@@ -310,7 +310,7 @@
                     const label = status === 'read' ? 'تمت القراءة' : (status === 'delivered' ? 'تم التسليم' : 'تم الإرسال');
                     const color = status === 'read'
                         ? 'text-sky-500'
-                        : (onDark ? 'text-emerald-900/70' : 'text-mist-400');
+                        : (onDark ? 'text-white/70' : 'text-mist-400');
                     const second = status === 'pending'
                         ? ''
                         : `<svg xmlns="http://www.w3.org/2000/svg" class="-ms-2 h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>`;
@@ -332,7 +332,7 @@
                     return threads.map((thread) => {
                         const selected = thread.is_selected;
                         const rowClass = selected
-                            ? 'bg-emerald-400/[0.06] border-s-2 border-s-emerald-400'
+                            ? 'bg-brand-500/[0.06] border-s-2 border-s-brand-500'
                             : 'hover:bg-mist-50 dark:hover:bg-ink-700/40';
                         const archive = thread.can_archive
                             ? `<form method="POST" action="${this.escapeHtml(thread.archive_url)}">
@@ -342,9 +342,9 @@
                             : '';
 
                         return `<div
-                            id="veyra-search-thread-${thread.id}"
+                            id="mada-search-thread-${thread.id}"
                             data-thread-id="${thread.id}"
-                            data-veyra-search="thread-${thread.id}"
+                            data-mada-search="thread-${thread.id}"
                             class="group relative flex gap-3 border-b border-mist-100 p-4 transition duration-150 dark:border-ink-700 ${rowClass}"
                         >
                             <a href="${this.escapeHtml(thread.open_url)}" class="flex min-w-0 flex-1 gap-3">
@@ -352,16 +352,16 @@
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between gap-2 pe-8">
                                         <p class="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">${this.escapeHtml(thread.display_name)}</p>
-                                        <span class="veyra-relative-time shrink-0 text-[11px] text-mist-400 dark:text-mist-500" data-timestamp="${this.escapeHtml(thread.last_message_at || '')}">${this.escapeHtml(this.formatRelative(thread.last_message_at))}</span>
+                                        <span class="mada-relative-time shrink-0 text-xs text-mist-400 dark:text-mist-500" data-timestamp="${this.escapeHtml(thread.last_message_at || '')}">${this.escapeHtml(this.formatRelative(thread.last_message_at))}</span>
                                     </div>
                                     <p class="mt-0.5 truncate text-sm font-medium text-ink-700 dark:text-mist-200">${this.escapeHtml(thread.subject)}</p>
                                     <p class="mt-0.5 truncate text-xs text-mist-500 dark:text-mist-400">${this.escapeHtml(thread.snippet)}</p>
                                     <div class="mt-1.5 flex items-center gap-2">
-                                        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${this.escapeHtml(thread.status_badge)}">
-                                            <span class="h-1.5 w-1.5 rounded-full ${this.escapeHtml(thread.status_dot)}"></span>
+                                        <span class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ${this.escapeHtml(thread.status_badge)}">
+                                            <span class="h-1.5 w-1.5 rounded-md ${this.escapeHtml(thread.status_dot)}"></span>
                                             ${this.escapeHtml(thread.status_label)}
                                         </span>
-                                        ${thread.unread ? '<span class="h-2 w-2 rounded-full bg-emerald-400"></span>' : ''}
+                                        ${thread.unread ? '<span class="h-2 w-2 rounded-full bg-brand-500"></span>' : ''}
                                     </div>
                                 </div>
                             </a>
@@ -381,7 +381,7 @@
                 renderMessageBubble(message) {
                     const isAdmin = Boolean(message.is_admin);
                     const bubbleClass = isAdmin
-                        ? 'bg-emerald-400 text-emerald-900 rounded-se-none'
+                        ? 'bg-brand-500 text-white rounded-se-none'
                         : 'border border-mist-200 bg-white text-ink-700 rounded-ss-none dark:border-ink-700 dark:bg-ink-800 dark:text-mist-100';
                     const rowClass = isAdmin ? 'flex-row-reverse' : 'flex-row';
                     const metaClass = isAdmin ? 'justify-end' : 'justify-start';
@@ -390,10 +390,10 @@
                         <img src="${this.escapeHtml(message.avatar_url)}" alt="${this.escapeHtml(message.sender_name)}" class="h-8 w-8 shrink-0 rounded-full border border-slate-700 object-cover">
                         <div class="max-w-[80%]">
                             <div class="px-4 py-3 text-sm shadow-sm rounded-2xl ${bubbleClass}">${this.escapeHtml(message.body)}</div>
-                            <div class="mt-1 flex items-center gap-1.5 px-1 text-[11px] text-mist-400 dark:text-mist-500 ${metaClass}">
+                            <div class="mt-1 flex items-center gap-1.5 px-1 text-xs text-mist-400 dark:text-mist-500 ${metaClass}">
                                 <span>
                                     ${this.escapeHtml(message.sender_name)} ·
-                                    <span class="veyra-relative-time" data-timestamp="${this.escapeHtml(message.created_at || '')}">${this.escapeHtml(this.formatRelative(message.created_at))}</span>
+                                    <span class="mada-relative-time" data-timestamp="${this.escapeHtml(message.created_at || '')}">${this.escapeHtml(this.formatRelative(message.created_at))}</span>
                                 </span>
                                 ${this.receiptMarkup(message.receipt, isAdmin)}
                             </div>
@@ -539,8 +539,8 @@
                         showCancelButton: true,
                         confirmButtonText: 'نعم، احذف',
                         cancelButtonText: 'إلغاء',
-                        confirmButtonColor: '#ef4444',
-                        cancelButtonColor: '#64748b',
+                        confirmButtonColor: '#b42318',
+                        cancelButtonColor: '#5a5262',
                         reverseButtons: true,
                     }).then(async (result) => {
                         if (! result.isConfirmed) {
@@ -584,7 +584,7 @@
                                 title: data.message || 'تم حذف المحادثة بنجاح.',
                                 showConfirmButton: Boolean(data.undo_url),
                                 confirmButtonText: data.undo_label || 'تراجع',
-                                confirmButtonColor: '#4edea3',
+                                confirmButtonColor: '#714b67',
                                 timer: data.undo_url ? 8000 : 2800,
                                 timerProgressBar: true,
                             }).then((toastResult) => {
@@ -614,7 +614,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'تعذّر حذف المحادثة',
-                                confirmButtonColor: '#4edea3',
+                                confirmButtonColor: '#714b67',
                             });
                         }
                     });

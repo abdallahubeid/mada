@@ -123,7 +123,7 @@
     </table>
 
     <footer class="muted">
-        <p>هذه القسيمة صادرة آلياً من نظام Veyra ERP ولا تحتاج إلى توقيع.</p>
+        <p>هذه القسيمة صادرة آلياً من نظام مدى ولا تحتاج إلى توقيع.</p>
     </footer>
 
     <p class="no-print" style="margin-top: 24px;">

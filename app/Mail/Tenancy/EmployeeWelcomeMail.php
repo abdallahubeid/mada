@@ -24,7 +24,7 @@ class EmployeeWelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'بيانات الدخول إلى '.$this->tenant->name.' على Veyra',
+            subject: 'بيانات الدخول إلى '.$this->tenant->name.' على مدى',
         );
     }
 

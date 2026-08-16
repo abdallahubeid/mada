@@ -336,7 +336,7 @@ class ITDepartmentAttendanceSeeder extends Seeder
 
         // Tenant slug in the address keeps the ten accounts identifiable as
         // seed data, and scoped to the tenant they belong to.
-        return sprintf('it.%02d.%s@%s.test', $index + 1, $handle, $tenant->slug ?: 'veyra');
+        return sprintf('it.%02d.%s@%s.test', $index + 1, $handle, $tenant->slug ?: 'mada');
     }
 
     /**

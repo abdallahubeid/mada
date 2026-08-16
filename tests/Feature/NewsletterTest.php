@@ -92,7 +92,7 @@ test('admin newsletter dashboard shows stats and subscribers', function () {
         ->assertSee('active@example.com', false)
         ->assertSee('gone@example.com', false)
         ->assertSee('إرسال حملة', false)
-        ->assertSee('veyraNewsletterDashboard', false)
+        ->assertSee('madaNewsletterDashboard', false)
         ->assertSee('font-mono text-sm', false)
         ->assertSee('dir="ltr"', false);
 });
@@ -231,7 +231,7 @@ test('newsletter dashboard table includes index column markup', function () {
         ->assertSee('border-e border-mist-100', false);
 });
 
-test('markdown mail branding uses veyra footer copy', function () {
+test('markdown mail branding uses mada footer copy', function () {
     $subscriber = NewsletterSubscriber::factory()->subscribed()->create([
         'email' => 'branding@example.com',
     ]);

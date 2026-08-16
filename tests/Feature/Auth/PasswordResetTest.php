@@ -29,7 +29,7 @@ test('forgot password sends a reset link notification', function () {
     $tenant = Tenant::factory()->active()->create();
     $user = User::factory()->create([
         'tenant_id' => $tenant->id,
-        'email' => 'reset-me@veyra.test',
+        'email' => 'reset-me@mada.test',
     ]);
 
     $this->post(route('password.email'), [
@@ -44,7 +44,7 @@ test('user can reset password with a valid token', function () {
     $tenant = Tenant::factory()->active()->create();
     $user = User::factory()->create([
         'tenant_id' => $tenant->id,
-        'email' => 'recover@veyra.test',
+        'email' => 'recover@mada.test',
         'password' => Hash::make('OldSecret123'),
     ]);
 

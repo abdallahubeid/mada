@@ -13,7 +13,7 @@ uses(RefreshDatabase::class);
 test('profile page renders authenticated user details', function () {
     actingAsPlatformOperator(attributes: [
         'name' => 'سارة المطيري',
-        'email' => 'sara@veyra.test',
+        'email' => 'sara@mada.test',
         'phone' => '+966501234567',
         'job_title' => 'مديرة تقنية',
     ]);
@@ -21,7 +21,7 @@ test('profile page renders authenticated user details', function () {
     $this->get(route('admin.profile'))
         ->assertOk()
         ->assertSee('سارة المطيري', false)
-        ->assertSee('sara@veyra.test', false)
+        ->assertSee('sara@mada.test', false)
         ->assertSee('مديرة تقنية', false)
         ->assertSee('المعلومات الشخصية', false)
         ->assertSee('الأمان وكلمة المرور', false)
@@ -32,13 +32,13 @@ test('profile page renders authenticated user details', function () {
 
 test('verified badge is placed beside the email label not inside the input', function () {
     actingAsPlatformOperator(attributes: [
-        'email' => 'owner@veyra.test',
+        'email' => 'owner@mada.test',
         'email_verified_at' => now(),
     ]);
 
     $html = $this->get(route('admin.profile'))
         ->assertOk()
-        ->assertSee('owner@veyra.test', false)
+        ->assertSee('owner@mada.test', false)
         ->assertSee('متحقق منه', false)
         ->getContent();
 
@@ -52,12 +52,12 @@ test('verified badge is placed beside the email label not inside the input', fun
 test('profile update persists personal information', function () {
     $user = actingAsPlatformOperator(attributes: [
         'name' => 'Old Name',
-        'email' => 'old@veyra.test',
+        'email' => 'old@mada.test',
     ]);
 
     $this->put(route('admin.profile.update'), [
         'name' => 'New Name',
-        'email' => 'new@veyra.test',
+        'email' => 'new@mada.test',
         'phone' => '+966509998877',
         'job_title' => 'Product Manager',
     ])
@@ -66,7 +66,7 @@ test('profile update persists personal information', function () {
     $user->refresh();
 
     expect($user->name)->toBe('New Name')
-        ->and($user->email)->toBe('new@veyra.test')
+        ->and($user->email)->toBe('new@mada.test')
         ->and($user->phone)->toBe('+966509998877')
         ->and($user->job_title)->toBe('Product Manager')
         ->and($user->email_verified_at)->toBeNull()
@@ -189,7 +189,7 @@ test('profile page does not render raw avatar storage path as plain text', funct
 
     expect($html)
         ->not->toContain('dir="ltr">'.$path)
-        ->and($html)->toContain('veyraProfileAvatar');
+        ->and($html)->toContain('madaProfileAvatar');
 });
 
 test('admin topbar renders the authenticated user avatar url', function () {
@@ -237,7 +237,7 @@ test('custom disk avatar urls omit the public path segment', function () {
 });
 
 test('user avatar url falls back to svg data uri when no image exists', function () {
-    $user = User::factory()->create(['name' => 'Veyra Admin']);
+    $user = User::factory()->create(['name' => 'Mada Admin']);
 
     expect($user->avatar_url)->toStartWith('data:image/svg+xml;base64,')
         ->and($user->avatar())->toBeInstanceOf(MorphOne::class);

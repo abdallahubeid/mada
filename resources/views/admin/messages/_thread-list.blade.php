@@ -1,11 +1,11 @@
 @forelse ($threads as $thread)
     <div
-        id="veyra-search-thread-{{ $thread['id'] }}"
+        id="mada-search-thread-{{ $thread['id'] }}"
         data-thread-id="{{ $thread['id'] }}"
-        data-veyra-search="thread-{{ $thread['id'] }}"
+        data-mada-search="thread-{{ $thread['id'] }}"
         @class([
             'group relative flex gap-3 border-b border-mist-100 p-4 transition duration-150 dark:border-ink-700',
-            'bg-emerald-400/[0.06] border-s-2 border-s-emerald-400' => $thread['is_selected'],
+            'bg-brand-500/[0.06] border-s-2 border-s-brand-500' => $thread['is_selected'],
             'hover:bg-mist-50 dark:hover:bg-ink-700/40' => ! $thread['is_selected'],
         ])
     >
@@ -19,7 +19,7 @@
                 <div class="flex items-center justify-between gap-2 pe-8">
                     <p class="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $thread['display_name'] }}</p>
                     <span
-                        class="veyra-relative-time shrink-0 text-[11px] text-mist-400 dark:text-mist-500"
+                        class="mada-relative-time shrink-0 text-xs text-mist-400 dark:text-mist-500"
                         data-timestamp="{{ $thread['last_message_at'] }}"
                     >
                         {{ $thread['last_message_at'] ? \Illuminate\Support\Carbon::parse($thread['last_message_at'])->diffForHumans() : '' }}
@@ -28,12 +28,12 @@
                 <p class="mt-0.5 truncate text-sm font-medium text-ink-700 dark:text-mist-200">{{ $thread['subject'] }}</p>
                 <p class="mt-0.5 truncate text-xs text-mist-500 dark:text-mist-400">{{ $thread['snippet'] }}</p>
                 <div class="mt-1.5 flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium {{ $thread['status_badge'] }}">
+                    <span class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium {{ $thread['status_badge'] }}">
                         <span class="h-1.5 w-1.5 rounded-full {{ $thread['status_dot'] }}"></span>
                         {{ $thread['status_label'] }}
                     </span>
                     @if ($thread['unread'])
-                        <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                        <span class="h-2 w-2 rounded-full bg-brand-500"></span>
                     @endif
                 </div>
             </div>

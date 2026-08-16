@@ -40,6 +40,6 @@ test('the landing page ai section renders seeded settings and cards', function (
         // The accounting ledger is advertised ONLY here, under the roadmap
         // badge — never in the finance offering, where it would read as shipped.
         ->assertSee('الدفتر المحاسبي والقوائم المالية', false)
-        ->assertSee('ph:sparkle-bold', false)
+        ->assertSee('M9.813 15.904 9 18.75l-.813-2.846', false)
         ->assertSee('قريباً', false);
 });

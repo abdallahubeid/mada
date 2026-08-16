@@ -30,7 +30,7 @@ class TenantRejectedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "بخصوص طلب تسجيل «{$this->tenant->name}» على Veyra",
+            subject: "بخصوص طلب تسجيل «{$this->tenant->name}» على مدى",
         );
     }
 

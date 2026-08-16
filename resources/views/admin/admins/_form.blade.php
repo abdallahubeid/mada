@@ -1,5 +1,5 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $isEdit = isset($admin);
     $selectedRole = old('role', $assignedRole ?? ($roles->first()?->name ?? \App\Domain\Platform\PlatformPermissionCatalog::ROLE_CONTENT_MANAGER));
@@ -91,10 +91,10 @@
             <div class="grid gap-4 lg:grid-cols-2">
                 @foreach ($groups as $domain => $group)
                     <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
-                        <h3 class="mb-3 font-display text-sm font-bold text-ink-900 dark:text-ink-50">{{ $group['label'] }}</h3>
+                        <h3 class="mb-3 font-display text-sm font-medium text-ink-900 dark:text-ink-50">{{ $group['label'] }}</h3>
                         <div class="space-y-2">
                             @foreach ($group['permissions'] as $permission => $permissionLabel)
-                                <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-mist-200 px-3 py-2.5 transition hover:border-emerald-300 dark:border-ink-600 dark:hover:border-emerald-500/40">
+                                <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-mist-200 px-3 py-2 transition hover:border-brand-300 dark:border-ink-600 dark:hover:border-brand-500/40">
                                     <span class="text-sm text-ink-700 dark:text-mist-200">{{ $permissionLabel }}</span>
                                     <span class="relative inline-flex shrink-0">
                                         <input
@@ -104,7 +104,7 @@
                                             class="peer sr-only"
                                             x-model="selected"
                                         >
-                                        <span class="h-6 w-11 rounded-full bg-mist-200 transition peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-400/40 dark:bg-ink-700"></span>
+                                        <span class="h-6 w-11 rounded-full bg-mist-200 transition peer-checked:bg-brand-500 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500/40 dark:bg-ink-700"></span>
                                         <span class="pointer-events-none absolute start-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-5 rtl:peer-checked:-translate-x-5"></span>
                                     </span>
                                 </label>

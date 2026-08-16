@@ -1,6 +1,6 @@
-# Veyra ERP — Module Business Rules
+# Mada ERP — Module Business Rules
 
-> Part of the Veyra ERP documentation set. See `VEYRA_DOCS.md` for the full Software Design Document and `ARCHITECTURE.md` for tenancy/RBAC foundations referenced below.
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full Software Design Document and `ARCHITECTURE.md` for tenancy/RBAC foundations referenced below.
 
 ## 1. HR & Recruitment Module
 
@@ -53,7 +53,7 @@
 
 **Purpose:** convert HR + Projects data into payroll disbursement and client revenue, with financial visibility for the CEO.
 
-**Scope boundary (unchanged):** Veyra's Finance module is **not** a general ledger. There is no chart of accounts, no double-entry bookkeeping, no journals, no trial balance (`PROJECT_VISION.md` §4). "Ledger" in this codebase means the **Work Ledger** — attendance reconciliation — never a financial GL.
+**Scope boundary (unchanged):** Mada's Finance module is **not** a general ledger. There is no chart of accounts, no double-entry bookkeeping, no journals, no trial balance (`PROJECT_VISION.md` §4). "Ledger" in this codebase means the **Work Ledger** — attendance reconciliation — never a financial GL.
 
 ### 3.0 Delivery Split (ADR-18)
 
@@ -71,7 +71,7 @@ Phase 2B may not begin until the Projects & Timesheets module lands. Until then 
 
 **Phase 2B (deferred):** `clients`, `invoices`, `invoice_line_items`, `invoice_payments`.
 
-> **Naming:** the tenant-facing revenue entity is **`client_invoices` / `ClientInvoice`**, not `invoices`. `tenant_invoices` already exists and means the opposite thing — Veyra billing the tenant for its subscription. Two tables named `*invoices*` carrying money in opposite directions is a wrong-model bug waiting to happen (BR-616).
+> **Naming:** the tenant-facing revenue entity is **`client_invoices` / `ClientInvoice`**, not `invoices`. `tenant_invoices` already exists and means the opposite thing — Mada billing the tenant for its subscription. Two tables named `*invoices*` carrying money in opposite directions is a wrong-model bug waiting to happen (BR-616).
 
 ### 3.2 Business Rules
 
@@ -100,7 +100,7 @@ Phase 2B may not begin until the Projects & Timesheets module lands. Until then 
 - **BR-623 (Manual settlement inputs ⚠️):** Loan and other deductions on a settlement are **manual inputs**, not derived — the system has no loans or advances entity. Until one exists, the preparer types the outstanding amount and the figure carries no independent verification.
 - **BR-614 (Employee payslip visibility):** An employee may read **only** their own payslips, and only those belonging to an `approved` or `paid` run. Draft and `pending_approval` payslips are invisible to the employee under every code path, including direct id access — enforced by Policy, per BR-701's discipline.
 - **BR-615 (Separation of duties, ADR-09):** The user who approves a payroll run may not be the user who prepared it. Asserted at the model layer (`approver_id !== maker_id`), because the Owner `Gate::before` bypass grants Owners the `prepare` permission implicitly and a permission check therefore cannot express this constraint. Covered by a test that must fail when the assertion is removed.
-- **BR-616 (Naming):** The tenant→client revenue entity is `client_invoices`/`ClientInvoice`. `tenant_invoices`/`TenantInvoice` remains reserved for Veyra→tenant subscription billing. Neither may be renamed into the other's namespace.
+- **BR-616 (Naming):** The tenant→client revenue entity is `client_invoices`/`ClientInvoice`. `tenant_invoices`/`TenantInvoice` remains reserved for Mada→tenant subscription billing. Neither may be renamed into the other's namespace.
 - **BR-617 (Retention override, tightened 2026-08-06):** A locked payroll run — and every payslip and line item under it — **cannot be deleted at all**, softly or permanently. It never enters the Trash console.
   - *The rule originally read "never force-deletable, restorable but never purgeable." Implementation showed that is not self-consistent: `active_period` (BR-611) is NULL for a soft-deleted run, so trashing an approved run frees its month and lets a second run claim it. Restoring the original would then violate the unique key and fail — leaving a "restorable" record that cannot actually be restored. Blocking deletion outright is the only reading under which BR-611 and BR-617 both hold.*
   - Drafts and cancelled runs delete and restore normally; only `approved` and `paid` are frozen. Enforced by `PayrollRunObserver`, `PayslipObserver` and `PayslipLineItemObserver` on `deleting` and `forceDeleting`.
@@ -167,7 +167,7 @@ Both restrictions above must be enforced at the Policy/query-scope level (e.g., 
 
 ## 6. Super Admin / Platform Console Module
 
-**Purpose:** the operational surface for Veyra's own platform operators (`users` rows with `tenant_id = null`) to run the business — tenant lifecycle decisions, platform-wide configuration, system health visibility, and tenant support — kept strictly separate from any single tenant's data and its `TenantContext`/global-scope machinery.
+**Purpose:** the operational surface for Mada's own platform operators (`users` rows with `tenant_id = null`) to run the business — tenant lifecycle decisions, platform-wide configuration, system health visibility, and tenant support — kept strictly separate from any single tenant's data and its `TenantContext`/global-scope machinery.
 
 ### 6.1 Entities
 
@@ -175,7 +175,7 @@ Both restrictions above must be enforced at the Policy/query-scope level (e.g., 
 |---|---|---|
 | Platform Settings | `platform_settings` | Singleton, platform-level configuration row/key-value store; **no `tenant_id`** — never queried through the tenant global scope. Sensitive fields (SMTP credentials, payment gateway keys) are encrypted at rest (ADR-16). |
 | Notifications Console | reuses `notifications` (§4) | Adds platform-level alert categories surfaced only to Super Admin users; not a new table — see BR-804. |
-| Support Inquiries | `support_threads`, `support_messages` | A tenant Owner/CEO-initiated conversation with Veyra support. Deliberately **not** routed through the generic Approval Engine (ADR-08) — a support inquiry is a conversation, not an approve/reject decision (ADR-17). |
+| Support Inquiries | `support_threads`, `support_messages` | A tenant Owner/CEO-initiated conversation with Mada support. Deliberately **not** routed through the generic Approval Engine (ADR-08) — a support inquiry is a conversation, not an approve/reject decision (ADR-17). |
 | Super Admin User Management | `users` (`tenant_id = null`), `admin_invitations`, `permissions`/`roles` (Spatie, platform guard) | Manages the platform operator accounts themselves. Provisioned by invitation only; mandatory 2FA (ADR-14). Two operator tiers exist in v1: **Super Admin** (full, non-configurable access) and **Support Admin** (least-privilege, granular per-permission set from a fixed catalog) — see BR-807/BR-808. |
 
 ### 6.2 Business Rules

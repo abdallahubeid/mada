@@ -18,8 +18,8 @@ class DemoTenantSeeder extends Seeder
     public function run(): void
     {
         $tenant = Tenant::factory()->active()->create([
-            'name' => 'Veyra Demo Co',
-            'slug' => 'veyra-demo',
+            'name' => 'شركة مدى التجريبية',
+            'slug' => 'mada-demo',
         ]);
 
         app(SeedDefaultTenantRoles::class)->handle($tenant);
@@ -27,12 +27,12 @@ class DemoTenantSeeder extends Seeder
         $owner = User::factory()->create([
             'tenant_id' => $tenant->id,
             'name' => 'Demo Owner',
-            'email' => 'owner@veyra.test',
+            'email' => 'owner@mada.test',
         ]);
 
         app(TenantContext::class)->setTenant($tenant);
         $owner->assignRole('Owner');
 
-        $this->command?->info('Demo tenant ready — owner@veyra.test / password');
+        $this->command?->info('Demo tenant ready — owner@mada.test / password');
     }
 }

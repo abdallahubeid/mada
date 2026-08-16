@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * A tenant represents a single customer organization on the Veyra platform.
+ * A tenant represents a single customer organization on the Mada platform.
  *
  * Tenants are the root of data isolation: every tenant-scoped model carries
  * a `tenant_id` column enforced via the {@see TenantScope}
@@ -40,7 +40,7 @@ class Tenant extends Model
      * Laravel's default factory name guesser assumes models live directly
      * under `App\Models`, which would resolve this to the non-existent
      * `Database\Factories\Domain\Tenancy\Models\TenantFactory`. Since Tenant
-     * lives under the Domain-oriented structure (docs/VEYRA_DOCS.md §13),
+     * lives under the Domain-oriented structure (docs/MADA_DOCS.md §13),
      * the factory is wired explicitly instead.
      */
     protected static function newFactory(): TenantFactory

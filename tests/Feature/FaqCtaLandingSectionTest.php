@@ -12,12 +12,12 @@ test('setting seeder persists faq and cta section chrome', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('faq_title'))->toBe('الأسئلة الشائعة')
-        ->and(Setting::getValue('faq_sub_title'))->toBe('إجابات سريعة عن أكثر ما يسأل عنه عملاؤنا.')
-        ->and(Setting::getValue('cta_title'))->toBe('ابدأ اليوم — مجاناً بالكامل')
-        ->and(Setting::getValue('cta_sub_title'))->toBe('فعّل مؤسستك خلال دقائق: أنشئ حسابك، وادعُ فريقك، وابدأ التشغيل. دون رسوم ودون بطاقة ائتمان خلال الفترة الحالية.')
-        ->and(Setting::getValue('cta_btn1_text'))->toBe('ابدأ مجاناً الآن')
+        ->and(Setting::getValue('faq_sub_title'))->toBe('أكثر ما يُسأل عنه قبل البدء.')
+        ->and(Setting::getValue('cta_title'))->toBe('جرّبه على مؤسستك هذا الأسبوع')
+        ->and(Setting::getValue('cta_sub_title'))->toBe('أنشئ حسابك، ادعُ فريقك، وابدأ التشغيل. لا رسوم ولا بطاقة بنكية.')
+        ->and(Setting::getValue('cta_btn1_text'))->toBe('ابدأ الآن — مجاناً')
         ->and(Setting::getValue('cta_btn1_link'))->toBe('/register')
-        ->and(Setting::getValue('cta_btn2_text'))->toBe('تواصل مع المبيعات')
+        ->and(Setting::getValue('cta_btn2_text'))->toBe('تحدّث مع مستشار')
         ->and(Setting::getValue('cta_btn2_link'))->toBe('/contact');
 });
 
@@ -39,14 +39,14 @@ test('the landing page faq and cta sections render seeded settings and content',
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('الأسئلة الشائعة', false)
-        ->assertSee('إجابات سريعة عن أكثر ما يسأل عنه عملاؤنا.', false)
+        ->assertSee('أكثر ما يُسأل عنه قبل البدء.', false)
         ->assertSee('هل أحتاج إلى خبرة تقنية لاستخدام النظام؟', false)
         // The isolation answer no longer claims per-tenant databases; it now
         // describes the row-level scoping the app actually implements.
         ->assertSee('يحمل كل سجل في النظام معرّف مؤسسته', false)
-        ->assertSee('ابدأ اليوم — مجاناً بالكامل', false)
-        ->assertSee('فعّل مؤسستك خلال دقائق: أنشئ حسابك، وادعُ فريقك، وابدأ التشغيل. دون رسوم ودون بطاقة ائتمان خلال الفترة الحالية.', false)
-        ->assertSee('تواصل مع المبيعات', false)
+        ->assertSee('جرّبه على مؤسستك هذا الأسبوع', false)
+        ->assertSee('أنشئ حسابك، ادعُ فريقك، وابدأ التشغيل. لا رسوم ولا بطاقة بنكية.', false)
+        ->assertSee('تحدّث مع مستشار', false)
         ->assertSee('/register', false)
         ->assertSee('/contact', false);
 });

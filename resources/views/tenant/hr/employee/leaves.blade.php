@@ -1,14 +1,14 @@
 @php
     use App\Domain\Tenancy\Enums\LeaveRequestStatus;
 
-    $card = 'rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800';
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $card = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
     $statusClasses = [
         LeaveRequestStatus::Pending->value => 'bg-amber-400/15 text-amber-800 dark:text-amber-300',
-        LeaveRequestStatus::Approved->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        LeaveRequestStatus::Approved->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         LeaveRequestStatus::Rejected->value => 'bg-danger-solid/10 text-danger-solid',
     ];
 @endphp
@@ -17,8 +17,8 @@
     @if ($employee === null)
         <div class="mx-auto max-w-2xl">
             <div class="{{ $card }} text-center">
-                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/15 text-2xl">📝</div>
-                <h1 class="mt-4 font-display text-2xl font-bold text-ink-900 dark:text-ink-50">طلبات الإجازة</h1>
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/15 text-mist-400 dark:text-mist-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg></div>
+                <h1 class="mt-4 font-display text-2xl font-medium text-ink-900 dark:text-ink-50">طلبات الإجازة</h1>
                 <p class="mt-2 text-sm text-mist-500">
                     حسابك غير مرتبط بملف موظف، لذا لا تتوفر أرصدة أو طلبات إجازة. تواصل مع إدارة الموارد البشرية لربط حسابك.
                 </p>
@@ -28,13 +28,13 @@
         <div class="mx-auto max-w-5xl space-y-6" x-data="{ leaveOpen: {{ $errors->any() ? 'true' : 'false' }} }">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">طلبات الإجازة</h1>
+                    <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">طلبات الإجازة</h1>
                     <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                         أرصدتك المتاحة وسجل طلباتك — المتبقي {{ $remainingLeaveDays }} يوم عبر جميع الأنواع.
                     </p>
                 </div>
                 @can('hr.my_leaves.view')
-                    <button type="button" @click="leaveOpen = true" class="inline-flex items-center rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                    <button type="button" @click="leaveOpen = true" class="inline-flex items-center rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                         طلب إجازة جديد
                     </button>
                 @endcan
@@ -46,10 +46,10 @@
                     <div class="{{ $card }}">
                         <div class="flex items-baseline justify-between">
                             <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $balance['type']->name }}</p>
-                            <p class="font-display text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ $balance['remaining'] }}</p>
+                            <p class="font-display text-2xl font-medium text-brand-600 dark:text-brand-300">{{ $balance['remaining'] }}</p>
                         </div>
                         <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-mist-100 dark:bg-ink-700">
-                            <div class="h-full rounded-full bg-emerald-400" style="width: {{ $balance['annual'] > 0 ? min(100, ($balance['remaining'] / $balance['annual']) * 100) : 0 }}%"></div>
+                            <div class="h-full rounded-full bg-brand-500" style="width: {{ $balance['annual'] > 0 ? min(100, ($balance['remaining'] / $balance['annual']) * 100) : 0 }}%"></div>
                         </div>
                         <p class="mt-2 text-xs text-mist-500">مستخدم {{ $balance['used'] }} من {{ $balance['annual'] }} يوم</p>
                     </div>
@@ -62,29 +62,29 @@
 
             {{-- History --}}
             <div class="space-y-4">
-                <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">سجل طلباتي</h2>
+                <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">سجل طلباتي</h2>
                 <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                         <thead class="bg-mist-50 dark:bg-ink-900">
                             <tr>
-                                <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                                <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">النوع</th>
-                                <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">من</th>
-                                <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">إلى</th>
-                                <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الأيام</th>
-                                <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الحالة</th>
+                                <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                                <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">النوع</th>
+                                <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">من</th>
+                                <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">إلى</th>
+                                <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الأيام</th>
+                                <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الحالة</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                             @forelse ($leaveRequests as $leaveRequest)
                                 <tr>
-                                    <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-3 text-start">{{ $leaveRequest->leaveType?->name ?? '—' }}</td>
-                                    <td class="px-4 py-3 tabular-nums text-start"><x-ui.ltr>{{ $leaveRequest->start_date?->format('Y-m-d') }}</x-ui.ltr></td>
-                                    <td class="px-4 py-3 tabular-nums text-start"><x-ui.ltr>{{ $leaveRequest->end_date?->format('Y-m-d') }}</x-ui.ltr></td>
-                                    <td class="px-4 py-3 text-start">{{ $leaveRequest->days_count }}</td>
-                                    <td class="px-4 py-3 text-center">
-                                        <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$leaveRequest->status->value] ?? ''])>
+                                    <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                    <td class="px-3 py-2 text-start">{{ $leaveRequest->leaveType?->name ?? '—' }}</td>
+                                    <td class="px-3 py-2 tabular-nums text-start"><x-ui.ltr>{{ $leaveRequest->start_date?->format('Y-m-d') }}</x-ui.ltr></td>
+                                    <td class="px-3 py-2 tabular-nums text-start"><x-ui.ltr>{{ $leaveRequest->end_date?->format('Y-m-d') }}</x-ui.ltr></td>
+                                    <td class="px-3 py-2 text-start">{{ $leaveRequest->days_count }}</td>
+                                    <td class="px-3 py-2 text-center">
+                                        <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$leaveRequest->status->value] ?? ''])>
                                             {{ $leaveRequest->status->label() }}
                                         </span>
                                         @if ($leaveRequest->status === LeaveRequestStatus::Rejected && filled($leaveRequest->rejection_reason))
@@ -93,7 +93,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <x-ui.table-empty :colspan="6" icon="🌴" message="لا توجد طلبات إجازة." />
+                                <x-ui.table-empty :colspan="6" icon="sun" message="لا توجد طلبات إجازة." />
                             @endforelse
                         </tbody>
                     </table>
@@ -104,7 +104,7 @@
             {{-- Request modal --}}
             @can('hr.my_leaves.view')
                 <div x-show="leaveOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4" @keydown.escape.window="leaveOpen = false">
-                    <div class="w-full max-w-lg rounded-2xl border border-mist-200 bg-white p-5 shadow-xl dark:border-ink-600 dark:bg-ink-800" @click.outside="leaveOpen = false">
+                    <div class="w-full max-w-lg rounded-2xl border border-mist-200 bg-white p-4 shadow-xl dark:border-ink-600 dark:bg-ink-800" @click.outside="leaveOpen = false">
                         <div class="flex items-center justify-between">
                             <h3 class="font-semibold text-ink-900 dark:text-ink-50">طلب إجازة جديد</h3>
                             <button type="button" @click="leaveOpen = false" class="text-mist-500">إغلاق</button>
@@ -147,7 +147,7 @@
                                     <p class="{{ $errorClass }}">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <button type="submit" class="w-full rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                            <button type="submit" class="w-full rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                                 إرسال الطلب
                             </button>
                         </form>

@@ -25,7 +25,7 @@
 @once
     @push('scripts')
         <script>
-            window.veyraClampX = function (el) {
+            window.madaClampX = function (el) {
                 if (! el) {
                     return;
                 }

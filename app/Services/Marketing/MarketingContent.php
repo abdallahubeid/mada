@@ -399,7 +399,7 @@ class MarketingContent
 
         /** @var array<string, mixed> $footer */
         $footer = config('marketing.footer', []);
-        $copyright = $footer['copyright'] ?? '© {year} Veyra ERP. جميع الحقوق محفوظة.';
+        $copyright = $footer['copyright'] ?? '© {year} مدى. جميع الحقوق محفوظة.';
 
         return [
             'blurb' => $settings->get('footer_description') ?? $footer['blurb'] ?? '',
@@ -467,7 +467,7 @@ class MarketingContent
             'title_line_1' => 'مستقبل إدارة',
             'title_accent' => 'المؤسسات',
             'title_line_2' => 'بذكاء وفخامة',
-            'subtitle' => 'منصة Veyra ERP الشاملة لإدارة الموارد البشرية، المشاريع، والرواتب — أتمتة كاملة لعمليات مؤسستك في نظام واحد أنيق وذكي، بدقة تنظيمية وأمان تام لبياناتك.',
+            'subtitle' => 'منصة مدى الشاملة لإدارة الموارد البشرية، المشاريع، والرواتب — أتمتة كاملة لعمليات مؤسستك في نظام واحد أنيق وذكي، بدقة تنظيمية وأمان تام لبياناتك.',
             'primary_cta' => ['label' => 'ابدأ التجربة المجانية', 'url' => '/register'],
             'secondary_cta' => ['label' => 'احجز عرضًا توضيحيًا', 'url' => '/contact'],
             'metrics' => [

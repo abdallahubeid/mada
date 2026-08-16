@@ -207,24 +207,24 @@
             class="flex min-w-0 items-center gap-2"
             :class="sidebarCollapsed && 'lg:justify-center'"
             title="الصفحة الرئيسية"
-            aria-label="الصفحة الرئيسية — Veyra ERP"
+            aria-label="الصفحة الرئيسية — مدى"
             @click="closeSidebarDrawer()"
         >
             @if ($adminLogoUrl)
                 <img
                     src="{{ $adminLogoUrl }}"
-                    alt="Veyra ERP"
+                    alt="مدى"
                     class="h-8 max-h-8 w-auto max-w-[140px] shrink-0 object-contain object-start"
                     :class="sidebarCollapsed && 'lg:max-w-8'"
                 >
                 <div class="leading-tight" x-show="! sidebarCollapsed">
-                    <span class="block text-[10px] font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
+                    <span class="block text-xs font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
                 </div>
             @else
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400 font-display text-sm font-bold text-emerald-900 shadow-glow">V</span>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-500 font-display text-sm font-medium text-white shadow-glow">م</span>
                 <div class="leading-tight" x-show="! sidebarCollapsed">
-                    <span class="block font-display text-sm font-bold text-ink-900 dark:text-ink-50">Veyra</span>
-                    <span class="block text-[10px] font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
+                    <span class="block font-display text-sm font-medium text-ink-900 dark:text-ink-50">مدى</span>
+                    <span class="block text-xs font-medium uppercase tracking-wide text-mist-500">Platform Console</span>
                 </div>
             @endif
         </a>
@@ -307,11 +307,11 @@
                                         :class="sidebarCollapsed && 'lg:justify-center'"
                                         @class([
                                             'group flex w-full items-center gap-3 rounded-lg border-s-2 px-3 py-2 text-sm font-medium transition-all duration-300 ease-out active:scale-[0.98]',
-                                            'border-emerald-400 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400' => $isActive,
+                                            'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300' => $isActive,
                                             'border-transparent text-ink-600 hover:border-mist-300 hover:bg-mist-100 dark:text-mist-300 dark:hover:border-ink-600 dark:hover:bg-ink-800' => ! $isActive,
                                         ])
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ $isActive ? 'text-emerald-500 dark:text-emerald-400' : 'text-mist-400 group-hover:text-mist-500 dark:text-mist-500' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ $isActive ? 'text-brand-500 dark:text-brand-300' : 'text-mist-400 group-hover:text-mist-500 dark:text-mist-500' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                             {!! $item['icon'] !!}
                                         </svg>
                                         <span x-show="! sidebarCollapsed" class="flex-1 text-start">{{ $item['label'] }}</span>
@@ -337,7 +337,7 @@
                                                         @click="closeSidebarDrawer()"
                                                         @class([
                                                             'block rounded-lg px-3 py-1.5 text-sm transition duration-200',
-                                                            'bg-emerald-400/10 font-semibold text-emerald-600 dark:text-emerald-400' => $childIsActive,
+                                                            'bg-brand-500/10 font-semibold text-brand-600 dark:text-brand-300' => $childIsActive,
                                                             'text-mist-500 hover:bg-mist-100 hover:text-ink-700 dark:text-mist-400 dark:hover:bg-ink-800 dark:hover:text-mist-100' => ! $childIsActive,
                                                         ])
                                                     >{{ $child['label'] }}</a>
@@ -354,14 +354,14 @@
                                     :class="sidebarCollapsed && 'lg:justify-center'"
                                     @class([
                                         'group flex items-center gap-3 rounded-lg border-s-2 px-3 py-2 text-sm font-medium transition-all duration-300 ease-out active:scale-[0.98]',
-                                        'border-emerald-400 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400' => $isActive,
+                                        'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300' => $isActive,
                                         'border-transparent text-ink-600 hover:border-mist-300 hover:bg-mist-100 dark:text-mist-300 dark:hover:border-ink-600 dark:hover:bg-ink-800' => ! $isActive,
                                     ])
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ $isActive ? 'text-emerald-500 dark:text-emerald-400' : 'text-mist-400 group-hover:text-mist-500 dark:text-mist-500' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ $isActive ? 'text-brand-500 dark:text-brand-300' : 'text-mist-400 group-hover:text-mist-500 dark:text-mist-500' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                         {!! $item['icon'] !!}
                                     </svg>
-                                    <span x-show="! sidebarCollapsed" class="{{ $isActive ? 'underline decoration-emerald-400 decoration-2 underline-offset-4' : 'underline-offset-2' }}">{{ $item['label'] }}</span>
+                                    <span x-show="! sidebarCollapsed" class="{{ $isActive ? 'underline decoration-brand-500 decoration-2 underline-offset-4' : 'underline-offset-2' }}">{{ $item['label'] }}</span>
                                 </a>
                             @else
                                 <span
@@ -373,7 +373,7 @@
                                         {!! $item['icon'] !!}
                                     </svg>
                                     <span class="flex-1" x-show="! sidebarCollapsed">{{ $item['label'] }}</span>
-                                    <span class="rounded-full bg-mist-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mist-500 dark:bg-ink-800 dark:text-mist-400" x-show="! sidebarCollapsed">
+                                    <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-mist-500 dark:bg-ink-800 dark:text-mist-400" x-show="! sidebarCollapsed">
                                         قريباً
                                     </span>
                                 </span>

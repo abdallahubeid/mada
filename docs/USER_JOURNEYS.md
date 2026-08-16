@@ -1,6 +1,6 @@
-# Veyra ERP — User Journeys
+# Mada ERP — User Journeys
 
-> Part of the Veyra ERP documentation set. See `VEYRA_DOCS.md` for the full SDD, `ARCHITECTURE.md` for the tenant lifecycle state machine, and `MODULES.md` for BR-701 (Employee Workspace).
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full SDD, `ARCHITECTURE.md` for the tenant lifecycle state machine, and `MODULES.md` for BR-701 (Employee Workspace).
 
 ## 1. Admin Onboarding Flow (Tenant Signup → Active)
 

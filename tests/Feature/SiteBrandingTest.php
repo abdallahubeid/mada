@@ -44,7 +44,7 @@ test('the landing page falls back to default branding assets when settings are e
 
     $this->get(route('landing'))
         ->assertOk()
-        ->assertSee('Veyra', false)
+        ->assertSee('مدى', false)
         ->assertSee(asset('favicon.svg'), false);
 });
 

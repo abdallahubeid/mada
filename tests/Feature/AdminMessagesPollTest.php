@@ -79,7 +79,7 @@ test('messages poll reports selected_exists false after soft delete', function (
 test('messages inbox page includes poll bootstrap config', function () {
     $this->get(route('admin.messages'))
         ->assertOk()
-        ->assertSee('veyraMessagesInbox', false)
+        ->assertSee('madaMessagesInbox', false)
         ->assertSee('pollIntervalMs', false)
         ->assertSee('deleteThread', false)
         ->assertSee('هل أنت تأكد من حذف هذه المحادثة؟', false);

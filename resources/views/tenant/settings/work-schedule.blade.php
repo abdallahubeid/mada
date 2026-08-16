@@ -5,14 +5,14 @@
 <x-layouts.app title="جدول العمل والورديات">
     <div class="mx-auto max-w-3xl space-y-6">
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">جدول العمل والورديات</h1>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">جدول العمل والورديات</h1>
             <p class="mt-1 text-sm text-mist-500">حدد ساعات الدوام وفترة السماح للتأخير وأيام عطلة نهاية الأسبوع.</p>
         </div>
 
         <form
             method="POST"
             action="{{ route('settings.work-schedule.update') }}"
-            class="space-y-5 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
+            class="space-y-5 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
         >
             @csrf
             @method('PUT')
@@ -27,7 +27,7 @@
                             required
                             dir="ltr"
                             value="{{ old('work_start_time', $calendar?->workStartTimeLabel() ?? '08:30') }}"
-                            class="w-full rounded-xl border border-mist-200 px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900"
+                            class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"
                         >
                     </div>
                     <div>
@@ -38,7 +38,7 @@
                             required
                             dir="ltr"
                             value="{{ old('work_end_time', $calendar?->workEndTimeLabel() ?? '16:30') }}"
-                            class="w-full rounded-xl border border-mist-200 px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900"
+                            class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"
                         >
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                         max="180"
                         required
                         value="{{ old('grace_period_minutes', $calendar?->grace_period_minutes ?? 15) }}"
-                        class="w-full rounded-xl border border-mist-200 px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900 sm:max-w-xs"
+                        class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 sm:max-w-xs"
                     >
                     <p class="mt-1 text-xs text-mist-500">يُحتسب التأخير بعد بداية الدوام + فترة السماح (مثلاً 08:30 + 15 = 08:45).</p>
                 </div>
@@ -66,7 +66,7 @@
                                     type="checkbox"
                                     name="weekend_days[]"
                                     value="{{ $value }}"
-                                    class="rounded border-mist-300 text-emerald-500"
+                                    class="rounded border-mist-300 text-brand-500"
                                     @checked(in_array($value, $weekend, true))
                                 >
                                 {{ $label }}
@@ -77,7 +77,7 @@
             </fieldset>
 
             @if ($canUpdate)
-                <button type="submit" class="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-emerald-300">
+                <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600">
                     حفظ جدول العمل
                 </button>
             @else

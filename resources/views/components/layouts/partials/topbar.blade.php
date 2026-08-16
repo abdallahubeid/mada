@@ -35,7 +35,7 @@
         </button>
 
         <div class="min-w-0">
-            <h1 class="truncate font-display text-lg font-semibold text-ink-900 dark:text-ink-50">{{ $title ?? 'لوحة التحكم' }}</h1>
+            <h1 class="truncate font-display text-lg font-medium text-ink-900 dark:text-ink-50">{{ $title ?? 'لوحة التحكم' }}</h1>
             <p class="hidden truncate text-xs text-mist-500 sm:block dark:text-mist-400">{{ $tenantName }}</p>
         </div>
     </div>
@@ -53,7 +53,7 @@
                 name="q"
                 placeholder="بحث في المنصة..."
                 autocomplete="off"
-                class="w-56 rounded-lg border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 lg:w-72 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
+                class="w-56 rounded-lg border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 lg:w-72 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
             >
         </div>
 
@@ -66,9 +66,12 @@
             <a
                 href="{{ route('tenant.hr.my-attendance') }}"
                 wire:navigate
-                class="hidden items-center gap-1.5 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-400/20 sm:inline-flex dark:text-emerald-300"
+                class="hidden items-center gap-1.5 rounded-xl border border-brand-500/40 bg-brand-500/10 px-3 py-1.5 text-xs font-semibold text-brand-700 transition hover:bg-brand-500/20 sm:inline-flex dark:text-brand-300"
             >
-                حضوري 🕒
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                حضوري
             </a>
 
             @if ($showCheckOutButton)
@@ -79,31 +82,15 @@
                         class="hidden items-center gap-1.5 rounded-xl border border-amber-400/50 bg-amber-400/15 px-3 py-1.5 text-xs font-semibold text-amber-900 transition hover:bg-amber-400/25 sm:inline-flex dark:text-amber-200"
                         title="تسجيل الانصراف"
                     >
-                        تسجيل انصراف 🚪
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                        </svg>
+                        تسجيل انصراف
                     </button>
                 </form>
             @endif
         @endcan
 
-        <button
-            type="button"
-            @click="
-                const root = document.documentElement;
-                const nextDark = ! root.classList.contains('dark');
-                root.classList.toggle('dark', nextDark);
-                localStorage.setItem('veyra-theme', nextDark ? 'dark' : 'light');
-            "
-            class="rounded-lg p-2 text-mist-500 transition duration-200 ease-in-out hover:bg-mist-100 active:scale-90 dark:text-mist-400 dark:hover:bg-ink-800"
-            aria-label="تبديل الوضع الليلي"
-            title="تبديل الوضع الليلي"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-            </svg>
-        </button>
 
         {{--
             Messenger.
@@ -124,7 +111,7 @@
             href="{{ route('tenant.messenger.index') }}"
             @class([
                 'relative rounded-lg p-2 transition duration-200 ease-in-out hover:bg-mist-100 active:scale-90 dark:hover:bg-ink-800',
-                'text-emerald-600 dark:text-emerald-400' => request()->routeIs('tenant.messenger.*'),
+                'text-brand-600 dark:text-brand-300' => request()->routeIs('tenant.messenger.*'),
                 'text-mist-500 dark:text-mist-400' => ! request()->routeIs('tenant.messenger.*'),
             ])
             aria-label="المراسلات"
@@ -136,7 +123,7 @@
             </svg>
             @if ($messengerUnread > 0)
                 <span
-                    class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-emerald-400 px-1 text-[10px] font-bold text-emerald-950"
+                    class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-500 px-1 text-xs font-bold text-white"
                     data-testid="tenant-messenger-badge"
                 >{{ $messengerUnread > 99 ? '99+' : $messengerUnread }}</span>
             @endif
@@ -156,7 +143,7 @@
             <span
                 x-show="unreadCount > 0"
                 x-cloak
-                class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-solid px-1 text-[10px] font-bold text-white"
+                class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-solid px-1 text-xs font-bold text-white"
                 x-text="unreadCount > 99 ? '99+' : unreadCount"
                 data-testid="tenant-notifications-badge"
             ></span>
@@ -181,7 +168,7 @@
                         class="h-8 w-8 rounded-full border border-slate-700 object-cover"
                     >
                 @else
-                    <span class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-emerald-400/15 font-display text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-md border border-slate-700 bg-brand-500/15 font-display text-sm font-medium text-brand-600 dark:text-brand-300">
                         {{ mb_substr($userName, 0, 1) }}
                     </span>
                 @endif

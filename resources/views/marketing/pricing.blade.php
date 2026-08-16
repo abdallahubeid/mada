@@ -1,7 +1,7 @@
 {{-- Pricing page — plans from MarketingContent / DB. --}}
 <x-layouts.marketing
-    title="الأسعار — Veyra ERP"
-    description="قارن خطط Startup و Growth و Enterprise في Veyra ERP. تجربة مجانية دون بطاقة ائتمان، مع خصم على الفوترة السنوية."
+    title="الأسعار — مدى"
+    description="قارن خطط Startup و Growth و Enterprise في مدى. تجربة مجانية دون بطاقة ائتمان، مع خصم على الفوترة السنوية."
 >
     <x-marketing.nav />
 

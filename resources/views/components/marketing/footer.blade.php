@@ -79,7 +79,7 @@
     $blurb = $settings['footer_description'] ?? 'نظام إدارة الموارد المؤسسي الذكي الذي يواكب طموحات مؤسستك القادمة.';
     $newsletterTitle = $settings['footer_newsletter_title'] ?? 'البريد الإلكتروني';
     $newsletterBtnText = $settings['footer_newsletter_btn_text'] ?? 'اشتراك';
-    $copyright = $footer['copyright'] ?? ('© '.now()->year.' Veyra ERP. جميع الحقوق محفوظة.');
+    $copyright = $footer['copyright'] ?? ('© '.now()->year.' مدى. جميع الحقوق محفوظة.');
 
     if ($footer !== null) {
         $columns = $footer['columns'] ?? $columns;
@@ -95,16 +95,16 @@
     }
 @endphp
 
-<footer class="bg-ink-950 py-16 text-mist-400">
+<footer class="bg-footer py-16 text-footer-muted" data-surface="dark">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
             <div class="lg:col-span-2">
                 <a href="/" class="flex shrink-0 items-center gap-2.5">
                     @if ($logoUrl = \App\Models\Setting::assetUrl($settings['site_logo'] ?? null))
-                        <img src="{{ $logoUrl }}" alt="Veyra ERP" class="h-10 max-h-10 w-auto max-w-[220px] shrink-0 object-contain object-start">
+                        <img src="{{ $logoUrl }}" alt="مدى" class="h-10 max-h-10 w-auto max-w-[220px] shrink-0 object-contain object-start">
                     @else
-                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 font-display text-sm font-bold text-ink-950 shadow-glow">V</span>
-                        <span class="font-display text-xl font-bold text-white">Veyra <span class="text-emerald-400">ERP</span></span>
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 font-display text-sm font-bold text-white">م</span>
+                        <span class="font-display text-xl font-bold text-footer-heading">مدى <span class="text-brand-300">ERP</span></span>
                     @endif
                 </a>
                 <p class="mt-4 max-w-xs text-sm leading-relaxed">{{ $blurb }}</p>
@@ -120,36 +120,36 @@
                             value="{{ old('email') }}"
                             required
                             placeholder="{{ $newsletterTitle }}"
-                            class="w-full rounded-full border border-ink-800 bg-ink-900 px-4 py-2 text-sm text-white placeholder:text-mist-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30"
+                            class="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/40"
                         >
-                        <button type="submit" class="shrink-0 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-ink-950 transition duration-200 hover:bg-emerald-400 active:scale-[0.98]">
+                        <button type="submit" class="shrink-0 rounded-md bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-brand-600 active:scale-[0.98]">
                             {{ $newsletterBtnText }}
                         </button>
                     </div>
                     @error('email')
-                        <p class="mt-2 text-xs text-danger-solid">{{ $message }}</p>
+                        <p class="mt-2 text-xs text-critical-400">{{ $message }}</p>
                     @enderror
                 </form>
             </div>
 
             @foreach ($columns as $column)
                 <div>
-                    <p class="text-sm font-semibold text-white">{{ $column['title'] }}</p>
+                    <p class="text-sm font-semibold text-footer-heading">{{ $column['title'] }}</p>
                     <ul class="mt-4 space-y-2 text-sm">
                         @foreach ($column['links'] as $navLink)
-                            <li><a href="{{ $navLink['url'] ?? $navLink['path'] ?? '#' }}" class="transition duration-200 hover:text-emerald-400">{{ $navLink['label'] }}</a></li>
+                            <li><a href="{{ $navLink['url'] ?? $navLink['path'] ?? '#' }}" class="text-footer-muted transition duration-150 hover:text-white">{{ $navLink['label'] }}</a></li>
                         @endforeach
                     </ul>
                 </div>
             @endforeach
         </div>
 
-        <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-ink-800 pt-8 text-xs sm:flex-row">
+        <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs sm:flex-row">
             <p>{{ $copyright }}</p>
             @if ($socials !== [])
                 <div class="flex items-center gap-3">
                     @foreach ($socials as $social)
-                        <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-ink-800 text-mist-400 transition duration-200 hover:border-emerald-400 hover:text-emerald-400">
+                        <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-mist-500 transition duration-150 hover:border-brand-300 hover:bg-white/5 hover:text-ink-900">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">{!! $social['icon'] !!}</svg>
                         </a>
                     @endforeach

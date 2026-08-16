@@ -10,7 +10,7 @@
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
         $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
         $blankPlan = [
             'id' => null,
@@ -39,11 +39,11 @@
     }">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الخطط وحدود الميزات</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الخطط وحدود الميزات</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تُحفظ مباشرة في جداول الخطط وميزاتها.</p>
             </div>
 
-            <button type="button" @click="create()" class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">
+            <button type="button" @click="create()" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">
                 إضافة خطة
             </button>
         </div>
@@ -51,19 +51,19 @@
         <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             @foreach ($plans as $plan)
                 <div @class([
-                    'relative flex flex-col rounded-2xl border bg-white p-5 shadow-sm transition duration-200 dark:bg-ink-800',
-                    'border-emerald-400/50 ring-1 ring-emerald-400/30' => $plan['popular'],
+                    'relative flex flex-col rounded-2xl border bg-white p-4 shadow-sm transition duration-200 dark:bg-ink-800',
+                    'border-brand-500/50 ring-1 ring-brand-500/30' => $plan['popular'],
                     'border-mist-200 dark:border-ink-600' => ! $plan['popular'],
                 ])>
                     @if ($plan['popular'])
-                        <span class="absolute -top-2.5 end-5 rounded-full bg-emerald-400 px-2.5 py-1 text-[10px] font-bold text-emerald-900">مميزة</span>
+                        <span class="absolute -top-2.5 end-5 rounded-md bg-brand-500 px-2.5 py-1 text-xs font-bold text-white">مميزة</span>
                     @endif
 
                     <div class="flex items-center justify-between gap-2">
-                        <h3 class="font-display text-lg font-bold text-ink-900 dark:text-ink-50">{{ $plan['name'] }}</h3>
+                        <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">{{ $plan['name'] }}</h3>
                         <span @class([
-                            'rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                            'bg-emerald-500/10 text-emerald-600' => $plan['is_active'],
+                            'rounded-md px-2 py-0.5 text-xs font-semibold',
+                            'bg-brand-500/10 text-brand-600' => $plan['is_active'],
                             'bg-mist-100 text-mist-500' => ! $plan['is_active'],
                         ])>{{ $plan['is_active'] ? 'نشطة' : 'غير نشطة' }}</span>
                     </div>
@@ -71,7 +71,7 @@
                     <p class="mt-1 text-sm text-mist-500">{{ $plan['tagline'] }}</p>
 
                     <div class="mt-3 flex items-baseline gap-1">
-                        <span class="font-display text-3xl font-bold text-ink-900 dark:text-ink-50">${{ number_format((float) $plan['price_monthly']) }}</span>
+                        <span class="font-display text-3xl font-medium text-ink-900 dark:text-ink-50">${{ number_format((float) $plan['price_monthly']) }}</span>
                         <span class="text-sm text-mist-500">/ شهريًا</span>
                     </div>
 
@@ -84,7 +84,7 @@
                     </ul>
 
                     <div class="mt-5 flex items-center gap-2 border-t border-mist-100 pt-4 dark:border-ink-700">
-                        <button type="button" @click="edit(@js($plan))" class="flex-1 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:text-mist-200">تعديل</button>
+                        <button type="button" @click="edit(@js($plan))" class="flex-1 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200">تعديل</button>
                         <form method="POST" action="{{ route('admin.plans.destroy', $plan['id']) }}" data-swal-confirm data-swal-variant="warning" data-swal-title="أرشفة هذه الخطة؟" data-swal-text="ستختفي الخطة من صفحة الأسعار العامة، وتبقى الاشتراكات القائمة عليها كما هي. يمكن استعادتها لاحقاً." data-swal-confirm-button="نعم، أرشف الخطة">
                             @csrf
                             @method('DELETE')
@@ -113,14 +113,14 @@
                 </template>
 
                 <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
-                    <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">
+                    <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">
                         <span x-show="isNew">إضافة خطة جديدة</span>
                         <span x-show="!isNew">تعديل خطة</span>
                     </h3>
                     <button type="button" @click="open = false" class="rounded-lg p-1 text-mist-400" aria-label="إغلاق">×</button>
                 </div>
 
-                <div class="flex-1 space-y-4 overflow-y-auto p-5">
+                <div class="flex-1 space-y-4 overflow-y-auto p-4">
                     <div>
                         <label class="{{ $labelClass }}">اسم الخطة</label>
                         <input type="text" name="name" x-model="form.name" class="{{ $inputClass }}" required>
@@ -167,19 +167,19 @@
                         <label class="{{ $labelClass }}">المزايا (سطر لكل ميزة)</label>
                         <textarea name="features_text" rows="6" x-model="form.features_text" class="{{ $inputClass }}"></textarea>
                     </div>
-                    <label class="flex items-center justify-between rounded-xl border border-mist-200 px-3 py-2.5 dark:border-ink-600">
+                    <label class="flex items-center justify-between rounded-xl border border-mist-200 px-3 py-2 dark:border-ink-600">
                         <span class="text-sm">خطة مميزة</span>
-                        <input type="checkbox" name="is_highlighted" value="1" x-model="form.is_highlighted" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400">
+                        <input type="checkbox" name="is_highlighted" value="1" x-model="form.is_highlighted" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500">
                     </label>
-                    <label class="flex items-center justify-between rounded-xl border border-mist-200 px-3 py-2.5 dark:border-ink-600">
+                    <label class="flex items-center justify-between rounded-xl border border-mist-200 px-3 py-2 dark:border-ink-600">
                         <span class="text-sm">نشطة للعرض العام</span>
-                        <input type="checkbox" name="is_active" value="1" x-model="form.is_active" class="rounded border-mist-300 text-emerald-500 focus:ring-emerald-400">
+                        <input type="checkbox" name="is_active" value="1" x-model="form.is_active" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500">
                     </label>
                 </div>
 
                 <div class="flex items-center justify-end gap-3 border-t border-mist-100 px-5 py-4 dark:border-ink-700">
                     <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600">إلغاء</button>
-                    <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow">حفظ الخطة</button>
+                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow">حفظ الخطة</button>
                 </div>
             </form>
         </aside>

@@ -4,7 +4,7 @@
     $statusClasses = [
         PayrollRunStatus::Draft->value => 'bg-mist-200 text-mist-700 dark:bg-ink-700 dark:text-mist-300',
         PayrollRunStatus::PendingApproval->value => 'bg-amber-400/15 text-amber-700 dark:text-amber-300',
-        PayrollRunStatus::Approved->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-300',
+        PayrollRunStatus::Approved->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
         PayrollRunStatus::Paid->value => 'bg-sky-400/15 text-sky-700 dark:text-sky-300',
         PayrollRunStatus::Cancelled->value => 'bg-danger-solid/10 text-danger-solid',
     ];
@@ -18,10 +18,10 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
                 <div class="flex items-center gap-3">
-                    <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">
+                    <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">
                         مسيرة رواتب <x-ui.ltr>{{ $run->period }}</x-ui.ltr>
                     </h1>
-                    <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$run->status->value] ?? ''])>
+                    <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$run->status->value] ?? ''])>
                         {{ $run->status->label() }}
                     </span>
                 </div>
@@ -35,11 +35,11 @@
             <div class="flex flex-wrap items-center gap-2">
                 @can('finance.payroll.prepare')
                     @if ($run->status->isEditable())
-                        <a href="{{ route('finance.payroll-runs.edit', $run) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">تعديل</a>
+                        <a href="{{ route('finance.payroll-runs.edit', $run) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تعديل</a>
 
                         <form method="POST" action="{{ route('finance.payroll-runs.recalculate', $run) }}">
                             @csrf
-                            <button type="submit" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">إعادة الاحتساب</button>
+                            <button type="submit" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">إعادة الاحتساب</button>
                         </form>
 
                         <form method="POST" action="{{ route('finance.payroll-runs.submit', $run) }}"
@@ -49,7 +49,7 @@
                               data-swal-text="ستُرسل المسيرة إلى المعتمِد للمراجعة، ولن تتمكن من تعديلها حتى يتم اعتمادها أو إعادتها إليك."
                               data-swal-confirm-button="نعم، ارفع للاعتماد">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">رفع للاعتماد</button>
+                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">رفع للاعتماد</button>
                         </form>
                     @endif
                 @endcan
@@ -62,7 +62,7 @@
                           data-swal-text="سيتم قفل المسيرة نهائياً ولن يمكن تعديل أي مبلغ فيها. أي تصحيح لاحق يتم عبر قيد تسوية في مسيرة تالية."
                           data-swal-confirm-button="نعم، اعتمد المسيرة">
                         @csrf
-                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">اعتماد</button>
+                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">اعتماد</button>
                     </form>
                 @endif
 
@@ -94,7 +94,7 @@
                 @csrf
                 <label for="rejection_reason" class="mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200">رفض المسيرة وإعادتها للمُعِد</label>
                 <div class="flex flex-col gap-2 sm:flex-row">
-                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
                     <button type="submit" class="rounded-xl border border-danger-solid px-4 py-2 text-sm font-semibold text-danger-solid">رفض</button>
                 </div>
                 @error('rejection_reason')
@@ -112,7 +112,7 @@
             ] as $tile)
                 <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
-                    <p class="mt-2 font-display text-xl font-bold text-ink-900 dark:text-ink-50">
+                    <p class="mt-2 font-display text-xl font-medium text-ink-900 dark:text-ink-50">
                         @if ($tile['money'])
                             <x-ui.money :amount="$tile['value']" :currency="$run->currency" />
                         @else
@@ -127,38 +127,38 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
-                        <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                        <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الموظف</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">أيام العمل</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الغياب</th>
-                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الأساسي</th>
-                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">خصم الغياب</th>
-                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الإجمالي</th>
-                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الصافي</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">إجراءات</th>
+                        <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                        <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">الموظف</th>
+                        <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">أيام العمل</th>
+                        <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">الغياب</th>
+                        <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">الأساسي</th>
+                        <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">خصم الغياب</th>
+                        <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">الإجمالي</th>
+                        <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">الصافي</th>
+                        <th class="px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">إجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                     @forelse ($payslips as $payslip)
                         <tr class="transition hover:bg-mist-50/80 dark:hover:bg-ink-900/40">
-                            <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">
+                            <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">
                                 {{ $loop->iteration + ($payslips->currentPage() - 1) * $payslips->perPage() }}
                             </td>
-                            <td class="px-4 py-3 text-start font-medium text-ink-900 dark:text-ink-50">{{ $payslip->employee_name }}</td>
-                            <td class="px-4 py-3 text-center text-mist-500"><x-ui.ltr>{{ $payslip->scheduled_days }}</x-ui.ltr></td>
-                            <td class="px-4 py-3 text-center text-mist-500"><x-ui.ltr>{{ $payslip->absent_days }}</x-ui.ltr></td>
-                            <td class="px-4 py-3 text-end text-mist-500"><x-ui.money :amount="$payslip->base_amount" /></td>
-                            <td class="px-4 py-3 text-end text-danger-solid"><x-ui.money :amount="$payslip->absence_deduction" /></td>
-                            <td class="px-4 py-3 text-end text-mist-500"><x-ui.money :amount="$payslip->gross_amount" /></td>
-                            <td class="px-4 py-3 text-end font-semibold text-ink-900 dark:text-ink-50">
+                            <td class="px-3 py-2 text-start font-medium text-ink-900 dark:text-ink-50">{{ $payslip->employee_name }}</td>
+                            <td class="px-3 py-2 text-center text-mist-500"><x-ui.ltr>{{ $payslip->scheduled_days }}</x-ui.ltr></td>
+                            <td class="px-3 py-2 text-center text-mist-500"><x-ui.ltr>{{ $payslip->absent_days }}</x-ui.ltr></td>
+                            <td class="px-3 py-2 text-end text-mist-500"><x-ui.money :amount="$payslip->base_amount" /></td>
+                            <td class="px-3 py-2 text-end text-danger-solid"><x-ui.money :amount="$payslip->absence_deduction" /></td>
+                            <td class="px-3 py-2 text-end text-mist-500"><x-ui.money :amount="$payslip->gross_amount" /></td>
+                            <td class="px-3 py-2 text-end font-semibold text-ink-900 dark:text-ink-50">
                                 <x-ui.money :amount="$payslip->net_amount" :currency="$payslip->pay_currency" />
                             </td>
-                            <td class="px-4 py-3 text-center">
-                                <a href="{{ route('finance.payslips.show', $payslip) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600">تفاصيل</a>
+                            <td class="px-3 py-2 text-center">
+                                <a href="{{ route('finance.payslips.show', $payslip) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تفاصيل</a>
                             </td>
                         </tr>
                     @empty
-                        <x-ui.table-empty :colspan="9" icon="🧾" message="لا توجد قسائم رواتب في هذه المسيرة." />
+                        <x-ui.table-empty :colspan="9" icon="receipt" message="لا توجد قسائم رواتب في هذه المسيرة." />
                     @endforelse
                 </tbody>
             </table>
@@ -175,24 +175,24 @@
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الموظف</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">الفترة الأصلية</th>
-                            <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">السبب</th>
-                            <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">القيمة</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">الموظف</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">الفترة الأصلية</th>
+                            <th class="px-3 py-2 text-start text-xs font-medium text-mist-500 dark:text-mist-400">السبب</th>
+                            <th class="px-3 py-2 text-end text-xs font-medium text-mist-500 dark:text-mist-400">القيمة</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                         @foreach ($adjustments as $adjustment)
                             <tr>
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3 text-start text-ink-700 dark:text-mist-200">{{ $adjustment->employee_name }}</td>
-                                <td class="px-4 py-3 text-start text-mist-500"><x-ui.ltr>{{ $adjustment->original_period }}</x-ui.ltr></td>
-                                <td class="px-4 py-3 text-start text-mist-500">{{ $adjustment->reason }}</td>
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 text-start text-ink-700 dark:text-mist-200">{{ $adjustment->employee_name }}</td>
+                                <td class="px-3 py-2 text-start text-mist-500"><x-ui.ltr>{{ $adjustment->original_period }}</x-ui.ltr></td>
+                                <td class="px-3 py-2 text-start text-mist-500">{{ $adjustment->reason }}</td>
                                 <td @class([
                                     'px-4 py-3 text-end font-semibold',
                                     'text-danger-solid' => $adjustment->isClawback(),
-                                    'text-emerald-600 dark:text-emerald-400' => ! $adjustment->isClawback(),
+                                    'text-brand-600 dark:text-brand-300' => ! $adjustment->isClawback(),
                                 ])>
                                     <x-ui.money :amount="$adjustment->amount" :signed="true" />
                                 </td>
@@ -205,7 +205,7 @@
 
         @can('finance.payroll.prepare')
             @if ($run->status->isEditable() && $correctablePayslips->isNotEmpty())
-                <form method="POST" action="{{ route('finance.payroll-runs.adjustments.store', $run) }}" class="space-y-3 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <form method="POST" action="{{ route('finance.payroll-runs.adjustments.store', $run) }}" class="space-y-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     @csrf
                     <div>
                         <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">تسجيل قيد تسوية لفترة مقفلة</h2>
@@ -245,7 +245,7 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow hover:bg-emerald-300">تسجيل التسوية</button>
+                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">تسجيل التسوية</button>
                     </div>
                 </form>
             @endif

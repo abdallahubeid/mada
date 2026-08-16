@@ -12,7 +12,7 @@ test('setting seeder persists modules section chrome', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('modules_badge_text'))->toBe('الوحدات')
-        ->and(Setting::getValue('modules_title'))->toBe('وحدات تعمل معاً، لا بجوار بعضها')
+        ->and(Setting::getValue('modules_title'))->toBe('وحدات تعمل **معاً**، لا بجوار بعضها')
         ->and(Setting::getValue('modules_sub_title'))->toBe('كل وحدة تكتب وتقرأ من البيانات المعزولة نفسها، فلا يوجد رقمان لنفس الحقيقة ولا مطابقة يدوية في نهاية الشهر.');
 });
 
@@ -40,7 +40,7 @@ test('the landing page modules section renders seeded settings and cards', funct
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('الوحدات', false)
-        ->assertSee('وحدات تعمل معاً، لا بجوار بعضها', false)
+        ->assertSee('وحدات تعمل', false)->assertSee('معاً', false)
         ->assertSee('كل وحدة تكتب وتقرأ من البيانات المعزولة نفسها، فلا يوجد رقمان لنفس الحقيقة ولا مطابقة يدوية في نهاية الشهر.', false)
         ->assertSee('الموارد البشرية', false)
         ->assertSee('المالية والرواتب', false)
@@ -48,6 +48,6 @@ test('the landing page modules section renders seeded settings and cards', funct
         ->assertSee('الدعم والتذاكر', false)
         ->assertSee('إدارة المستأجرين', false)
         ->assertSee('الأمان والصلاحيات', false)
-        ->assertSee('ph:users-three-bold', false)
-        ->assertSee('ph:shield-check-bold', false);
+        ->assertSee('M15 19.128a9.38 9.38', false)
+        ->assertSee('M9 12.75 11.25 15 15 9.75m-3-7.036', false);
 });

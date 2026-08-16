@@ -109,7 +109,7 @@ class SetupWizardController extends Controller
             $calendar->save();
         });
 
-        flash()->success('تم حفظ إعدادات المؤسسة بنجاح. حسابك ما زال قيد مراجعة فريق Veyra.');
+        flash()->success('تم حفظ إعدادات المؤسسة بنجاح. حسابك ما زال قيد مراجعة فريق مدى.');
 
         return redirect()->route('dashboard.setup');
     }

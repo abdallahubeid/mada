@@ -2,7 +2,7 @@
     use App\Domain\Tenancy\Enums\TaskPriority;
     use App\Domain\Tenancy\Enums\TaskStatus;
 
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
     $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
@@ -16,14 +16,14 @@
         TaskStatus::Todo->value => 'bg-mist-100 text-mist-700 dark:bg-ink-700 dark:text-mist-200',
         TaskStatus::InProgress->value => 'bg-sky-400/15 text-sky-800 dark:text-sky-300',
         TaskStatus::Review->value => 'bg-amber-400/15 text-amber-800 dark:text-amber-300',
-        TaskStatus::Completed->value => 'bg-emerald-400/15 text-emerald-700 dark:text-emerald-400',
+        TaskStatus::Completed->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
     ];
 @endphp
 
 <x-layouts.app title="إسناد المهام">
     <div class="mx-auto max-w-6xl space-y-6">
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إسناد المهام</h1>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إسناد المهام</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">أنشئ مهام جديدة وأسندها لأعضاء فريقك المباشرين، وتابع حالتها أولاً بأول.</p>
         </div>
 
@@ -37,9 +37,9 @@
             </div>
         @else
             <div class="grid gap-6 lg:grid-cols-[380px_1fr]">
-                <section class="h-fit space-y-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="h-fit space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
                     <div>
-                        <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">مهمة جديدة</h2>
+                        <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">مهمة جديدة</h2>
                         <p class="mt-1 text-xs text-mist-500">تُسند فقط لأعضاء فريقك المباشرين.</p>
                     </div>
 
@@ -95,14 +95,14 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                        <button type="submit" class="w-full rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                             إسناد المهمة
                         </button>
                     </form>
                 </section>
 
                 <section class="space-y-3">
-                    <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">مهام الفريق</h2>
+                    <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">مهام الفريق</h2>
 
                     @if ($tasks->isEmpty())
                         <div class="rounded-2xl border border-dashed border-mist-200 bg-white p-8 text-center dark:border-ink-600 dark:bg-ink-800">
@@ -114,28 +114,28 @@
                                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                                     <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                                         <tr>
-                                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">المهمة</th>
-                                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الموظف</th>
-                                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الاستحقاق</th>
-                                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الأولوية</th>
-                                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">الحالة</th>
+                                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">المهمة</th>
+                                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الموظف</th>
+                                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الاستحقاق</th>
+                                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الأولوية</th>
+                                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">الحالة</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                                         @foreach ($tasks as $task)
                                             <tr>
-                                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
-                                                <td class="px-4 py-3 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $task->title }}</td>
-                                                <td class="px-4 py-3 text-mist-600 dark:text-mist-300 text-start">{{ $task->employee?->full_name ?? '—' }}</td>
-                                                <td class="px-4 py-3 tabular-nums text-start"><x-ui.ltr>{{ $task->due_date?->format('Y-m-d') ?? '—' }}</x-ui.ltr></td>
-                                                <td class="px-4 py-3 text-start">
-                                                    <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $priorityClasses[$task->priority->value] ?? ''])>
+                                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration }}</td>
+                                                <td class="px-3 py-2 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $task->title }}</td>
+                                                <td class="px-3 py-2 text-mist-600 dark:text-mist-300 text-start">{{ $task->employee?->full_name ?? '—' }}</td>
+                                                <td class="px-3 py-2 tabular-nums text-start"><x-ui.ltr>{{ $task->due_date?->format('Y-m-d') ?? '—' }}</x-ui.ltr></td>
+                                                <td class="px-3 py-2 text-start">
+                                                    <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $priorityClasses[$task->priority->value] ?? ''])>
                                                         {{ $task->priority->label() }}
                                                     </span>
                                                 </td>
-                                                <td class="px-4 py-3 text-center">
-                                                    <span @class(['inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$task->status->value] ?? ''])>
+                                                <td class="px-3 py-2 text-center">
+                                                    <span @class(['inline-flex rounded-md px-2.5 py-0.5 text-xs font-semibold', $statusClasses[$task->status->value] ?? ''])>
                                                         {{ $task->status->label() }}
                                                     </span>
                                                 </td>

@@ -2,7 +2,7 @@
     /** @var string $status pending|delivered|read */
     $color = match ($status) {
         'read' => 'text-sky-500',
-        default => ($onDark ?? false) ? 'text-emerald-900/70' : 'text-mist-400',
+        default => ($onDark ?? false) ? 'text-white/70' : 'text-mist-400',
     };
 @endphp
 

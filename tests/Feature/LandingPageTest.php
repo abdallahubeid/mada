@@ -21,7 +21,7 @@ test('the landing page renders with hero and pricing content', function () {
 
     $this->get('/')
         ->assertOk()
-        ->assertSee('Veyra')
+        ->assertSee('مدى')
         ->assertSee('ابدأ مجاناً الآن')
         ->assertSee('النمو', false)
         ->assertSee('الأكثر طلباً');

@@ -24,7 +24,7 @@ test('the features page renders successfully', function () {
         ->assertOk()
         ->assertSee('المميزات')
         ->assertSee('أمان متعدد المستأجرين')
-        ->assertSee('ابدأ مجاناً الآن');
+        ->assertSee('ابدأ الآن — مجاناً');
 });
 
 test('the solutions page renders industry sections with anchors', function () {

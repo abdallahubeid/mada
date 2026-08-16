@@ -44,6 +44,6 @@ test('the landing page problems section renders seeded settings and cards', func
         ->assertSee('عمليات يدوية تستنزف الفرق', false)
         ->assertSee('غياب الرؤية المالية اللحظية', false)
         ->assertSee('مخاوف أمنية على البيانات', false)
-        ->assertSee('ph:link-bold', false)
-        ->assertSee('ph:warning-bold', false);
+        ->assertSee('M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244', false)
+        ->assertSee('M12 9v3.75m-9.303 3.376', false);
 });

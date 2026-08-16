@@ -11,11 +11,11 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">العطلات الرسمية</h1>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">العطلات الرسمية</h1>
                 <p class="mt-1 text-sm text-mist-500">تُستثنى هذه الأيام تلقائياً من احتساب مدة طلبات الإجازة.</p>
             </div>
             @if ($canManage)
-                <button type="button" @click="openCreate()" class="inline-flex items-center justify-center rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-300">
+                <button type="button" @click="openCreate()" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600">
                     إضافة عطلة
                 </button>
             @endif
@@ -26,12 +26,12 @@
                 <table class="w-full min-w-max text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs text-mist-500 dark:border-ink-700">
-                            <th class="w-12 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">#</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الاسم</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">الفترة</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">متكررة</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-start">ملاحظات</th>
-                            <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
+                            <th class="w-12 px-3 py-2 text-center text-xs font-medium text-mist-500 dark:text-mist-400">#</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الاسم</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">الفترة</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">متكررة</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-start">ملاحظات</th>
+                            <th class="px-3 py-2 text-xs font-medium text-mist-500 dark:text-mist-400 text-center">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
@@ -48,21 +48,21 @@
                                 ];
                             @endphp
                             <tr class="hover:bg-mist-50 dark:hover:bg-ink-700/40">
-                                <td class="w-12 px-4 py-3 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration + ($holidays->currentPage() - 1) * $holidays->perPage() }}</td>
-                                <td class="px-4 py-3 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $holiday->name }}</td>
-                                <td class="px-4 py-3 text-mist-500 text-start"><x-ui.ltr>{{ $holiday->start_date?->format('Y-m-d') }}
+                                <td class="w-12 px-3 py-2 text-center text-sm tabular-nums text-mist-500">{{ $loop->iteration + ($holidays->currentPage() - 1) * $holidays->perPage() }}</td>
+                                <td class="px-3 py-2 font-medium text-ink-900 dark:text-ink-50 text-start">{{ $holiday->name }}</td>
+                                <td class="px-3 py-2 text-mist-500 text-start"><x-ui.ltr>{{ $holiday->start_date?->format('Y-m-d') }}
                                     @if ($holiday->end_date && $holiday->start_date && ! $holiday->end_date->equalTo($holiday->start_date))
                                         → {{ $holiday->end_date->format('Y-m-d') }}
                                     @endif</x-ui.ltr></td>
-                                <td class="px-4 py-3 text-start">
+                                <td class="px-3 py-2 text-start">
                                     @if ($holiday->is_recurring)
-                                        <span class="rounded-full bg-sky-500/10 px-2 py-0.5 text-xs font-semibold text-sky-700 dark:text-sky-300">سنوياً</span>
+                                        <span class="rounded-md bg-sky-500/10 px-2 py-0.5 text-xs font-semibold text-sky-700 dark:text-sky-300">سنوياً</span>
                                     @else
                                         <span class="text-mist-400">—</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-mist-500 text-start">{{ $holiday->notes ?? '—' }}</td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-3 py-2 text-mist-500 text-start">{{ $holiday->notes ?? '—' }}</td>
+                                <td class="px-3 py-2 text-center">
                                     @if ($canManage)
                                         <div class="flex justify-center gap-2">
                                             <button type="button" @click="openEdit(@js($editPayload))" class="rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold dark:border-ink-600">تعديل</button>
@@ -76,7 +76,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-ui.table-empty :colspan="6" icon="📅" message="لا توجد عطلات مسجّلة بعد." />
+                            <x-ui.table-empty :colspan="6" icon="calendar" message="لا توجد عطلات مسجّلة بعد." />
                         @endforelse
                     </tbody>
                 </table>
@@ -88,7 +88,7 @@
 
         @if ($canManage)
             <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4">
-                <div class="w-full max-w-lg rounded-2xl bg-white p-5 shadow-xl dark:bg-ink-800" @click.outside="close()">
+                <div class="w-full max-w-lg rounded-2xl bg-white p-4 shadow-xl dark:bg-ink-800" @click.outside="close()">
                     <h3 class="font-semibold" x-text="editing ? 'تعديل عطلة' : 'عطلة جديدة'"></h3>
                     <form method="POST" class="mt-4 space-y-3" :action="editing ? editing.action : @js(route('tenant.holidays.store'))">
                         @csrf
@@ -99,12 +99,12 @@
                             <input type="date" name="end_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.end_date || ''">
                         </div>
                         <label class="flex items-center gap-2 text-sm">
-                            <input type="checkbox" name="is_recurring" value="1" class="rounded border-mist-300 text-emerald-500" :checked="!!editing?.is_recurring">
+                            <input type="checkbox" name="is_recurring" value="1" class="rounded border-mist-300 text-brand-500" :checked="!!editing?.is_recurring">
                             تتكرر سنوياً
                         </label>
                         <textarea name="notes" rows="2" placeholder="ملاحظات" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.notes || ''"></textarea>
                         <div class="flex gap-2">
-                            <button type="submit" class="flex-1 rounded-xl bg-emerald-400 py-2 text-sm font-semibold text-emerald-900">حفظ</button>
+                            <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">حفظ</button>
                             <button type="button" @click="close()" class="rounded-xl border border-mist-200 px-4 py-2 text-sm dark:border-ink-600">إلغاء</button>
                         </div>
                     </form>

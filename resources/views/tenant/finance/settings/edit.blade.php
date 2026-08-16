@@ -1,6 +1,6 @@
 <x-layouts.app title="إعدادات المالية ونهاية الخدمة">
     @php
-        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-mist-500';
+        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-mist-500';
         $labelClasses = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
         $hintClasses = 'mt-1.5 text-xs text-mist-500 dark:text-mist-400';
         $errorClasses = 'mt-1.5 text-xs text-danger-solid';
@@ -19,7 +19,7 @@
 
     <div class="mx-auto max-w-3xl space-y-6">
         <div>
-            <h1 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إعدادات المالية ونهاية الخدمة</h1>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إعدادات المالية ونهاية الخدمة</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                 القواعد التي تُحتسب بها مكافأة نهاية الخدمة لكل تسوية جديدة.
             </p>
@@ -27,12 +27,12 @@
 
         {{--
             The single most important thing on this page. EOSB is a statutory
-            entitlement and Veyra ships a default, not a legal position — a
+            entitlement and مدى ships a default, not a legal position — a
             tenant that never reads this banner is the failure mode the whole
             screen exists to prevent.
         --}}
         <div class="rounded-2xl border border-amber-300/60 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-            <p class="font-semibold">⚠️ هذه القيم ليست استشارة قانونية</p>
+            <p class="font-semibold"><svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4 shrink-0 align-[-2px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg> هذه القيم ليست استشارة قانونية</p>
             <p class="mt-1 leading-relaxed">
                 القيم الافتراضية تتبع النمط الخليجي/السعودي الشائع: نصف راتب شهر عن كل سنة في السنوات الخمس الأولى، وراتب شهر كامل عن كل سنة بعدها، مع تدرّج في حالة الاستقالة.
                 يجب اعتمادها من مختص قبل أول تسوية فعلية، لأنها تحدّد أكبر دفعة مالية مفردة يستلمها الموظف.
@@ -57,13 +57,13 @@
             data-swal-title="حفظ قواعد نهاية الخدمة؟"
             data-swal-text="ستُحتسب كل تسوية جديدة بهذه القواعد. التسويات القائمة لن تتغيّر."
             data-swal-confirm-button="نعم، احفظ القواعد"
-            class="space-y-6 rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
+            class="space-y-6 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
         >
             @csrf
             @method('PUT')
 
             <fieldset class="space-y-4">
-                <legend class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الاستحقاق الأساسي</legend>
+                <legend class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الاستحقاق الأساسي</legend>
 
                 <label class="flex items-start gap-3 rounded-xl border border-mist-200 p-3 dark:border-ink-600">
                     <input type="checkbox" name="eosb_enabled" value="1" class="mt-1" @checked(old('eosb_enabled', $policy->enabled))>
@@ -113,7 +113,7 @@
             </fieldset>
 
             <fieldset class="space-y-4 border-t border-mist-100 pt-5 dark:border-ink-700">
-                <legend class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">تدرّج الاستقالة</legend>
+                <legend class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">تدرّج الاستقالة</legend>
                 <p class="text-sm text-mist-500 dark:text-mist-400">
                     النسبة المستحقة من المكافأة الكاملة عند الاستقالة، حسب مدة الخدمة. تُطبَّق الشريحة الأعلى التي بلغها الموظف.
                     حالات إنهاء العقد والتقاعد تُصرف كاملة دائماً.
@@ -121,8 +121,8 @@
 
                 <div class="space-y-2">
                     <div class="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">من (أشهر الخدمة)</span>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400">النسبة المستحقة (٪)</span>
+                        <span class="text-xs font-semibold text-mist-500 dark:text-mist-400">من (أشهر الخدمة)</span>
+                        <span class="text-xs font-semibold text-mist-500 dark:text-mist-400">النسبة المستحقة (٪)</span>
                         <span></span>
                     </div>
 
@@ -136,7 +136,7 @@
                                    class="{{ $inputClasses }} text-end tabular-nums">
                             <button type="button"
                                     @click="taper.length === 1 ? taper[0] = { months: 0, percent: '0' } : taper.splice(index, 1)"
-                                    class="rounded-xl border border-mist-200 px-4 py-2.5 text-sm font-semibold text-ink-700 transition hover:border-mist-300 hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-900">
+                                    class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition hover:border-mist-300 hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-900">
                                 حذف
                             </button>
                         </div>
@@ -144,7 +144,7 @@
 
                     <button type="button"
                             @click="taper.push({ months: 0, percent: '0' })"
-                            class="rounded-xl border border-dashed border-mist-300 px-4 py-2 text-sm font-semibold text-mist-600 transition hover:border-emerald-400 hover:text-emerald-600 dark:border-ink-600 dark:text-mist-300">
+                            class="rounded-xl border border-dashed border-mist-300 px-4 py-2 text-sm font-semibold text-mist-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-300">
                         + إضافة شريحة
                     </button>
                 </div>
@@ -160,7 +160,7 @@
             </fieldset>
 
             <fieldset class="space-y-4 border-t border-mist-100 pt-5 dark:border-ink-700">
-                <legend class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">الشهر المعياري</legend>
+                <legend class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">الشهر المعياري</legend>
                 <p class="text-sm text-mist-500 dark:text-mist-400">
                     يُستخدم لاشتقاق الأجر الشهري للموظف بالساعة، ولاحتساب بدل رصيد الإجازات عندما لا يتضمن شهر المغادرة أيام عمل مجدولة.
                 </p>
@@ -191,7 +191,7 @@
             </fieldset>
 
             <div class="flex justify-end gap-3 border-t border-mist-100 pt-5 dark:border-ink-700">
-                <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300">
+                <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
                     حفظ القواعد
                 </button>
             </div>

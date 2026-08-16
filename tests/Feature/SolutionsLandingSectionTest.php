@@ -14,7 +14,7 @@ test('setting seeder persists solutions section chrome and cta', function () {
     $this->seed(SettingSeeder::class);
 
     expect(Setting::getValue('solutions_badge_text'))->toBe('الحل')
-        ->and(Setting::getValue('solutions_title'))->toBe('مصدر واحد للحقيقة عبر مؤسستك بالكامل')
+        ->and(Setting::getValue('solutions_title'))->toBe('مصدر واحد للحقيقة عبر **مؤسستك بالكامل**')
         ->and(Setting::getValue('solutions_sub_title'))->toBe('تنتقل البيانات من إعلان الوظيفة إلى العقد إلى الحضور إلى مسيّرة الرواتب دون إعادة إدخال واحدة، ودون جدول جانبي واحد.')
         ->and(Setting::getValue('solutions_btn_text'))->toBe('اكتشف كل المميزات')
         ->and(Setting::getValue('solutions_btn_link'))->toBe('#modules');
@@ -47,11 +47,11 @@ test('the landing page solutions section renders seeded settings and sidebar mod
     $this->get(route('landing'))
         ->assertOk()
         ->assertSee('الحل', false)
-        ->assertSee('مصدر واحد للحقيقة عبر مؤسستك بالكامل', false)
+        ->assertSee('مصدر واحد للحقيقة عبر', false)->assertSee('مؤسستك بالكامل', false)
         ->assertSee('تنتقل البيانات من إعلان الوظيفة إلى العقد إلى الحضور إلى مسيّرة الرواتب دون إعادة إدخال واحدة، ودون جدول جانبي واحد.', false)
         ->assertSee('دورة حياة الموظف كاملة في مسار واحد: من إعلان الوظيفة إلى المقابلة إلى العقد إلى مستحق نهاية الخدمة.', false)
         ->assertSee('محرّك موافقات موحّد للإجازات والمصروفات ومسيّرات الرواتب، بفصل صارم بين مَن يُعدّ المعاملة ومَن يعتمدها.', false)
-        ->assertSee('ph:check-bold', false)
+        ->assertSee('m4.5 12.75 6 6 9-13.5', false)
         ->assertSee('اكتشف كل المميزات', false)
         ->assertSee('#modules', false)
         ->assertSee('الموارد البشرية', false)

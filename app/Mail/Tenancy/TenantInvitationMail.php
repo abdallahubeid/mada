@@ -22,7 +22,7 @@ class TenantInvitationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'دعوة للانضمام إلى '.$this->tenant->name.' على Veyra',
+            subject: 'دعوة للانضمام إلى '.$this->tenant->name.' على مدى',
         );
     }
 

@@ -33,7 +33,7 @@
 --}}
 <div
     {{ $attributes->merge(['class' => 'relative shrink-0']) }}
-    x-data="veyraEmojiPicker(@js(['categories' => $categories, 'event' => $event]))"
+    x-data="madaEmojiPicker(@js(['categories' => $categories, 'event' => $event]))"
 >
     <button
         type="button"
@@ -41,7 +41,7 @@
         @click="toggle()"
         :aria-expanded="open ? 'true' : 'false'"
         aria-haspopup="dialog"
-        class="rounded-xl p-2.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
+        class="rounded-xl p-2.5 text-mist-500 transition duration-200 hover:bg-mist-100 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:text-mist-400 dark:hover:bg-ink-700 dark:hover:text-mist-100"
         :class="open && 'bg-mist-100 text-ink-700 dark:bg-ink-700 dark:text-mist-100'"
         aria-label="{{ $label }}"
         title="{{ $label }}"
@@ -62,7 +62,7 @@
         x-transition.origin.bottom
         {{-- Anchoring picks the direction; this corrects the last few pixels
              when even the correct direction does not fit. --}}
-        x-effect="open && $nextTick(() => window.veyraClampX($el))"
+        x-effect="open && $nextTick(() => window.madaClampX($el))"
         @click.outside="open = false"
         {{--
             Closes when focus lands anywhere outside the picker — which is how
@@ -93,9 +93,9 @@
                     :title="category.label"
                     :aria-label="category.label"
                     @click="active = category.key"
-                    class="flex-1 rounded-lg py-1.5 text-base leading-none transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+                    class="flex-1 rounded-lg py-1.5 text-base leading-none transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50"
                     :class="active === category.key
-                        ? 'bg-emerald-400/15 ring-1 ring-inset ring-emerald-400/40'
+                        ? 'bg-brand-500/15 ring-1 ring-inset ring-brand-500/40'
                         : 'opacity-60 hover:bg-mist-100 hover:opacity-100 dark:hover:bg-ink-800'"
                     x-text="category.icon"
                 ></button>
@@ -105,13 +105,13 @@
         {{-- Recents. Hidden until there is something in it rather than shown
              empty, so the picker does not open onto a blank strip. --}}
         <div x-show="recent.length > 0" x-cloak class="border-b border-mist-100 px-2.5 pb-2 pt-2 dark:border-ink-700">
-            <p class="mb-1 text-[10px] font-semibold text-mist-500 dark:text-mist-400">المستخدمة مؤخراً</p>
+            <p class="mb-1 text-xs font-semibold text-mist-500 dark:text-mist-400">المستخدمة مؤخراً</p>
             <div class="grid grid-cols-8 gap-0.5">
                 <template x-for="emoji in recent" :key="'recent-' + emoji">
                     <button
                         type="button"
                         @click="pick(emoji)"
-                        class="rounded-lg py-1 text-lg leading-none transition duration-150 hover:scale-125 hover:bg-mist-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:hover:bg-ink-800"
+                        class="rounded-lg py-1 text-lg leading-none transition duration-150 hover:scale-125 hover:bg-mist-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:hover:bg-ink-800"
                         x-text="emoji"
                     ></button>
                 </template>
@@ -119,14 +119,14 @@
         </div>
 
         <div class="max-h-52 overflow-y-auto p-2.5">
-            <p class="mb-1 text-[10px] font-semibold text-mist-500 dark:text-mist-400" x-text="activeLabel"></p>
+            <p class="mb-1 text-xs font-semibold text-mist-500 dark:text-mist-400" x-text="activeLabel"></p>
             <div class="grid grid-cols-8 gap-0.5">
                 <template x-for="emoji in emojis" :key="active + '-' + emoji">
                     <button
                         type="button"
                         @click="pick(emoji)"
                         :aria-label="emoji"
-                        class="rounded-lg py-1 text-lg leading-none transition duration-150 hover:scale-125 hover:bg-mist-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 dark:hover:bg-ink-800"
+                        class="rounded-lg py-1 text-lg leading-none transition duration-150 hover:scale-125 hover:bg-mist-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 dark:hover:bg-ink-800"
                         x-text="emoji"
                     ></button>
                 </template>
@@ -140,7 +140,7 @@
 @once
     @push('scripts')
         <script>
-            function veyraEmojiPicker(config) {
+            function madaEmojiPicker(config) {
                 return {
                     open: false,
                     categories: config.categories,
@@ -153,7 +153,7 @@
                      * preference, not company data, and persisting it
                      * server-side would mean a write on every emoji tap.
                      */
-                    storageKey: 'veyra.messenger.recent-emoji',
+                    storageKey: 'mada.messenger.recent-emoji',
 
                     init() {
                         this.recent = this.readRecent();

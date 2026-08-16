@@ -9,21 +9,18 @@
 
     $steps = ['بيانات الحساب', 'بيانات المؤسسة', 'الخطة والمراجعة'];
 
-    $inputClasses = 'block w-full rounded-xl border border-mist-300 bg-white px-4 py-2.5 text-sm text-ink-900 shadow-sm transition duration-150 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50 dark:placeholder:text-mist-500';
-    $labelClasses = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
-    $errorClasses = 'mt-1.5 text-xs text-danger-solid';
-    $primaryBtn = 'inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-ink-950 shadow-glow transition duration-200 ease-in-out hover:bg-emerald-400 active:scale-[0.98]';
-    $secondaryBtn = 'inline-flex items-center justify-center gap-2 rounded-full border border-mist-300 px-6 py-3 text-sm font-semibold text-ink-700 transition duration-200 ease-in-out hover:border-emerald-400 hover:text-emerald-600 active:scale-[0.98] dark:border-ink-600 dark:text-mist-200 dark:hover:border-emerald-400 dark:hover:text-emerald-400';
+    // Shared with login.blade.php — see the note there on the 40px control height.
+    $inputClasses = 'block h-10 w-full rounded-lg border border-mist-300 bg-white px-3 text-sm text-ink-900 transition duration-150 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/25';
+    $labelClasses = 'mb-1.5 block text-sm font-medium text-ink-700';
+    $errorClasses = 'mt-1.5 text-xs font-medium text-critical-500';
+    $primaryBtn = 'inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-500 px-6 text-sm font-semibold text-white transition duration-150 ease-in-out hover:bg-brand-600 active:translate-y-px';
+    $secondaryBtn = 'inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-mist-100 px-6 text-sm font-semibold text-ink-700 transition duration-150 ease-in-out hover:bg-mist-200 active:translate-y-px';
 @endphp
 
-<x-layouts.guest max-width="max-w-2xl" title="إنشاء حساب — Veyra ERP">
-    <div class="mb-8 text-center">
-        <a href="/" class="inline-flex items-center gap-2">
-            <span class="font-display text-2xl font-bold text-emerald-600 dark:text-emerald-400">Veyra</span>
-            <span class="text-sm text-mist-500">ERP</span>
-        </a>
-        <h1 class="mt-6 font-display text-2xl font-bold text-ink-900 dark:text-ink-50 sm:text-3xl">ابدأ تجربتك المجانية</h1>
-        <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">أنشئ حساب مؤسستك في ثلاث خطوات بسيطة — بدون بطاقة ائتمانية.</p>
+<x-layouts.auth-centered wide title="إنشاء حساب — مدى">
+    <div class="mb-6 text-center">
+        <h1 class="font-display text-3xl font-extrabold tracking-tight text-ink-900">ابدأ مجاناً</h1>
+        <p class="mt-2 text-sm text-mist-500">ثلاث خطوات قصيرة، ولا حاجة لبطاقة بنكية.</p>
     </div>
 
     <div
@@ -34,7 +31,7 @@
                 return value.toString().trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
             },
         }"
-        class="rounded-3xl border border-mist-200 bg-white p-6 shadow-sm dark:border-ink-700 dark:bg-ink-800/60 sm:p-8"
+        class="rounded-xl border border-mist-200 bg-white p-6 shadow-sm sm:p-8"
     >
         {{-- Stepper --}}
         <div class="mb-8 flex items-center" role="list" aria-label="خطوات إنشاء الحساب">
@@ -44,10 +41,10 @@
                     <div class="flex flex-col items-center gap-2">
                         <span
                             :class="step > {{ $n }}
-                                ? 'bg-emerald-500 text-ink-950'
+                                ? 'bg-brand-500 text-white'
                                 : (step === {{ $n }}
-                                    ? 'border-2 border-emerald-400 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400'
-                                    : 'border border-mist-300 text-mist-400 dark:border-ink-600 dark:text-mist-500')"
+                                    ? 'border-2 border-brand-500 bg-brand-500/10 text-brand-600'
+                                    : 'border border-mist-300 text-mist-400')"
                             class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition duration-300 ease-out"
                         >
                             <template x-if="step > {{ $n }}">
@@ -60,7 +57,7 @@
                             </template>
                         </span>
                         <span
-                            :class="step === {{ $n }} ? 'text-emerald-600 dark:text-emerald-400' : 'text-mist-500 dark:text-mist-400'"
+                            :class="step === {{ $n }} ? 'text-brand-600' : 'text-mist-500'"
                             class="hidden text-xs font-medium sm:block"
                         >
                             {{ $label }}
@@ -69,7 +66,7 @@
 
                     @if ($index < count($steps) - 1)
                         <div
-                            :class="step > {{ $n }} ? 'bg-emerald-400' : 'bg-mist-200 dark:bg-ink-600'"
+                            :class="step > {{ $n }} ? 'bg-brand-500' : 'bg-mist-200'"
                             class="mx-3 h-0.5 flex-1 rounded-full transition duration-300 ease-out"
                         ></div>
                     @endif
@@ -86,7 +83,7 @@
                     <label for="name" class="{{ $labelClasses }}">الاسم الكامل</label>
                     <input
                         id="name" name="name" type="text" value="{{ old('name') }}" autocomplete="name" autofocus
-                        class="{{ $inputClasses }} {{ $errors->has('name') ? '!border-danger-solid' : '' }}"
+                        class="{{ $inputClasses }} {{ $errors->has('name') ? '!border-critical-500' : '' }}"
                     />
                     @error('name') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror
                 </div>
@@ -95,7 +92,7 @@
                     <label for="email" class="{{ $labelClasses }}">البريد الإلكتروني للعمل</label>
                     <input
                         id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email"
-                        class="{{ $inputClasses }} {{ $errors->has('email') ? '!border-danger-solid' : '' }}"
+                        class="{{ $inputClasses }} {{ $errors->has('email') ? '!border-critical-500' : '' }}"
                     />
                     @error('email') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror
                 </div>
@@ -105,7 +102,7 @@
                         <label for="password" class="{{ $labelClasses }}">كلمة المرور</label>
                         <input
                             id="password" name="password" type="password" autocomplete="new-password"
-                            class="{{ $inputClasses }} {{ $errors->has('password') ? '!border-danger-solid' : '' }}"
+                            class="{{ $inputClasses }} {{ $errors->has('password') ? '!border-critical-500' : '' }}"
                         />
                         @error('password') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror
                     </div>
@@ -133,32 +130,32 @@
                     <input
                         id="company_name" name="company_name" type="text" value="{{ old('company_name') }}" autocomplete="organization"
                         @input="if (! slugTouched) { $refs.companySlug.value = slugify($event.target.value); }"
-                        class="{{ $inputClasses }} {{ $errors->has('company_name') ? '!border-danger-solid' : '' }}"
+                        class="{{ $inputClasses }} {{ $errors->has('company_name') ? '!border-critical-500' : '' }}"
                     />
                     @error('company_name') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label for="company_slug" class="{{ $labelClasses }}">المعرّف الفريد للمؤسسة</label>
-                    <div class="flex items-stretch overflow-hidden rounded-xl border border-mist-300 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/30 dark:border-ink-600 {{ $errors->has('company_slug') ? '!border-danger-solid' : '' }}">
+                    <div class="flex items-stretch overflow-hidden rounded-xl border border-mist-300 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/30 {{ $errors->has('company_slug') ? '!border-critical-500' : '' }}">
                         <input
                             id="company_slug" x-ref="companySlug" name="company_slug" type="text" value="{{ old('company_slug') }}"
                             dir="ltr" @input="slugTouched = true"
-                            class="w-full flex-1 border-0 bg-white px-4 py-2.5 text-sm text-ink-900 placeholder:text-mist-400 focus:outline-none focus:ring-0 dark:bg-ink-800 dark:text-ink-50"
+                            class="w-full flex-1 border-0 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-mist-400 focus:outline-none focus:ring-0"
                         />
-                        <span class="flex items-center whitespace-nowrap bg-mist-50 px-4 text-sm text-mist-400 dark:bg-ink-700 dark:text-mist-500">.veyra.app</span>
+                        <span class="flex items-center whitespace-nowrap bg-mist-50 px-4 text-sm text-mist-400">.mada.app</span>
                     </div>
                     @error('company_slug')
                         <p class="{{ $errorClasses }}">{{ $message }}</p>
                     @else
-                        <p class="mt-1.5 text-xs text-mist-400 dark:text-mist-500">أحرف إنجليزية صغيرة وأرقام وشرطات فقط.</p>
+                        <p class="mt-1.5 text-xs text-mist-400">أحرف إنجليزية صغيرة وأرقام وشرطات فقط.</p>
                     @enderror
                 </div>
 
                 <div class="grid gap-5 sm:grid-cols-2">
                     <div>
                         <label for="industry" class="{{ $labelClasses }}">قطاع النشاط</label>
-                        <select id="industry" name="industry" class="{{ $inputClasses }} {{ $errors->has('industry') ? '!border-danger-solid' : '' }}">
+                        <select id="industry" name="industry" class="{{ $inputClasses }} {{ $errors->has('industry') ? '!border-critical-500' : '' }}">
                             <option value="" disabled {{ old('industry') ? '' : 'selected' }}>اختر القطاع</option>
                             @foreach ($industries as $value => $label)
                                 <option value="{{ $value }}" @selected(old('industry') === $value)>{{ $label }}</option>
@@ -168,7 +165,7 @@
                     </div>
                     <div>
                         <label for="team_size" class="{{ $labelClasses }}">حجم فريق العمل</label>
-                        <select id="team_size" name="team_size" class="{{ $inputClasses }} {{ $errors->has('team_size') ? '!border-danger-solid' : '' }}">
+                        <select id="team_size" name="team_size" class="{{ $inputClasses }} {{ $errors->has('team_size') ? '!border-critical-500' : '' }}">
                             <option value="" disabled {{ old('team_size') ? '' : 'selected' }}>اختر الحجم</option>
                             @foreach ($teamSizes as $value => $label)
                                 <option value="{{ $value }}" @selected(old('team_size') === $value)>{{ $label }}</option>
@@ -190,11 +187,11 @@
                     <p class="{{ $labelClasses }}">اختر خطة الاشتراك</p>
                     <div class="grid gap-4 sm:grid-cols-3">
                         @foreach ($plans as $value => $plan)
-                            <label class="relative flex cursor-pointer flex-col rounded-2xl border border-mist-200 p-4 transition duration-200 ease-out has-checked:border-emerald-400 has-checked:bg-emerald-400/5 has-checked:shadow-glow dark:border-ink-600">
+                            <label class="relative flex cursor-pointer flex-col rounded-2xl border border-mist-200 p-4 transition duration-200 ease-out has-checked:border-brand-500 has-checked:bg-brand-500/5 has-checked:shadow-glow">
                                 <input type="radio" name="plan" value="{{ $value }}" class="sr-only" {{ old('plan', 'growth') === $value ? 'checked' : '' }} />
-                                <span class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">{{ $plan['label'] }}</span>
-                                <span class="mt-1 text-xs text-mist-500 dark:text-mist-400">{{ $plan['tagline'] }}</span>
-                                <span class="mt-3 text-sm font-semibold text-emerald-600 dark:text-emerald-400">{{ $plan['price'] }}</span>
+                                <span class="font-display text-base font-semibold text-ink-900">{{ $plan['label'] }}</span>
+                                <span class="mt-1 text-xs text-mist-500">{{ $plan['tagline'] }}</span>
+                                <span class="mt-3 text-sm font-semibold text-brand-600">{{ $plan['price'] }}</span>
                             </label>
                         @endforeach
                     </div>
@@ -202,9 +199,9 @@
                 </div>
 
                 <div>
-                    <label class="flex items-start gap-3 text-sm text-mist-600 dark:text-mist-300">
-                        <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} class="mt-0.5 h-4 w-4 shrink-0 rounded border-mist-300 text-emerald-500 focus:ring-emerald-400/40 dark:border-ink-600 dark:bg-ink-800" />
-                        <span>أوافق على <a href="#" class="font-medium text-emerald-600 underline dark:text-emerald-400">الشروط والأحكام</a> و<a href="#" class="font-medium text-emerald-600 underline dark:text-emerald-400">سياسة الخصوصية</a>.</span>
+                    <label class="flex items-start gap-3 text-sm text-mist-600">
+                        <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} class="mt-0.5 h-4 w-4 shrink-0 rounded border-mist-300 text-brand-500 focus:ring-brand-500/40" />
+                        <span>أوافق على <a href="#" class="font-medium text-brand-600 underline">الشروط والأحكام</a> و<a href="#" class="font-medium text-brand-600 underline">سياسة الخصوصية</a>.</span>
                     </label>
                     @error('terms') <p class="{{ $errorClasses }}">{{ $message }}</p> @enderror
                 </div>
@@ -217,8 +214,8 @@
         </form>
     </div>
 
-    <p class="mt-6 text-center text-sm text-mist-500 dark:text-mist-400">
+    <p class="mt-6 text-center text-sm text-mist-500">
         لديك حساب بالفعل؟
-        <a href="{{ route('login') }}" class="font-semibold text-emerald-600 hover:underline dark:text-emerald-400">سجّل الدخول</a>
+        <a href="{{ route('login') }}" class="font-semibold text-brand-600 hover:underline">سجّل الدخول</a>
     </p>
-</x-layouts.guest>
+</x-layouts.auth-centered>

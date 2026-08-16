@@ -10,9 +10,9 @@
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
         $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
-        $cardClass = 'rounded-2xl border border-mist-200 bg-white p-5 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+        $cardClass = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
         $val = fn (string $key) => old($key, $settings[$key] ?? '');
         $tabs = [
             'site' => 'الموقع',
@@ -36,7 +36,7 @@
 
     <div x-data="{ tab: 'hero' }">
         <div>
-            <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إعدادات صفحة الهبوط</h2>
+            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إعدادات صفحة الهبوط</h2>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة محتوى الصفحة عبر مفاتيح فريدة لكل قسم.</p>
         </div>
 
@@ -47,9 +47,9 @@
                         type="button"
                         @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}'
-                            ? 'border-emerald-400 text-emerald-600 dark:text-emerald-400'
+                            ? 'border-brand-500 text-brand-600 dark:text-brand-300'
                             : 'border-transparent text-mist-500 hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200'"
-                        class="whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-all duration-200"
+                        class="whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium transition-all duration-200"
                     >{{ $label }}</button>
                 @endforeach
             </div>
@@ -60,7 +60,7 @@
             @method('PUT')
 
             <div x-show="tab === 'site'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Site</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Site</h3>
                 @include('admin.landing.settings._setting-image-field', [
                     'key' => 'site_logo',
                     'label' => 'site_logo',
@@ -76,7 +76,7 @@
             </div>
 
             <div x-show="tab === 'hero'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Hero</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Hero</h3>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">hero_badge_text</label>
@@ -110,7 +110,7 @@
             </div>
 
             <div x-show="tab === 'problem'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Problem</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Problem</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">problems_badge_text</label>
@@ -128,7 +128,7 @@
             </div>
 
             <div x-show="tab === 'solution'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Solution</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Solution</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">solutions_badge_text</label>
@@ -156,7 +156,7 @@
             </div>
 
             <div x-show="tab === 'offerings'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Offerings</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Offerings</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">offerings_title</label>
@@ -170,7 +170,7 @@
             </div>
 
             <div x-show="tab === 'modules'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Modules</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Modules</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">modules_badge_text</label>
@@ -188,7 +188,7 @@
             </div>
 
             <div x-show="tab === 'previews'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Product Previews</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Product Previews</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">product_previews_badge_text</label>
@@ -217,10 +217,59 @@
                         <input type="file" name="previews_video" accept="video/*" class="{{ $inputClass }}">
                     </div>
                 </div>
+
+                {{--
+                    ── Video Section ────────────────────────────────────────
+                    Controls the public landing video band. Lives inside the
+                    Previews tab because it shares `previews_video`: that upload
+                    is the fallback source when no external URL is set.
+                --}}
+                <div class="mt-8 border-t border-mist-200 pt-6 dark:border-ink-700">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Video Section</h3>
+
+                        {{--
+                            The hidden input is load-bearing: an unchecked
+                            checkbox submits nothing at all, so without a
+                            paired "0" the controller could never distinguish
+                            "switched off" from "field not on this form" and
+                            the section could be turned on but never off.
+                        --}}
+                        <label class="inline-flex cursor-pointer items-center gap-2.5">
+                            <input type="hidden" name="is_video_section_active" value="0">
+                            <input
+                                type="checkbox"
+                                name="is_video_section_active"
+                                value="1"
+                                @checked(\App\Models\Setting::isVideoSectionActive())
+                                class="h-4 w-4 rounded-xs border-mist-300 text-brand-500 focus:ring-brand-500/40 dark:border-ink-600"
+                            >
+                            <span class="text-sm font-medium text-ink-700 dark:text-mist-200">إظهار قسم الفيديو في الصفحة العامة</span>
+                        </label>
+                    </div>
+
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label class="{{ $labelClass }}">video_title</label>
+                            <input type="text" name="video_title" value="{{ $val('video_title') }}" class="{{ $inputClass }}">
+                        </div>
+                        <div>
+                            <label class="{{ $labelClass }}">video_description</label>
+                            <textarea name="video_description" rows="2" class="{{ $inputClass }}">{{ $val('video_description') }}</textarea>
+                        </div>
+                        <div>
+                            <label class="{{ $labelClass }}">video_url</label>
+                            <input type="url" name="video_url" value="{{ $val('video_url') }}" dir="ltr" placeholder="https://cdn.example.com/tour.mp4" class="{{ $inputClass }}">
+                            <p class="mt-1.5 text-xs text-mist-500">
+                                يُستخدم هذا الرابط إن وُجد، وإلا فسيُعرض الملف المرفوع في <span dir="ltr">previews_video</span> أعلاه. اتركه فارغاً للرجوع للملف المرفوع.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div x-show="tab === 'ai'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">AI</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">AI</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">ai_badge_text</label>
@@ -238,7 +287,7 @@
             </div>
 
             <div x-show="tab === 'features'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Why Us</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Why Us</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">why_us_badge_text</label>
@@ -256,7 +305,7 @@
             </div>
 
             <div x-show="tab === 'testimonials'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Testimonials</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Testimonials</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">testimonials_badge_text</label>
@@ -274,7 +323,7 @@
             </div>
 
             <div x-show="tab === 'pricing'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Pricing</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Pricing</h3>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">pricing_title</label>
@@ -296,7 +345,7 @@
             </div>
 
             <div x-show="tab === 'faq'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">FAQ</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">FAQ</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="{{ $labelClass }}">faq_title</label>
@@ -310,7 +359,7 @@
             </div>
 
             <div x-show="tab === 'cta'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">CTA</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">CTA</h3>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">cta_title</label>
@@ -340,11 +389,11 @@
             </div>
 
             <div x-show="tab === 'footer'" x-cloak class="{{ $cardClass }} space-y-6">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Footer & Social</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Footer & Social</h3>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
                     <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Brand & About</p>
-                    <p class="text-xs text-mist-500">الشعار يُدار من تبويب «الموقع» (<code class="text-emerald-600">site_logo</code>).</p>
+                    <p class="text-xs text-mist-500">الشعار يُدار من تبويب «الموقع» (<code class="text-brand-600">site_logo</code>).</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_description</label>
                         <textarea name="footer_description" rows="3" class="{{ $inputClass }}">{{ $val('footer_description') }}</textarea>
@@ -366,7 +415,7 @@
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 1 — المنتج</p>
+                    <p class="text-xs font-semibold uppercase text-mist-500">Column 1 — المنتج</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_title1</label>
                         <input type="text" name="footer_title1" value="{{ $val('footer_title1') }}" class="{{ $inputClass }}">
@@ -386,7 +435,7 @@
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 2 — الشركة</p>
+                    <p class="text-xs font-semibold uppercase text-mist-500">Column 2 — الشركة</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_title2</label>
                         <input type="text" name="footer_title2" value="{{ $val('footer_title2') }}" class="{{ $inputClass }}">
@@ -406,7 +455,7 @@
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-mist-200 p-4 dark:border-ink-600">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-mist-500">Column 3 — القانونية</p>
+                    <p class="text-xs font-semibold uppercase text-mist-500">Column 3 — القانونية</p>
                     <div>
                         <label class="{{ $labelClass }}">footer_title3</label>
                         <input type="text" name="footer_title3" value="{{ $val('footer_title3') }}" class="{{ $inputClass }}">
@@ -443,7 +492,7 @@
             </div>
 
             <div x-show="tab === 'privacy'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Privacy Policy</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Privacy Policy</h3>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">privacy_badge_text</label>
@@ -473,7 +522,7 @@
             </div>
 
             <div x-show="tab === 'terms'" x-cloak class="{{ $cardClass }} space-y-4">
-                <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50">Terms &amp; Conditions</h3>
+                <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Terms &amp; Conditions</h3>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">terms_badge_text</label>
@@ -504,7 +553,7 @@
 
             <div class="mt-6 flex items-center justify-end gap-3 border-t border-mist-200 pt-5 dark:border-ink-700">
                 <a href="{{ route('admin.landing.settings.edit') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">إلغاء</a>
-                <button type="submit" class="rounded-xl bg-emerald-400 px-5 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300 active:scale-95">حفظ الإعدادات</button>
+                <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95">حفظ الإعدادات</button>
             </div>
         </form>
     </div>
@@ -531,8 +580,8 @@
                         showCancelButton: true,
                         confirmButtonText: 'نعم، احذف',
                         cancelButtonText: 'إلغاء',
-                        confirmButtonColor: '#ef4444',
-                        cancelButtonColor: '#64748b',
+                        confirmButtonColor: '#b42318',
+                        cancelButtonColor: '#5a5262',
                         reverseButtons: true,
                     }).then(function (result) {
                         if (! result.isConfirmed) {
@@ -584,7 +633,7 @@
                                     icon: 'error',
                                     title: 'تعذّر حذف الصورة',
                                     text: 'حاول مرة أخرى.',
-                                    confirmButtonColor: '#4edea3',
+                                    confirmButtonColor: '#714b67',
                                 });
                             });
                     });

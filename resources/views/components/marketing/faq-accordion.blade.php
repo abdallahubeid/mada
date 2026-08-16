@@ -24,7 +24,7 @@
 @endphp
 
 @if ($framed)
-<section class="bg-white py-24 dark:bg-ink-900">
+<section class="bg-mist-50 py-24">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         @if ($sectionTitle !== '')
             <x-marketing.section-heading :title="$sectionTitle" :subtitle="$sectionSubtitle" />
@@ -36,7 +36,7 @@
 
         @if ($limit)
             <div class="mt-8 text-center">
-                <a href="{{ route('marketing.faq') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 transition hover:gap-3 dark:text-emerald-400">
+                <a href="{{ route('marketing.faq') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 transition hover:gap-3 dark:text-brand-300">
                     عرض جميع الأسئلة
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" /></svg>
                 </a>

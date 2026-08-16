@@ -4,7 +4,7 @@
     $adminUser = auth()->user();
     $adminUser?->loadMissing('avatar');
     $adminName = $adminUser->name ?? 'مشرف المنصّة';
-    $adminEmail = $adminUser->email ?? 'admin@veyra.test';
+    $adminEmail = $adminUser->email ?? 'admin@mada.test';
     $adminAvatarUrl = $adminUser?->avatar_url;
 
     $chromeBadges = app(\App\Services\Admin\AdminChromeBadges::class)->snapshot();
@@ -39,7 +39,7 @@
         </button>
 
         <div class="min-w-0">
-            <h1 class="truncate font-display text-lg font-semibold text-ink-900 dark:text-ink-50">@yield('title', 'لوحة تحكم المنصّة')</h1>
+            <h1 class="truncate font-display text-lg font-medium text-ink-900 dark:text-ink-50">@yield('title', 'لوحة تحكم المنصّة')</h1>
             <nav aria-label="مسار التنقّل" class="hidden text-xs text-mist-500 sm:block dark:text-mist-400">
                 @hasSection('breadcrumbs')
                     @yield('breadcrumbs')
@@ -53,7 +53,7 @@
     <div class="flex items-center gap-2">
         <div
             class="flex items-center gap-2"
-            x-data="veyraAdminChrome(@js([
+            x-data="madaAdminChrome(@js([
                 'pollUrl' => route('admin.chrome.poll'),
                 'suggestUrl' => route('admin.search.suggest'),
                 'searchUrl' => route('admin.search'),
@@ -83,7 +83,7 @@
                         @focus="fetchSuggestions()"
                         placeholder="بحث في المنصّة..."
                         autocomplete="off"
-                        class="w-56 rounded-lg border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 lg:w-72 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
+                        class="w-56 rounded-lg border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 lg:w-72 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
                     >
                 </form>
 
@@ -108,11 +108,11 @@
 
                     <template x-for="group in suggestionGroups" :key="group.key">
                         <div class="border-b border-mist-100 last:border-b-0 dark:border-ink-700">
-                            <p class="px-4 pt-3 pb-1 text-[11px] font-semibold tracking-wide text-mist-400 uppercase dark:text-mist-500" x-text="group.label"></p>
+                            <p class="px-4 pt-3 pb-1 text-xs font-semibold tracking-wide text-mist-400 uppercase dark:text-mist-500" x-text="group.label"></p>
                             <template x-for="item in group.items" :key="item.url + (item.anchor || '')">
                                 <a
                                     :href="item.url"
-                                    class="block px-4 py-2.5 transition hover:bg-mist-50 dark:hover:bg-ink-700"
+                                    class="block px-3 py-2 transition hover:bg-mist-50 dark:hover:bg-ink-700"
                                     @click="openSuggestion(item, $event)"
                                 >
                                     <p class="truncate text-sm font-medium text-ink-900 dark:text-ink-50" x-text="item.title"></p>
@@ -125,7 +125,7 @@
                     <template x-if="! loadingSuggestions && query.trim().length >= minQueryLength">
                         <a
                             :href="searchUrl + '?q=' + encodeURIComponent(query.trim())"
-                            class="block border-t border-mist-100 px-4 py-2.5 text-center text-sm font-semibold text-emerald-600 transition hover:bg-emerald-500/5 dark:border-ink-700 dark:text-emerald-400"
+                            class="block border-t border-mist-100 px-3 py-2 text-center text-sm font-semibold text-brand-600 transition hover:bg-brand-500/5 dark:border-ink-700 dark:text-brand-300"
                             @click="closeSuggestions()"
                         >
                             عرض كل النتائج
@@ -146,7 +146,7 @@
                 <span
                     x-show="messagesUnread > 0"
                     x-cloak
-                    class="absolute end-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-solid px-1 text-[10px] font-bold text-white"
+                    class="absolute end-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-solid px-1 text-xs font-bold text-white"
                     x-text="badgeLabel(messagesUnread)"
                 ></span>
             </a>
@@ -163,29 +163,11 @@
                 <span
                     x-show="notificationsUnread > 0"
                     x-cloak
-                    class="absolute end-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-solid px-1 text-[10px] font-bold text-white"
+                    class="absolute end-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-solid px-1 text-xs font-bold text-white"
                     x-text="badgeLabel(notificationsUnread)"
                 ></span>
             </a>
         </div>
-
-        {{-- Appearance toggle (persisted, ADR-15) --}}
-        <button
-            type="button"
-            x-data
-            @click="
-                const root = document.documentElement;
-                const nextDark = ! root.classList.contains('dark');
-                root.classList.toggle('dark', nextDark);
-                localStorage.setItem('veyra-theme', nextDark ? 'dark' : 'light');
-            "
-            class="rounded-lg p-2 text-mist-500 transition duration-200 ease-in-out hover:bg-mist-100 active:scale-90 dark:text-mist-400 dark:hover:bg-ink-800"
-            aria-label="تبديل الوضع الليلي"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-            </svg>
-        </button>
 
         {{-- Profile menu --}}
         <div class="relative" @click.outside="profileOpen = false">
@@ -205,7 +187,7 @@
                         class="h-8 w-8 rounded-full border border-slate-700 object-cover"
                     >
                 @else
-                    <span class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-emerald-400/15 font-display text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-brand-500/15 font-display text-sm font-medium text-brand-600 dark:text-brand-300">
                         {{ mb_substr($adminName, 0, 1) }}
                     </span>
                 @endif
@@ -266,18 +248,18 @@
 @once
     @push('styles')
         <style>
-            @keyframes veyra-search-flash {
+            @keyframes mada-search-flash {
                 0%, 100% { background-color: transparent; }
                 25%, 55% { background-color: rgb(250 204 21 / 0.4); }
             }
-            .veyra-search-flash {
-                animation: veyra-search-flash 1.4s ease-in-out 2;
+            .mada-search-flash {
+                animation: mada-search-flash 1.4s ease-in-out 2;
             }
         </style>
     @endpush
     @push('scripts')
         <script>
-            function veyraAdminChrome(config) {
+            function madaAdminChrome(config) {
                 return {
                     pollUrl: config.pollUrl,
                     suggestUrl: config.suggestUrl,
@@ -377,7 +359,7 @@
                     openSuggestion(item, event) {
                         if (item && item.mode === 'scroll' && item.anchor && item.scope && item.scope === this.context) {
                             const el = document.getElementById(item.anchor)
-                                || document.querySelector('[data-veyra-search="' + item.anchor.replace(/^veyra-search-/, '') + '"]');
+                                || document.querySelector('[data-mada-search="' + item.anchor.replace(/^mada-search-/, '') + '"]');
 
                             if (el) {
                                 event.preventDefault();
@@ -395,21 +377,21 @@
                             return false;
                         }
 
-                        const id = String(token).startsWith('veyra-search-')
+                        const id = String(token).startsWith('mada-search-')
                             ? String(token)
-                            : 'veyra-search-' + String(token);
-                        const short = id.replace(/^veyra-search-/, '');
+                            : 'mada-search-' + String(token);
+                        const short = id.replace(/^mada-search-/, '');
                         const el = document.getElementById(id)
-                            || document.querySelector('[data-veyra-search="' + short + '"]');
+                            || document.querySelector('[data-mada-search="' + short + '"]');
 
                         if (! el) {
                             return false;
                         }
 
                         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        el.classList.remove('veyra-search-flash');
+                        el.classList.remove('mada-search-flash');
                         void el.offsetWidth;
-                        el.classList.add('veyra-search-flash');
+                        el.classList.add('mada-search-flash');
 
                         return true;
                     },

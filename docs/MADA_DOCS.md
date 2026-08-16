@@ -1,21 +1,21 @@
-# Veyra ERP — Software Design Document (SDD)
+# Mada ERP — Software Design Document (SDD)
 
 ## Document Control
 
 | Field | Value |
 |---|---|
-| Document | Veyra ERP — Software Design Document (Master Reference) |
+| Document | Mada ERP — Software Design Document (Master Reference) |
 | Version | 1.3 (Foundation Architecture + Employee Workspace & Appearance Strategy + Super Admin Platform Console + Finance Phase 2A Foundations) |
 | Status | **Binding — treat as the system's constitution** |
 | Owner | Product/Engineering (CTO function) |
 | Date | 2026-07-20 |
 | Last amended | 2026-08-10 — Super Admin suspension and reactivation implemented, closing the Phase 1 exit criterion (BR-206 amended to match enforcement, BR-209 added, `tenants.manage` separated from `tenants.update`). Previously 2026-08-09 — tenant lifecycle gains a sixth `rejected` state with a mandatory reason, and `tenants.plan_id` becomes the plan source of truth (ADR-04 amended, BR-203/204/205 revised, BR-207/BR-208 added). EOSB rules made tenant-configurable and snapshot per settlement (ADR-23, BR-624–BR-627). Previously 2026-08-06 — Finance delivery split (ADR-18), pay basis axis (ADR-19), monetary precision (ADR-20), Work Ledger materialization (ADR-21), tax/VAT reservation (ADR-22) |
-| Applies to | All engineering, design, and QA work on Veyra ERP, in all future sessions |
+| Applies to | All engineering, design, and QA work on Mada ERP, in all future sessions |
 
 **Precedence rule:** This document (and the rest of `docs/`) is the single source of truth. No code, migration, or UI change may contradict a rule defined here. If a new requirement isn't covered, it must be added here first — as a new numbered rule — before being implemented. Every AI session working on this repository must read all files in `docs/` before proposing or making changes.
 
 **Companion documents (all inside `docs/`):**
-- `PROJECT_VISION.md` — why Veyra exists, value proposition, non-goals
+- `PROJECT_VISION.md` — why Mada exists, value proposition, non-goals
 - `ARCHITECTURE.md` — multi-tenancy, RBAC, tenant lifecycle
 - `MODULES.md` — per-module business rules
 - `USER_JOURNEYS.md` — critical end-to-end flows
@@ -32,7 +32,7 @@ This file is the full consolidated reference; the companion files are focused ex
 
 ## 1. Purpose & Scope
 
-Veyra ERP is a multi-tenant, commercial SaaS platform unifying Recruitment/HR, Project Operations, and Finance/Payroll for SMB and mid-market organizations. It is built as a **real-world commercial product**, not a prototype — every architectural decision below is made with production scale, security, and maintainability as the bar, not classroom simplicity.
+Mada ERP is a multi-tenant, commercial SaaS platform unifying Recruitment/HR, Project Operations, and Finance/Payroll for SMB and mid-market organizations. It is built as a **real-world commercial product**, not a prototype — every architectural decision below is made with production scale, security, and maintainability as the bar, not classroom simplicity.
 
 **Technology baseline:** Laravel 13, Blade, Livewire 3, Alpine.js, Tailwind CSS, MySQL, Spatie Permission (Teams feature enabled), single-database row-level multi-tenancy (`tenant_id`).
 
@@ -40,7 +40,7 @@ Veyra ERP is a multi-tenant, commercial SaaS platform unifying Recruitment/HR, P
 
 ## 2. Product Vision
 
-> Veyra ERP is the operating system for growing SMB and mid-market teams — unifying recruitment, HR, project delivery, and financial operations into one tenant-isolated SaaS platform. Veyra's core differentiator is the **closed data loop**: recruit → employ → track work → get paid, generate client revenue, and see it all on one financial dashboard, with zero manual re-entry between modules.
+> Mada ERP is the operating system for growing SMB and mid-market teams — unifying recruitment, HR, project delivery, and financial operations into one tenant-isolated SaaS platform. Mada's core differentiator is the **closed data loop**: recruit → employ → track work → get paid, generate client revenue, and see it all on one financial dashboard, with zero manual re-entry between modules.
 
 **Non-goals for v1:** full accounting/GL (chart of accounts, double-entry bookkeeping), inventory/manufacturing, multi-currency consolidation, native mobile apps.
 
@@ -52,7 +52,7 @@ Full detail: see `PROJECT_VISION.md`.
 
 | Term | Definition |
 |---|---|
-| Tenant | One customer organization (company) using Veyra. Isolated by `tenant_id`. |
+| Tenant | One customer organization (company) using Mada. Isolated by `tenant_id`. |
 | Super Admin | Platform operator. Not tied to any tenant (`tenant_id = null`). |
 | CEO / Owner | The tenant's top-level admin, created at registration. |
 | Pending Tenant | A tenant not yet approved by Super Admin; restricted to setup screens only. |
@@ -65,11 +65,11 @@ Full detail: see `PROJECT_VISION.md`.
 | Work Ledger | The reconciled record of workdays vs. attendance vs. approved leave, used as the single source for absence deductions. Materialized as `work_ledger_entries` (ADR-21) — a derived projection, not a source record. |
 | Pay Basis | *How* an employee is paid — `salaried`, `hourly`, or `unpaid`. Independent of Contract Type, which describes the employment *form* (ADR-19). |
 | Contract Type | The employment form — `full_time`, `part_time`, `fixed_term`, `freelance`. Carries no pay semantics. |
-| Minor Units | The integer smallest denomination of a currency (halalas, cents, fils). **All monetary values in Veyra are stored as minor units** (ADR-20). |
+| Minor Units | The integer smallest denomination of a currency (halalas, cents, fils). **All monetary values in Mada are stored as minor units** (ADR-20). |
 | Maker / Checker | The two distinct users required to prepare and to approve a payroll run. They may never be the same user (ADR-09). |
 | Adjustment Entry | A correction to a locked payroll run, recorded as a new line item in a *subsequent* run — never an edit to the locked one (BR-603). |
 | Platform Setting | A platform-wide (never tenant-scoped) configuration value — branding, SMTP, payment gateway keys, registration auto-approval toggle — managed only by Super Admin. |
-| Support Thread | A conversation initiated by a tenant Owner/CEO with Veyra support, handled by Super Admin via the Platform Console; not part of the generic Approval Engine. |
+| Support Thread | A conversation initiated by a tenant Owner/CEO with Mada support, handled by Super Admin via the Platform Console; not part of the generic Approval Engine. |
 
 ---
 

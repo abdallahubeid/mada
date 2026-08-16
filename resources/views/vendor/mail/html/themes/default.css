@@ -1,5 +1,5 @@
 /*
- * Veyra ERP transactional email theme.
+ * Mada ERP transactional email theme.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * WHY THE VALUES ARE LITERAL HEX AND NOT var(--color-*)
@@ -11,7 +11,7 @@
  * this file has to be updated by hand.
  *
  * The values below are the same tokens the product uses: ink for text,
- * mist for muted copy and rules, emerald-400 (#4EDEA3) for the accent.
+ * mist for muted copy and rules, plum brand-500 (#714B67) for the accent.
  *
  * EVERY MESSAGE IS ARABIC AND RIGHT-TO-LEFT (see layout.blade.php). Text
  * alignment is therefore `right`, not `start`: Outlook does not support
@@ -32,8 +32,8 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 
 body {
     -webkit-text-size-adjust: none;
-    background-color: #f4f6f5;
-    color: #3c4a42;
+    background-color: #faf9fb;
+    color: #3b3544;
     height: 100%;
     line-height: 1.4;
     margin: 0;
@@ -50,7 +50,7 @@ blockquote {
 }
 
 a {
-    color: #047857;
+    color: #5e3d56;
 }
 
 a img {
@@ -60,7 +60,7 @@ a img {
 /* Typography */
 
 h1 {
-    color: #081425;
+    color: #1a1620;
     font-size: 20px;
     font-weight: bold;
     margin-top: 0;
@@ -68,7 +68,7 @@ h1 {
 }
 
 h2 {
-    color: #081425;
+    color: #1a1620;
     font-size: 17px;
     font-weight: bold;
     margin-top: 0;
@@ -76,7 +76,7 @@ h2 {
 }
 
 h3 {
-    color: #081425;
+    color: #1a1620;
     font-size: 15px;
     font-weight: bold;
     margin-top: 0;
@@ -90,8 +90,14 @@ p {
     text-align: right;
 }
 
+/*
+ * 15px floor. `.sub`, `.subcopy` and the footer are exactly the captions and
+ * fine print the rule names, and they were the only sizes in this file below
+ * it. Values stay literal because CSS-inliners and Outlook's Word renderer
+ * cannot resolve custom properties — see the note at the top of this file.
+ */
 p.sub {
-    font-size: 12px;
+    font-size: 15px;
 }
 
 img {
@@ -104,7 +110,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #f4f6f5;
+    background-color: #faf9fb;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -127,7 +133,7 @@ img {
 }
 
 .header a {
-    color: #081425;
+    color: #1a1620;
     font-size: 20px;
     font-weight: bold;
     text-decoration: none;
@@ -138,7 +144,7 @@ img {
 /*
  * `width`/`height` are NOT fixed to a square here. Laravel's default pins the
  * logo to 75x75, which is right for a square avatar mark and wrong for a
- * wordmark — the Veyra site logo is a horizontal lockup and was being squashed
+ * wordmark — the Mada site logo is a horizontal lockup and was being squashed
  * into a square. Constraining the height and letting the width follow keeps
  * any logo the tenant uploads in proportion.
  */
@@ -157,9 +163,9 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #f4f6f5;
-    border-bottom: 1px solid #f4f6f5;
-    border-top: 1px solid #f4f6f5;
+    background-color: #faf9fb;
+    border-bottom: 1px solid #faf9fb;
+    border-top: 1px solid #faf9fb;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -176,10 +182,10 @@ img {
     -premailer-cellspacing: 0;
     -premailer-width: 570px;
     background-color: #ffffff;
-    border-color: #e4e9e6;
-    border-radius: 12px;
+    border-color: #e5e1ea;
+    border-radius: 8px;
     border-width: 1px;
-    box-shadow: 0 1px 3px 0 rgba(8, 20, 37, 0.08), 0 8px 24px -12px rgba(8, 20, 37, 0.12);
+    box-shadow: 0 1px 3px 0 rgba(26, 22, 32, 0.07), 0 8px 24px -12px rgba(26, 22, 32, 0.10);
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -192,13 +198,13 @@ img {
 /* Subcopy */
 
 .subcopy {
-    border-top: 1px solid #e4e9e6;
+    border-top: 1px solid #e5e1ea;
     margin-top: 25px;
     padding-top: 25px;
 }
 
 .subcopy p {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 /* Footer */
@@ -225,18 +231,18 @@ img {
 /*
  * Laravel's default footer colour is #a1a1aa, which measures 2.3:1 on the page
  * background — unreadable for the legal and contact line the footer now
- * carries. #6c7a71 was the first attempt and still only reached 4.15:1 at
- * 12px; this is the light-mode `mist-600` value and measures 6.6:1.
+ * carries. A mid-grey was the first attempt and still only reached 4.15:1 at
+ * 12px; this is the light-mode `mist-600` value and measures 9.4:1.
  */
 .footer p {
-    color: #454f49;
-    font-size: 12px;
+    color: #474050;
+    font-size: 15px;
     line-height: 1.6;
     text-align: center;
 }
 
 .footer a {
-    color: #047857;
+    color: #5e3d56;
     text-decoration: underline;
 }
 
@@ -251,15 +257,15 @@ img {
 }
 
 .table th {
-    border-bottom: 1px solid #e4e9e6;
-    color: #081425;
+    border-bottom: 1px solid #e5e1ea;
+    color: #1a1620;
     margin: 0;
     padding-bottom: 8px;
     text-align: right;
 }
 
 .table td {
-    color: #3c4a42;
+    color: #3b3544;
     font-size: 15px;
     line-height: 20px;
     margin: 0;
@@ -288,9 +294,15 @@ img {
 /*
  * Buttons.
  *
- * DARK text on the emerald fill, not white — this is both the product's own
- * button treatment (`bg-emerald-400 text-emerald-900`) and the only accessible
- * option: white on #4EDEA3 measures 1.7:1, while ink on it measures 8.9:1.
+ * WHITE text on the plum fill — the product's own button treatment
+ * (`bg-brand-500 text-white`) and comfortably accessible: white on #714B67
+ * measures 7.3:1. This inverted from dark-on-mint when the palette moved from
+ * emerald to the Mada plum; a mid-plum fill cannot carry a dark label.
+ *
+ * `button-success` is now a genuinely different hue from `button-primary`.
+ * They were the same green while emerald meant both "brand" and "success", so
+ * a "your account is approved" mail and a "confirm your address" mail shipped
+ * identical buttons.
  *
  * The chunky borders are Laravel's padding technique and are kept on purpose:
  * Outlook's Word renderer ignores padding on an inline anchor, so border of
@@ -298,8 +310,8 @@ img {
  */
 .button {
     -webkit-text-size-adjust: none;
-    border-radius: 8px;
-    color: #081425;
+    border-radius: 6px;
+    color: #ffffff;
     display: inline-block;
     font-weight: bold;
     overflow: hidden;
@@ -308,32 +320,33 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #4edea3;
-    border-bottom: 10px solid #4edea3;
-    border-left: 20px solid #4edea3;
-    border-right: 20px solid #4edea3;
-    border-top: 10px solid #4edea3;
-    color: #081425;
+    background-color: #714b67;
+    border-bottom: 10px solid #714b67;
+    border-left: 20px solid #714b67;
+    border-right: 20px solid #714b67;
+    border-top: 10px solid #714b67;
+    color: #ffffff;
 }
 
+/* Approvals and confirmations — white on this green measures 5.4:1. */
 .button-green,
 .button-success {
-    background-color: #4edea3;
-    border-bottom: 10px solid #4edea3;
-    border-left: 20px solid #4edea3;
-    border-right: 20px solid #4edea3;
-    border-top: 10px solid #4edea3;
-    color: #081425;
+    background-color: #0f7b3d;
+    border-bottom: 10px solid #0f7b3d;
+    border-left: 20px solid #0f7b3d;
+    border-right: 20px solid #0f7b3d;
+    border-top: 10px solid #0f7b3d;
+    color: #ffffff;
 }
 
 /* Refusals and suspensions — white on this red measures 4.6:1. */
 .button-red,
 .button-error {
-    background-color: #b3261e;
-    border-bottom: 10px solid #b3261e;
-    border-left: 20px solid #b3261e;
-    border-right: 20px solid #b3261e;
-    border-top: 10px solid #b3261e;
+    background-color: #b42318;
+    border-bottom: 10px solid #b42318;
+    border-left: 20px solid #b42318;
+    border-right: 20px solid #b42318;
+    border-top: 10px solid #b42318;
     color: #ffffff;
 }
 
@@ -345,18 +358,18 @@ img {
  * rather than at its start.
  */
 .panel {
-    border-right: #4edea3 solid 4px;
+    border-right: #714b67 solid 4px;
     margin: 21px 0;
 }
 
 .panel-content {
-    background-color: #f4f6f5;
-    color: #3c4a42;
+    background-color: #faf9fb;
+    color: #3b3544;
     padding: 16px;
 }
 
 .panel-content p {
-    color: #3c4a42;
+    color: #3b3544;
 }
 
 .panel-item {

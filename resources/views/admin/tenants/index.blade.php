@@ -29,7 +29,7 @@
         {{-- Header --}}
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">إدارة المستأجرين</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إدارة المستأجرين</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     {{ $counts['all'] }} مستأجر عبر دورة الحياة كاملة — راجِع الطلبات وأدِر الحالات.
                 </p>
@@ -57,15 +57,15 @@
                              result set the operator is working through. --}}
                         href="{{ route('admin.tenants', array_filter(['status' => $key, 'q' => $search, 'plan' => $planFilter])) }}"
                         @class([
-                            'flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-all duration-200',
-                            'border-emerald-400 text-emerald-600 dark:text-emerald-400' => $isActive,
+                            'flex items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-all duration-200',
+                            'border-brand-500 text-brand-600 dark:text-brand-300' => $isActive,
                             'border-transparent text-mist-500 hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200' => ! $isActive,
                         ])
                     >
                         {{ $label }}
                         <span @class([
-                            'rounded-full px-2 py-0.5 text-xs font-bold',
-                            'bg-emerald-400/15 text-emerald-600 dark:text-emerald-400' => $isActive,
+                            'rounded-md px-2 py-0.5 text-xs font-bold',
+                            'bg-brand-500/15 text-brand-600 dark:text-brand-300' => $isActive,
                             'bg-mist-100 text-mist-500 dark:bg-ink-700 dark:text-mist-400' => ! $isActive,
                         ])>{{ $counts[$key] }}</span>
                     </a>
@@ -88,11 +88,11 @@
                     name="q"
                     value="{{ $search }}"
                     placeholder="ابحث بالاسم أو النطاق أو البريد الإلكتروني..."
-                    class="w-full rounded-xl border border-mist-200 bg-white py-2.5 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
+                    class="w-full rounded-xl border border-mist-200 bg-white py-2.5 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
                 >
             </div>
 
-            <select name="plan" class="rounded-xl border border-mist-200 bg-white px-3 py-2.5 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50">
+            <select name="plan" class="rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50">
                 <option value="">كل الخطط</option>
                 @foreach ($plans as $plan)
                     <option value="{{ $plan->id }}" @selected($planFilter === $plan->id)>{{ $plan->name }}</option>
@@ -100,10 +100,10 @@
             </select>
 
             <div class="flex items-center gap-2">
-                <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">تصفية</button>
+                <button type="submit" class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تصفية</button>
 
                 @if ($search !== '' || $planFilter !== null)
-                    <a href="{{ route('admin.tenants', ['status' => $activeTab]) }}" class="rounded-xl border border-mist-200 px-4 py-2.5 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:border-ink-600 dark:text-mist-300 dark:hover:bg-ink-700">مسح</a>
+                    <a href="{{ route('admin.tenants', ['status' => $activeTab]) }}" class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:border-ink-600 dark:text-mist-300 dark:hover:bg-ink-700">مسح</a>
                 @endif
             </div>
         </form>
@@ -114,55 +114,55 @@
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
                         <tr class="border-b border-mist-100 text-xs uppercase tracking-wide text-mist-500 dark:border-ink-700 dark:text-mist-400">
-                            <th class="px-5 py-3 text-start font-semibold">الشركة</th>
-                            <th class="px-5 py-3 text-start font-semibold">المالك</th>
-                            <th class="px-5 py-3 text-start font-semibold">الخطة</th>
-                            <th class="px-5 py-3 text-start font-semibold">الحالة</th>
-                            <th class="px-5 py-3 text-start font-semibold">الموظفون</th>
-                            <th class="px-5 py-3 text-start font-semibold">تاريخ التسجيل</th>
-                            <th class="px-5 py-3 text-start font-semibold">آخر نشاط</th>
-                            <th class="px-5 py-3 text-end font-semibold">إجراءات</th>
+                            <th class="px-3 py-2 text-start font-medium">الشركة</th>
+                            <th class="px-3 py-2 text-start font-medium">المالك</th>
+                            <th class="px-3 py-2 text-start font-medium">الخطة</th>
+                            <th class="px-3 py-2 text-start font-medium">الحالة</th>
+                            <th class="px-3 py-2 text-start font-medium">الموظفون</th>
+                            <th class="px-3 py-2 text-start font-medium">تاريخ التسجيل</th>
+                            <th class="px-3 py-2 text-start font-medium">آخر نشاط</th>
+                            <th class="px-3 py-2 text-end font-medium">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                         @forelse ($tenants as $t)
                             <tr class="transition duration-150 hover:bg-mist-50 dark:hover:bg-ink-700/40">
-                                <td class="px-5 py-3.5">
+                                <td class="px-3 py-2">
                                     <a href="{{ route('admin.tenants.show', $t['slug']) }}" class="group flex items-center gap-3">
-                                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-mist-100 font-display text-sm font-bold text-mist-500 dark:bg-ink-700 dark:text-mist-300">
+                                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-mist-100 font-display text-sm font-medium text-mist-500 dark:bg-ink-700 dark:text-mist-300">
                                             {{ mb_substr($t['name'], 0, 1) }}
                                         </span>
                                         <div class="min-w-0">
-                                            <p class="truncate font-semibold text-ink-900 group-hover:text-emerald-600 dark:text-ink-50 dark:group-hover:text-emerald-400">{{ $t['name'] }}</p>
-                                            <p class="truncate text-xs text-mist-400 dark:text-mist-500">{{ $t['slug'] }}.veyra.app</p>
+                                            <p class="truncate font-semibold text-ink-900 group-hover:text-brand-600 dark:text-ink-50 dark:group-hover:text-brand-300">{{ $t['name'] }}</p>
+                                            <p class="truncate text-xs text-mist-400 dark:text-mist-500">{{ $t['slug'] }}.mada.app</p>
                                         </div>
                                     </a>
                                 </td>
-                                <td class="px-5 py-3.5">
+                                <td class="px-3 py-2">
                                     <p class="text-ink-700 dark:text-mist-200">{{ $t['owner'] }}</p>
                                     <p class="text-xs text-mist-400 dark:text-mist-500">{{ $t['email'] }}</p>
                                 </td>
-                                <td class="px-5 py-3.5">
+                                <td class="px-3 py-2">
                                     <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-medium text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $t['plan'] }}</span>
                                 </td>
-                                <td class="px-5 py-3.5">
+                                <td class="px-3 py-2">
                                     <x-admin.status-badge :status="$t['status']" />
                                 </td>
-                                <td class="px-5 py-3.5 text-ink-700 dark:text-mist-200">{{ $t['employees'] }}</td>
-                                <td class="px-5 py-3.5 text-mist-500 dark:text-mist-400">{{ $t['signup'] }}</td>
-                                <td class="px-5 py-3.5 text-mist-500 dark:text-mist-400">{{ $t['last_active'] }}</td>
-                                <td class="px-5 py-3.5">
+                                <td class="px-3 py-2 text-ink-700 dark:text-mist-200">{{ $t['employees'] }}</td>
+                                <td class="px-3 py-2 text-mist-500 dark:text-mist-400">{{ $t['signup'] }}</td>
+                                <td class="px-3 py-2 text-mist-500 dark:text-mist-400">{{ $t['last_active'] }}</td>
+                                <td class="px-3 py-2">
                                     <div class="flex items-center justify-end gap-2">
                                         @switch($t['status'])
                                             @case('pending_approval')
-                                                <button type="button" @click="modal = 'approve'; tenant = @js($t['name']); slug = @js($t['slug']); planId = @js((string) ($t['plan_id'] ?? ''))" class="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">موافقة</button>
+                                                <button type="button" @click="modal = 'approve'; tenant = @js($t['name']); slug = @js($t['slug']); planId = @js((string) ($t['plan_id'] ?? ''))" class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">موافقة</button>
                                                 <button type="button" @click="modal = 'reject'; tenant = @js($t['name']); slug = @js($t['slug'])" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-95 dark:border-ink-600 dark:text-mist-300">رفض</button>
                                                 @break
                                             @case('active')
                                                 <button type="button" @click="modal = 'suspend'; tenant = @js($t['name']); slug = @js($t['slug'])" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-95 dark:border-ink-600 dark:text-mist-300">إيقاف</button>
                                                 @break
                                             @case('suspended')
-                                                <button type="button" @click="modal = 'reactivate'; tenant = @js($t['name']); slug = @js($t['slug'])" class="rounded-lg bg-emerald-400 px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">إعادة تفعيل</button>
+                                                <button type="button" @click="modal = 'reactivate'; tenant = @js($t['name']); slug = @js($t['slug'])" class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">إعادة تفعيل</button>
                                                 @break
                                             @case('rejected')
                                                 <span class="text-xs text-mist-400 dark:text-mist-500">مرفوض · عرض فقط</span>
@@ -224,16 +224,16 @@
                 {{-- Approve — real POST, with plan confirmation --}}
                 <form x-show="modal === 'approve'" method="POST" :action="actionUrl(approveUrl)">
                     @csrf
-                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-500 dark:text-emerald-400">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500/15 text-brand-500 dark:text-brand-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
                     </div>
-                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">تفعيل المستأجر</h3>
+                    <h3 class="mt-4 font-display text-lg font-medium text-ink-900 dark:text-ink-50">تفعيل المستأجر</h3>
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
                         سيتم تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span> وفتح لوحة التحكم الكاملة له فورًا، مع إرسال إشعار بالبريد إلى مالك الحساب.
                     </p>
 
                     <label for="approve_plan_id" class="mt-4 block text-sm font-medium text-ink-700 dark:text-mist-200">الخطة المعتمدة</label>
-                    <select id="approve_plan_id" name="plan_id" x-model="planId" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <select id="approve_plan_id" name="plan_id" x-model="planId" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
                         <option value="">— إبقاء الخطة المختارة عند التسجيل —</option>
                         @foreach ($plans as $plan)
                             <option value="{{ $plan->id }}">{{ $plan->name }}</option>
@@ -243,7 +243,7 @@
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">تأكيد التفعيل</button>
+                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تأكيد التفعيل</button>
                     </div>
                 </form>
 
@@ -253,7 +253,7 @@
                     <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-danger-solid/15 text-danger-solid">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
                     </div>
-                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">رفض المستأجر</h3>
+                    <h3 class="mt-4 font-display text-lg font-medium text-ink-900 dark:text-ink-50">رفض المستأجر</h3>
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
                         سيتم رفض طلب <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span>. نص السبب أدناه <span class="font-semibold">يُرسل إلى مقدّم الطلب</span> ويُحفظ في سجل التدقيق.
                     </p>
@@ -271,7 +271,7 @@
                     <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-danger-solid/15 text-danger-solid">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
                     </div>
-                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">إيقاف المستأجر</h3>
+                    <h3 class="mt-4 font-display text-lg font-medium text-ink-900 dark:text-ink-50">إيقاف المستأجر</h3>
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
                         سيفقد جميع مستخدمي <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span> الوصول إلى وحدات النظام فوراً. نص السبب أدناه <span class="font-semibold">يُرسل إلى مالك الحساب</span> ويُحفظ في سجل التدقيق.
                     </p>
@@ -289,17 +289,17 @@
                 {{-- Reactivate — real POST, no body beyond the token --}}
                 <form x-show="modal === 'reactivate'" method="POST" :action="actionUrl(reactivateUrl)">
                     @csrf
-                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-500 dark:text-emerald-400">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500/15 text-brand-500 dark:text-brand-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
                     </div>
-                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900 dark:text-ink-50">إعادة تفعيل المستأجر</h3>
+                    <h3 class="mt-4 font-display text-lg font-medium text-ink-900 dark:text-ink-50">إعادة تفعيل المستأجر</h3>
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">
                         سيستعيد مستخدمو <span class="font-semibold text-ink-700 dark:text-mist-200" x-text="tenant"></span> الوصول الكامل فوراً، ويُرسَل إشعار بالبريد إلى مالك الحساب. سبب الإيقاف الحالي يُرفع من السجل.
                     </p>
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition duration-200 hover:bg-emerald-300 active:scale-95">تأكيد إعادة التفعيل</button>
+                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تأكيد إعادة التفعيل</button>
                     </div>
                 </form>
             </div>

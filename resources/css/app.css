@@ -1,7 +1,16 @@
 @import 'tailwindcss';
 
-/* Brand typefaces per the Figma reference: Tajawal for UI/body copy, Cairo for display headings. */
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;500;600;700&display=swap');
+/*
+ * Brand typefaces: Tajawal for UI/body copy, Cairo for display headings.
+ *
+ * Tajawal is loaded at 400;500;600;700 — the 600 face is REQUIRED. The import
+ * previously requested `wght@400;500;700`, so every `font-semibold` (600) in
+ * the app had no matching loaded face and the CSS font-matching algorithm
+ * resolved it upward to 700. That made `font-semibold` and `font-bold` render
+ * identically across ~1,500 elements, collapsing the second tier of the
+ * typographic hierarchy in the primary language. Do not drop 600 again.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Marhey:wght@400;500;600;700&display=swap');
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -21,84 +30,377 @@
     --font-display: 'Cairo', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 
     /*
-     * Ink — navy surface scale extracted from the Figma reference (Veyra
-     * ERP dark theme: canvas #081425/#040E1F, card surface #152031,
-     * elevated surface #1F2A3C/#2A3548, heading text #D8E3FB). Figma only
-     * specifies the dark theme; the 50–400 light-mode stops are a derived
-     * counterpart, not pulled from the file.
+     * The playful accent face. Odoo spends ALL of its personality in one place
+     * — a handwriting face (Caveat) at 88px in the hero, against an otherwise
+     * plain Inter page. Caveat has no Arabic glyphs, so Marhey is the
+     * equivalent move: a Google-hosted Arabic display face with an informal,
+     * rounded voice that still sets real Arabic letterforms.
+     *
+     * Used ONLY for short hero phrases and section eyebrows. It is not a body
+     * face and must never appear at paragraph length.
      */
-    --color-ink-50: #d8e3fb;
-    --color-ink-100: #eaf0fb;
-    --color-ink-200: #d3dcee;
-    --color-ink-300: #a9b8d6;
-    --color-ink-400: #7d8eaf;
-    --color-ink-500: #2a3548;
-    --color-ink-600: #1f2a3c;
-    --color-ink-700: #152031;
-    --color-ink-800: #111c2d;
-    --color-ink-900: #081425;
-    --color-ink-950: #040e1f;
+    --font-hand: 'Marhey', 'Cairo', ui-sans-serif, system-ui, sans-serif;
 
     /*
-     * Mist — muted text / icon / divider tones, extracted from the same
-     * reference (#bbcabf secondary text, #86948a border, #3c4a42 divider).
+     * ─────────────────────────────────────────────────────────────────────
+     * SURFACE WHITE IS NOT #FFF.
+     *
+     * Overriding Tailwind's own `--color-white` re-points every `bg-white`
+     * card, nav bar and auth panel in one line instead of editing several
+     * hundred class strings. Pure white against the softened canvas was the
+     * source of the glare.
+     *
+     * #fbfbfb is imperceptible where `text-white` is used as a LABEL (on the
+     * plum primary it still measures 7.2:1) but visibly gentler across the
+     * large surfaces that were causing eye strain.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --color-white: #fbfbfb;
+
+    /*
+     * The 12px floor. `text-xs` is the smallest size in the system and every
+     * `text-[10px]`/`text-[11px]` in the markup has been folded into it.
+     * Leading is set here rather than per-element so the 348 call sites that
+     * moved up to 12px all gained matching line-height at once.
+     */
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * 15px IS THE FLOOR. `text-xs` NO LONGER MEANS 12px.
+     *
+     * The smallest size in the system is 0.9375rem, and `text-xs` is remapped
+     * onto it rather than the Tailwind default. That single line lifts 933
+     * `text-xs` usages — badges, table headers, captions, helper text, footer
+     * links — without touching a class name anywhere.
+     *
+     * `text-xs` and `text-sm` are therefore now the SAME size. That is
+     * deliberate: keeping both names working means no markup churn, and the
+     * distinction they used to carry (12 vs 14) no longer exists under a 15px
+     * floor. Anything needing to look quieter than body copy should reach for
+     * colour or weight, not size — there is no smaller step left.
+     *
+     * Line-height drops from 1.5 to 1.45 as the size goes up: 12px × 1.5 gave
+     * 18px of line box, and holding 1.5 at 15px would push that to 22.5px,
+     * visibly loosening every badge and table header on the page.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --text-xs: 0.9375rem; /* 15px — ABSOLUTE MINIMUM, nothing may go below */
+    --text-xs--line-height: 1.45;
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * GLOBAL TYPE SCALE BUMP
+     *
+     * `text-sm` carries the bulk of the product — it is the single most-used
+     * size in the codebase — so lifting it 14 → 15px raises the readability
+     * floor everywhere at once without touching a single class name.
+     *
+     * The scale is bumped here rather than by raising the ROOT font size,
+     * which would have been the obvious lever and is the wrong one: Tailwind's
+     * spacing scale is also rem-based, so moving the root rescales every
+     * padding, gap and margin in the app at the same time. Changing the type
+     * tokens alone moves type alone.
+     *
+     * Line heights go up with the sizes. A larger size at the old leading
+     * reads tighter, not roomier, which is the opposite of the intent.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --text-sm: 0.9375rem; /* 15px */
+    --text-sm--line-height: 1.65;
+    --text-base: 1rem; /* 16px */
+    --text-base--line-height: 1.75;
+    --text-lg: 1.125rem; /* 18px */
+    --text-lg--line-height: 1.65;
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * PRIMARY — Clay's near-black CTA (`colors.primary` #0a0a0a).
+     *
+     * The `brand-*` NAMES are kept and re-pointed rather than renamed: 845
+     * `bg-brand-500` and 375 `text-brand-600` usages across 240 files all
+     * become the new primary the moment these values change. Renaming would
+     * have meant editing every one of them for no behavioural gain.
+     *
+     * brand-500 is the button fill, brand-600 its active state
+     * (`colors.primary-active` #1f1f1f). The lighter stops carry the muted
+     * text ramp so accent-coloured labels stay legible on cream instead of
+     * washing out the way a tinted mid-tone would.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --color-brand-50: #f8f3f7;
+    --color-brand-100: #efe3ec;
+    --color-brand-200: #dcc7d6;
+    --color-brand-300: #c4a3bb;
+    --color-brand-400: #a67b9b;
+    --color-brand-500: #714b67;
+    --color-brand-600: #5e3d56;
+    --color-brand-700: #4b3145;
+    --color-brand-800: #382434;
+    --color-brand-900: #261823;
+    --color-brand-950: #180f16;
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * NEUTRALS — one hue family, replacing the previous two.
+     *
+     * `mist` used to be a GREEN-tinted grey (hue ≈ 140°) and `ink` a NAVY
+     * (hue ≈ 215°). They sit adjacent on every screen, so switching themes
+     * swung the neutral hue 75° and nothing felt like one product. Both ramps
+     * are now built on a single low-saturation mauve axis (hue ≈ 290°) that
+     * sits under the plum without competing with it.
+     *
+     * The two NAMES are kept — and kept distinct — because they carry
+     * different roles that a single ramp cannot serve at one stop:
+     *
+     *   ink-*   structure: surfaces, borders, strong text.
+     *   mist-*  muted text and subtle fills (and is theme-split, see below).
+     *
+     * Every existing `bg-ink-800 dark:border-ink-600 text-mist-500` in the
+     * markup keeps its meaning; only the hue moved.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    /*
+     * INK — structure and strong text, re-pointed to Clay's ink ramp.
+     *
+     * `ink-50` doubles as a light SURFACE and as light TEXT on a dark card
+     * (599 usages split between the two), so it maps to the cream canvas
+     * rather than to pure white — it has to read correctly in both roles.
+     */
+    --color-ink-50: #f8f6f9;
+    --color-ink-100: #f1eef3;
+    --color-ink-200: #e5e1ea;
+    --color-ink-300: #d0cad7;
+    --color-ink-400: #9e96a8;
+    --color-ink-500: #4b4455;
+    --color-ink-600: #3b3544;
+    --color-ink-700: #2c2734;
+    --color-ink-800: #221d29;
+    --color-ink-900: #1a1620;
+    --color-ink-950: #110e15;
+
+    /*
+     * Mist — muted text / icon / divider tones.
      *
      * ─────────────────────────────────────────────────────────────────────
      * 400–600 ARE THEME-DEPENDENT — see the `.dark` override below.
      *
-     * The Figma file specifies the DARK theme only, so these three stops were
-     * originally its dark-theme values used in both themes. On a light canvas
-     * that measured:
+     * A tone that reads correctly as secondary text on the ink canvas is far
+     * too light on white: the pre-unification values measured 2.29:1 and
+     * 3.17:1 there, well under the WCAG AA 4.5:1 floor, and `mist-500` alone
+     * appears over a thousand times — so the fix cannot live in the markup.
      *
-     *     text-mist-400 on #fff → 2.29:1   (WCAG AA needs 4.5:1)
-     *     text-mist-500 on #fff → 3.17:1
-     *
-     * which is the washed-out secondary text across every light-mode screen —
-     * and `mist-500` alone is used well over a thousand times, so the fix
-     * cannot live in the markup. The values below are the LIGHT-mode ramp,
-     * re-derived for contrast; `.dark` restores the Figma tones, which already
-     * measure 8.4:1 / 6.1:1 against the ink canvas.
+     * The values below are the LIGHT ramp, derived for contrast on white:
+     * mist-400 = 5.5:1, mist-500 = 7.4:1, mist-600 = 10.0:1. `.dark` restores
+     * tones measured against the dark sheet instead.
      *
      * Because `text-mist-500` resolves this variable at the element, a class
      * like `text-mist-500 dark:text-mist-400` keeps working untouched: it picks
      * the light value on a light canvas and the dark value inside `.dark`.
      *
      * Stops 50–300 and 700–900 are NOT theme-split: they paint borders,
-     * dividers and light surfaces whose appearance is correct as-is, and
-     * `text-mist-300` in light mode is only ever a breadcrumb "/" separator.
+     * dividers and light surfaces whose appearance is correct as-is.
      * ─────────────────────────────────────────────────────────────────────
      */
-    --color-mist-50: #f4f6f5;
-    --color-mist-100: #e4e9e6;
-    --color-mist-200: #c7d1cb;
-    --color-mist-300: #bbcabf;
-    --color-mist-400: #67756c; /* light: 4.84:1 on white — tertiary/meta text */
-    --color-mist-500: #57645b; /* light: 6.21:1 on white — secondary body text */
-    --color-mist-600: #454f49; /* light: 8.51:1 on white — emphasis */
-    --color-mist-700: #3c4a42;
-    --color-mist-800: #263129;
-    --color-mist-900: #182019;
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * CANVAS + MUTED TEXT — softened ground, darkened copy.
+     *
+     * `mist-50` is the page canvas and drops to #f6f7f9, a step deeper than
+     * the surface tone below it so cards still separate without needing a
+     * border to do it.
+     *
+     * 400–600 were measurably fine (5.5 / 7.4 / 10.0 on white) and still read
+     * as washed out, because contrast ratio is not the same thing as
+     * perceived weight: a mid-grey at 12–14px on a near-white ground looks
+     * light long before it fails WCAG. They are darkened to land on the
+     * intended targets — roughly #4B5563 for tertiary and #374151 for body —
+     * while keeping the mauve cast that ties them to the plum.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    /*
+     * `mist-50` is the page floor and the single most load-bearing value in
+     * the system — every section, the body element and the nav all paint it.
+     * `mist-200` (1,042 usages) is the hairline.
+     */
+    --color-mist-50: #f6f7f9; /* page canvas */
+    --color-mist-100: #f0eef4;
+    --color-mist-200: #e3dfe9;
+    --color-mist-300: #cdc7d5;
+    --color-mist-400: #524c5e; /* light: 8.20:1 on white — tertiary/meta text */
+    --color-mist-500: #413b4f; /* light: 10.69:1 on white — secondary body text */
+    --color-mist-600: #2f2a3a; /* light: 13.4:1 on white — emphasis */
+    --color-mist-700: #3b3544;
+    --color-mist-800: #2c2734;
+    --color-mist-900: #1a1620;
+
 
     /*
-     * Brand Emerald — overrides only the specific Tailwind default shades
-     * that the Figma file actually uses (#4EDEA3 primary accent, #00422B /
-     * #003824 success-container tones). Every other shade keeps Tailwind's
-     * stock emerald scale, which already matches the file's #10B981 usage.
+     * ─────────────────────────────────────────────────────────────────────
+     * STATUS — deliberately distinct from the brand hue.
+     *
+     * The previous palette used emerald for the brand AND for success, so a
+     * "Save" button and an "Approved" badge were the same colour. Odoo keeps
+     * these apart on purpose (plum brand, #28a745 success) and so do we now:
+     * with a plum brand, green is free to mean exactly one thing.
+     *
+     * Light stops are measured on white, dark stops on the ink-800 sheet.
+     * ─────────────────────────────────────────────────────────────────────
      */
-    --color-emerald-400: #4edea3;
-    --color-emerald-800: #00422b;
-    --color-emerald-900: #003824;
+    --color-success-500: #0f7b3d; /* 5.38:1 on white */
+    --color-success-400: #4ade80; /* 9.8:1 on ink-800 */
+    --color-success-50: #e8f6ed;
+    --color-warning-500: #b45309; /* 5.01:1 on white */
+    --color-warning-400: #fbbf24; /* 10.2:1 on ink-800 */
+    --color-warning-50: #fdf3e4;
+    --color-critical-500: #b42318; /* 6.62:1 on white */
+    --color-critical-400: #ff8a82; /* 7.5:1 on ink-800 */
+    --color-critical-50: #fdecea;
+    --color-accent-500: #0369a1; /* informational blue — 5.87:1 on white */
+    --color-accent-400: #7cc4ff; /* 9.1:1 on ink-800 */
+    --color-accent-50: #e6f2fa;
 
-    /* Semantic status pairs (Material-3-style container/on-container roles), extracted from Figma. */
-    --color-danger-bg: #93000a;
-    --color-danger-text: #ffb4ab;
-    --color-danger-solid: #fc7c78;
-    --color-info-bg: #0566d9;
-    --color-info-text: #adc6ff;
+    /*
+     * Legacy semantic pairs kept as aliases so existing `text-danger-solid` /
+     * `bg-info-bg` markup keeps resolving. Retuned from the old Material-3
+     * container tones — they were the only Material tokens in an otherwise
+     * non-Material system, and their saturation fought the new neutrals.
+     */
+    --color-danger-bg: #5c1a14;
+    --color-danger-text: #ff8a82;
+    --color-danger-solid: #b42318;
+    --color-info-bg: #0369a1;
+    --color-info-text: #7cc4ff;
 
-    /* Signature ambient glow behind primary CTAs, matching Figma's tinted drop-shadow on emerald buttons. */
-    --shadow-glow: 0 8px 20px -6px color-mix(in srgb, var(--color-emerald-400) 45%, transparent),
-        0 4px 10px -4px color-mix(in srgb, var(--color-emerald-400) 30%, transparent);
+    /*
+     * MARKER — the hand-drawn highlight behind hero phrases.
+     *
+     * Odoo paints these with a raster-free SVG swash sitting *behind* the text
+     * (`background-size: contain`, `background-position: 50% 60%`), not with a
+     * flat `background-color`, which is what stops it reading as a `<mark>`.
+     * The strokes below are hand-authored rather than borrowed from Odoo's CDN.
+     *
+     * Warm orange, deliberately the only saturated warm tone in the system: it
+     * has to survive sitting on white next to a cool plum without either
+     * looking accidental.
+     */
+    --color-footer: #1f242d;
+    --color-footer-heading: #f8f9fa;
+    --color-footer-muted: #9ca3af;
+
+    --color-marker-500: #f59e0b;
+    --color-marker-400: #fbbf5e;
+    --color-marker-600: #d97706;
+    /*
+     * marker-700 exists solely so the handwritten annotation has a legible
+     * tone. marker-600 measured 2.97:1 on the softened canvas — fine as a
+     * swash fill behind text, well under AA as text itself. This is the same
+     * hue carried dark enough to read at 16px (5.6:1).
+     */
+    --color-marker-700: #9a4c08;
+
+    /*
+     * Two more accent hues, used ONLY by the hand-drawn decorators. They are
+     * deliberately outside the brand ramp: Odoo's hero doodles are yellow,
+     * blue, green and red at once precisely because they read as pen marks
+     * added on top of the page rather than as part of its colour system.
+     *
+     * They never appear on a control, a status or a surface — only inside a
+     * `.mada-*` stroke. That restriction is what keeps four accent hues from
+     * turning into visual noise.
+     */
+    --color-doodle-teal: #00d2c8;
+    --color-doodle-blue: #3b82f6;
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * FOOTER — the one deliberately dark block on the site.
+     *
+     * Odoo's footer is a deep neutral slab, not a tinted continuation of the
+     * page. It is NOT a return of dark mode: it is a single always-dark brand
+     * surface, the same category as the CTA band, and it carries
+     * `data-surface="dark"` so the `mist-*` muted tones inside it resolve to
+     * the dark ramp instead of the light one.
+     *
+     * The ground is Odoo's `$o-gray-900` (#212529) nudged very slightly toward
+     * the mauve neutral axis so it sits under the plum rather than beside it.
+     * Heading and link tones are fixed here rather than left to `mist-*`
+     * because a footer is the one place the whole hierarchy has to be legible
+     * on a dark ground at 12–14px.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * RADIUS — enterprise ceiling, applied by REDEFINING Tailwind's scale
+     * rather than rewriting ~1,100 class names across 250 Blade files.
+     *
+     * `rounded-md`/`rounded-lg` (buttons, inputs) resolve to 8px, `rounded-xl`
+     * (588 uses, cards) to 10px, `rounded-2xl` (304 uses, panels) to 14px.
+     *
+     * The first pass set these at 3–6px, matching Odoo's web client literally.
+     * That is correct for a 400-row form view and too severe for a marketing
+     * surface and a login card, where the corner is most of what makes a
+     * control look pressable. These values are the compromise: unmistakably
+     * tighter than the 12–24px they replaced, but soft enough to read as
+     * friendly rather than as a spreadsheet.
+     *
+     * `rounded-full` is deliberately untouched: it is correct for avatars,
+     * toggle knobs and unread dots. Status chips that misuse it are corrected
+     * in markup, where the intent is visible.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --radius-xs: 3px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 8px;
+    --radius-xl: 10px;
+    --radius-2xl: 14px;
+    --radius-3xl: 20px;
+    --radius-4xl: 26px;
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * ELEVATION — semantic, and flattened by the same redefinition trick.
+     *
+     * 253 surfaces carried `shadow-sm` AND a 1px border, which flattens the
+     * elevation language: when everything casts a shadow, nothing can stand
+     * out by casting one. `shadow-sm` is now a hairline-strength lift, and
+     * real depth is reserved for things that genuinely float.
+     *
+     * No token carries a horizontal offset, so nothing appears lit from the
+     * wrong side when the layout mirrors to RTL.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --shadow-2xs: 0 1px 1px rgb(26 22 32 / 0.03);
+    --shadow-xs: 0 1px 2px rgb(26 22 32 / 0.04);
+    --shadow-sm: 0 1px 2px rgb(26 22 32 / 0.05);
+    --shadow-md: 0 2px 6px -1px rgb(26 22 32 / 0.08);
+    --shadow-lg: 0 4px 12px -2px rgb(26 22 32 / 0.10);
+    --shadow-xl: 0 8px 20px -4px rgb(26 22 32 / 0.13);
+    --shadow-2xl: 0 14px 34px -8px rgb(26 22 32 / 0.18);
+
+    /*
+     * `shadow-glow` was a tinted bloom behind every primary CTA — a good
+     * signature idea used 131 times, which makes it wallpaper rather than a
+     * signature. It is redefined here as a restrained brand-tinted lift so all
+     * 131 call sites become correct at once instead of needing 131 edits.
+     */
+    --shadow-glow: 0 1px 2px rgb(26 22 32 / 0.10), 0 2px 6px -2px color-mix(in srgb, var(--color-brand-500) 28%, transparent);
+
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * MOTION — three durations, three curves. Previously five durations and
+     * three easings were mixed per element with no rule.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    --ease-standard: cubic-bezier(0.2, 0, 0.2, 1);
+    --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+    /* Enterprise control metrics — see docs/DESIGN_SYSTEM.md §5. */
+    --spacing-control: 2rem; /* 32px — buttons, inputs, selects */
+    --spacing-control-lg: 2.25rem; /* 36px */
+    --spacing-row: 2.25rem; /* 36px — data table row */
+    --spacing-bar: 3rem; /* 48px — topbar, card header, toolbar */
 
     /*
      * Subtle, slow ambient motion for decorative surfaces (login split-screen
@@ -167,14 +469,307 @@
 
 /*
  * ─────────────────────────────────────────────────────────────────────────
+ * 12px FLOOR — a backstop, not the mechanism.
+ *
+ * The floor is enforced primarily in the markup: every `text-[10px]` and
+ * `text-[11px]` was folded into `text-xs`, and `--text-xs` is pinned at
+ * 0.75rem above. This block only catches the elements the browser shrinks on
+ * its own — `<small>`, `<sub>` and `<sup>` all apply a UA-stylesheet
+ * `font-size: smaller`, which lands under 12px inside any `text-xs` or
+ * `text-sm` parent no matter what the utility classes say.
+ *
+ * Specificity is kept at zero with :where() so a real utility always wins,
+ * and the rule sets a floor rather than a fixed size so larger contexts are
+ * untouched.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+:where(small, sub, sup) {
+    font-size: max(0.9375rem, 0.85em);
+}
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * SURFACE VOCABULARY
+ *
+ * Every card on the marketing site draws from these three classes rather than
+ * re-deciding its own border/shadow/radius. Nine sections previously each
+ * invented a slightly different tile — that inconsistency is most of what made
+ * the page read as flat and templated, because nothing had a considered
+ * relationship to anything else.
+ *
+ * The depth model is deliberately shallow: a hairline ring, a whisper of
+ * shadow, and a lift on hover. Enterprise surfaces earn their craft from
+ * precise edges and alignment, not from elevation — a page where every card
+ * floats reads as a toy.
+ *
+ * `ring` rather than `border`: a ring is drawn outside the box so it never
+ * eats a pixel of padding, and it stays hairline-crisp at fractional zoom
+ * where a 1px border rounds unevenly.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+.mada-surface {
+    position: relative;
+    background-color: var(--color-white);
+    border-radius: var(--radius-2xl);
+    box-shadow:
+        0 1px 2px rgb(26 22 32 / 0.04),
+        0 0 0 1px rgb(26 22 32 / 0.05);
+    transition-property: transform, box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: var(--ease-standard);
+}
+
+.mada-surface:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 10px 30px -12px rgb(26 22 32 / 0.14),
+        0 2px 6px -2px rgb(26 22 32 / 0.06),
+        0 0 0 1px rgb(26 22 32 / 0.07);
+}
+
+/*
+ * The featured variant. A single warm bloom bleeding from one corner, sized in
+ * `em` so it scales with the tile. Used on ONE card per section at most —
+ * emphasis that appears on every tile is not emphasis.
+ */
+.mada-surface-feature {
+    /*
+     * The bloom below is positioned OUTSIDE the tile's box. Without clipping it
+     * paints past the card edge and, on the last column of a grid, past the
+     * page's own content width — which is how a decorative glow ends up
+     * creating horizontal scroll on mobile.
+     */
+    overflow: hidden;
+}
+
+.mada-surface-feature::before {
+    content: '';
+    position: absolute;
+    inset-block-start: -3rem;
+    inset-inline-end: -3rem;
+    width: 12rem;
+    height: 12rem;
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, var(--color-brand-500) 8%, transparent);
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.mada-surface-feature > * {
+    position: relative;
+    z-index: 1;
+}
+
+/*
+ * Section ground texture — a very fine dot mesh, 3% opacity.
+ *
+ * This is the one piece of "atmosphere" on the page and it is kept almost
+ * subliminal on purpose: at any strength you can actually SEE as dots it
+ * becomes a pattern competing with the content. Its whole job is to stop a
+ * 2000px run of flat #F6F7F9 from reading as an empty sheet.
+ */
+.mada-mesh {
+    position: relative;
+}
+
+.mada-mesh::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgb(26 22 32 / 0.055) 1px, transparent 0);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    pointer-events: none;
+}
+
+.mada-mesh > * {
+    position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mada-surface:hover {
+        transform: none;
+    }
+}
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * HAND-DRAWN DECORATION
+ *
+ * Three primitives that carry the entire "playful" register of the marketing
+ * surface: a marker swash behind a phrase, a curved underline, and a doodle
+ * arrow. They live here rather than in markup because each is an SVG data URI,
+ * and because the whole point is that a phrase gets ONE of them — keeping them
+ * as named classes makes over-use visible in review.
+ *
+ * All three are drawn on a `preserveAspectRatio='none'` viewBox so they stretch
+ * to whatever phrase they wrap, at any breakpoint, in either direction. The
+ * paths are intentionally asymmetric — a symmetrical "hand-drawn" stroke reads
+ * as a shape, not as a pen.
+ *
+ * RTL: a background image has no direction, so the marker and underline mirror
+ * for free. `.mada-arrow` is the exception and is flipped explicitly, because a
+ * pointing arrow means the opposite thing when the layout mirrors.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
+/*
+ * The swash sits BEHIND the text: `background-position` puts it low in the line
+ * box so ascenders stay clear, and the height is set in `em` so it tracks the
+ * font size instead of needing a value per breakpoint.
+ *
+ * `box-decoration-break: clone` matters — when a highlighted phrase wraps onto
+ * a second line, `slice` (the default) stretches one swash across both
+ * fragments and the second line gets a sliver. `clone` gives each fragment its
+ * own complete stroke, which is what a real marker would do.
+ */
+.mada-marker {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23f59e0b'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 0.66em;
+    background-position: 0 72%;
+    padding-inline: 0.14em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+.mada-marker {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23f59e0b'/%3E%3C/svg%3E");
+}
+
+/* A lighter wash, for a second highlighted phrase that must not compete. */
+.mada-marker-soft {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23fbbf5e'/%3E%3C/svg%3E");
+}
+
+/*
+ * Hand-drawn circle, teal. The path deliberately OVERSHOOTS its start point —
+ * the loop closes past where it began, the way a circle drawn quickly around a
+ * word does. A closed ellipse reads as a border; the overshoot is the whole
+ * tell.
+ *
+ * Drawn as a positioned pseudo-element rather than a background, because the
+ * ring has to sit OUTSIDE the text box on all four sides. A background is
+ * clipped to the box and would crop the loop.
+ */
+.mada-circle {
+    position: relative;
+    display: inline-block;
+}
+
+.mada-circle::before {
+    content: '';
+    position: absolute;
+    /*
+     * Slightly wider and shallower than the first attempt. The loop needs
+     * horizontal room to read as a sketch rather than as an oval border, but
+     * pushing it further from the text vertically just made the headline feel
+     * loosely spaced.
+     */
+    inset: -0.2em -0.5em;
+    /*
+     * ─────────────────────────────────────────────────────────────────────
+     * REFINED STROKE
+     *
+     * The first pass drew this at stroke-width 3.4 on a 220×86 viewBox, which
+     * — once `preserveAspectRatio='none'` stretched it across a 72px word —
+     * rendered as a heavy cyan band that competed with the letterforms it was
+     * supposed to frame.
+     *
+     * Three changes: the weight drops to 2, the viewBox grows to 240×92 so the
+     * same nominal weight scales down further against the text, and the
+     * control points are re-cut as one continuous sweep instead of four
+     * segments meeting at hard tangents — the corners are where a stroke stops
+     * looking drawn and starts looking like a shape.
+     *
+     * The overshoot past the start point is kept and lengthened: it is the
+     * single detail that reads as "drawn by hand" rather than "an ellipse".
+     * Opacity is carried on the element, not baked into the stroke colour, so
+     * the teal stays a real token value.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 92' preserveAspectRatio='none'%3E%3Cpath d='M126 8C74 4 22 19 12 43c-8 20 30 40 96 41 58 1 116-15 120-38 4-22-42-38-98-38-22 0-45 3-62 9' fill='none' stroke='%2300d2c8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+/*
+ * Double swash underline, blue. Two strokes of different weight and slightly
+ * different curve — a second pass over the same line never lands on the first.
+ */
+.mada-underline-double {
+    position: relative;
+    display: inline-block;
+}
+
+.mada-underline-double::after {
+    content: '';
+    position: absolute;
+    inset-inline: -0.1em;
+    bottom: -0.34em;
+    height: 0.34em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 24' preserveAspectRatio='none'%3E%3Cpath d='M4 8C42 3 96 2 138 5c26 2 45 4 58 6' fill='none' stroke='%233b82f6' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M11 19C47 14 101 13 143 16c21 2 36 3 47 4' fill='none' stroke='%233b82f6' stroke-width='2.6' stroke-linecap='round' opacity='.75'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    pointer-events: none;
+}
+
+/*
+ * Curved underline. Drawn as a stroke rather than a filled band so the ends
+ * taper the way a pen lifts, and offset below the baseline so it never clips a
+ * descender in Arabic (ج، ح، خ، ع and ي all drop well below).
+ */
+.mada-underline {
+    position: relative;
+    display: inline-block;
+}
+
+.mada-underline::after {
+    content: '';
+    position: absolute;
+    inset-inline: -0.08em;
+    bottom: -0.28em;
+    height: 0.3em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 12.5C38 5 88 3 129 6c30 2 52 5 68 8' fill='none' stroke='%23f59e0b' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    /*
+     * The underline draws itself once on load. `background-size` is animated
+     * from 0 width, which is cheap and — unlike a stroke-dashoffset animation —
+     * needs no JS to measure the path length.
+     */
+    .mada-underline::after,
+    .mada-underline-double::after {
+        animation: mada-draw 520ms var(--ease-enter) 260ms both;
+    }
+}
+
+@keyframes mada-draw {
+    from {
+        background-size: 0% 100%;
+    }
+    to {
+        background-size: 100% 100%;
+    }
+}
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
  * MARKETING SURFACE POLISH
  *
  * Two primitives shared by the public landing page and the tenant portal so
  * both surfaces age together. Both are built from tokens already in the
  * palette — no new colours enter the system here.
- *
- * A third, `.veyra-hero-grid`, was removed on request: the hero canvas keeps
- * the two emerald bloom layers it had before and no background texture.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -187,24 +782,21 @@
  * Translate, not scale: scaling a card resamples its text and its border
  * hairline, which shimmers on a 1px border at these sizes.
  */
-.veyra-card {
+.mada-card {
     transition-property: transform, box-shadow, border-color;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    transition-duration: 180ms;
+    transition-timing-function: var(--ease-standard);
 }
 
-.veyra-card:hover {
-    transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--color-emerald-400) 45%, transparent);
-    box-shadow:
-        0 18px 40px -18px color-mix(in srgb, var(--color-ink-950) 22%, transparent),
-        0 0 0 1px color-mix(in srgb, var(--color-emerald-400) 12%, transparent);
+.mada-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-brand-500) 40%, transparent);
+    box-shadow: var(--shadow-lg);
 }
 
-.dark .veyra-card:hover {
-    box-shadow:
-        0 18px 44px -16px rgb(0 0 0 / 0.55),
-        0 0 30px -12px color-mix(in srgb, var(--color-emerald-400) 30%, transparent);
+.dark .mada-card:hover {
+    border-color: color-mix(in srgb, var(--color-brand-300) 32%, transparent);
+    box-shadow: 0 8px 24px -8px rgb(0 0 0 / 0.6);
 }
 
 /*
@@ -215,25 +807,26 @@
  */
 /*
  * ─────────────────────────────────────────────────────────────────────────
- * The ring is a box-shadow, NOT an outline, and there is no `border-radius`
+ * The ring is an `outline`, and there is deliberately no `border-radius`
  * declaration here.
  *
- * The first version of this rule carried `border-radius: inherit`, intending
- * to make the ring follow the control's curve. It does the opposite: it
- * OVERRIDES the control's own radius with the parent's — almost always 0 — so
- * a `rounded-xl` input snapped to square corners the moment it was focused,
- * and the outline then correctly traced that new square shape. That is the
- * hard-cornered halo seen on /forgot-password.
+ * An earlier version carried `border-radius: inherit`, intending to make the
+ * ring follow the control's curve. It does the opposite: it OVERRIDES the
+ * control's own radius with the parent's — almost always 0 — so a `rounded-xl`
+ * input snapped to square corners the moment it was focused. A control's
+ * radius already applies to its own outline in current browsers, so nothing
+ * needs declaring.
  *
- * A control's radius already applies to its own outline in current browsers,
- * so nothing needed declaring. `box-shadow` is used regardless because it
- * follows `border-radius` everywhere, including Safari below 16.4 where
- * `outline` is still drawn square, and because it renders as a soft halo
- * rather than a hard rule.
+ * `outline`, not `box-shadow`, and NOT wrapped in :where(). box-shadow was the
+ * first attempt and is the wrong tool: Tailwind writes its rings and elevation
+ * into that same property, so any control already carrying `shadow-sm` — which
+ * most inputs in this app do — replaced the focus halo wholesale and rendered
+ * no focus state at all. Wrapping the rule in :where() made that worse by
+ * dropping its specificity to zero, so every utility won.
  *
- * The transparent `outline` is deliberate: Windows High Contrast Mode discards
- * box-shadow entirely, and a transparent outline is repainted there as a
- * visible system-coloured one — so the focus state survives forced colours.
+ * `outline` occupies a property nothing else in the system writes to, so it
+ * cannot be clobbered. Controls that declare their own `focus:ring-*` still win
+ * on specificity, as they should.
  * ─────────────────────────────────────────────────────────────────────────
  */
 a:focus-visible,
@@ -244,28 +837,23 @@ select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible {
-    outline: 2px solid var(--color-emerald-400);
+    outline: 2px solid var(--color-brand-500);
     outline-offset: 2px;
 }
 
-/*
- * `outline`, not `box-shadow`, and NOT wrapped in :where().
- *
- * box-shadow was the first attempt and is the wrong tool here: Tailwind writes
- * its rings and elevation into that same property, so any control already
- * carrying `shadow-sm` — which most inputs in this app do — replaced the focus
- * halo wholesale and rendered no focus state at all. Wrapping the rule in
- * :where() made that worse by dropping its specificity to zero, so every
- * utility won.
- *
- * `outline` occupies a property nothing else in the system writes to, so it
- * cannot be clobbered, and current engines already clip it to the element's
- * own border-radius — which is all that was ever needed. Controls that declare
- * their own `focus:ring-*` still win on specificity, as they should.
- */
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark [role='button']:focus-visible,
+.dark input:focus-visible,
+.dark select:focus-visible,
+.dark textarea:focus-visible,
+.dark summary:focus-visible,
+.dark [tabindex]:focus-visible {
+    outline-color: var(--color-brand-300);
+}
 
 @media (prefers-reduced-motion: reduce) {
-    .veyra-card:hover {
+    .mada-card:hover {
         transform: none;
     }
 }
@@ -281,12 +869,29 @@ summary:focus-visible,
 }
 
 /*
- * Dark-theme muted tones — the original Figma values (DESIGN_SYSTEM.md §2).
+ * ─────────────────────────────────────────────────────────────────────────
+ * ENTERPRISE DENSITY — tabular figures.
+ *
+ * `font-variant-numeric: tabular-nums` appeared 97 times against thousands of
+ * numeric cells, so columns of figures did not line up. Applying it at the
+ * element type means it is never a per-cell decision again, which matters
+ * more here than in a latin-only product: the UI runs RTL in Arabic while the
+ * digits inside it run LTR, so ragged figure widths read as broken alignment
+ * rather than as a typographic detail.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+table,
+.tabular {
+    font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Dark-theme muted tones (DESIGN_SYSTEM.md §2.4).
  *
  * These are restored here rather than left in `@theme` because the same three
  * stops need different values per theme: the tones that read correctly against
- * the ink canvas are far too light against white. Measured against `ink-950`:
- * mist-400 = 8.4:1, mist-500 = 6.1:1, mist-600 = 4.3:1 (separators only).
+ * the ink canvas are far too light against white. Measured against `ink-800`:
+ * mist-400 = 6.2:1, mist-500 = 4.8:1, mist-600 = 3.4:1 (separators only).
  *
  * Declared on `.dark` itself, not `.dark *`, so the variables cascade to every
  * descendant exactly once — matching where the class is set (<html>).
@@ -310,10 +915,14 @@ summary:focus-visible,
  * muted tones on a white background, i.e. exactly the bug this block exists to
  * fix, inverted. The opacity variants are therefore enumerated explicitly.
  *
+ * `[data-surface='dark']` is the forward-looking escape hatch: new always-dark
+ * panels should declare it rather than extend the enumerated list below.
+ *
  * Wrapped in :where() so specificity stays 0 and nothing here outranks a real
  * utility class.
  */
 :where(
+    [data-surface='dark'],
     [class~='bg-ink-700'],
     [class~='bg-ink-800'],
     [class~='bg-ink-900'],
@@ -329,25 +938,47 @@ summary:focus-visible,
     [class~='bg-ink-950/80'],
     [class~='bg-ink-950/85']
 ) {
-    --color-mist-400: #9db0a4;
-    --color-mist-500: #86948a;
-    --color-mist-600: #6c7a71;
+    /*
+     * Clay's on-dark ramp (`colors.on-dark` / `on-dark-soft`).
+     *
+     * These stops are theme-inverted for the handful of surfaces that are dark
+     * in an otherwise cream system — the product-UI mock inside the showcase
+     * frame, chiefly. When the palette was re-pointed to Clay, `mist-400/500`
+     * became #6a6a6a/#3a3a3a and `brand-300` became #3a3a3a, so every label
+     * inside that mock went dark-on-dark and measured ~1.7:1.
+     *
+     * `brand-300` is included because it is the accent-text stop, and on a
+     * dark mock the accent has to invert with everything else.
+     */
+    --color-mist-400: #a9a1b2;
+    --color-mist-500: #948b9e;
+    --color-mist-600: #7d7388;
+    --color-brand-300: #c4a3bb;
 }
 
 /*
- * Brand accent, light mode only. Tailwind's stock emerald-600 measures ~3.7:1
- * on white — below AA for the 12–14px eyebrow labels, active nav items and
- * step numbers it is used for throughout the marketing site. emerald-700's
- * value takes it to 5.5:1 while staying unmistakably the same brand green.
- * Dark mode is untouched: it pairs `text-emerald-600` with
- * `dark:text-emerald-400`, which already measures well against ink.
+ * ─────────────────────────────────────────────────────────────────────────
+ * Stock status hues, light mode only.
+ *
+ * `amber` and `sky` are kept as Tailwind's own scales — they are already
+ * distinct from the plum brand and re-labelling ~340 usages would add churn
+ * without adding meaning. Two stops do need correcting: measured on white,
+ * Tailwind's `amber-600` is 3.19:1 and `sky-600` is 4.10:1, both under the
+ * WCAG AA 4.5:1 floor, and both are used for 12–14px status labels.
+ *
+ * Only the light values move; the `dark:*-300/400` counterparts these are
+ * paired with in markup already measure 7.6–9.8:1 on the ink sheet, so `.dark`
+ * restores Tailwind's originals rather than inheriting the darkened ones.
+ * ─────────────────────────────────────────────────────────────────────────
  */
 :root {
-    --color-emerald-600: #047857;
+    --color-amber-600: #a25c07; /* 4.71:1 on white */
+    --color-sky-600: #01669b; /* 5.42:1 on white */
 }
 
 .dark {
-    --color-emerald-600: oklch(0.596 0.145 163.225);
+    --color-amber-600: oklch(0.666 0.179 58.318);
+    --color-sky-600: oklch(0.588 0.158 241.966);
 }
 
 /* Respect the user's OS-level motion preference even though we lean on animation for polish. */

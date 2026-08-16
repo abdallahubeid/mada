@@ -31,7 +31,7 @@ class TenantSuspendedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "إيقاف مؤقت لحساب «{$this->tenant->name}» على Veyra",
+            subject: "إيقاف مؤقت لحساب «{$this->tenant->name}» على مدى",
         );
     }
 

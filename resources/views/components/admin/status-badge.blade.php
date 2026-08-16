@@ -15,7 +15,7 @@
         // Tenant lifecycle
         'pending_verification' => ['label' => 'بانتظار التحقق', 'text' => 'text-sky-600 dark:text-sky-400', 'bg' => 'bg-sky-500/10', 'dot' => 'bg-sky-500'],
         'pending_approval' => ['label' => 'بانتظار الموافقة', 'text' => 'text-amber-600 dark:text-amber-400', 'bg' => 'bg-amber-500/10', 'dot' => 'bg-amber-500'],
-        'active' => ['label' => 'نشط', 'text' => 'text-emerald-600 dark:text-emerald-400', 'bg' => 'bg-emerald-500/10', 'dot' => 'bg-emerald-400'],
+        'active' => ['label' => 'نشط', 'text' => 'text-brand-600 dark:text-brand-300', 'bg' => 'bg-brand-500/10', 'dot' => 'bg-brand-500'],
         /*
          * Added with the sixth state (ADR-04 amended 2026-08-09). Without it a
          * rejected tenant fell through to the default branch and rendered the
@@ -32,7 +32,7 @@
     $cfg = $map[$status] ?? ['label' => $label ?? $status, 'text' => 'text-mist-500 dark:text-mist-400', 'bg' => 'bg-mist-400/10', 'dot' => 'bg-mist-400'];
 @endphp
 
-<span {{ $attributes->class(['inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium', $cfg['text'], $cfg['bg']]) }}>
+<span {{ $attributes->class(['inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium', $cfg['text'], $cfg['bg']]) }}>
     <span class="h-1.5 w-1.5 rounded-full {{ $cfg['dot'] }}"></span>
     {{ $label ?? $cfg['label'] }}
 </span>

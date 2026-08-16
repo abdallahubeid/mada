@@ -1,22 +1,22 @@
-# Veyra ERP — Project Vision
+# Mada ERP — Project Vision
 
-> Part of the Veyra ERP documentation set. See `VEYRA_DOCS.md` for the full Software Design Document. This file must not be read in isolation when making architectural decisions — cross-check `ARCHITECTURE.md` and `MODULES.md`.
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full Software Design Document. This file must not be read in isolation when making architectural decisions — cross-check `ARCHITECTURE.md` and `MODULES.md`.
 
-## 1. What Veyra ERP Is
+## 1. What Mada ERP Is
 
-Veyra ERP is a **commercial, multi-tenant SaaS application** — not a prototype, not an internal tool, not a graduation project. It is built to be sold to real companies, operated at scale, and maintained over years. Every decision in this documentation set is made with that bar in mind: production security, data isolation, auditability, and maintainability come first.
+Mada ERP is a **commercial, multi-tenant SaaS application** — not a prototype, not an internal tool, not a graduation project. It is built to be sold to real companies, operated at scale, and maintained over years. Every decision in this documentation set is made with that bar in mind: production security, data isolation, auditability, and maintainability come first.
 
-Veyra ERP integrates three business domains that are normally sold as separate tools:
+Mada ERP integrates three business domains that are normally sold as separate tools:
 
 1. **HR & Recruitment** — hiring, employee records, attendance, leave.
 2. **Operations & Projects** — task/project execution, time tracking.
 3. **Finance & Payroll** — payroll, invoicing, expenses, financial reporting.
 
-Each tenant (a customer company) operates in complete data isolation from every other tenant, under a single shared application and database, managed centrally by Veyra's own Super Admin layer.
+Each tenant (a customer company) operates in complete data isolation from every other tenant, under a single shared application and database, managed centrally by Mada's own Super Admin layer.
 
 ## 2. The Value Proposition: The Canonical Closed-Loop Data Flow
 
-Veyra's core differentiator is not "more modules than the competition" — it is that **the modules are structurally connected**, so data entered once flows automatically to every place it's needed, with zero manual re-entry:
+Mada's core differentiator is not "more modules than the competition" — it is that **the modules are structurally connected**, so data entered once flows automatically to every place it's needed, with zero manual re-entry:
 
 ```mermaid
 flowchart LR
@@ -34,7 +34,7 @@ flowchart LR
     H --> I
 ```
 
-In plain terms: **recruit → employ → track work → get paid, generate client revenue, and see it all on one financial dashboard.** Competing point-solutions (an ATS, a project tool, a payroll tool) require this data to be manually reconciled between systems. Veyra's entire architecture exists to make that reconciliation automatic and provably correct (see `ARCHITECTURE.md` §"Work Ledger" and `MODULES.md` for the reconciliation rules that make this safe rather than just convenient).
+In plain terms: **recruit → employ → track work → get paid, generate client revenue, and see it all on one financial dashboard.** Competing point-solutions (an ATS, a project tool, a payroll tool) require this data to be manually reconciled between systems. Mada's entire architecture exists to make that reconciliation automatic and provably correct (see `ARCHITECTURE.md` §"Work Ledger" and `MODULES.md` for the reconciliation rules that make this safe rather than just convenient).
 
 ## 3. Target Customer
 
@@ -50,7 +50,7 @@ These are deliberate exclusions, not oversights. Do not build toward these witho
 
 | Non-goal | Reasoning |
 |---|---|
-| Full accounting/GL (chart of accounts, double-entry bookkeeping) | Veyra's Finance module produces payroll and client invoices, not a full general ledger. Tenants needing full accounting should export to a dedicated accounting tool. |
+| Full accounting/GL (chart of accounts, double-entry bookkeeping) | Mada's Finance module produces payroll and client invoices, not a full general ledger. Tenants needing full accounting should export to a dedicated accounting tool. |
 | Inventory / manufacturing / supply chain | Out of scope for a services/knowledge-work-oriented ERP. |
 | Multi-currency consolidation across tenants | Each tenant operates in a single configured currency (Phase 1–4). Cross-currency consolidation is a post-Phase-4 evaluation, not a commitment. |
 | Native mobile apps | Web-first, responsive, mobile-browser-friendly. Native apps are not planned in the current roadmap. |

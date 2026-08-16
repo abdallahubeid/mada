@@ -27,7 +27,7 @@ class TenantApprovedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "تم تفعيل حساب «{$this->tenant->name}» على Veyra",
+            subject: "تم تفعيل حساب «{$this->tenant->name}» على مدى",
         );
     }
 

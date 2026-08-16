@@ -1,22 +1,35 @@
-# Veyra ERP — Design System
+# Mada ERP — Design System
 
-> Part of the Veyra ERP documentation set. See `VEYRA_DOCS.md` §12 for the summary and `MODULES.md` BR-701 for the Employee Workspace this system must render correctly.
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` §12 for the summary and `MODULES.md` BR-701 for the Employee Workspace this system must render correctly.
 
 ## 1. Visual Identity
 
-- **Palette:** Emerald & Charcoal, used consistently across the public marketing site, the tenant app, the Super Admin console, and error pages (403/404/500). No module or page may introduce an off-palette color scheme.
-  - Emerald is the primary action/brand accent (CTAs, active states, success indicators, brand marks).
-  - Charcoal is the primary neutral (backgrounds, text, chrome) in both light and dark variants — see §2.
+Brand name: **مدى** (latin transliteration *Mada*, used only in code comments and identifiers).
+
+- **Palette:** Plum & Slate, used consistently across the public marketing site, the tenant app, the Super Admin console, and error pages (403/404/500). No module or page may introduce an off-palette color scheme.
+  - **Plum** (`brand-*`, anchored on `#714B67`) is the primary action/brand accent — CTAs, active states, brand marks. It is *not* a status colour.
+  - **Slate** (`ink-*` for structure, `mist-*` for muted text) is the primary neutral in both light and dark variants — see §2. Both ramps sit on one low-saturation mauve axis (hue ≈ 290°).
+- **Brand ≠ action ≠ success.** Green means one thing only: success. `success-*`, `warning-*`, `critical-*` and `accent-*` (informational blue) are separate token families and never double as the brand. A filled plum button is an action; a status is always a chip, never a fill.
 - **Consistency rule:** the Landing Page, Super Admin console, and internal tenant dashboard must feel like one product, not three different skins.
+
+### 1.1 Geometry & elevation
+
+Radii are applied by redefining Tailwind's scale in `app.css`, not by rewriting class names — `rounded-xl` resolves to **6px**, `rounded-2xl` to **8px**. Nothing in the app reads past 8px; `rounded-full` is reserved for avatars, toggle knobs and unread dots.
+
+Elevation is semantic and flat by default: **border or shadow, never both.** `shadow-sm` is a hairline lift, `shadow-lg` is for dropdowns/popovers, `shadow-2xl` for modals and drawers. No shadow token carries a horizontal offset, so nothing appears lit from the wrong side when the layout mirrors to RTL.
+
+### 1.2 Motion
+
+Three durations (120 / 180 / 260ms) and three curves (`--ease-standard`, `--ease-enter`, `--ease-exit`). Never `transition: all` — enumerate the properties. Nothing containing text may scale on hover (scaling resamples glyphs and shimmers a 1px border); press states use `translateY(1px)`.
 
 ## 2. Appearance Strategy — Dark Mode & Light Mode (ADR-15)
 
 ### 2.1 Decision
 
-Veyra's frontend natively supports **Dark Mode and Light Mode** using Tailwind CSS's **class-based `dark:` variant strategy** (`darkMode: 'class'` in the Tailwind configuration), not the OS-media-query-only strategy. This is a deliberate choice:
+Mada's frontend natively supports **Dark Mode and Light Mode** using Tailwind CSS's **class-based `dark:` variant strategy** (`darkMode: 'class'` in the Tailwind configuration), not the OS-media-query-only strategy. This is a deliberate choice:
 
 - **Class-based** means the user's explicit choice (a toggle in the app shell, not just their OS setting) is what controls the theme, and that choice is **persisted** (per-user preference, applied on next load before first paint to avoid a flash of the wrong theme).
-- Every shared component must ship with both variants **from the moment it is built** — this is a Phase 1 requirement, not a Phase 4 polish item, because Veyra is a commercial product from day one.
+- Every shared component must ship with both variants **from the moment it is built** — this is a Phase 1 requirement, not a Phase 4 polish item, because Mada is a commercial product from day one.
 
 ### 2.2 Implementation rules
 
@@ -33,16 +46,17 @@ Veyra's frontend natively supports **Dark Mode and Light Mode** using Tailwind C
 
 ### 2.4 Muted text is theme-dependent (added 2026-08-10)
 
-The Figma reference specifies the **dark** theme only, so `mist-400/500/600` were originally its dark-theme tones used in both themes. On a light canvas that measured **2.29:1** (`mist-400`) and **3.17:1** (`mist-500`) — well under the WCAG AA 4.5:1 floor, and the cause of the washed-out secondary text across every light-mode screen.
+A tone that reads correctly as secondary text on the dark canvas is far too light on white — the pre-unification values measured **2.29:1** (`mist-400`) and **3.17:1** (`mist-500`) there, well under the WCAG AA 4.5:1 floor, and were the cause of the washed-out secondary text across every light-mode screen.
 
-- These three stops are now **theme-split in `app.css`**: the `@theme` block holds the light ramp (4.8:1 / 6.2:1 / 8.5:1 on white) and `.dark` restores the Figma tones. `text-mist-500 dark:text-mist-400` therefore keeps working untouched — **do not** rewrite those pairings in markup.
+- These three stops are **theme-split in `app.css`**: the `@theme` block holds the light ramp (5.5:1 / 7.4:1 / 10.0:1 on white) and `.dark` restores tones measured against the ink sheet (6.2:1 / 4.8:1 / 3.4:1). `text-mist-500 dark:text-mist-400` therefore keeps working untouched — **do not** rewrite those pairings in markup.
+- **New always-dark panels should declare `data-surface="dark"`** rather than extend the enumerated `[class~='bg-ink-*']` allowlist below it.
 - **Always-dark surfaces carry the dark tones automatically.** Panels that are dark in both themes (product-tour frame, footer, CTA panel, login showcase, 403/404) have no `dark:` variants, so the same rule keys the dark tones off the `bg-ink-700/800/900/950` utilities. Those selectors use `~=` (whole-token) matching, never `*=`: a substring match also hits `dark:bg-ink-900/60`, which appears on cards that are **white** in light mode.
 - `--color-emerald-600` is likewise light-only (5.5:1 on white); Tailwind's stock value measures ~3.7:1 and is used for 12–14px eyebrow labels and active nav items.
 - **Verify with measurement, not by eye.** Both themes currently measure **zero** AA failures on the landing page. Stops 50–300 and 700–900 are not theme-split — they paint borders, dividers and surfaces.
 
 ## 3. Layout Direction — RTL/LTR Native Compatibility (ADR-10)
 
-- Veyra is bilingual from v1: **Arabic (primary) and English**, and must support both right-to-left (RTL) and left-to-right (LTR) layouts natively.
+- Mada is bilingual from v1: **Arabic (primary) and English**, and must support both right-to-left (RTL) and left-to-right (LTR) layouts natively.
 - **Rule:** use Tailwind's **logical properties** everywhere directionality matters — `ms-`/`me-` (margin-start/end) instead of `ml-`/`mr-`, `ps-`/`pe-` instead of `pl-`/`pr-`, `start-`/`end-` instead of `left-`/`right-`, and logical text alignment. Physical-direction utility classes (`ml-`, `mr-`, `left-`, `right-`) are **not permitted** in shared components or module views.
 - The `<html>` element's `dir` attribute is set based on the active locale (`rtl` for Arabic, `ltr` for English) — components must never hardcode a direction assumption.
 - Icons that imply direction (e.g., arrows, chevrons for "next/back") must flip automatically with `dir`, not be hardcoded to point one way.
@@ -64,6 +78,26 @@ The Figma reference specifies the **dark** theme only, so `mist-400/500/600` wer
 
 - ERP dashboards prioritize data density over marketing-style whitespace: default compact table row height, information-dense list views.
 - Marketing/public pages (Landing, Pricing, Careers) may use more generous spacing consistent with a "premium" first impression — this is the one place default Tailwind spacing (not compact) is expected.
+
+### 5.1 Control metrics
+
+| Token | Value | Applies to |
+| --- | --- | --- |
+| `--spacing-control` | 32px | buttons, inputs, selects |
+| `--spacing-row` | 36px | data table rows (`px-3 py-2` at `text-sm`) |
+| `--spacing-bar` | 48px | topbar, card header, toolbar |
+
+App-surface cards use 16px padding (`p-4`), matching Odoo's `$o-spacer`. Marketing keeps its generous scale.
+
+### 5.2 Font weights — 400 / 500 / 600 / 700
+
+Tajawal is imported at `wght@400;500;600;700` and **all four must stay in the import.** The font previously loaded only 400/500/700, so every `font-semibold` (600) had no matching face and the CSS font-matching algorithm resolved it upward to 700 — `font-semibold` and `font-bold` rendered identically across ~1,500 elements, collapsing the second tier of the hierarchy in the primary language. Dropping 600 from the import silently reintroduces that.
+
+### 5.3 Arabic typography rules
+
+- **Never `tracking-*` on Arabic text.** Arabic is cursive; letter-spacing breaks the joins between letters and renders words as disconnected glyphs. Column headers previously carried `tracking-wider` for this reason and no longer do. Letter-spacing is permitted on latin-only strings.
+- **`uppercase` is a no-op on Arabic** and was removed from `<th>` along with the tracking.
+- **Tabular figures are automatic.** `font-variant-numeric: tabular-nums` is applied at the `table` element in `app.css` rather than per cell — the UI runs RTL while the digits inside it run LTR, so ragged figure widths read as broken alignment.
 
 ## 6. Employee Workspace UI Requirements (ties to BR-701)
 
@@ -95,8 +129,8 @@ One markup contract for every data table in the tenant and admin apps. Print vie
 
 | Slot | Classes |
 | --- | --- |
-| `<th>` | `px-4 py-3 text-xs font-semibold uppercase tracking-wider text-mist-500 dark:text-mist-400` |
-| `<td>` | `px-4 py-3 text-sm text-ink-700 dark:text-mist-200` |
+| `<th>` | `px-3 py-2 text-[11px] font-medium text-mist-500 dark:text-mist-400` |
+| `<td>` | `px-3 py-2 text-sm text-ink-700 dark:text-mist-200` |
 | Index `#` (th + td) | add `w-12 text-center`; the `td` also takes `text-mist-500` |
 | Status badges / actions (th + td) | add `text-center` |
 | Numeric amounts & currency (th + td) | add `text-end` |

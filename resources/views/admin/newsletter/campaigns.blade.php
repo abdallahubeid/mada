@@ -36,7 +36,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'تعذّر تحميل محتوى الحملة',
-                        confirmButtonColor: '#4edea3',
+                        confirmButtonColor: '#714b67',
                     });
                 } finally {
                     this.loading = false;
@@ -47,12 +47,12 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-bold text-ink-900 dark:text-ink-50">الحملات البريدية</h2>
+                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الحملات البريدية</h2>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">سجل الحملات المرسلة وعدد المستلمين مع إمكانية مراجعة المحتوى.</p>
             </div>
             <a
                 href="{{ route('admin.newsletter.index') }}"
-                class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-glow transition hover:bg-emerald-300"
+                class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
             >
                 إرسال حملة جديدة
             </a>
@@ -62,30 +62,30 @@
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>
-                        <th class="w-14 border-e border-mist-100 px-6 py-4 text-center font-semibold dark:border-ink-700">#</th>
-                        <th class="border-e border-mist-100 px-6 py-4 text-start font-semibold dark:border-ink-700">الموضوع</th>
-                        <th class="border-e border-mist-100 px-6 py-4 text-center font-semibold dark:border-ink-700">المستلمون</th>
-                        <th class="border-e border-mist-100 px-6 py-4 text-center font-semibold dark:border-ink-700">تاريخ الإرسال</th>
-                        <th class="px-6 py-4 text-end font-semibold">عرض</th>
+                        <th class="w-14 border-e border-mist-100 px-3 py-2 text-center font-medium dark:border-ink-700">#</th>
+                        <th class="border-e border-mist-100 px-3 py-2 text-start font-medium dark:border-ink-700">الموضوع</th>
+                        <th class="border-e border-mist-100 px-3 py-2 text-center font-medium dark:border-ink-700">المستلمون</th>
+                        <th class="border-e border-mist-100 px-3 py-2 text-center font-medium dark:border-ink-700">تاريخ الإرسال</th>
+                        <th class="px-3 py-2 text-end font-medium">عرض</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-mist-100 dark:divide-ink-700">
                     @forelse ($campaigns as $campaign)
                         <tr
-                            id="veyra-search-campaign-{{ $campaign->id }}"
+                            id="mada-search-campaign-{{ $campaign->id }}"
                             data-campaign-id="{{ $campaign->id }}"
-                            data-veyra-search="campaign-{{ $campaign->id }}"
+                            data-mada-search="campaign-{{ $campaign->id }}"
                         >
-                            <td class="border-e border-mist-100 px-6 py-4 font-medium text-ink-900 dark:border-ink-700 dark:text-ink-50">
+                            <td class="border-e border-mist-100 px-3 py-2 font-medium text-ink-900 dark:border-ink-700 dark:text-ink-50">
                                 {{ $campaign->subject }}
                             </td>
-                            <td class="border-e border-mist-100 px-6 py-4 text-center text-mist-500 dark:border-ink-700">
+                            <td class="border-e border-mist-100 px-3 py-2 text-center text-mist-500 dark:border-ink-700">
                                 {{ $campaign->recipients_count }}
                             </td>
-                            <td class="border-e border-mist-100 px-6 py-4 text-center text-mist-500 dark:border-ink-700" dir="rtl" lang="ar">
+                            <td class="border-e border-mist-100 px-3 py-2 text-center text-mist-500 dark:border-ink-700" dir="rtl" lang="ar">
                                 {{ $campaign->sent_at?->locale('ar')->diffForHumans() ?? '—' }}
                             </td>
-                            <td class="px-6 py-4 text-end">
+                            <td class="px-3 py-2 text-end">
                                 <button
                                     type="button"
                                     @click="viewCampaign(@js(route('admin.newsletter.campaigns.show', $campaign)))"
@@ -119,7 +119,7 @@
             <div class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-mist-200 bg-white p-6 shadow-xl dark:border-ink-600 dark:bg-ink-800">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <h3 class="font-display text-xl font-bold text-ink-900 dark:text-ink-50" x-text="campaign?.subject || 'محتوى الحملة'"></h3>
+                        <h3 class="font-display text-xl font-medium text-ink-900 dark:text-ink-50" x-text="campaign?.subject || 'محتوى الحملة'"></h3>
                         <p class="mt-1 text-sm text-mist-500">
                             <span x-show="campaign">المستلمون: <span x-text="campaign?.recipients_count"></span> · </span>
                             <span x-text="campaign?.sent_at_formatted || ''"></span>

@@ -120,7 +120,7 @@ test('contact messages inbox has no open closed status ui', function () {
 
     $this->get(route('tenant.contact-messages.index'))
         ->assertOk()
-        ->assertSee('veyraTenantContactInbox', false)
+        ->assertSee('madaTenantContactInbox', false)
         ->assertSee('selectThread', false)
         ->assertSee('closeChat', false)
         ->assertSee('اختر محادثة لبدء القراءة', false)

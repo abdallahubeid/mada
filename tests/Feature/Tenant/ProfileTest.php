@@ -36,12 +36,12 @@ test('tenant profile update persists personal information and avatar on custom d
 
     $user = actingAsTenantUser(TenantPermissionCatalog::ROLE_OWNER, ['status' => 'active'], [
         'name' => 'Old Tenant',
-        'email' => 'old-tenant@veyra.test',
+        'email' => 'old-tenant@mada.test',
     ]);
 
     $this->put(route('profile.update'), [
         'name' => 'New Tenant',
-        'email' => 'new-tenant@veyra.test',
+        'email' => 'new-tenant@mada.test',
         'phone' => '+966501112233',
         'job_title' => 'CEO',
         'avatar' => UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg'),
@@ -51,7 +51,7 @@ test('tenant profile update persists personal information and avatar on custom d
     $avatar = $user->avatar;
 
     expect($user->name)->toBe('New Tenant')
-        ->and($user->email)->toBe('new-tenant@veyra.test')
+        ->and($user->email)->toBe('new-tenant@mada.test')
         ->and($user->phone)->toBe('+966501112233')
         ->and($user->job_title)->toBe('CEO')
         ->and($user->email_verified_at)->toBeNull()
@@ -88,22 +88,26 @@ test('tenant password update requires current password', function () {
     expect(Hash::check('NewSecret123', $user->fresh()->password))->toBeTrue();
 });
 
-test('tenant app shell defaults dark mode when no local storage preference', function () {
+test('tenant app shell renders light only and never applies the dark class', function () {
     actingAsTenantUser(TenantPermissionCatalog::ROLE_OWNER, ['status' => 'active']);
 
     $html = $this->get(route('dashboard'))->assertOk()->getContent();
 
     /*
-     * Asserts the CONTRACT, not the source text. This previously pinned two
-     * literal strings from the inline script, so consolidating the six copies
-     * into <x-theme-script /> failed it even though the behaviour was intact —
-     * the test was describing an implementation rather than a requirement.
+     * Dark mode has been withdrawn (supersedes ADR-15). This test previously
+     * asserted the OPPOSITE contract — that a visitor with no stored
+     * preference got dark — and is inverted rather than deleted, because the
+     * guarantee still worth holding is that the bootstrap makes the theme
+     * deterministic. It just now determines light.
+     *
+     * Asserts the CONTRACT, not the source text: the shell must strip the
+     * class rather than merely omit it, because a cached page, an extension,
+     * or a bfcache restore can all reintroduce `dark` on <html> after the
+     * server has rendered.
      */
     expect($html)
-        // Dark for anyone who has not explicitly chosen light.
-        ->toContain("classList.toggle('dark', stored !== 'light')")
-        ->toContain("localStorage.getItem('veyra-theme')");
-
+        ->toContain("classList.remove('dark')")
+        ->not->toContain("classList.toggle('dark'");
 });
 
 test('the theme bootstrap re-applies after a livewire navigation', function () {
@@ -124,23 +128,53 @@ test('the theme bootstrap re-applies after a livewire navigation', function () {
     expect($bootstrap)->toContain("addEventListener('livewire:navigated'");
 });
 
-test('the theme bootstrap does not persist a default on first visit', function () {
+test('the theme bootstrap clears the legacy preference and never writes one', function () {
     /*
-     * The old script called `setItem('veyra-theme', 'dark')` on any visit with
-     * no stored value, stamping the current default into every visitor's
-     * browser the moment they loaded a page — so changing the product default
-     * later would never have reached them, and "no preference" became
-     * indistinguishable from "explicitly chose dark".
+     * With dark mode withdrawn, nothing reads `mada-theme` any more — but
+     * returning visitors still carry the value their old toggle wrote. Left in
+     * place it is a latent trap: a later feature that reintroduces a stored
+     * preference would silently inherit a choice made against a palette that
+     * no longer exists.
      *
-     * Asserted against the component source, not the rendered page: the theme
-     * TOGGLE in the top bar writes the key too, and must keep doing so. Only
-     * the bootstrap is required to stay read-only.
+     * So the bootstrap is now required to REMOVE the key, and still required
+     * never to write one. The previous version of this test asserted the read
+     * (`getItem`) instead; the read is gone along with the feature, the
+     * no-write guarantee is what survives.
      */
     $bootstrap = file_get_contents(base_path('resources/views/components/theme-script.blade.php'));
 
     expect($bootstrap)
-        ->toContain("localStorage.getItem('veyra-theme')")
+        ->toContain("localStorage.removeItem('mada-theme')")
         ->not->toContain('localStorage.setItem');
+});
+
+test('no surface ships a theme toggle any more', function () {
+    /*
+     * The four toggles (marketing nav, tenant top bar, admin top bar, company
+     * portal) are what made the theme user-switchable. Removing dark mode
+     * means removing the controls, not just the default — a surviving toggle
+     * would add `dark` back to <html> and land the visitor on a half-styled
+     * page whose `dark:` variants are no longer maintained.
+     */
+    $writers = [];
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(base_path('resources/views'))
+    );
+
+    foreach ($iterator as $file) {
+        if ($file->isDir() || ! str_ends_with($file->getFilename(), '.blade.php')) {
+            continue;
+        }
+
+        $source = file_get_contents($file->getPathname());
+
+        if (str_contains($source, "localStorage.setItem('mada-theme'")) {
+            $writers[] = $file->getFilename();
+        }
+    }
+
+    expect($writers)->toBe([]);
 });
 
 test('every shell that owns its own document renders the theme bootstrap', function () {
@@ -153,7 +187,7 @@ test('every shell that owns its own document renders the theme bootstrap', funct
      */
     $shells = [
         'resources/views/components/layouts/app.blade.php',
-        'resources/views/components/layouts/auth-split.blade.php',
+        'resources/views/components/layouts/auth-centered.blade.php',
         'resources/views/components/layouts/guest.blade.php',
         'resources/views/components/layouts/marketing.blade.php',
         'resources/views/layouts/admin.blade.php',
