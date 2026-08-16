@@ -20,7 +20,15 @@ services:
     name: mada
     runtime: docker
     plan: free
-    region: oregon
+
+    # FRANKFURT, to sit beside the database — not a default.
+    # The Clever Cloud MySQL host resolves to hv-par8-023.clvrcld.net, i.e.
+    # Paris. The first deployment ran in Oregon, which put roughly 150ms of
+    # Atlantic between the app and every single query. With session and cache
+    # both database-backed at the time, a trivial request spent most of its
+    # life waiting on the network and `/up` took ~28s to answer. Render fixes a
+    # service's region at creation, so correcting this meant recreating it.
+    region: frankfurt
     branch: main
     dockerfilePath: ./Dockerfile
 
@@ -30,16 +38,6 @@ services:
     healthCheckPath: /up
 
     # ── Start command ────────────────────────────────────────────────────────
-    # The three cache commands belong HERE rather than in the build, because
-    # Render does not expose service environment variables to `docker build`.
-    # Cached during the build, config.php would freeze the DB credentials as
-    # empty strings — and a config cache outranks the environment at runtime,
-    # so the app would boot and then fail every query.
-    #
-    # `migrate --force` runs unattended (no confirmation prompt in production).
-    # Safe on the free plan, which runs a single instance; with more than one
-    # instance this would need to move to a release step or a job, since
-    # concurrent migrators race on the same schema.
     # A single executable, NOT a command chain. Render splits this string into
     # argv and execs it without a shell, so both obvious spellings fail:
     #
@@ -100,14 +98,35 @@ services:
       - key: DB_PASSWORD
         sync: false
 
-      # All three are database-backed, so the schema created by `migrate`
-      # covers them and no Redis instance is required.
+      # Session and cache are FILE-backed, not database-backed.
+      #
+      # The schema supports either — `migrate` creates both tables — but the
+      # database lives in another datacentre from anything that is not the
+      # Frankfurt instance, and even colocated it is a network hop. Every
+      # request reads a session and usually writes one; the CMS layer reads the
+      # cache repeatedly. Moving both to the local filesystem removes those
+      # round trips from the hot path entirely.
+      #
+      # The trade is that the filesystem is ephemeral: a deploy or restart logs
+      # everyone out and empties the cache. That is acceptable on a single
+      # free-plan instance and would NOT be once this scales past one — at that
+      # point these belong in Redis, not back in MySQL.
       - key: SESSION_DRIVER
-        value: database
+        value: file
       - key: CACHE_STORE
-        value: database
+        value: file
+
+      # Queue stays database-backed: jobs must outlive the container.
       - key: QUEUE_CONNECTION
         value: database
+
+      # `php artisan serve` wraps PHP's built-in server, which handles ONE
+      # request at a time unless told otherwise. Render probes /up continuously,
+      # and with a single worker those probes monopolise the server — external
+      # requests queue behind them and time out. Laravel's serve command reads
+      # this variable and forks that many workers.
+      - key: PHP_CLI_SERVER_WORKERS
+        value: "4"
 
       # Reverb (websockets) is a separate long-running process and is not part
       # of this service. `null` keeps broadcast calls from attempting to reach
