@@ -32,6 +32,19 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        /*
+         * Render (and any comparable PaaS) terminates TLS at its load balancer
+         * and forwards plain HTTP to the container. Without this, Laravel sees
+         * the inbound scheme as `http` and every `url()`, `route()`, redirect
+         * and asset link comes out as `http://` on an `https://` page —
+         * mixed-content blocking, and a login POST that silently downgrades.
+         *
+         * `at: '*'` rather than an IP list because the proxy addresses are
+         * dynamic and not published; the container is only reachable through
+         * that proxy, so there is no path for a client to forge the header.
+         */
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'tenant.context' => BindTenantContext::class,
             'tenant.active' => EnsureTenantActive::class,

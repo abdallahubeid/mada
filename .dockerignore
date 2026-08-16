@@ -1,0 +1,46 @@
+# Keeps the build context small and, more importantly, keeps local state out of
+# the image. `.env` is the one that matters: it is gitignored so it is not in a
+# fresh clone, but a local `docker build` would otherwise bake a developer's
+# database credentials into a production image — and Laravel reads `.env` in
+# preference to nothing, so it would silently win over Render's environment.
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+.gitattributes
+
+# Reinstalled inside the image; copying host builds risks platform-specific
+# binaries (this project is developed on Windows) landing in a Linux container.
+node_modules
+vendor
+
+# Generated during the build.
+public/build
+public/hot
+
+# Runtime state. Only file CONTENTS are excluded, never the directories
+# themselves: `storage/framework/{cache,sessions,views}`, `storage/logs` and
+# `bootstrap/cache` must EXIST in the container or the framework aborts on boot
+# with "Please provide a valid cache path". In a fresh clone each holds nothing
+# but a .gitignore, so listing the directories here would delete them from the
+# image and buy no size back.
+storage/app/private/**
+storage/app/public/**
+storage/framework/cache/data/**
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*.php
+
+# Not needed to run the app.
+tests
+phpunit.xml
+docs
+.claude
+.cursor
+README.md
+AGENTS.md
+boost.json
+session-briefing-*.txt
