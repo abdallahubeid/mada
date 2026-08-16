@@ -38,6 +38,14 @@
         <env name="DB_CONNECTION" value="mysql"/>
         <env name="DB_HOST" value="127.0.0.1"/>
         <env name="DB_PORT" value="3306"/>
+        <!--
+            Pre-rebrand schema name, kept deliberately. See the comment above
+            DB_DATABASE in .env.example: renaming the string without renaming
+            the MySQL schema breaks the connection, and this name is never
+            user-visible. If it is ever renamed, this entry and .env must move
+            together — a green suite against `veyra_testing` proves nothing
+            about an app pointed at `mada`.
+        -->
         <env name="DB_DATABASE" value="veyra_testing"/>
         <env name="DB_USERNAME" value="root"/>
         <env name="DB_PASSWORD" value=""/>

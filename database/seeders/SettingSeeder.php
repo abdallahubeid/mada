@@ -47,15 +47,26 @@ class SettingSeeder extends Seeder
             'product_previews_title' => 'شاهد النظام **قبل أن تسجّل**',
             'product_previews_sub_title' => 'واجهة عربية بالكامل، مبنية من اليمين لليسار — لا ترجمة مقلوبة ولا شاشات نصفها إنجليزي.',
             /*
-             * Video section. `video_url` is blank by default so a fresh install
-             * falls back to `previews_video`; with neither set the band renders
-             * nothing at all rather than an empty frame.
+             * Video section. BOTH sources ship blank on purpose.
+             *
+             * The seeder used to point `previews_video` at a bundled
+             * `media/mada-product-tour.mp4`, which was placeholder stock
+             * footage — not product footage. Seeding a path to a file that is
+             * no longer in the repo would render a <video> whose source 404s,
+             * so the default is empty and the band renders nothing until an
+             * admin supplies a real source.
+             *
+             * The section is still switched ON: the toggle answers "does the
+             * admin want this band?", not "is there a file yet". With no
+             * source the component short-circuits regardless, so a fresh
+             * install shows no gap — and the moment a video is uploaded or a
+             * URL pasted, it appears without a second setting to find.
              */
             'is_video_section_active' => '1',
             'video_title' => 'شاهد مدى أثناء التشغيل',
             'video_description' => 'جولة قصيرة داخل النظام — من إضافة موظف حتى اعتماد مسيرة الرواتب.',
             'video_url' => '',
-            'previews_video' => 'media/mada-product-tour.mp4',
+            'previews_video' => '',
             /*
              * This section is the product roadmap, not an AI teaser. The keys
              * keep their `ai_*` names because the CMS screens and the settings

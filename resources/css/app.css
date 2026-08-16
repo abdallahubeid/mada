@@ -469,13 +469,13 @@
 
 /*
  * ─────────────────────────────────────────────────────────────────────────
- * 12px FLOOR — a backstop, not the mechanism.
+ * 15px FLOOR — a backstop, not the mechanism.
  *
  * The floor is enforced primarily in the markup: every `text-[10px]` and
  * `text-[11px]` was folded into `text-xs`, and `--text-xs` is pinned at
- * 0.75rem above. This block only catches the elements the browser shrinks on
+ * 0.9375rem above. This block only catches the elements the browser shrinks on
  * its own — `<small>`, `<sub>` and `<sup>` all apply a UA-stylesheet
- * `font-size: smaller`, which lands under 12px inside any `text-xs` or
+ * `font-size: smaller`, which lands under the floor inside any `text-xs` or
  * `text-sm` parent no matter what the utility classes say.
  *
  * Specificity is kept at zero with :where() so a real utility always wins,

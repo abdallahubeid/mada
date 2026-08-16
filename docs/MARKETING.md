@@ -1,13 +1,13 @@
 # Mada ERP — Public Marketing Site
 
-> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full Software Design Document, `DESIGN_SYSTEM.md` for tokens/components, and `ARCHITECTURE.md` (ADR-10 RTL, ADR-15 theming) for foundations referenced below. Backend/CMS persistence for this site is specified in `MARKETING_CMS.md` (no migrations until that schema is implemented).
+> Part of the Mada ERP documentation set. See `MADA_DOCS.md` for the full Software Design Document, `DESIGN_SYSTEM.md` for tokens/components, and `ARCHITECTURE.md` (ADR-10 RTL) for foundations referenced below. **ADR-15 (dual-theme) is withdrawn** — the site is light-only; see `DESIGN_SYSTEM.md` §2. Backend/CMS persistence for this site is specified in `MARKETING_CMS.md` (no migrations until that schema is implemented).
 >
 > **Scope:** the public, unauthenticated marketing website (Arabic-first, `ar`/`rtl`). It is distinct from the authenticated tenant app (`/app/*`) and the Super Admin console (`/admin/*`). It reuses `resources/views/components/layouts/marketing.blade.php`.
 
 ## 1. Guiding Principles
 
 - **Arabic-first, RTL-native.** All copy is Arabic; every layout uses logical properties (`ps-*`, `pe-*`, `start-*`, `end-*`) per ADR-10 so a future locale switcher works without rework.
-- **Dark-elevated theme parity.** Same tokens as the product: `ink-*` surfaces, `mist-*` text, `emerald` (`#4EDEA3`) accent, `shadow-glow`, `font-display` (Cairo) for headings, `font-sans` (Tajawal) for body. Light mode supported via `dark:` pass and the pre-paint theme script (ADR-15).
+- **One canvas with the product.** Same tokens, same light ground: `mist-*`/`ink-*` neutrals on one mauve axis, **plum** (`brand-*`, `#714B67`) as the brand accent — not emerald, and never a status colour — `font-display` (Cairo) for headings, `font-sans` (Tajawal) for body, `font-hand` (Marhey) for the hero's handwritten accents. There is no dark variant and no theme script to select one: **ADR-15 is withdrawn**, see `DESIGN_SYSTEM.md` §2. The footer and CTA band are still deep slabs, but they are always-dark *surfaces* on a light site (§2.4), not a second theme.
 - **Honesty over hype.** Consistent with the product's "phase honesty" discipline: unreleased capabilities are labeled roadmap, never presented as shipped (see §4 AI section).
 - **Single source of truth.** Shared content (plans, FAQ) lives in one data source consumed by both the landing previews and the dedicated pages (§5) — no duplicated arrays.
 - **Extend, don't restart.** A landing page already exists (`resources/views/landing.blade.php`, served by `Route::view('/', 'landing')`). This effort refactors it into reusable section components and adds the remaining pages.

@@ -83,8 +83,11 @@
                         <input type="text" name="hero_badge_text" value="{{ $val('hero_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="{{ $labelClass }}">hero_title</label>
-                        <input type="text" name="hero_title" value="{{ $val('hero_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'hero_title',
+                            'label' => 'hero_title',
+                            'context' => 'hero',
+                        ])
                     </div>
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">hero_description</label>
@@ -117,8 +120,10 @@
                         <input type="text" name="problems_badge_text" value="{{ $val('problems_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">problems_title</label>
-                        <input type="text" name="problems_title" value="{{ $val('problems_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'problems_title',
+                            'label' => 'problems_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">problems_sub_title</label>
@@ -135,8 +140,10 @@
                         <input type="text" name="solutions_badge_text" value="{{ $val('solutions_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">solutions_title</label>
-                        <input type="text" name="solutions_title" value="{{ $val('solutions_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'solutions_title',
+                            'label' => 'solutions_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">solutions_sub_title</label>
@@ -159,8 +166,10 @@
                 <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Offerings</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="{{ $labelClass }}">offerings_title</label>
-                        <input type="text" name="offerings_title" value="{{ $val('offerings_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'offerings_title',
+                            'label' => 'offerings_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">offerings_sub_title</label>
@@ -177,8 +186,10 @@
                         <input type="text" name="modules_badge_text" value="{{ $val('modules_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">modules_title</label>
-                        <input type="text" name="modules_title" value="{{ $val('modules_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'modules_title',
+                            'label' => 'modules_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">modules_sub_title</label>
@@ -195,8 +206,10 @@
                         <input type="text" name="product_previews_badge_text" value="{{ $val('product_previews_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">product_previews_title</label>
-                        <input type="text" name="product_previews_title" value="{{ $val('product_previews_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'product_previews_title',
+                            'label' => 'product_previews_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">product_previews_sub_title</label>
@@ -294,8 +307,10 @@
                         <input type="text" name="why_us_badge_text" value="{{ $val('why_us_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">why_us_title</label>
-                        <input type="text" name="why_us_title" value="{{ $val('why_us_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'why_us_title',
+                            'label' => 'why_us_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">why_us_sub_title</label>
@@ -312,8 +327,10 @@
                         <input type="text" name="testimonials_badge_text" value="{{ $val('testimonials_badge_text') }}" class="{{ $inputClass }}">
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">testimonials_title</label>
-                        <input type="text" name="testimonials_title" value="{{ $val('testimonials_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'testimonials_title',
+                            'label' => 'testimonials_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">testimonials_sub_title</label>
@@ -326,8 +343,10 @@
                 <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">Pricing</h3>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="sm:col-span-2">
-                        <label class="{{ $labelClass }}">pricing_title</label>
-                        <input type="text" name="pricing_title" value="{{ $val('pricing_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'pricing_title',
+                            'label' => 'pricing_title',
+                        ])
                     </div>
                     <div class="sm:col-span-2">
                         <label class="{{ $labelClass }}">pricing_sub_title</label>
@@ -348,8 +367,10 @@
                 <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">FAQ</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="{{ $labelClass }}">faq_title</label>
-                        <input type="text" name="faq_title" value="{{ $val('faq_title') }}" class="{{ $inputClass }}">
+                        @include('admin.landing.settings._decorated-title-field', [
+                            'key' => 'faq_title',
+                            'label' => 'faq_title',
+                        ])
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">faq_sub_title</label>

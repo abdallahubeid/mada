@@ -8,7 +8,7 @@ Brand name: **مدى** (latin transliteration *Mada*, used only in code comments
 
 - **Palette:** Plum & Slate, used consistently across the public marketing site, the tenant app, the Super Admin console, and error pages (403/404/500). No module or page may introduce an off-palette color scheme.
   - **Plum** (`brand-*`, anchored on `#714B67`) is the primary action/brand accent — CTAs, active states, brand marks. It is *not* a status colour.
-  - **Slate** (`ink-*` for structure, `mist-*` for muted text) is the primary neutral in both light and dark variants — see §2. Both ramps sit on one low-saturation mauve axis (hue ≈ 290°).
+  - **Slate** (`ink-*` for structure, `mist-*` for muted text) is the primary neutral — see §2. Both ramps sit on one low-saturation mauve axis (hue ≈ 290°).
 - **Brand ≠ action ≠ success.** Green means one thing only: success. `success-*`, `warning-*`, `critical-*` and `accent-*` (informational blue) are separate token families and never double as the brand. A filled plum button is an action; a status is always a chip, never a fill.
 - **Consistency rule:** the Landing Page, Super Admin console, and internal tenant dashboard must feel like one product, not three different skins.
 
@@ -22,37 +22,52 @@ Elevation is semantic and flat by default: **border or shadow, never both.** `sh
 
 Three durations (120 / 180 / 260ms) and three curves (`--ease-standard`, `--ease-enter`, `--ease-exit`). Never `transition: all` — enumerate the properties. Nothing containing text may scale on hover (scaling resamples glyphs and shimmers a 1px border); press states use `translateY(1px)`.
 
-## 2. Appearance Strategy — Dark Mode & Light Mode (ADR-15)
+## 2. Appearance Strategy — One Light Canvas (supersedes ADR-15)
+
+> **ADR-15 is withdrawn.** Mada previously shipped a user-toggled dark theme that defaulted to dark and persisted in `localStorage`. It no longer does. This section describes what the code actually does; the rescinded decision is preserved in §2.5 so the reversal is legible rather than looking like drift.
 
 ### 2.1 Decision
 
-Mada's frontend natively supports **Dark Mode and Light Mode** using Tailwind CSS's **class-based `dark:` variant strategy** (`darkMode: 'class'` in the Tailwind configuration), not the OS-media-query-only strategy. This is a deliberate choice:
+**There is one theme: light.** Marketing site, auth screens, Platform Console, tenant app and company portal share a single canvas, so the product no longer changes tone from section to section. There is no toggle, no stored preference, and no OS-media-query fallback.
 
-- **Class-based** means the user's explicit choice (a toggle in the app shell, not just their OS setting) is what controls the theme, and that choice is **persisted** (per-user preference, applied on next load before first paint to avoid a flash of the wrong theme).
-- Every shared component must ship with both variants **from the moment it is built** — this is a Phase 1 requirement, not a Phase 4 polish item, because Mada is a commercial product from day one.
+This is not the same as "dark mode is unimplemented". It was implemented, shipped, and withdrawn — so the rule for new work is that a component ships **one** styling pass, and adding a `dark:` variant to new markup is a defect, not thoroughness.
 
 ### 2.2 Implementation rules
 
-- Every shared component (`card`, `status-badge`, `kanban-column`, `empty-state`, `slide-over-drawer`, `wizard-stepper`, `payslip/print-view`, tables, forms, sidebar, top bar, notification drawer) must define both a light-mode and `dark:`-prefixed styling pass before it is considered complete — a component without a dark variant is not done.
-- A theme toggle is present in the tenant app shell and the Super Admin console (not required on the public marketing site, which may standardize on one theme for brand consistency — confirm with brand guidelines if this changes).
-- Charts/graphs on the Financial Dashboard must have distinct, tested color sets for both themes — the emerald accent must remain legible on both light and dark backgrounds.
-- Print views (e.g., Payslip) always render in a fixed light/print-safe theme regardless of the active app theme, since printed output should not depend on screen appearance settings.
+- Shared components define a **single** light-mode styling pass. A component is not "incomplete" for lacking a dark variant.
+- **No surface ships a theme toggle.** Four were removed. This is pinned by `no surface ships a theme toggle any more` in `tests/Feature/Tenant/ProfileTest.php` — that test walks the layouts and fails on any new `localStorage.setItem('mada-theme'…)`, so a reintroduced toggle cannot land quietly.
+- Charts/graphs on the Financial Dashboard target one set of tones, measured against white.
+- Print views (e.g., Payslip) are unchanged: they always render print-safe, which is now the same canvas the screen uses.
 
-### 2.3 Theme bootstrap — one definition (added 2026-08-10)
+### 2.3 Theme bootstrap — `<x-theme-script />` is kept on purpose
 
-- **Dark is the product default.** A visitor with no stored preference gets dark, on every surface: marketing site, registration, Platform Console, tenant app, company portal.
-- The pre-paint script lives in **one** component, `<x-theme-script />`, and every page that owns its own `<html>` must include it in `<head>` **before** the stylesheet. It previously existed as six inline copies; the seventh surface that needed it (the disabled company-portal page) was written without it and rendered light for everyone regardless of their stored preference. One component means a page either has the behaviour or visibly does not include it.
-- **`localStorage` holds only an explicit user choice.** The bootstrap does not write a key on first visit, so "no preference" stays distinguishable from "chose dark" — which is what keeps the default a property of the component rather than something already burned into every existing visitor's browser.
+The component was **not** deleted with the feature, and every page that owns its own `<html>` still includes it in `<head>` before the stylesheet. It now enforces the single theme rather than selecting one:
 
-### 2.4 Muted text is theme-dependent (added 2026-08-10)
+- It **strips `.dark` from `<html>`** on load and again on every `livewire:navigated`. `wire:navigate` copies the incoming document's `<html>` attributes onto the live element, so a `dark` class left by a cached page, an extension or a restored bfcache entry would otherwise survive the swap. Stripping after each navigation is what makes "light only" true at runtime and not merely true in the templates.
+- It **clears the legacy `mada-theme` key** once. Returning visitors still carry `"dark"` in their browser from before the change. Nothing reads it today, but leaving it would let a future stored-preference feature silently inherit a choice made against a palette that no longer exists. The `localStorage` access is wrapped in `try/catch` — private-mode browsers throw on access, and losing the cleanup is acceptable where taking the page down before first paint is not.
 
-A tone that reads correctly as secondary text on the dark canvas is far too light on white — the pre-unification values measured **2.29:1** (`mist-400`) and **3.17:1** (`mist-500`) there, well under the WCAG AA 4.5:1 floor, and were the cause of the washed-out secondary text across every light-mode screen.
+### 2.4 Muted text is a single ramp (updated 2026-08-16)
 
-- These three stops are **theme-split in `app.css`**: the `@theme` block holds the light ramp (5.5:1 / 7.4:1 / 10.0:1 on white) and `.dark` restores tones measured against the ink sheet (6.2:1 / 4.8:1 / 3.4:1). `text-mist-500 dark:text-mist-400` therefore keeps working untouched — **do not** rewrite those pairings in markup.
-- **New always-dark panels should declare `data-surface="dark"`** rather than extend the enumerated `[class~='bg-ink-*']` allowlist below it.
-- **Always-dark surfaces carry the dark tones automatically.** Panels that are dark in both themes (product-tour frame, footer, CTA panel, login showcase, 403/404) have no `dark:` variants, so the same rule keys the dark tones off the `bg-ink-700/800/900/950` utilities. Those selectors use `~=` (whole-token) matching, never `*=`: a substring match also hits `dark:bg-ink-900/60`, which appears on cards that are **white** in light mode.
-- `--color-emerald-600` is likewise light-only (5.5:1 on white); Tailwind's stock value measures ~3.7:1 and is used for 12–14px eyebrow labels and active nav items.
-- **Verify with measurement, not by eye.** Both themes currently measure **zero** AA failures on the landing page. Stops 50–300 and 700–900 are not theme-split — they paint borders, dividers and surfaces.
+The `mist-*` stops were theme-split while both themes existed. They are now **single-valued** in the `@theme` block of `app.css`, measured on white:
+
+| Token | Value | Contrast on white | Role |
+|---|---|---|---|
+| `--color-mist-400` | `#524c5e` | 8.20:1 | tertiary / meta text |
+| `--color-mist-500` | `#413b4f` | 10.69:1 | secondary body text |
+| `--color-mist-600` | `#2f2a3a` | 13.4:1 | emphasis |
+
+- **Always-dark *surfaces* still exist, and are not dark mode.** The footer, the CTA band, the login showcase and the 403/404 pages are deep-neutral brand slabs on a light site. A `:where()` block in `app.css` re-resolves the `mist-*` tones inside them so their muted text stays legible without any per-panel opt-out.
+- **New always-dark panels declare `data-surface="dark"`** rather than extending the enumerated `[class~='bg-ink-*']` allowlist beside it. Those selectors match with `~=` (whole token), never `*=`: a substring match would also hit `dark:bg-ink-900/60`, which sits in the class attribute of cards that are **white** — they would then take dark muted tones on a white ground, i.e. the exact bug that block exists to fix, inverted.
+- Stops 50–300 and 700–900 paint borders, dividers and surfaces and were never theme-split.
+- **Verify with measurement, not by eye.** The landing page currently measures **zero** AA failures.
+
+### 2.5 The `dark:` variants still in the markup are inert
+
+Roughly **3,880 `dark:` utilities across 187 Blade files** remain. Nothing ever adds the class that activates them, so they render nothing.
+
+They are left in place deliberately: the retirement is currently reversible from **one file** (`theme-script.blade.php`), and a mass strip would both destroy that property and produce a 187-file diff with no visible effect. They are removed **opportunistically, as each view is next touched for other reasons** — not in a sweep.
+
+Do not read an existing `dark:` class as a pattern to copy. New markup gets one pass.
 
 ## 3. Layout Direction — RTL/LTR Native Compatibility (ADR-10)
 
@@ -65,14 +80,14 @@ A tone that reads correctly as secondary text on the dark canvas is far too ligh
 
 | Component | Purpose | Notes |
 |---|---|---|
-| `card` | Base content container used across all dashboards/lists | Light + dark variants required |
+| `card` | Base content container used across all dashboards/lists | Single light pass (§2.1) |
 | `status-badge` | Status indicators (`pending`, `active`, `suspended`, task statuses, payroll states) | Color-coded consistently per status across the whole app |
 | `kanban-column` | Drag-and-drop board column (Applicants, Tasks) | Livewire-driven (ADR-01) |
 | `empty-state` | Icon + message + guided CTA, shown on every list/board/dashboard with no data | Never a blank screen (per `USER_JOURNEYS.md` §4) |
 | `slide-over-drawer` | Notifications drawer, quick-view panels | Slides from layout-appropriate side based on `dir` |
 | `wizard-stepper` | Multi-step forms (Registration, Setup Wizard) | Shows step X of Y explicitly |
-| `payslip/print-view` | Print-friendly payslip modal/page | Fixed light theme regardless of app theme (§2.2) |
-| `message-thread` | Conversation inbox (list + detail + reply composer) | Used by the Super Admin Support Inquiries console (`/admin/messages`, `MODULES.md` §6); light + dark variants required |
+| `payslip/print-view` | Print-friendly payslip modal/page | Print-safe light, same canvas as the screen (§2.2) |
+| `message-thread` | Conversation inbox (list + detail + reply composer) | Used by the Super Admin Support Inquiries console (`/admin/messages`, `MODULES.md` §6) |
 
 ## 5. Density & Typography
 
@@ -117,20 +132,22 @@ One markup contract for every data table in the tenant and admin apps. Print vie
 ### Structure
 
 ```blade
-<div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+<div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm">
     <table class="min-w-full text-sm">
-        <thead class="bg-mist-50 dark:bg-ink-900"> … </thead>
-        <tbody class="divide-y divide-mist-100 dark:divide-ink-700"> … </tbody>
+        <thead class="bg-mist-50"> … </thead>
+        <tbody class="divide-y divide-mist-100"> … </tbody>
     </table>
 </div>
 ```
+
+Existing tables in the app still carry `dark:border-ink-600 dark:bg-ink-800` and friends. Those are inert leftovers (§2.5), not part of the contract — match the block above for new tables and drop the variants from an old one when you are editing it anyway.
 
 ### Cell classes
 
 | Slot | Classes |
 | --- | --- |
-| `<th>` | `px-3 py-2 text-[11px] font-medium text-mist-500 dark:text-mist-400` |
-| `<td>` | `px-3 py-2 text-sm text-ink-700 dark:text-mist-200` |
+| `<th>` | `px-3 py-2 text-xs font-medium text-mist-500` |
+| `<td>` | `px-3 py-2 text-sm text-ink-700` |
 | Index `#` (th + td) | add `w-12 text-center`; the `td` also takes `text-mist-500` |
 | Status badges / actions (th + td) | add `text-center` |
 | Numeric amounts & currency (th + td) | add `text-end` |
@@ -158,7 +175,7 @@ Restarting at `1` on page 2 misreads as a different record set, so paginated tab
 |---|---|---|---|
 | `danger` *(default)* | Deletion and trash moves — **and nothing else** | warning / red | «نعم، احذف» |
 | `warning` | Rejection, cancellation, deactivation, archiving, ending an employment | warning / amber | «نعم، تابع» |
-| `success` | Approval, finalization, conversion — the record advances | question / emerald | «نعم، تابع» |
+| `success` | Approval, finalization, conversion — the record advances | question / green `#0f7b3d` | «نعم، تابع» |
 | `info` | Submission, disbursement recording — a neutral forward step | question / sky | «نعم، تابع» |
 
 **`danger` is the default only for backwards compatibility with existing delete forms.** Any non-deletion action MUST declare its variant. Omitting it produces a red "نعم، احذف" button over the text *«سيتم الحذف الناعم…»* — which is how an Approve button once warned the user their payroll run was about to be deleted.

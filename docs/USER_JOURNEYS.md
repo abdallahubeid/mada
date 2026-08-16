@@ -70,7 +70,7 @@ flowchart TD
 4. **Leave Requests:** routed through the generic Approval Engine (ADR-08); on approval, the Work Ledger is updated automatically (BR-401) — the employee never manually reconciles attendance vs. leave.
 5. **Payslip viewing:** read-only, print-friendly view of the employee's own locked/approved payslip only (BR-603) — prorated correctly for mid-period joiners/leavers (BR-605). Employees cannot view draft or other employees' payslips under any condition.
 
-**Governing rules:** BR-701 (`MODULES.md` §5), BR-401/BR-402 (Work Ledger reconciliation), BR-603/BR-605 (Payroll), ADR-08 (Approval Engine), ADR-15 (Dark/Light mode applies to every screen in this journey — see `DESIGN_SYSTEM.md`).
+**Governing rules:** BR-701 (`MODULES.md` §5), BR-401/BR-402 (Work Ledger reconciliation), BR-603/BR-605 (Payroll), ADR-08 (Approval Engine), ADR-24 (one light canvas on every screen in this journey — see `DESIGN_SYSTEM.md` §2).
 
 ---
 
