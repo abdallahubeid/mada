@@ -46,7 +46,17 @@ RUN npm run build
 
 
 # ── Stage 2 · PHP runtime ────────────────────────────────────────────────────
-FROM php:8.3-cli-bookworm AS app
+#
+# 8.4, NOT the `"php": "^8.3"` that composer.json advertises. That constraint
+# is the floor the application declares; the LOCKFILE is what actually gets
+# installed, and it pins symfony/* 8.1.x, which requires php >= 8.4.1. Building
+# on 8.3 fails at `composer install` with seventeen separate conflicts.
+#
+# composer.json is left alone deliberately: `^8.3` is not wrong, it is merely
+# looser than the resolved set, and tightening it would be a source change made
+# to satisfy a deployment rather than the other way round. If the lock is ever
+# regenerated on an older PHP, this line is what has to move.
+FROM php:8.4-cli-bookworm AS app
 
 # `git` and `unzip` are for Composer's dist installs; the -dev headers are only
 # needed while compiling the extensions below and are removed with the apt
