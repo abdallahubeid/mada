@@ -125,6 +125,12 @@ RUN composer dump-autoload --optimize --no-dev --no-interaction \
 
 COPY --from=assets /app/public/build ./public/build
 
+# `chmod +x` rather than relying on the committed mode bit: this repository is
+# developed on Windows, where git records 100644 for shell scripts, and the
+# container would fail with "permission denied" on a file that looks correct in
+# the tree.
+RUN chmod +x docker/start.sh
+
 # Laravel writes compiled views, logs and caches to these two trees at runtime.
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwX storage bootstrap/cache
@@ -132,9 +138,11 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 USER www-data
 
 # Documentation only — Render injects the real value as $PORT and the start
-# command binds to it.
+# script binds to it.
 EXPOSE 8000
 
-# Overridden by `dockerCommand` in render.yaml. Kept in sync with it so the
-# image behaves the same when run outside Render.
-CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# Exec form, one argv element. Render splits `dockerCommand` into argv without
+# a shell, so anything with `&&` or quoting in it is misparsed; naming a single
+# executable is what makes the two paths (local `docker run` and Render)
+# behave identically. See docker/start.sh for the reasoning in full.
+CMD ["./docker/start.sh"]

@@ -40,13 +40,20 @@ services:
     # Safe on the free plan, which runs a single instance; with more than one
     # instance this would need to move to a release step or a job, since
     # concurrent migrators race on the same schema.
-    # NOT wrapped in `sh -c "..."`. Render already evaluates this string with a
-    # shell, so wrapping it again nested one shell inside another and the whole
-    # `&&` chain arrived as a single command name:
-    #   sh: 1: php artisan config:cache && php artisan route:cache && ...: not found
-    # exit status 127. Given plainly, the `&&` operators and `$PORT` are the
-    # outer shell's to interpret, which is what was wanted all along.
-    dockerCommand: php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+    # A single executable, NOT a command chain. Render splits this string into
+    # argv and execs it without a shell, so both obvious spellings fail:
+    #
+    #   php artisan config:cache && php artisan route:cache && ...
+    #     → `&&` reaches artisan as a positional argument
+    #       ("No arguments expected", exit 1)
+    #
+    #   sh -c "php artisan config:cache && ..."
+    #     → the quoted chain is split too, and sh gets the whole string as a
+    #       command name (exit 127, "not found")
+    #
+    # docker/start.sh holds the sequence — caches, migrate, then `exec` the
+    # server so it becomes PID 1 and receives SIGTERM directly.
+    dockerCommand: ./docker/start.sh
 
     envVars:
       - key: APP_NAME
