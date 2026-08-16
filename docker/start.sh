@@ -28,6 +28,38 @@
 # would go green while the app is broken.
 set -e
 
+# ── Storage symlink ──────────────────────────────────────────────────────────
+# Links public/storage -> storage/app/public for the `public` disk.
+#
+# This is NOT what was breaking avatar uploads. Avatars — and every other
+# upload in this app — go to the `custom` disk, which roots at public/ directly
+# and needs no symlink; nothing currently reads or writes the `public` disk at
+# all. The link is created anyway so the disk works the moment something does
+# use it, rather than failing confusingly later.
+#
+# `|| true` is load-bearing. Under `set -e` a failure here would kill the
+# container before the server ever starts, and this command fails for entirely
+# benign reasons: the link already exists in a reused layer, or public/ is not
+# writable by www-data. Neither is worth taking the deployment down for.
+echo "==> Linking public storage"
+php artisan storage:link || echo "    (skipped — link exists or public/ is not writable)"
+
+# ── Upload directory check ───────────────────────────────────────────────────
+# Every upload in this app goes to the `custom` disk, which roots at public/.
+# When those directories are not writable by the running user, the failure does
+# not appear until someone submits a form, and it appears as a bare 500 —
+# Laravel's `'throw' => false` on the disk does not cover the
+# UnableToCreateDirectory that gets raised.
+#
+# Asserting it at start turns that into one visible line in the deploy log.
+# Warn rather than exit: a broken avatar upload is not a reason to refuse to
+# serve the site.
+for d in public/user/avatar public/uploads/settings public/tenant/logo; do
+    if [ ! -w "$d" ]; then
+        echo "WARNING: $d is not writable by $(id -un) — uploads to it will fail"
+    fi
+done
+
 # ── Caches ───────────────────────────────────────────────────────────────────
 # These run HERE, at container start, and deliberately not during the image
 # build. Render exposes a service's environment variables to the running

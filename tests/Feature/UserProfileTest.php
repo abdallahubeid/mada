@@ -133,6 +133,70 @@ test('profile update replaces existing avatar and deletes old file', function ()
     Storage::disk('custom')->assertExists($user->avatar->path);
 });
 
+/*
+ * ─────────────────────────────────────────────────────────────────────────────
+ * A FAILED UPLOAD MUST NOT 500, AND MUST NOT COST THE USER THEIR OLD AVATAR.
+ *
+ * Reported from production as a 500 on /admin/profile. The `custom` disk roots
+ * at public_path(''), and in the container that directory is owned by root
+ * while the process runs as www-data — so `$file->store()` raised
+ * League\Flysystem\UnableToCreateDirectory.
+ *
+ * The disk is configured `'throw' => false`, which is why this was not caught
+ * earlier by inspection: that setting only swallows UnableToWriteFile.
+ * UnableToCreateDirectory is a different class and escaped as an unhandled 500.
+ *
+ * The old code also deleted the existing avatar BEFORE storing the new one, so
+ * the failure destroyed the avatar the user already had.
+ *
+ * Config::set on the disk root reproduces an unwritable target without needing
+ * real filesystem permissions, which cannot be arranged portably on Windows.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+test('avatar upload failure degrades gracefully instead of returning 500', function () {
+    $user = actingAsPlatformOperator();
+
+    $oldPath = 'user/avatar/keep-me.png';
+    Storage::fake('custom');
+    Storage::disk('custom')->put($oldPath, 'old-avatar');
+
+    $old = $user->images()->create([
+        'collection' => 'avatar',
+        'disk' => 'custom',
+        'path' => $oldPath,
+        'original_name' => 'keep-me.png',
+        'mime_type' => 'image/png',
+        'file_size' => 9,
+        'sort_order' => 0,
+    ]);
+
+    // Point the disk at a root that cannot be created, then drop the resolved
+    // instance so the next call rebuilds it against the new config.
+    config()->set('filesystems.disks.custom.root', 'Z:/unwritable-'.uniqid());
+    Storage::forgetDisk('custom');
+
+    $response = $this->put(route('admin.profile.update'), [
+        'name' => 'اسم محدّث',
+        'email' => $user->email,
+        'avatar' => UploadedFile::fake()->create('new.png', 120, 'image/png'),
+    ]);
+
+    // Not a 500, and not a silent success either.
+    $response->assertRedirect(route('admin.profile'));
+
+    expect(session('flasher.type'))->toBe('warning');
+
+    $user->refresh();
+
+    // The rest of the form still saved — a broken upload must not discard the
+    // name change that already committed.
+    expect($user->name)->toBe('اسم محدّث')
+        // The previous avatar survives: still exactly one, still the old row.
+        ->and($user->images()->where('collection', 'avatar')->count())->toBe(1)
+        ->and($user->avatar->id)->toBe($old->id)
+        ->and($user->avatar->path)->toBe($oldPath);
+});
+
 test('profile password update requires current password and updates hash', function () {
     $user = actingAsPlatformOperator(attributes: [
         'password' => 'password',

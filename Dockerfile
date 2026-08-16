@@ -135,6 +135,51 @@ RUN chmod +x docker/start.sh
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwX storage bootstrap/cache
 
+# ─────────────────────────────────────────────────────────────────────────────
+# UPLOAD DIRECTORIES — the cause of the 500 on avatar upload.
+#
+# The `custom` disk roots at public_path('') (config/filesystems.php), so every
+# admin and tenant upload lands somewhere under public/. Everything COPYed
+# above is owned by root, and the process runs as www-data — so the first
+# upload of any kind died trying to create its directory:
+#
+#   League\Flysystem\UnableToCreateDirectory:
+#   Unable to create a directory at /var/www/html/public/user/avatar
+#
+# That surfaces as an unhandled 500 rather than a handled failure, because
+# Laravel's `'throw' => false` on the disk only swallows UnableToWriteFile —
+# UnableToCreateDirectory is a different class and escapes. Verified by
+# reproduction against an unwritable root.
+#
+# ONLY THE UPLOAD SUBTREES ARE HANDED OVER, never public/ as a whole. public/
+# also holds index.php and the compiled Vite bundle; a web process able to
+# rewrite its own entrypoint and assets is a far worse problem than a failed
+# avatar upload.
+#
+# All eleven are created here, not just user/avatar — they are the same bug and
+# fixing one would leave ten identical 500s waiting behind the other forms.
+# ─────────────────────────────────────────────────────────────────────────────
+RUN set -eux; \
+    for d in \
+        user/avatar \
+        testimonial/avatar \
+        tenant/logo \
+        uploads/settings \
+        expenses \
+        aifeature/icon \
+        feature/icon \
+        module/icon \
+        offering/icon \
+        problem/icon \
+        solution/icon \
+    ; do \
+        mkdir -p "public/$d"; \
+    done; \
+    chown -R www-data:www-data \
+        public/user public/testimonial public/tenant public/uploads \
+        public/expenses public/aifeature public/feature public/module \
+        public/offering public/problem public/solution
+
 USER www-data
 
 # Documentation only — Render injects the real value as $PORT and the start
