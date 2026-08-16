@@ -58,9 +58,20 @@ RUN npm run build
 # regenerated on an older PHP, this line is what has to move.
 FROM php:8.4-cli-bookworm AS app
 
-# `git` and `unzip` are for Composer's dist installs; the -dev headers are only
-# needed while compiling the extensions below and are removed with the apt
-# cache in the same layer.
+# `git` and `unzip` are for Composer's dist installs.
+#
+# The -dev packages are deliberately NOT purged afterwards. An earlier revision
+# ran `apt-get purge --auto-remove libzip-dev libicu-dev` to save a few dozen
+# megabytes, and it took the RUNTIME shared objects with the headers:
+#
+#   Warning: PHP Startup: Unable to load dynamic library 'zip'
+#   (libzip.so.4: cannot open shared object file: No such file or directory)
+#
+# The extensions compiled fine and then had nothing to link against at boot.
+# Re-adding just the runtime libs means hardcoding version-suffixed package
+# names (libzip4, libicu72) that change with the Debian release, which trades a
+# silent runtime break for a silent build break. Keeping the headers is the
+# honest cost.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         unzip \
@@ -71,7 +82,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         intl \
         opcache \
-    && apt-get purge -y --auto-remove libzip-dev libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # gd is intentionally absent. The only `Image` in this codebase is an Eloquent
