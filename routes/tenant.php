@@ -9,6 +9,8 @@ use App\Http\Controllers\Tenant\ConversationController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\DepartmentController;
 use App\Http\Controllers\Tenant\EmployeeController;
+use App\Http\Controllers\Tenant\HR\EmployeeDocumentController;
+use App\Livewire\HR\NonAccountEmployees;
 use App\Http\Controllers\Tenant\Finance\ExpenseCategoryController;
 use App\Http\Controllers\Tenant\Finance\ExpenseController;
 use App\Http\Controllers\Tenant\Finance\FinanceDashboardController;
@@ -433,6 +435,26 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             Route::post('/employees', [EmployeeController::class, 'store'])
                 ->middleware('permission:hr.employees.create')
                 ->name('employees.store');
+
+            /*
+             * Confidential document download. Registered BEFORE the
+             * `{employee}` show route is irrelevant here (the segments differ),
+             * but it deliberately sits on `hr.employees.view` rather than
+             * `view_any`: reading one person's CV is a per-record act, and the
+             * controller adds a tenant-ownership check on top.
+             */
+            Route::get('/employees/{employee}/cv', [EmployeeDocumentController::class, 'cv'])
+                ->middleware('permission:hr.employees.view')
+                ->name('employees.cv');
+
+            /*
+             * Non-account employees — the bulk "create login" workspace.
+             * `hr.employees.create` is the right gate: the action's outcome is
+             * new user records, not merely a listing.
+             */
+            Route::get('/employees-without-accounts', NonAccountEmployees::class)
+                ->middleware('permission:hr.employees.create')
+                ->name('employees.without-accounts');
 
             Route::get('/employees/{employee}', [EmployeeController::class, 'show'])
                 ->middleware('permission:hr.employees.view')

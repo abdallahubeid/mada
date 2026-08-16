@@ -63,6 +63,13 @@
             'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.98 5.98 0 00-.34-2.004M18 18.72H6.5m11.5 0a9.07 9.07 0 01-.34 2.004M6.5 18.72a5.98 5.98 0 01-.34-2.004m0 0A5.995 5.995 0 0112 15c1.985 0 3.753.97 4.84 2.476M6.16 16.716A5.995 5.995 0 0112 15m0-9.75a3 3 0 110 6 3 3 0 010-6z" />',
         ],
         [
+            'label' => 'موظفون بلا حسابات',
+            'route' => 'hr.employees.without-accounts',
+            'pattern' => 'hr.employees.without-accounts',
+            'permission' => 'hr.employees.create',
+            'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />',
+        ],
+        [
             'label' => 'العقود',
             'route' => 'hr.contracts.index',
             'pattern' => 'hr.contracts.*',

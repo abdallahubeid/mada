@@ -109,7 +109,7 @@ class EmployeeController extends Controller
             }
 
             if ($request->hasFile('cv')) {
-                $payload['cv_path'] = $this->storeUpload($request->file('cv'), 'cvs');
+                $payload['cv_path'] = $this->storeCv($request->file('cv'));
             }
 
             $employee = Employee::query()->create($payload);
@@ -235,7 +235,7 @@ class EmployeeController extends Controller
             }
 
             if ($data['remove_cv'] && $employee->cv_path) {
-                Storage::disk('custom')->delete($employee->cv_path);
+                Storage::disk('private')->delete($employee->cv_path);
                 $payload['cv_path'] = null;
             }
 
@@ -248,9 +248,9 @@ class EmployeeController extends Controller
 
             if ($request->hasFile('cv')) {
                 if ($employee->cv_path) {
-                    Storage::disk('custom')->delete($employee->cv_path);
+                    Storage::disk('private')->delete($employee->cv_path);
                 }
-                $payload['cv_path'] = $this->storeUpload($request->file('cv'), 'cvs');
+                $payload['cv_path'] = $this->storeCv($request->file('cv'));
             }
 
             $employee->update($payload);
@@ -298,7 +298,7 @@ class EmployeeController extends Controller
         }
 
         if ($employee->cv_path) {
-            Storage::disk('custom')->delete($employee->cv_path);
+            Storage::disk('private')->delete($employee->cv_path);
         }
 
         $this->auditor->log('employee.deleted', 'hr', $employee, [
@@ -360,6 +360,22 @@ class EmployeeController extends Controller
             'department_id' => $data['department_id'] ?? null,
             'manager_id' => $data['manager_id'] ?? null,
         ];
+    }
+
+    /**
+     * CVs go to the PRIVATE disk — never the web root.
+     *
+     * `storeUpload()` writes to the `custom` disk, whose root is public/.
+     * That is right for avatars, which the UI renders by URL, and wrong for
+     * a resume: it made every CV downloadable by anyone holding the link.
+     * Reading one now goes through hr.employees.cv, which checks the
+     * permission AND the tenant.
+     */
+    private function storeCv(UploadedFile $file): string
+    {
+        $tenantId = $this->tenantContext->getTenantId();
+
+        return $file->store("tenant/{$tenantId}/employees/cvs", 'private');
     }
 
     private function storeUpload(UploadedFile $file, string $collection): string

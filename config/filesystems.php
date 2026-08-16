@@ -86,8 +86,50 @@ return [
             'root' => public_path(''),
             // Do NOT append "/public" — that produces 404s like /public/user/avatar/*.jpg
             // when the server already serves from the public directory.
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/'),
+            /*
+             * ROOT-RELATIVE, not absolute.
+             *
+             * This was `rtrim(env('APP_URL'), '/')`, which bakes whatever host
+             * APP_URL happens to hold into every stored image URL. That makes
+             * avatars break whenever the app is reached on a different host
+             * than APP_URL names — behind an ngrok tunnel, on a staging
+             * domain, or simply when `.env` carries a stale value. (This
+             * project's .env currently declares APP_URL TWICE; the second wins,
+             * so every avatar src pointed at a tunnel rather than at the origin
+             * the page was served from.)
+             *
+             * `'/'` makes the local driver emit `/user/avatar/x.jpg`, which the
+             * browser resolves against whatever origin is serving the page. It
+             * is correct on localhost, the tunnel and production without any
+             * of them having to agree on a config value.
+             */
+            'url' => '/',
             'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        /*
+         * ─────────────────────────────────────────────────────────────────
+         * PRIVATE — never reachable over HTTP.
+         *
+         * The `custom` disk above roots at the web document root, which is
+         * correct for avatars and site logos and WRONG for anything
+         * confidential. CVs were being written there, which made every
+         * employee and candidate résumé downloadable by anyone who could
+         * guess or was given the URL — no session, no permission check.
+         *
+         * This disk roots inside storage/, which no vhost serves, so the only
+         * way to read a file on it is through a controller that has already
+         * run an authorization check. There is deliberately NO `url` key: a
+         * disk with no URL cannot accidentally be linked to from a view.
+         * ─────────────────────────────────────────────────────────────────
+         */
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'visibility' => 'private',
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
