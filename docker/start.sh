@@ -29,20 +29,13 @@
 set -e
 
 # ── Storage symlink ──────────────────────────────────────────────────────────
-# Links public/storage -> storage/app/public for the `public` disk.
+# public/storage -> storage/app/public is created in the Dockerfile, as root,
+# because public/ stays root-owned and this script runs as www-data. Repeating
+# it here would only ever print "skipped", so it is not repeated.
 #
-# This is NOT what was breaking avatar uploads. Avatars — and every other
-# upload in this app — go to the `custom` disk, which roots at public/ directly
-# and needs no symlink; nothing currently reads or writes the `public` disk at
-# all. The link is created anyway so the disk works the moment something does
-# use it, rather than failing confusingly later.
-#
-# `|| true` is load-bearing. Under `set -e` a failure here would kill the
-# container before the server ever starts, and this command fails for entirely
-# benign reasons: the link already exists in a reused layer, or public/ is not
-# writable by www-data. Neither is worth taking the deployment down for.
-echo "==> Linking public storage"
-php artisan storage:link || echo "    (skipped — link exists or public/ is not writable)"
+# For the record: the symlink is NOT what was breaking avatar uploads. Avatars
+# and every other upload go to the `custom` disk, which roots at public/
+# directly and needs no symlink.
 
 # ── Upload directory check ───────────────────────────────────────────────────
 # Every upload in this app goes to the `custom` disk, which roots at public/.

@@ -180,6 +180,16 @@ RUN set -eux; \
         public/expenses public/aifeature public/feature public/module \
         public/offering public/problem public/solution
 
+# public/storage -> storage/app/public, for the `public` disk.
+#
+# Created HERE, while still root, because public/ itself stays root-owned — the
+# same `storage:link` in the start script runs as www-data and can only skip.
+# Nothing in the app uses the `public` disk today (all uploads go to `custom`,
+# which roots at public/ directly), so this is not what fixed avatar uploads;
+# it means the disk simply works if something starts using it, instead of
+# failing later for a reason that would look unrelated.
+RUN php artisan storage:link
+
 USER www-data
 
 # Documentation only — Render injects the real value as $PORT and the start
