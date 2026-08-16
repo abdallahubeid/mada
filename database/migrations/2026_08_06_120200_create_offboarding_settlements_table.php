@@ -62,13 +62,42 @@ return new class extends Migration
             $table->index(['tenant_id', 'employee_id'], 'offboarding_settlements_tenant_employee_index');
 
             /*
-             * One LIVE settlement per employee, using the same stored-generated
+             * One LIVE settlement per employee, using the same generated
              * sentinel as payroll_runs.active_period (BR-611): NULL for
              * cancelled or soft-deleted rows, which MySQL treats as distinct,
              * so dead settlements may coexist while only one live one stands.
+             *
+             * ─────────────────────────────────────────────────────────────
+             * VIRTUAL, NOT STORED — and that is a correctness requirement on
+             * MySQL, not a space optimisation.
+             *
+             * MySQL 8 forbids CASCADE / SET NULL / SET DEFAULT on a foreign
+             * key whose column is the BASE COLUMN of a *stored* generated
+             * column. `employee_id` is exactly that: it is the base column of
+             * this expression and it carries `cascadeOnDelete()` above. With
+             * `storedAs` the table creates and then the foreign key is
+             * rejected:
+             *
+             *   SQLSTATE[HY000]: General error: 1215
+             *   Cannot add foreign key constraint
+             *
+             * MariaDB does not enforce the restriction, so this migration ran
+             * clean in local development (MariaDB 10.4) and on the test suite,
+             * and failed only against a real MySQL 8 server. DDL auto-commits,
+             * so each failed attempt left the table behind and the NEXT run
+             * reported the misleading "table already exists" instead.
+             *
+             * `virtualAs` keeps the cascade and the unique index intact —
+             * MySQL maintains the secondary index on a virtual column just the
+             * same. The difference is invisible to the application: nothing
+             * writes this column, and every read goes through the index.
+             *
+             * The sibling `payroll_runs.active_period` may stay STORED; its
+             * base columns are plain dates and statuses, not foreign keys.
+             * ─────────────────────────────────────────────────────────────
              */
             $table->unsignedBigInteger('active_employee_id')
-                ->storedAs("if(deleted_at is null and status <> 'cancelled', employee_id, null)");
+                ->virtualAs("if(deleted_at is null and status <> 'cancelled', employee_id, null)");
 
             $table->unique(['tenant_id', 'active_employee_id'], 'offboarding_settlements_active_unique');
         });
