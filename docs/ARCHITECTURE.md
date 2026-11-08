@@ -631,3 +631,16 @@ Work Ledger and dashboard aggregates are cached under `tenant:{tenant_id}:...` k
 | Tests | `ExpenseModuleTest` (19), `OffboardingSettlementTest` (24), `FinanceSettingsTest` (25) — workflow transitions, EOSB precision at tier boundaries and the resignation taper, immutability, lifecycle locking, HTTP endpoints, cross-tenant isolation. `FinanceSettingsTest` additionally pins the defaults to the pre-ADR-23 constants, so any drift in the "we changed no number" claim fails the suite |
 
 **A finding worth recording:** a model whose `updating` observer throws **keeps the rejected attribute dirty in memory**. Reusing that instance presents the rejected field to the next guard, which then correctly refuses a legitimate transition. Real requests discard the instance; anything that catches a lock exception and continues on the same object must `refresh()` first.
+
+### Vercel deployment (serverless) — 2026-11-08
+
+| Area | Notes |
+|---|---|
+| Files | `vercel.json` (project config) + `api/index.php` (function entry). Render (`render.yaml`, `Dockerfile`) is untouched and still deployable |
+| Runtime | `vercel-php@0.8.0` = PHP 8.4 (`@libphp/amazon-linux-2023-v84`; ships `pdo_mysql`, `intl`, `mbstring`, `gd`, `zip`). `0.9.0` is PHP 8.5 |
+| Region | `cdg1` (Paris), beside the Clever Cloud MySQL host — same reasoning as Render's Frankfurt pin |
+| Build | `npm ci` → `npm run build`; `public/` is the static output, with `public/index.php` and `.htaccess` deleted so the PHP source is never served as a static file. Every other path rewrites to `/api/index.php` |
+| Writable paths | Read-only filesystem except `/tmp`: `LARAVEL_STORAGE_PATH`, `VIEW_COMPILED_PATH` and the five `APP_*_CACHE` paths point under `/tmp/laravel` |
+| Env defaults | Set in `api/index.php` only when the Vercel project does not define the key: `SESSION_DRIVER=database`, `CACHE_STORE=database` (shared across function instances, so logins and rate limits hold), `QUEUE_CONNECTION=sync`, `BROADCAST_CONNECTION=null`, `LOG_CHANNEL=stderr`. `DB_*`, `APP_KEY` and `APP_URL` are project variables, never defaulted |
+| Not available ⚠️ | Reverb (no long-running process — chat and notifications fall back to their pollers / page loads), the scheduler (`tenant:send-check-out-reminders` does not fire), and durable uploads: logos, avatars, CVs and chat attachments written at runtime land in `/tmp` or the read-only `public/` and do not survive the instance |
+| Migrations | Not run on deploy (no shell). The database is the one Render already migrates |
