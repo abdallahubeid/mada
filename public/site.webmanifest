@@ -1,0 +1,14 @@
+{
+    "name": "مدى",
+    "short_name": "مدى",
+    "lang": "ar",
+    "dir": "rtl",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#f8f6f2",
+    "background_color": "#f8f6f2",
+    "icons": [
+        { "src": "/android-chrome-192x192.png?v=2", "sizes": "192x192", "type": "image/png" },
+        { "src": "/android-chrome-512x512.png?v=2", "sizes": "512x512", "type": "image/png" }
+    ]
+}

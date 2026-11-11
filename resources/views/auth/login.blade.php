@@ -7,17 +7,18 @@
     register and the password screens cannot drift apart.
 --}}
 <x-layouts.auth-centered title="تسجيل الدخول — مدى">
-    <div class="site-card p-6 sm:p-8">
+    <div class="site-card p-5 sm:p-7">
         <div class="text-center">
-            <h1 class="site-section-title site-h3">أهلاً بعودتك</h1>
-            <p class="mt-8">سجّل الدخول للمتابعة إلى مساحة عملك.</p>
+            {{-- mb-7 reserves the underline bar, whether or not the subtitle shows. --}}
+            <h1 class="site-section-title site-h4 mb-7">أهلاً بعودتك</h1>
+            <p class="short:hidden">سجّل الدخول للمتابعة إلى مساحة عملك.</p>
         </div>
 
         @if (session('status'))
-            <p class="site-notice mt-6" role="status">{{ session('status') }}</p>
+            <p class="site-notice mt-4" role="status">{{ session('status') }}</p>
         @endif
 
-        <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-5" novalidate>
+        <form method="POST" action="{{ route('login') }}" class="mt-5 space-y-3.5" novalidate>
             @csrf
 
             <div>
@@ -35,7 +36,7 @@
             <div>
                 <div class="flex items-baseline justify-between gap-3">
                     <label for="password" class="site-label">كلمة المرور</label>
-                    <a href="{{ route('password.request') }}" class="site-link mb-2">نسيت كلمة المرور؟</a>
+                    <a href="{{ route('password.request') }}" class="site-link mb-1.5">نسيت كلمة المرور؟</a>
                 </div>
                 <input
                     id="password" name="password" type="password" autocomplete="current-password"
@@ -54,7 +55,7 @@
         </form>
     </div>
 
-    <p class="mt-6 text-center">
+    <p class="mt-3 text-center">
         ليس لديك حساب؟
         <a href="{{ route('register') }}" class="site-link">أنشئ حساباً مجاناً</a>
     </p>

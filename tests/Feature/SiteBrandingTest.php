@@ -66,3 +66,24 @@ test('the admin layout falls back to default favicon when settings are empty', f
         ->assertOk()
         ->assertSee(asset('favicon.svg'), false);
 });
+
+test('the default favicon set ships every format and the sign-in page links it', function () {
+    $this->seed(SettingSeeder::class);
+
+    foreach (['favicon.ico', 'favicon.svg', 'favicon-16x16.png', 'favicon-32x32.png', 'apple-touch-icon.png', 'android-chrome-192x192.png', 'android-chrome-512x512.png', 'site.webmanifest'] as $file) {
+        expect(public_path($file))->toBeFile()
+            ->and(filesize(public_path($file)))->toBeGreaterThan(0);
+    }
+
+    // The retired Veyra "V" mark must not come back.
+    expect(file_get_contents(public_path('favicon.svg')))->not->toContain('Veyra')->toContain('#fe6019');
+
+    auth()->logout();
+
+    $this->get(route('login'))
+        ->assertOk()
+        ->assertSee(asset('favicon.ico').'?v=2', false)
+        ->assertSee(asset('favicon.svg').'?v=2', false)
+        ->assertSee(asset('apple-touch-icon.png').'?v=2', false)
+        ->assertSee(asset('site.webmanifest').'?v=2', false);
+});

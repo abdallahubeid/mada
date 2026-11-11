@@ -477,6 +477,35 @@
         border-color: #b42318;
     }
 
+    /*
+     * Auth screens (`body.site-auth`) fit one viewport, so their fields are
+     * denser: 48px inputs instead of 58px (still above the 44px target) and a
+     * tighter label gap. Marketing forms keep the template size.
+     */
+    .site-auth .site-input {
+        padding-block: 0.6875rem;
+    }
+
+    .site-auth .site-label {
+        margin-bottom: 0.375rem;
+    }
+
+    /* `tiny` viewports (app.css): 44px fields and steps, the touch-target floor. */
+    @media (max-height: 640px) {
+        .site-auth .site-input {
+            padding-block: 0.5625rem;
+        }
+
+        .site-auth .site-label {
+            margin-bottom: 0.25rem;
+        }
+
+        .site-auth .site-step {
+            width: 2rem;
+            height: 2rem;
+        }
+    }
+
     .site-error {
         margin-top: 0.375rem;
         color: #b42318;

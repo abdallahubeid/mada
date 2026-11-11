@@ -32,6 +32,17 @@
  */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Height breakpoints for the one-screen auth layout, which must fit without
+ * page scroll:
+ *   short: ≤ 680px tall — a 1366×768 laptop once the browser toolbar is
+ *          taken (≈ 657px), a 375×667 phone. Secondary copy and padding go.
+ *   tiny:  ≤ 640px tall — a phone with its browser bars showing (iPhone SE
+ *          ≈ 553px), a 360×640 Android. The footer goes, fields drop to 44px.
+ */
+@custom-variant short (@media (max-height: 680px));
+@custom-variant tiny (@media (max-height: 640px));
+
 @theme {
     --font-sans: 'Poppins', 'Tajawal', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';

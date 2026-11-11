@@ -32,15 +32,17 @@
                 return value.toString().trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
             },
         }"
-        class="site-card p-6 sm:p-8"
+        class="site-card p-4 sm:p-6 tiny:p-3"
     >
         <div class="text-center">
-            <h1 class="site-section-title site-h3">ابدأ مجاناً</h1>
-            <p class="mt-8">ثلاث خطوات قصيرة، ولا حاجة لبطاقة بنكية.</p>
+            {{-- mb-7 reserves the underline bar, whether or not the subtitle shows. --}}
+            <h1 class="site-section-title site-h4 mb-7 tiny:mb-6">ابدأ مجاناً</h1>
+            {{-- On phones and short screens the stepper already says "three steps". --}}
+            <p class="hidden sm:block short:hidden">ثلاث خطوات قصيرة، ولا حاجة لبطاقة بنكية.</p>
         </div>
 
         {{-- Stepper: a real sequence, so numbered. --}}
-        <ol class="mt-8 mb-8 flex items-center" aria-label="خطوات إنشاء الحساب">
+        <ol class="mt-4 mb-4 flex items-center tiny:mt-3 tiny:mb-2.5" aria-label="خطوات إنشاء الحساب">
             @foreach ($steps as $index => $label)
                 @php $n = $index + 1; @endphp
                 <li class="flex items-center {{ $index < count($steps) - 1 ? 'flex-1' : '' }}" :aria-current="step === {{ $n }} ? 'step' : 'false'">
@@ -71,26 +73,28 @@
             @endforeach
         </ol>
 
-        <form method="POST" action="{{ route('register') }}" class="space-y-6" novalidate>
+        <form method="POST" action="{{ route('register') }}" class="space-y-4" novalidate>
             @csrf
 
             {{-- Step 1: account --}}
-            <fieldset x-show="step === 1" x-cloak class="space-y-5">
+            <fieldset x-show="step === 1" x-cloak class="space-y-3 tiny:space-y-2">
                 <legend class="sr-only">{{ $steps[0] }}</legend>
 
-                <div>
-                    <label for="name" class="site-label">الاسم الكامل</label>
-                    <input id="name" name="name" type="text" value="{{ old('name') }}" autocomplete="name" autofocus class="site-input" {!! $invalid('name') !!} />
-                    @error('name') <p id="name-error" class="site-error">{{ $message }}</p> @enderror
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div>
+                        <label for="name" class="site-label">الاسم الكامل</label>
+                        <input id="name" name="name" type="text" value="{{ old('name') }}" autocomplete="name" autofocus class="site-input" {!! $invalid('name') !!} />
+                        @error('name') <p id="name-error" class="site-error">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label for="email" class="site-label">البريد الإلكتروني للعمل</label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" placeholder="name@company.com" dir="ltr" class="site-input text-start" {!! $invalid('email') !!} />
+                        @error('email') <p id="email-error" class="site-error">{{ $message }}</p> @enderror
+                    </div>
                 </div>
 
-                <div>
-                    <label for="email" class="site-label">البريد الإلكتروني للعمل</label>
-                    <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" placeholder="name@company.com" dir="ltr" class="site-input text-start" {!! $invalid('email') !!} />
-                    @error('email') <p id="email-error" class="site-error">{{ $message }}</p> @enderror
-                </div>
-
-                <div class="grid gap-5 sm:grid-cols-2">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label for="password" class="site-label">كلمة المرور</label>
                         <input id="password" name="password" type="password" autocomplete="new-password" class="site-input" {!! $invalid('password') !!} />
@@ -112,40 +116,42 @@
             </fieldset>
 
             {{-- Step 2: organisation --}}
-            <fieldset x-show="step === 2" x-cloak class="space-y-5">
+            <fieldset x-show="step === 2" x-cloak class="space-y-3 tiny:space-y-2">
                 <legend class="sr-only">{{ $steps[1] }}</legend>
 
-                <div>
-                    <label for="company_name" class="site-label">اسم المؤسسة</label>
-                    <input
-                        id="company_name" name="company_name" type="text" value="{{ old('company_name') }}" autocomplete="organization"
-                        @input="if (! slugTouched) { $refs.companySlug.value = slugify($event.target.value); }"
-                        class="site-input" {!! $invalid('company_name') !!}
-                    />
-                    @error('company_name') <p id="company_name-error" class="site-error">{{ $message }}</p> @enderror
-                </div>
-
-                <div>
-                    <label for="company_slug" class="site-label">المعرّف الفريد للمؤسسة</label>
-                    {{-- One field visually: the slug and its fixed domain suffix share the cream input surface. --}}
-                    <div @class(['site-input flex items-stretch overflow-hidden p-0 focus-within:border-site-primary', 'border-[#b42318]' => $errors->has('company_slug')])>
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div>
+                        <label for="company_name" class="site-label">اسم المؤسسة</label>
                         <input
-                            id="company_slug" x-ref="companySlug" name="company_slug" type="text" value="{{ old('company_slug') }}"
-                            dir="ltr" @input="slugTouched = true"
-                            class="w-full min-w-0 flex-1 border-0 bg-transparent px-3 py-4 text-start focus:outline-none"
-                            aria-describedby="company_slug-{{ $errors->has('company_slug') ? 'error' : 'hint' }}"
-                            @error('company_slug') aria-invalid="true" @enderror
+                            id="company_name" name="company_name" type="text" value="{{ old('company_name') }}" autocomplete="organization"
+                            @input="if (! slugTouched) { $refs.companySlug.value = slugify($event.target.value); }"
+                            class="site-input" {!! $invalid('company_name') !!}
                         />
-                        <span class="flex items-center whitespace-nowrap bg-white/70 px-4 text-site-text" dir="ltr">.mada.app</span>
+                        @error('company_name') <p id="company_name-error" class="site-error">{{ $message }}</p> @enderror
                     </div>
-                    @error('company_slug')
-                        <p id="company_slug-error" class="site-error">{{ $message }}</p>
-                    @else
-                        <p id="company_slug-hint" class="mt-1.5">أحرف إنجليزية صغيرة وأرقام وشرطات فقط.</p>
-                    @enderror
+
+                    <div>
+                        <label for="company_slug" class="site-label">المعرّف الفريد للمؤسسة</label>
+                        {{-- One field visually: the slug and its fixed domain suffix share the cream input surface. --}}
+                        <div @class(['site-input flex items-stretch overflow-hidden p-0 focus-within:border-site-primary', 'border-[#b42318]' => $errors->has('company_slug')])>
+                            <input
+                                id="company_slug" x-ref="companySlug" name="company_slug" type="text" value="{{ old('company_slug') }}"
+                                dir="ltr" @input="slugTouched = true"
+                                class="w-full min-w-0 flex-1 border-0 bg-transparent px-3 py-[0.6875rem] text-start tiny:py-[0.5625rem] focus:outline-none"
+                                aria-describedby="company_slug-{{ $errors->has('company_slug') ? 'error' : 'hint' }}"
+                                @error('company_slug') aria-invalid="true" @enderror
+                            />
+                            <span class="flex items-center whitespace-nowrap bg-white/70 px-4 text-site-text" dir="ltr">.mada.app</span>
+                        </div>
+                        @error('company_slug')
+                            <p id="company_slug-error" class="site-error">{{ $message }}</p>
+                        @else
+                            <p id="company_slug-hint" class="mt-1 text-sm leading-snug tiny:mt-0.5">أحرف إنجليزية صغيرة وأرقام وشرطات فقط.</p>
+                        @enderror
+                    </div>
                 </div>
 
-                <div class="grid gap-5 sm:grid-cols-2">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label for="industry" class="site-label">قطاع النشاط</label>
                         <select id="industry" name="industry" class="site-input" {!! $invalid('industry') !!}>
@@ -176,18 +182,18 @@
             </fieldset>
 
             {{-- Step 3: plan and terms --}}
-            <fieldset x-show="step === 3" x-cloak class="space-y-5">
+            <fieldset x-show="step === 3" x-cloak class="space-y-3 tiny:space-y-2">
                 <legend class="sr-only">{{ $steps[2] }}</legend>
 
                 <div role="radiogroup" aria-labelledby="plan-label" @error('plan') aria-describedby="plan-error" @enderror>
                     <p id="plan-label" class="site-label">اختر خطة الاشتراك</p>
-                    <div class="grid gap-4 sm:grid-cols-3">
+                    <div class="grid grid-cols-3 gap-2.5 sm:gap-3">
                         @foreach ($plans as $value => $plan)
-                            <label class="relative flex cursor-pointer flex-col rounded-md border border-site-border bg-white p-4 transition has-checked:border-site-primary has-checked:bg-site-cream has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-site-primary">
+                            <label class="relative flex cursor-pointer flex-col rounded-md border border-site-border bg-white p-3 transition has-checked:border-site-primary has-checked:bg-site-cream has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-site-primary">
                                 <input type="radio" name="plan" value="{{ $value }}" class="sr-only" {{ old('plan', 'growth') === $value ? 'checked' : '' }} />
                                 <span class="font-semibold text-site-dark">{{ $plan['label'] }}</span>
-                                <span class="mt-1">{{ $plan['tagline'] }}</span>
-                                <span class="mt-3 font-semibold text-site-primary-ink">{{ $plan['price'] }}</span>
+                                <span class="mt-1 hidden text-sm leading-snug sm:block">{{ $plan['tagline'] }}</span>
+                                <span class="mt-2 text-sm font-semibold text-site-primary-ink">{{ $plan['price'] }}</span>
                             </label>
                         @endforeach
                     </div>
@@ -214,7 +220,7 @@
         </form>
     </div>
 
-    <p class="mt-6 text-center">
+    <p class="mt-3 text-center tiny:mt-2">
         لديك حساب بالفعل؟
         <a href="{{ route('login') }}" class="site-link">سجّل الدخول</a>
     </p>

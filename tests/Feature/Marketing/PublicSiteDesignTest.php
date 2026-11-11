@@ -62,6 +62,19 @@ test('the guest auth screens share the site identity', function (string $route) 
     'forgot password' => ['password.request'],
 ]);
 
+test('the guest auth screens are pinned to one viewport with no page scroll', function (string $route) {
+    // Body = the dynamic viewport, clipped; the panel area is the only thing
+    // that may scroll, and only when a screen is shorter than the form.
+    $this->get(route($route))
+        ->assertOk()
+        ->assertSee('<body class="site site-auth flex h-dvh flex-col overflow-hidden', false)
+        ->assertSee('overflow-y-auto overscroll-contain', false)
+        ->assertSee('mx-auto my-auto w-full', false);
+})->with([
+    'sign in' => ['login'],
+    'register' => ['register'],
+]);
+
 test('sign-in errors are tied to their fields for assistive technology', function () {
     $this->from(route('login'))
         ->post(route('login'), [])
