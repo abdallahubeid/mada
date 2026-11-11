@@ -114,7 +114,7 @@ Already listed in `DATABASE_ROADMAP.md` §2.1. Marketing pricing and admin Plan 
 | `tiers[].cta` | `plans.cta_label` |
 | `tiers[].href` | `plans.cta_url` |
 | `tiers[].highlighted` | `plans.is_highlighted` |
-| `tiers[].features[]` | `plan_features.label` (+ `sort_order`) |
+| `tiers[].features[]` | `plan_features.label` (+ `sort_order`); rows with a `feature_key` are limits and render as a readable line instead (`MarketingContent::planFeatureLine()`: "الموظفون: حتى 25", "التخزين: 1 جيجابايت", "بلا حد" for `unlimited`); unknown keys are omitted, never printed raw |
 | `currency` | `plans.currency` (or platform default) |
 
 Public API shape for Blade remains today’s tier array via `PlanCatalog::publicTiers()`.

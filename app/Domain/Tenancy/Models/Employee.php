@@ -92,6 +92,12 @@ class Employee extends Model
         );
     }
 
+    /**
+     * Public URL for the employee photo, or an initial SVG fallback.
+     *
+     * The fallback matches {@see User::initialAvatarDataUri()}: orange
+     * initial (#c2410c) on the peach wash (#ffece4), 4.6:1.
+     */
     public function avatarUrl(): string
     {
         if (filled($this->avatar_path)) {
@@ -99,15 +105,15 @@ class Employee extends Model
         }
 
         $initial = htmlspecialchars(
-            mb_strtoupper(mb_substr(trim($this->first_name), 0, 1) ?: '?'),
+            mb_strtoupper(mb_substr(trim((string) $this->first_name), 0, 1) ?: '?'),
             ENT_QUOTES | ENT_XML1,
             'UTF-8'
         );
 
         $svg = <<<SVG
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-  <rect width="64" height="64" rx="32" fill="#10b981"/>
-  <text x="32" y="38" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="#022c22">{$initial}</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{$initial}">
+  <rect width="64" height="64" rx="32" fill="#ffece4"/>
+  <text x="32" y="38" text-anchor="middle" font-family="Poppins,Tajawal,system-ui,sans-serif" font-size="28" font-weight="600" fill="#c2410c">{$initial}</text>
 </svg>
 SVG;
 

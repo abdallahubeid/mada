@@ -4,8 +4,8 @@
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+        $inputClass = 'ui-control w-full';
+        $labelClass = 'ui-label';
         $errorClass = 'mt-1.5 text-xs text-danger-solid';
     @endphp
 
@@ -37,7 +37,7 @@
                     <ul class="mt-4 space-y-3">
                         @foreach ($job['responsibilities'] as $item)
                             <li class="flex gap-3 rounded-xl border border-mist-100 bg-mist-50/70 px-3 py-2 text-sm text-mist-600 dark:border-ink-700 dark:bg-ink-900/50 dark:text-mist-300">
-                                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-brand-500 text-xs font-bold text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></span>
+                                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-brand-action text-xs font-bold text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></span>
                                 <span>{{ $item }}</span>
                             </li>
                         @endforeach
@@ -91,7 +91,7 @@
                             <p class="{{ $errorClass }}">{{ $message }}</p>
                         @enderror
                     </div>
-                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
+                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-brand-action px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
                         إرسال الطلب
                     </button>
                 </form>

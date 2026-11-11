@@ -35,12 +35,12 @@
         </button>
 
         <div class="min-w-0">
-            <h1 class="truncate font-display text-lg font-medium text-ink-900 dark:text-ink-50">{{ $title ?? 'لوحة التحكم' }}</h1>
+            <p class="truncate font-display text-lg font-medium text-ink-900 dark:text-ink-50">{{ $title ?? 'لوحة التحكم' }}</p>
             <p class="hidden truncate text-xs text-mist-500 sm:block dark:text-mist-400">{{ $tenantName }}</p>
         </div>
     </div>
 
-    <div class="flex items-center gap-2">
+    <div class="flex shrink-0 items-center gap-2">
         {{-- Topbar search (visual chrome aligned with Platform Console) --}}
         <div class="relative hidden md:block">
             <label for="tenant-topbar-search" class="sr-only">بحث في المنصة</label>
@@ -53,7 +53,7 @@
                 name="q"
                 placeholder="بحث في المنصة..."
                 autocomplete="off"
-                class="w-56 rounded-lg border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 lg:w-72 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50"
+                class="ui-control w-56 ps-9 pe-3 lg:w-72"
             >
         </div>
 
@@ -123,7 +123,7 @@
             </svg>
             @if ($messengerUnread > 0)
                 <span
-                    class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-500 px-1 text-xs font-bold text-white"
+                    class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-action px-1 text-xs font-bold text-white"
                     data-testid="tenant-messenger-badge"
                 >{{ $messengerUnread > 99 ? '99+' : $messengerUnread }}</span>
             @endif

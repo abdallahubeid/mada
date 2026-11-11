@@ -1,13 +1,13 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
     $isCreate = $method === 'POST';
     $lineItems = $lineItems ?? collect();
 @endphp
 
-<form method="POST" action="{{ $action }}" class="space-y-5 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+<form method="POST" action="{{ $action }}" class="ui-card space-y-5 p-4">
     @csrf
     @if ($method !== 'POST')
         @method($method)
@@ -63,7 +63,7 @@
                                             dir="ltr"
                                             name="line_items[{{ $lineItem->id }}]"
                                             value="{{ old('line_items.'.$lineItem->id, number_format(abs($lineItem->amount) / 100, 2, '.', '')) }}"
-                                            class="w-32 rounded-lg border border-mist-200 bg-white px-2 py-1.5 text-end text-sm tabular-nums dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                                            class="ui-control w-32 text-end tabular-nums">
                                     </td>
                                 </tr>
                             @endforeach
@@ -87,7 +87,7 @@
 
     <div class="flex justify-end gap-3 pt-2">
         <a href="{{ $isCreate ? route('finance.payroll-runs.index') : route('finance.payroll-runs.show', $run) }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">
+        <button type="submit" class="ui-btn ui-btn-primary">
             {{ $isCreate ? 'إنشاء المسودة' : 'حفظ التعديلات' }}
         </button>
     </div>

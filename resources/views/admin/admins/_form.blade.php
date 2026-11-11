@@ -1,6 +1,6 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $isEdit = isset($admin);
     $selectedRole = old('role', $assignedRole ?? ($roles->first()?->name ?? \App\Domain\Platform\PlatformPermissionCatalog::ROLE_CONTENT_MANAGER));
     $hadOldPermissions = old('permissions') !== null;
@@ -90,7 +90,7 @@
             <p class="mb-4 text-xs text-mist-500">عند اختيار الدور تُفعَّل صلاحياته افتراضيًا، ويمكنك تعديلها يدويًا قبل الحفظ.</p>
             <div class="grid gap-4 lg:grid-cols-2">
                 @foreach ($groups as $domain => $group)
-                    <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                    <section class="ui-card p-4">
                         <h3 class="mb-3 font-display text-sm font-medium text-ink-900 dark:text-ink-50">{{ $group['label'] }}</h3>
                         <div class="space-y-2">
                             @foreach ($group['permissions'] as $permission => $permissionLabel)

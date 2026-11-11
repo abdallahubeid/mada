@@ -3,25 +3,12 @@
 ])
 
 @php
-    /** @var \Illuminate\Support\Collection<int, \App\Models\Feature>|\Illuminate\Database\Eloquent\Collection<int, \App\Models\Feature> $features */
     $features ??= collect();
 
     /*
-     * ─────────────────────────────────────────────────────────────────────
-     * ALTERNATING SPLIT ROWS, NOT A FOUR-ACROSS GRID
-     *
-     * This section makes four ARGUMENTS about engineering decisions. A row of
-     * four equal tiles gives each of them two lines of space and no visual
-     * weight, so the reader skims all four and retains none — the format was
-     * fighting the content.
-     *
-     * Each claim now gets a full row: copy on one side, a visual anchor on the
-     * other, sides swapping every row so the eye zig-zags down the page
-     * instead of scanning a wall.
-     *
-     * The anchor is chosen by the feature's own stored icon, so it needs no new
-     * column and an unknown icon simply falls back to the plain glyph.
-     * ─────────────────────────────────────────────────────────────────────
+     * Each reason is paired with a small product vignette that shows the
+     * claim rather than restating it (audit trail, RTL form, export, speed).
+     * Keyed by the CMS icon so an editor's choice of icon picks the picture.
      */
     $anchors = [
         'ph:shield-check-bold' => 'audit',
@@ -33,47 +20,39 @@
     ];
 @endphp
 
-<section class="bg-mist-50 py-24">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+{{--
+    Template "speciality" rows: copy and figure side by side, swapping sides
+    on every row, each title carrying the start-aligned orange bar. The
+    figure rests on scattered circles as the template's images do.
+--}}
+<section class="site-section">
+    <div class="site-container">
         <x-marketing.section-heading
             :eyebrow="$settings['why_us_badge_text'] ?? 'لماذا مدى'"
             :title="$settings['why_us_title'] ?? ''"
             :subtitle="$settings['why_us_sub_title'] ?? ''"
         />
 
-        <div class="mt-16 space-y-5">
+        <div class="mt-10 space-y-6 lg:space-y-0">
             @foreach ($features as $i => $feature)
                 @php
-                    $anchor = $anchors[$feature->icon] ?? null;
                     $flip = $i % 2 === 1;
                 @endphp
 
-                <article @class([
-                    'mada-surface grid items-center gap-8 p-7 sm:p-9 lg:grid-cols-2 lg:gap-12',
-                    'mada-surface-feature' => $i === 0,
-                ])>
-                    {{--
-                        `lg:order-2` on odd rows flips the visual to the other
-                        side. Order, not direction — using `order` keeps this
-                        working identically in RTL and LTR, where a
-                        float/`flex-row-reverse` approach would double-flip.
-                    --}}
-                    <div @class(['min-w-0', 'lg:order-2' => $flip])>
-                        <div class="flex items-center gap-3">
-                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500/8 text-brand-600 ring-1 ring-brand-500/10">
-                                @if ($feature->icon)
-                                    <x-ui.icon :name="$feature->icon" class="h-5 w-5" />
-                                @endif
-                            </span>
-                            <span class="font-display text-sm font-bold tabular text-mist-400">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
-                        </div>
-
-                        <h3 class="mt-5 font-display text-2xl font-extrabold tracking-tight text-ink-900 sm:text-3xl">{{ $feature->title }}</h3>
-                        <p class="mt-4 max-w-xl text-base leading-[1.75] text-mist-600">{{ $feature->description }}</p>
+                <article class="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
+                    <div @class(['relative isolate p-6 sm:p-[60px]', 'lg:order-2' => ! $flip])>
+                        <x-marketing.circles set="figure" />
+                        <x-marketing.feature-anchor :variant="$anchors[$feature->icon] ?? null" class="relative" />
                     </div>
 
-                    <div @class(['min-w-0', 'lg:order-1' => $flip])>
-                        <x-marketing.feature-anchor :variant="$anchor" />
+                    <div @class(['pb-6 lg:pb-0', 'lg:order-1' => ! $flip])>
+                        <span class="flex h-12 w-12 items-center justify-center rounded-md border border-site-peach bg-site-cream text-site-primary">
+                            @if ($feature->icon)
+                                <x-ui.icon :name="$feature->icon" class="h-6 w-6" />
+                            @endif
+                        </span>
+                        <h3 class="site-section-title site-section-title--start site-h3 mt-6">{{ $feature->title }}</h3>
+                        <p class="mt-10 max-w-xl">{{ $feature->description }}</p>
                     </div>
                 </article>
             @endforeach

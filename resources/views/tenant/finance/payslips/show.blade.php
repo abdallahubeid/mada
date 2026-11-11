@@ -15,7 +15,7 @@
                     · فترة <x-ui.ltr>{{ $payslip->payrollRun?->period }}</x-ui.ltr>
                 </p>
             </div>
-            <a href="{{ route('finance.payslips.print', $payslip) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">
+            <a href="{{ route('finance.payslips.print', $payslip) }}" target="_blank" rel="noopener" class="ui-btn ui-btn-secondary">
                 نسخة للطباعة
             </a>
         </div>
@@ -27,7 +27,7 @@
                 ['label' => 'أيام الحضور', 'value' => $payslip->present_days],
                 ['label' => 'أيام الغياب', 'value' => $payslip->absent_days],
             ] as $tile)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
                     <p class="mt-2 font-display text-lg font-medium text-ink-900 dark:text-ink-50">
                         @if (is_int($tile['value']))
@@ -40,7 +40,7 @@
             @endforeach
         </div>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>

@@ -33,7 +33,7 @@
             <div class="flex flex-wrap items-center gap-2">
                 @can('finance.expenses.manage')
                     @if ($expense->status->isEditable())
-                        <a href="{{ route('finance.expenses.edit', $expense) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تعديل</a>
+                        <a href="{{ route('finance.expenses.edit', $expense) }}" class="ui-btn ui-btn-secondary">تعديل</a>
                         <form method="POST" action="{{ route('finance.expenses.submit', $expense) }}"
                               data-swal-confirm
                               data-swal-variant="info"
@@ -41,7 +41,7 @@
                               data-swal-text="سيُرسل المصروف للمراجعة، ولن تتمكن من تعديله حتى يتم اعتماده أو إعادته إليك."
                               data-swal-confirm-button="نعم، ارفع للاعتماد">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">رفع للاعتماد</button>
+                            <button type="submit" class="ui-btn ui-btn-primary">رفع للاعتماد</button>
                         </form>
                     @endif
                 @endcan
@@ -54,7 +54,7 @@
                           data-swal-text="سيصبح المصروف معتمداً ويُحتسب ضمن تكاليف المؤسسة، ولن يمكن تعديله بعد ذلك."
                           data-swal-confirm-button="نعم، اعتمد المصروف">
                         @csrf
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">اعتماد</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">اعتماد</button>
                     </form>
                 @endif
 
@@ -73,7 +73,7 @@
                 @endcan
 
                 @if ($expense->receipt_path)
-                    <a href="{{ Storage::disk('custom')->url($expense->receipt_path) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">الإيصال</a>
+                    <a href="{{ Storage::disk('custom')->url($expense->receipt_path) }}" target="_blank" rel="noopener" class="ui-btn ui-btn-secondary">الإيصال</a>
                 @endif
             </div>
         </div>
@@ -86,12 +86,12 @@
         @endif
 
         @if ($canDecide)
-            <form method="POST" action="{{ route('finance.expenses.reject', $expense) }}" class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <form method="POST" action="{{ route('finance.expenses.reject', $expense) }}" class="ui-card p-4">
                 @csrf
                 <label for="rejection_reason" class="mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200">رفض المصروف</label>
                 <div class="flex flex-col gap-2 sm:flex-row">
-                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
-                    <button type="submit" class="rounded-xl border border-danger-solid px-4 py-2 text-sm font-semibold text-danger-solid">رفض</button>
+                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="ui-control w-full">
+                    <button type="submit" class="ui-btn ui-btn-danger-outline">رفض</button>
                 </div>
                 @error('rejection_reason')
                     <p class="mt-1.5 text-xs text-danger-solid">{{ $message }}</p>
@@ -106,7 +106,7 @@
                 ['label' => 'قدّمه', 'value' => $expense->submitter?->name ?? '—', 'money' => false],
                 ['label' => 'قرّره', 'value' => $expense->decider?->name ?? '—', 'money' => false],
             ] as $tile)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
                     <p class="mt-2 font-display text-lg font-medium text-ink-900 dark:text-ink-50">
                         @if ($tile['money'])
@@ -120,14 +120,14 @@
         </div>
 
         @if ($expense->description)
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">التفاصيل</p>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">{{ $expense->description }}</p>
             </div>
         @endif
 
         @if ($expense->approvals->isNotEmpty())
-            <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card w-full overflow-x-auto">
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>

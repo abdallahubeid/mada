@@ -4,12 +4,12 @@
 
 @section('breadcrumbs')
     <a href="{{ route('admin.problems.index') }}" class="text-mist-500 hover:text-brand-600">المشاكل</a>
-    <span class="mx-1.5 text-mist-300">/</span>
+    <span class="mx-1.5 text-mist-400" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">إضافة</span>
 @endsection
 
 @section('content')
-    <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إضافة مشكلة</h2>
+    <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إضافة مشكلة</h1>
     <div class="mt-6 max-w-2xl">
         @include('admin.landing.problems._form', [
             'problem' => $problem,

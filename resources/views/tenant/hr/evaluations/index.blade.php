@@ -1,6 +1,6 @@
 <x-layouts.app title="تقييمات الأداء">
     @php
-        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+        $inputClasses = 'ui-control w-full';
         $modeLabel = match ($viewerMode) {
             'owner' => 'نظرة المالك / الإدارة العليا',
             'hr' => 'عرض الموارد البشرية حسب الأقسام',
@@ -11,7 +11,7 @@
     <div class="space-y-6" x-data="{ periodType: @js($periodType->value) }">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">تقييمات الأداء</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">تقييمات الأداء</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     {{ $modeLabel }} · الفترة: <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $periodLabel }}</span>
                 </p>
@@ -34,7 +34,7 @@
                     <button
                         type="submit"
                         @disabled($periodLocked)
-                        class="inline-flex items-center rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="ui-btn ui-btn-primary"
                     >
                         إعتماد التقييم
                     </button>
@@ -42,18 +42,18 @@
             @endif
         </div>
 
-        <form method="GET" action="{{ route('hr.evaluations.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-3 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('hr.evaluations.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-3">
             <div>
-                <label class="mb-1.5 block text-xs font-semibold text-mist-500">نوع الفترة</label>
-                <select name="period_type" x-model="periodType" class="{{ $inputClasses }}" onchange="this.form.submit()">
+                <label for="f-index-period-type-1" class="mb-1.5 block text-xs font-semibold text-mist-500">نوع الفترة</label>
+                <select id="f-index-period-type-1" name="period_type" x-model="periodType" class="{{ $inputClasses }}" onchange="this.form.submit()">
                     @foreach ($periodTypes as $type)
                         <option value="{{ $type->value }}" @selected($periodType === $type)>{{ $type->label() }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="sm:col-span-2">
-                <label class="mb-1.5 block text-xs font-semibold text-mist-500">اختيار الفترة</label>
-                <select name="period_key" class="{{ $inputClasses }}" onchange="this.form.submit()">
+                <label for="f-index-period-key-2" class="mb-1.5 block text-xs font-semibold text-mist-500">اختيار الفترة</label>
+                <select id="f-index-period-key-2" name="period_key" class="{{ $inputClasses }}" onchange="this.form.submit()">
                     @foreach ($periodOptions as $option)
                         <option value="{{ $option['key'] }}" @selected($periodKey === $option['key'])>{{ $option['label'] }}</option>
                     @endforeach
@@ -62,7 +62,7 @@
         </form>
 
         @if ($groups->every(fn ($group) => $group['employees']->isEmpty()))
-            <div class="rounded-2xl border border-dashed border-mist-200 bg-white p-10 text-center dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card border border-dashed border-mist-200 p-10 text-center">
                 <p class="text-sm font-medium text-ink-900 dark:text-ink-50">لا يوجد موظفون لعرضهم في نطاق صلاحيتك.</p>
                 <p class="mt-1 text-sm text-mist-500">إن كنت مديراً مباشراً، تأكد من تعيين مرؤوسين عبر حقل المدير في ملفات الموظفين.</p>
             </div>
@@ -74,7 +74,7 @@
 
                 @foreach ($groups as $groupIndex => $group)
                     @continue($group['employees']->isEmpty())
-                    <div class="overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                    <div class="ui-card overflow-hidden">
                         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-mist-100 bg-mist-50 px-4 py-3 dark:border-ink-700 dark:bg-ink-900">
                             <div>
                                 <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">
@@ -120,7 +120,7 @@
                                                 <p class="font-medium text-ink-900 dark:text-ink-50">
                                                     {{ $employee->full_name }}
                                                     @if ($isHead)
-                                                        <span class="ms-1 rounded-md bg-brand-500 px-2 py-0.5 text-xs font-bold text-white">رئيس القسم</span>
+                                                        <span class="ms-1 rounded-md bg-brand-action px-2 py-0.5 text-xs font-bold text-white">رئيس القسم</span>
                                                     @endif
                                                 </p>
                                                 <p class="text-xs text-mist-500">{{ $employee->job_title }}</p>
@@ -131,7 +131,7 @@
                                                     step="0.01"
                                                     min="0"
                                                     max="5"
-                                                    name="{{ $rowName }}[rating]"
+                                                    aria-label="التقييم من 0 إلى 5" name="{{ $rowName }}[rating]"
                                                     value="{{ old($rowName.'.rating', $evaluation?->rating) }}"
                                                     @disabled(! $canSubmit || $locked || $periodLocked)
                                                     class="{{ $inputClasses }}"
@@ -166,7 +166,7 @@
                             type="submit"
                             name="intent"
                             value="draft"
-                            class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-700"
+                            class="ui-btn ui-btn-secondary"
                         >
                             حفظ كمسودة
                         </button>
@@ -174,7 +174,7 @@
                             type="submit"
                             name="intent"
                             value="submit"
-                            class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                            class="ui-btn ui-btn-primary"
                         >
                             إرسال التقييمات
                         </button>

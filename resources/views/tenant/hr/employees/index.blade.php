@@ -19,14 +19,14 @@
             @can('hr.employees.create')
                 <a
                     href="{{ route('hr.employees.create') }}"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                    class="ui-btn ui-btn-primary"
                 >
                     إضافة موظف
                 </a>
             @endcan
         </div>
 
-        <form method="GET" action="{{ route('hr.employees.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-4 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('hr.employees.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-4">
             <div class="sm:col-span-2">
                 <label for="q" class="mb-1.5 block text-xs font-medium text-mist-500">بحث</label>
                 <input
@@ -35,12 +35,12 @@
                     name="q"
                     value="{{ $filters['q'] }}"
                     placeholder="الاسم أو المسمى الوظيفي"
-                    class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                    class="ui-control w-full"
                 >
             </div>
             <div>
                 <label for="department_id" class="mb-1.5 block text-xs font-medium text-mist-500">القسم</label>
-                <select id="department_id" name="department_id" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="department_id" name="department_id" class="ui-control w-full">
                     <option value="all" @selected($filters['department_id'] === 'all')>الكل</option>
                     @foreach ($departments as $id => $name)
                         <option value="{{ $id }}" @selected($filters['department_id'] === (string) $id)>{{ $name }}</option>
@@ -49,7 +49,7 @@
             </div>
             <div>
                 <label for="status" class="mb-1.5 block text-xs font-medium text-mist-500">الحالة</label>
-                <select id="status" name="status" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="status" name="status" class="ui-control w-full">
                     <option value="all" @selected($filters['status'] === 'all')>الكل</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}" @selected($filters['status'] === $status->value)>{{ $status->label() }}</option>
@@ -57,12 +57,12 @@
                 </select>
             </div>
             <div class="flex items-end gap-2 sm:col-span-4">
-                <button type="submit" class="rounded-xl bg-ink-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-ink-800 dark:bg-ink-50 dark:text-ink-900">تصفية</button>
-                <a href="{{ route('hr.employees.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-500 hover:text-ink-700 dark:hover:text-mist-200">إعادة ضبط</a>
+                <button type="submit" class="ui-btn ui-btn-secondary">تصفية</button>
+                <a href="{{ route('hr.employees.index') }}" class="ui-btn ui-btn-neutral">إعادة ضبط</a>
             </div>
         </form>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -110,7 +110,7 @@
                                     @can('hr.employees.view')
                                         <a
                                             href="{{ route('hr.employees.show', $employee) }}"
-                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:hover:border-brand-500"
+                                            class="ui-btn ui-btn-secondary ui-btn-sm"
                                         >
                                             عرض
                                         </a>
@@ -118,7 +118,7 @@
                                     @can('hr.employees.update')
                                         <a
                                             href="{{ route('hr.employees.edit', $employee) }}"
-                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:hover:border-brand-500"
+                                            class="ui-btn ui-btn-secondary ui-btn-sm"
                                         >
                                             تعديل
                                         </a>
@@ -133,7 +133,7 @@
                                         >
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid transition hover:bg-danger-solid/10 dark:border-ink-600">
+                                            <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">
                                                 حذف
                                             </button>
                                         </form>

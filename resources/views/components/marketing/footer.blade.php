@@ -95,66 +95,78 @@
     }
 @endphp
 
-<footer class="bg-footer py-16 text-footer-muted" data-surface="dark">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-            <div class="lg:col-span-2">
-                <a href="/" class="flex shrink-0 items-center gap-2.5">
+{{--
+    Andromeda footer: light, not a dark slab. One row of four columns between
+    two hairlines, then a centred copyright line. The first column carries
+    the brand, the blurb, the newsletter form and the social icons; the CMS
+    link columns follow.
+--}}
+<footer>
+    <div class="site-container">
+        <div class="grid gap-10 border-y border-site-border py-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+            <div>
+                <a href="/" class="flex shrink-0 items-center gap-2.5" aria-label="مدى — الصفحة الرئيسية">
                     @if ($logoUrl = \App\Models\Setting::assetUrl($settings['site_logo'] ?? null))
                         <img src="{{ $logoUrl }}" alt="مدى" class="h-10 max-h-10 w-auto max-w-[220px] shrink-0 object-contain object-start">
                     @else
-                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 font-display text-sm font-bold text-white">م</span>
-                        <span class="font-display text-xl font-bold text-footer-heading">مدى <span class="text-brand-300">ERP</span></span>
+                        <span class="flex h-9 w-9 items-center justify-center rounded-md bg-site-primary text-lg font-semibold text-white">م</span>
+                        <span class="text-2xl font-semibold text-site-dark">مدى</span>
                     @endif
                 </a>
-                <p class="mt-4 max-w-xs text-sm leading-relaxed">{{ $blurb }}</p>
+                <p class="mt-3 max-w-xs">{{ $blurb }}</p>
 
                 <form method="POST" action="{{ route('marketing.newsletter.subscribe') }}" class="mt-6 max-w-sm">
                     @csrf
+                    <label for="footer-email" class="site-label text-sm">{{ $newsletterTitle }}</label>
                     <div class="flex gap-2">
-                        <label for="footer-email" class="sr-only">{{ $newsletterTitle }}</label>
                         <input
                             id="footer-email"
                             name="email"
                             type="email"
                             value="{{ old('email') }}"
                             required
-                            placeholder="{{ $newsletterTitle }}"
-                            class="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/40"
+                            autocomplete="email"
+                            placeholder="name@company.com"
+                            dir="ltr"
+                            class="site-input min-w-0 py-3 text-start"
+                            @error('email') aria-invalid="true" aria-describedby="footer-email-error" @enderror
                         >
-                        <button type="submit" class="shrink-0 rounded-md bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-brand-600 active:scale-[0.98]">
-                            {{ $newsletterBtnText }}
-                        </button>
+                        <button type="submit" class="site-btn site-btn-primary shrink-0">{{ $newsletterBtnText }}</button>
                     </div>
                     @error('email')
-                        <p class="mt-2 text-xs text-critical-400">{{ $message }}</p>
+                        <p id="footer-email-error" class="site-error">{{ $message }}</p>
                     @enderror
                 </form>
+
+                @if ($socials !== [])
+                    <ul class="mt-6 flex flex-wrap items-center gap-3">
+                        @foreach ($socials as $social)
+                            <li>
+                                <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}" class="site-social">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{!! $social['icon'] !!}</svg>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
 
             @foreach ($columns as $column)
                 <div>
-                    <p class="text-sm font-semibold text-footer-heading">{{ $column['title'] }}</p>
-                    <ul class="mt-4 space-y-2 text-sm">
+                    <h2 class="site-h5">{{ $column['title'] }}</h2>
+                    <ul class="mt-5 leading-10">
                         @foreach ($column['links'] as $navLink)
-                            <li><a href="{{ $navLink['url'] ?? $navLink['path'] ?? '#' }}" class="text-footer-muted transition duration-150 hover:text-white">{{ $navLink['label'] }}</a></li>
+                            <li>
+                                <a href="{{ $navLink['url'] ?? $navLink['path'] ?? '#' }}" class="transition hover:text-site-primary-ink hover:underline">{{ $navLink['label'] }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
             @endforeach
         </div>
 
-        <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs sm:flex-row">
+        <div class="py-6 text-center">
             <p>{{ $copyright }}</p>
-            @if ($socials !== [])
-                <div class="flex items-center gap-3">
-                    @foreach ($socials as $social)
-                        <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-mist-500 transition duration-150 hover:border-brand-300 hover:bg-white/5 hover:text-ink-900">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">{!! $social['icon'] !!}</svg>
-                        </a>
-                    @endforeach
-                </div>
-            @endif
         </div>
     </div>
 </footer>

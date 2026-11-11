@@ -20,7 +20,7 @@
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">ملخص تكاليف الرواتب المعتمدة والمصروفة.</p>
             </div>
             @can('finance.payroll.prepare')
-                <a href="{{ route('finance.payroll-runs.create') }}" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                <a href="{{ route('finance.payroll-runs.create') }}" class="ui-btn ui-btn-primary">
                     إنشاء مسيرة جديدة
                 </a>
             @endcan
@@ -42,7 +42,7 @@
                 ['label' => 'خصومات الغياب', 'value' => $kpis['total_absence_deductions'], 'money' => true, 'tone' => 'text-danger-solid'],
                 ['label' => 'قسائم مصروفة', 'value' => $kpis['employees_paid'], 'money' => false, 'tone' => 'text-ink-900 dark:text-ink-50'],
             ] as $tile)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
                     <p @class(['mt-2 font-display text-xl font-medium', $tile['tone']])>
                         @if ($tile['money'])
@@ -82,7 +82,7 @@
                 ['label' => 'التزام نهاية الخدمة', 'value' => $offboarding['committed'], 'tone' => 'text-danger-solid'],
                 ['label' => 'تسويات مصروفة', 'value' => $offboarding['paid'], 'tone' => 'text-sky-600 dark:text-sky-400'],
             ] as $tile)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
                     <p @class(['mt-2 font-display text-xl font-medium', $tile['tone']])>
                         <x-ui.money :amount="$tile['value']" :currency="$currency" />
@@ -115,7 +115,7 @@
         @endif
 
         <div class="grid gap-6 lg:grid-cols-2">
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">تكلفة الرواتب الشهرية</h2>
                 <p class="mt-1 text-xs text-mist-500 dark:text-mist-400">المسيرات المعتمدة والمصروفة فقط.</p>
 
@@ -136,7 +136,7 @@
                 </div>
             </div>
 
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">توزيع المسيرات حسب الحالة</h2>
 
                 <div class="mt-4 w-full overflow-x-auto">
@@ -168,7 +168,7 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card p-4">
             <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">المصروفات حسب التصنيف</h2>
 
             <div class="mt-4 w-full overflow-x-auto">
@@ -197,7 +197,7 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card p-4">
             <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">أعلى الأقسام تكلفة</h2>
             <p class="mt-1 text-xs text-mist-500 dark:text-mist-400">من بيانات القسائم المجمّدة، لا من سجل الموظفين الحالي.</p>
 
@@ -227,7 +227,7 @@
             </div>
         </div>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -250,7 +250,7 @@
                             </td>
                             <td class="px-3 py-2 text-end font-semibold text-ink-900 dark:text-ink-50"><x-ui.money :amount="$run->total_net" :currency="$run->currency" /></td>
                             <td class="px-3 py-2 text-center">
-                                <a href="{{ route('finance.payroll-runs.show', $run) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">عرض</a>
+                                <a href="{{ route('finance.payroll-runs.show', $run) }}" class="ui-btn ui-btn-secondary ui-btn-sm">عرض</a>
                             </td>
                         </tr>
                     @empty

@@ -36,7 +36,7 @@
         ])>
             <div class="flex items-start justify-between gap-2 border-b border-mist-100 px-4 py-3.5 dark:border-ink-700">
                 <div>
-                    <h2 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">المراسلات</h2>
+                    <h1 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">المراسلات</h1>
                     <p class="mt-0.5 text-xs text-mist-500 dark:text-mist-400">محادثات خاصة بينك وبين زملائك</p>
                 </div>
                 <button
@@ -59,7 +59,7 @@
                     <button
                         type="button"
                         @click="open = ! open"
-                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-[0.98]"
+                        class="ui-btn ui-btn-primary flex w-full"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                         محادثة جديدة
@@ -73,7 +73,7 @@
                         <button
                             type="button"
                             @click="$dispatch('open-group-modal')"
-                            class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition duration-200 hover:border-brand-500 hover:text-brand-700 dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300"
+                            class="ui-btn ui-btn-secondary mt-2 flex w-full"
                             data-testid="messenger-new-group"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" /></svg>
@@ -149,7 +149,7 @@
                                 <span class="flex items-center justify-between gap-2">
                                     <span class="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $thread['title'] }}</span>
                                     @if ($thread['unread'] > 0)
-                                        <span class="shrink-0 rounded-md bg-brand-500 px-1.5 py-0.5 text-xs font-bold text-white">{{ $thread['unread'] }}</span>
+                                        <span class="shrink-0 rounded-md bg-brand-action px-1.5 py-0.5 text-xs font-bold text-white">{{ $thread['unread'] }}</span>
                                     @endif
                                 </span>
                                 <span class="mt-0.5 block truncate text-xs text-mist-500 dark:text-mist-400">{{ $thread['last_message_at'] ?? 'لم تبدأ المحادثة بعد' }}</span>
@@ -315,7 +315,7 @@
                                     @contextmenu.prevent="quick = false; up = placeMenu($event.currentTarget); menu = true"
                                     @class([
                                         'relative max-w-[75%] rounded-2xl px-3.5 pb-3 pt-2 text-sm leading-relaxed',
-                                        'bg-brand-500 text-white' => $mine,
+                                        'bg-brand-action text-white' => $mine,
                                         'bg-mist-100 text-ink-800 dark:bg-ink-700 dark:text-mist-100' => ! $mine,
                                     ])
                                 >
@@ -429,7 +429,7 @@
                                 @contextmenu.prevent="quick = false; up = placeMenu($event.currentTarget); menu = true"
                                 class="relative max-w-[75%] rounded-2xl px-3.5 pb-3 pt-2 text-sm leading-relaxed"
                                 :class="m.sender_id === config.userId
-                                    ? 'bg-brand-500 text-white'
+                                    ? 'bg-brand-action text-white'
                                     : 'bg-mist-100 text-white dark:bg-ink-700 dark:text-mist-100'"
                             >
                                 <button
@@ -576,7 +576,7 @@
                         rows="1"
                         maxlength="5000"
                         placeholder="اكتب رسالتك... (Enter للإرسال، Shift+Enter لسطر جديد)"
-                        class="max-h-32 min-h-[2.5rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                        class="ui-control max-h-32 min-h-[2.5rem] flex-1 resize-none"
                     ></textarea>
                     {{-- Icon only. The paper plane is universally understood in
                          a composer, and dropping the label keeps the control
@@ -585,7 +585,7 @@
                     <button
                         type="submit"
                         :disabled="draft.trim() === '' && pending.length === 0"
-                        class="shrink-0 rounded-xl bg-brand-500 p-2.5 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                        class="shrink-0 rounded-xl bg-brand-action p-2.5 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                         aria-label="إرسال"
                         title="إرسال"
                         data-testid="messenger-send"
@@ -629,7 +629,7 @@
                     <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">أنت مسؤول المجموعة تلقائياً، ويمكن لأعضائها المشاركة دون إنشاء مجموعات جديدة.</p>
 
                     <label for="group_title" class="mt-4 block text-sm font-medium text-ink-700 dark:text-mist-200">اسم المجموعة</label>
-                    <input id="group_title" name="title" type="text" required maxlength="120" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <input id="group_title" name="title" type="text" required maxlength="120" class="ui-control mt-1.5 w-full">
 
                     <p class="mt-4 text-sm font-medium text-ink-700 dark:text-mist-200">الأعضاء</p>
                     <div class="mt-2 max-h-48 space-y-1 overflow-y-auto rounded-xl border border-mist-200 p-2 dark:border-ink-600">
@@ -646,7 +646,7 @@
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95">إنشاء المجموعة</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">إنشاء المجموعة</button>
                     </div>
                 </form>
             </div>
@@ -682,7 +682,7 @@
 
                 <div class="mt-6 flex items-center justify-end gap-3">
                     <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95">حفظ</button>
+                    <button type="submit" class="ui-btn ui-btn-primary">حفظ</button>
                 </div>
             </form>
         </div>
@@ -1314,7 +1314,7 @@
                             confirmButtonText: 'نعم، احذف',
                             cancelButtonText: 'إلغاء',
                             confirmButtonColor: '#b42318',
-                            cancelButtonColor: '#5a5262',
+                            cancelButtonColor: '#6c757d',
                             reverseButtons: true,
                         }).then((result) => result.isConfirmed);
                     },

@@ -19,14 +19,14 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">رسائل التواصل</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">رسائل التواصل</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     رسائل نموذج الموقع العام — محادثة واحدة لكل بريد إلكتروني، مع تحديث مباشر عبر Reverb.
                 </p>
             </div>
         </div>
 
-        <div class="mt-4 flex flex-col overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm lg:h-[calc(100dvh-12rem)] lg:flex-row dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card mt-4 flex flex-col overflow-hidden lg:h-[calc(100dvh-12rem)] lg:flex-row">
             <div class="flex max-h-[42vh] shrink-0 flex-col border-b border-mist-200 lg:max-h-none lg:w-80 lg:border-b-0 lg:border-e dark:border-ink-700">
                 <div class="space-y-3 border-b border-mist-100 p-3 dark:border-ink-700">
                     <div class="grid grid-cols-2 gap-1 rounded-xl bg-mist-100 p-1 dark:bg-ink-900">
@@ -69,7 +69,7 @@
                             name="q"
                             x-model="search"
                             placeholder="ابحث بالاسم أو البريد أو الموضوع..."
-                            class="w-full rounded-xl border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="ui-control w-full ps-9 pe-3"
                         >
                     </form>
                 </div>
@@ -229,7 +229,7 @@
                         openBtn.addEventListener('click', () => this.selectThread(thread.id, thread.show_url));
 
                         const unreadHtml = thread.unread
-                            ? `<span data-thread-unread class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-500 px-1.5 text-xs font-bold text-white">${Math.max(1, Number(thread.unread_count || 1))}</span>`
+                            ? `<span data-thread-unread class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-action px-1.5 text-xs font-bold text-white">${Math.max(1, Number(thread.unread_count || 1))}</span>`
                             : '';
 
                         openBtn.innerHTML = `
@@ -341,7 +341,7 @@
                             confirmButtonText: 'نعم، احذف',
                             cancelButtonText: 'إلغاء',
                             confirmButtonColor: '#b42318',
-                            cancelButtonColor: '#5a5262',
+                            cancelButtonColor: '#6c757d',
                             reverseButtons: true,
                         }).then(async (result) => {
                             if (! result.isConfirmed) {
@@ -494,9 +494,9 @@
                                         rows="1"
                                         required
                                         placeholder="اكتب ردًا يُرسل بالبريد ويُحفظ في المحادثة..."
-                                        class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                                        class="ui-control max-h-32 min-h-[2.75rem] flex-1 resize-none"
                                     ></textarea>
-                                    <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95" aria-label="إرسال">
+                                    <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-action text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95" aria-label="إرسال">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
                                     </button>
                                 </form>
@@ -523,7 +523,7 @@
                                     <button
                                         type="button"
                                         data-close-chat
-                                        class="inline-flex items-center gap-1.5 rounded-xl border border-mist-200 px-3 py-2 text-sm font-medium text-mist-500 transition hover:border-danger-solid/40 hover:bg-danger-solid/10 hover:text-danger-solid dark:border-ink-600"
+                                        class="ui-btn ui-btn-danger-outline"
                                         title="إغلاق المحادثة"
                                         aria-label="إغلاق المحادثة"
                                     >
@@ -603,7 +603,7 @@
                                 <img src="${this.escapeAttr(message.avatar_url || '')}" alt="" class="h-8 w-8 shrink-0 rounded-full border border-slate-700 object-cover">
                                 <div class="max-w-[80%]">
                                     <div class="rounded-2xl px-4 py-3 text-sm shadow-sm ${isStaff
-                                        ? 'bg-brand-500 text-white rounded-se-none'
+                                        ? 'bg-brand-action text-white rounded-se-none'
                                         : 'border border-mist-200 bg-white text-white rounded-ss-none dark:border-ink-700 dark:bg-ink-800 dark:text-mist-100'}">
                                         ${this.escapeHtml(message.body || '')}
                                     </div>
@@ -736,7 +736,7 @@
                                 if (! badge) {
                                     badge = document.createElement('span');
                                     badge.dataset.threadUnread = '';
-                                    badge.className = 'inline-flex min-w-5 items-center justify-center rounded-full bg-brand-500 px-1.5 text-xs font-bold text-white';
+                                    badge.className = 'inline-flex min-w-5 items-center justify-center rounded-full bg-brand-action px-1.5 text-xs font-bold text-white';
                                     badge.textContent = '1';
                                     existing.querySelector('.mt-1\\.5')?.appendChild(badge);
                                 } else {
@@ -859,7 +859,7 @@
                             title: message,
                             showConfirmButton: Boolean(undoUrl),
                             confirmButtonText: options.undoLabel || 'تراجع',
-                            confirmButtonColor: '#714b67',
+                            confirmButtonColor: '#fe6019',
                             showCancelButton: false,
                             timer: undoUrl ? 8000 : 2800,
                             timerProgressBar: true,

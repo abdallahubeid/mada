@@ -1,6 +1,6 @@
 <x-layouts.app title="إعدادات المالية ونهاية الخدمة">
     @php
-        $inputClasses = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-mist-500';
+        $inputClasses = 'ui-control w-full';
         $labelClasses = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
         $hintClasses = 'mt-1.5 text-xs text-mist-500 dark:text-mist-400';
         $errorClasses = 'mt-1.5 text-xs text-danger-solid';
@@ -57,7 +57,7 @@
             data-swal-title="حفظ قواعد نهاية الخدمة؟"
             data-swal-text="ستُحتسب كل تسوية جديدة بهذه القواعد. التسويات القائمة لن تتغيّر."
             data-swal-confirm-button="نعم، احفظ القواعد"
-            class="space-y-6 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6"
+            class="ui-card space-y-6 p-4 sm:p-6"
         >
             @csrf
             @method('PUT')
@@ -129,14 +129,14 @@
                     <template x-for="(band, index) in taper" :key="index">
                         <div class="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
                             <input type="number" min="0" max="600" step="1" dir="ltr" required
-                                   :name="`eosb_resignation_taper[${index}][months]`" x-model="band.months"
+                                   aria-label="عدد أشهر الخدمة" :name="`eosb_resignation_taper[${index}][months]`" x-model="band.months"
                                    class="{{ $inputClasses }} text-end tabular-nums">
                             <input type="number" min="0" max="100" step="0.01" dir="ltr" required
-                                   :name="`eosb_resignation_taper[${index}][percent]`" x-model="band.percent"
+                                   aria-label="نسبة الاستحقاق (٪)" :name="`eosb_resignation_taper[${index}][percent]`" x-model="band.percent"
                                    class="{{ $inputClasses }} text-end tabular-nums">
                             <button type="button"
                                     @click="taper.length === 1 ? taper[0] = { months: 0, percent: '0' } : taper.splice(index, 1)"
-                                    class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition hover:border-mist-300 hover:bg-mist-50 dark:border-ink-600 dark:text-mist-200 dark:hover:bg-ink-900">
+                                    class="ui-btn ui-btn-secondary">
                                 حذف
                             </button>
                         </div>
@@ -144,7 +144,7 @@
 
                     <button type="button"
                             @click="taper.push({ months: 0, percent: '0' })"
-                            class="rounded-xl border border-dashed border-mist-300 px-4 py-2 text-sm font-semibold text-mist-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-300">
+                            class="ui-btn ui-btn-secondary">
                         + إضافة شريحة
                     </button>
                 </div>
@@ -191,7 +191,7 @@
             </fieldset>
 
             <div class="flex justify-end gap-3 border-t border-mist-100 pt-5 dark:border-ink-700">
-                <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                <button type="submit" class="ui-btn ui-btn-primary">
                     حفظ القواعد
                 </button>
             </div>
@@ -205,7 +205,7 @@
               data-swal-confirm-button="نعم، استعد الافتراضي"
               class="flex justify-end">
             @csrf
-            <button type="submit" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-600 transition hover:border-amber-400 hover:text-amber-600 dark:border-ink-600 dark:text-mist-300">
+            <button type="submit" class="ui-btn ui-btn-secondary">
                 استعادة القيم الافتراضية
             </button>
         </form>

@@ -20,10 +20,10 @@
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تتبع الإجراءات الحساسة داخل المؤسسة بلغة واضحة للإدارة (المالك فقط).</p>
         </div>
 
-        <form method="GET" action="{{ route('tenant.audit-logs.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-3 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('tenant.audit-logs.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-3">
             <div>
-                <label class="mb-1.5 block text-xs font-medium text-mist-500">الوحدة</label>
-                <select name="module" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <label for="f-index-module-1" class="mb-1.5 block text-xs font-medium text-mist-500">الوحدة</label>
+                <select id="f-index-module-1" name="module" class="ui-control w-full">
                     <option value="all" @selected($filters['module'] === 'all')>الكل</option>
                     @foreach ($modules as $moduleKey => $moduleLabel)
                         <option value="{{ $moduleKey }}" @selected($filters['module'] === $moduleKey)>{{ $moduleLabel }}</option>
@@ -38,14 +38,14 @@
                         name="q"
                         value="{{ $filters['q'] }}"
                         placeholder="ابحث عن إجراء أو وحدة..."
-                        class="min-w-0 flex-1 rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                        class="ui-control min-w-0 flex-1"
                     >
-                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600">تصفية</button>
+                    <button type="submit" class="ui-btn ui-btn-secondary">تصفية</button>
                 </div>
             </div>
         </form>
 
-        <div class="overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card overflow-hidden">
             <div class="w-full overflow-x-auto">
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
@@ -109,7 +109,7 @@
                                             <button
                                                 type="button"
                                                 @click="openDetails(@js($detailEntry))"
-                                                class="inline-flex w-fit items-center gap-1 rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:border-brand-500 dark:hover:text-brand-300"
+                                                class="ui-btn ui-btn-secondary ui-btn-sm w-fit"
                                             >
                                                 معاينة التفاصيل
                                             </button>

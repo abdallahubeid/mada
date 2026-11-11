@@ -3,7 +3,6 @@
 ])
 
 @php
-    /** @var array<string, array<string, mixed>>|null $stats */
     $stats ??= [
         'tenants' => ['value' => 1284, 'decimals' => 0, 'prefix' => '', 'suffix' => '', 'separator' => true],
         'employees' => ['value' => 18420, 'decimals' => 0, 'prefix' => '', 'suffix' => '', 'separator' => true],
@@ -11,13 +10,13 @@
         'uptime' => ['value' => 99.9, 'decimals' => 1, 'prefix' => '%', 'suffix' => '', 'separator' => false],
     ];
 
-    /*
-     * The middle tab was «المشاريع», showing a Kanban mock-up for a module
-     * that does not exist — a product tour of vapourware, on the landing page,
-     * next to two tabs showing real screens. Replaced 2026-08-10 with the
-     * recruitment pipeline, which is built and whose columns below are the
-     * actual `job_applications` statuses (new / under_review / interviewed).
-     */
+    $tiles = [
+        'tenants' => 'المستأجرون',
+        'employees' => 'الموظفون',
+        'revenue' => 'الإيرادات',
+        'uptime' => 'الجاهزية',
+    ];
+
     $tabs = [
         ['key' => 'dashboard', 'label' => 'لوحة التحكم'],
         ['key' => 'recruitment', 'label' => 'التوظيف'],
@@ -25,8 +24,14 @@
     ];
 @endphp
 
-<section x-data="{ tab: 'dashboard' }" class="bg-mist-50 py-24">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+{{--
+    Product tour, drawn in the same light idiom as the template's banner
+    screenshot: a white frame with a soft shadow, cream inner panels, orange
+    data marks, sitting on a scatter of circles. The tabs are real buttons
+    (tablist semantics); the panels are illustrations of the product.
+--}}
+<section x-data="{ tab: 'dashboard' }" class="site-section">
+    <div class="site-container">
         <x-marketing.section-heading
             :eyebrow="$settings['product_previews_badge_text'] ?? 'جولة في المنتج'"
             :title="$settings['product_previews_title'] ?? ''"
@@ -34,114 +39,86 @@
         />
 
         <div class="mt-10 flex justify-center">
-            <div class="inline-flex items-center gap-1.5 rounded-full border border-mist-200 bg-ink-100 p-1.5 dark:border-ink-800 dark:bg-ink-800">
+            <div class="inline-flex flex-wrap justify-center gap-2" role="tablist" aria-label="أقسام الجولة">
                 @foreach ($tabs as $t)
                     <button
                         type="button"
+                        role="tab"
+                        id="showcase-tab-{{ $t['key'] }}"
+                        aria-controls="showcase-panel-{{ $t['key'] }}"
+                        :aria-selected="tab === '{{ $t['key'] }}' ? 'true' : 'false'"
                         @click="tab = '{{ $t['key'] }}'"
-                        :class="tab === '{{ $t['key'] }}' ? 'bg-white text-ink-900 shadow-sm dark:bg-ink-700 dark:text-white' : 'text-mist-500 hover:text-ink-700 dark:hover:text-mist-200'"
-                        class="rounded-md px-4 py-1.5 text-sm font-medium transition duration-200"
+                        :class="tab === '{{ $t['key'] }}' ? 'site-btn-primary' : 'site-btn-outline'"
+                        class="site-btn min-h-0 px-5 py-2"
                     >{{ $t['label'] }}</button>
                 @endforeach
             </div>
         </div>
 
-        <div class="relative mx-auto mt-10 max-w-5xl">
-            <div class="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-brand-500/10 blur-3xl" aria-hidden="true"></div>
-            <div class="rounded-3xl border border-mist-200 bg-white/60 p-2 shadow-2xl backdrop-blur-xl dark:border-ink-800 dark:bg-ink-800/60">
-                <div class="overflow-hidden rounded-2xl bg-ink-900" data-surface="dark">
-                    <div class="flex items-center gap-2 border-b border-ink-800 px-4 py-3">
-                        <span class="h-2.5 w-2.5 rounded-md bg-danger-solid"></span>
-                        <span class="h-2.5 w-2.5 rounded-md bg-amber-400"></span>
-                        <span class="h-2.5 w-2.5 rounded-md bg-brand-500"></span>
-                        <span class="ms-3 text-xs text-mist-500" x-text="'app.mada.com/' + tab"></span>
-                    </div>
+        <div class="relative isolate mx-auto mt-10 max-w-5xl p-4 sm:p-10">
+            <x-marketing.circles set="figure" />
 
-                    {{-- Dashboard --}}
-                    <div x-show="tab === 'dashboard'" class="grid gap-4 p-6 sm:grid-cols-4">
-                        <div class="rounded-xl bg-ink-800 p-4 text-center">
-                            <p class="text-xs text-mist-400">المستأجرون</p>
-                            <p class="mt-1 font-display text-xl font-bold text-ink-50">
+            <div class="site-card overflow-hidden shadow-[0_10px_50px_rgb(0_0_0/0.08)]">
+                <div class="flex items-center gap-2 border-b border-site-border px-4 py-3">
+                    <span class="h-2.5 w-2.5 rounded-full bg-site-primary"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-site-circle"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-site-border"></span>
+                    <span class="ms-3 text-sm" dir="ltr" x-text="'app.mada.com/' + tab">app.mada.com/dashboard</span>
+                </div>
+
+                <div id="showcase-panel-dashboard" role="tabpanel" aria-labelledby="showcase-tab-dashboard" x-show="tab === 'dashboard'" class="grid gap-4 p-5 sm:grid-cols-4 sm:p-6">
+                    @foreach ($tiles as $key => $label)
+                        <div class="rounded-md bg-site-cream p-4 text-center">
+                            <p>{{ $label }}</p>
+                            <p @class(['mt-1 site-h4', 'text-site-primary-ink' => $key === 'revenue'])>
                                 <x-marketing.stat-counter
-                                    :value="$stats['tenants']['value']"
-                                    :prefix="$stats['tenants']['prefix'] ?? ''"
-                                    :suffix="$stats['tenants']['suffix'] ?? ''"
-                                    :decimals="$stats['tenants']['decimals'] ?? 0"
-                                    :separator="$stats['tenants']['separator'] ?? true"
+                                    :value="$stats[$key]['value']"
+                                    :prefix="$stats[$key]['prefix'] ?? ''"
+                                    :suffix="$stats[$key]['suffix'] ?? ''"
+                                    :decimals="$stats[$key]['decimals'] ?? 0"
+                                    :separator="$stats[$key]['separator'] ?? in_array($key, ['tenants', 'employees'], true)"
                                 />
                             </p>
                         </div>
-                        <div class="rounded-xl bg-ink-800 p-4 text-center">
-                            <p class="text-xs text-mist-400">الموظفون</p>
-                            <p class="mt-1 font-display text-xl font-bold text-ink-50">
-                                <x-marketing.stat-counter
-                                    :value="$stats['employees']['value']"
-                                    :prefix="$stats['employees']['prefix'] ?? ''"
-                                    :suffix="$stats['employees']['suffix'] ?? ''"
-                                    :decimals="$stats['employees']['decimals'] ?? 0"
-                                    :separator="$stats['employees']['separator'] ?? true"
-                                />
-                            </p>
-                        </div>
-                        <div class="rounded-xl bg-ink-800 p-4 text-center">
-                            <p class="text-xs text-mist-400">الإيرادات</p>
-                            <p class="mt-1 font-display text-xl font-bold text-brand-300">
-                                <x-marketing.stat-counter
-                                    :value="$stats['revenue']['value']"
-                                    :prefix="$stats['revenue']['prefix'] ?? ''"
-                                    :suffix="$stats['revenue']['suffix'] ?? ''"
-                                    :decimals="$stats['revenue']['decimals'] ?? 0"
-                                    :separator="$stats['revenue']['separator'] ?? false"
-                                />
-                            </p>
-                        </div>
-                        <div class="rounded-xl bg-ink-800 p-4 text-center">
-                            <p class="text-xs text-mist-400">الجاهزية</p>
-                            <p class="mt-1 font-display text-xl font-bold text-ink-50">
-                                <x-marketing.stat-counter
-                                    :value="$stats['uptime']['value']"
-                                    :prefix="$stats['uptime']['prefix'] ?? ''"
-                                    :suffix="$stats['uptime']['suffix'] ?? ''"
-                                    :decimals="$stats['uptime']['decimals'] ?? 1"
-                                    :separator="$stats['uptime']['separator'] ?? false"
-                                />
-                            </p>
-                        </div>
-                        <div class="sm:col-span-4 rounded-xl bg-ink-800 p-4">
-                            <div class="flex h-32 items-end gap-2">
-                                @foreach ([40, 65, 45, 80, 60, 95, 70, 88] as $h)
-                                    <span class="w-full rounded-t-md bg-brand-500/60" style="height: {{ $h }}%"></span>
-                                @endforeach
+                    @endforeach
+
+                    <div class="rounded-md bg-site-cream p-4 sm:col-span-4" aria-hidden="true">
+                        <svg class="h-36 w-full text-site-primary" viewBox="0 0 400 120" preserveAspectRatio="none" fill="none">
+                            <defs>
+                                <linearGradient id="showcase-fill" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0" stop-color="currentColor" stop-opacity="0.25" />
+                                    <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0 95 C 30 60, 50 55, 80 70 S 130 30, 160 45 S 210 90, 240 70 S 290 20, 320 40 S 370 75, 400 50 L 400 120 L 0 120 Z" fill="url(#showcase-fill)" />
+                            <path d="M0 95 C 30 60, 50 55, 80 70 S 130 30, 160 45 S 210 90, 240 70 S 290 20, 320 40 S 370 75, 400 50" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div id="showcase-panel-recruitment" role="tabpanel" aria-labelledby="showcase-tab-recruitment" x-show="tab === 'recruitment'" x-cloak class="grid gap-4 p-5 sm:grid-cols-3 sm:p-6">
+                    @foreach (['طلبات جديدة', 'قيد المراجعة', 'تمت المقابلة'] as $col)
+                        <div class="rounded-md bg-site-cream p-4">
+                            <p class="mb-3 font-medium text-site-dark">{{ $col }}</p>
+                            <div class="space-y-2" aria-hidden="true">
+                                <div class="rounded-md bg-white p-3"><div class="h-2 w-3/4 rounded bg-site-primary/40"></div><div class="mt-2 h-2 w-1/2 rounded bg-site-border"></div></div>
+                                <div class="rounded-md bg-white p-3"><div class="h-2 w-2/3 rounded bg-site-primary/25"></div><div class="mt-2 h-2 w-1/3 rounded bg-site-border"></div></div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
 
-                    {{-- Recruitment pipeline — real JobApplication statuses --}}
-                    <div x-show="tab === 'recruitment'" x-cloak class="grid gap-4 p-6 sm:grid-cols-3">
-                        @foreach (['طلبات جديدة', 'قيد المراجعة', 'تمت المقابلة'] as $col)
-                            <div class="rounded-xl bg-ink-800 p-4">
-                                <p class="mb-3 text-xs font-semibold text-mist-300">{{ $col }}</p>
-                                <div class="space-y-2">
-                                    <div class="rounded-lg bg-ink-900 p-3"><div class="h-2 w-3/4 rounded bg-brand-500/40"></div><div class="mt-2 h-2 w-1/2 rounded bg-ink-700"></div></div>
-                                    <div class="rounded-lg bg-ink-900 p-3"><div class="h-2 w-2/3 rounded bg-brand-500/30"></div><div class="mt-2 h-2 w-1/3 rounded bg-ink-700"></div></div>
+                <div id="showcase-panel-payroll" role="tabpanel" aria-labelledby="showcase-tab-payroll" x-show="tab === 'payroll'" x-cloak class="p-5 sm:p-6">
+                    <div class="overflow-hidden rounded-md bg-site-cream">
+                        @foreach (['أحمد السالم' => '12,500', 'نورة القحطاني' => '9,800', 'خالد العتيبي' => '15,200'] as $name => $amount)
+                            <div class="flex items-center justify-between border-b border-white px-4 py-3 last:border-0">
+                                <div class="flex items-center gap-3">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-white font-semibold text-site-primary-ink">{{ mb_substr($name, 0, 1) }}</span>
+                                    <span class="text-site-dark">{{ $name }}</span>
                                 </div>
+                                <span class="font-semibold text-site-primary-ink" dir="ltr">{{ $amount }} SAR</span>
                             </div>
                         @endforeach
-                    </div>
-
-                    {{-- Payroll --}}
-                    <div x-show="tab === 'payroll'" x-cloak class="p-6">
-                        <div class="overflow-hidden rounded-xl bg-ink-800">
-                            @foreach (['أحمد السالم' => '12,500', 'نورة القحطاني' => '9,800', 'خالد العتيبي' => '15,200'] as $name => $amount)
-                                <div class="flex items-center justify-between border-b border-ink-900 px-4 py-3 last:border-0">
-                                    <div class="flex items-center gap-3">
-                                        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-500/15 text-xs font-bold text-brand-300">{{ mb_substr($name, 0, 1) }}</span>
-                                        <span class="text-sm text-mist-200">{{ $name }}</span>
-                                    </div>
-                                    <span class="font-display text-sm font-bold text-brand-300" dir="ltr">{{ $amount }} SAR</span>
-                                </div>
-                            @endforeach
-                        </div>
                     </div>
                 </div>
             </div>

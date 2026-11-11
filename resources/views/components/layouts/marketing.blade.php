@@ -16,7 +16,7 @@
     ADR-10 still governs: everything below uses logical `ps-*`/`pe-*`/`start`/`end`
     properties so this keeps working the moment that switcher exists.
 --}}
-<html lang="ar" dir="rtl" class="h-full scroll-smooth">
+<html lang="ar" dir="rtl" class="h-full scroll-smooth scroll-pt-24">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,7 +40,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="h-full bg-mist-50 font-sans text-mist-500 antialiased dark:bg-ink-950 dark:text-mist-300">
+<body class="site min-h-full antialiased">
     {{ $slot }}
 
     {{-- Animated marketing stat counters (x-marketing.stat-counter). Registered
@@ -132,7 +132,7 @@
                 Swal.fire({
                     icon: @js(session('flasher.type', 'success')),
                     title: @js(session('flasher.message')),
-                    confirmButtonColor: '#714b67',
+                    confirmButtonColor: '#fe6019',
                     confirmButtonText: 'حسنًا',
                     timer: 4200,
                     timerProgressBar: true,

@@ -1,8 +1,8 @@
 <x-layouts.app title="الموقع العام">
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50 disabled:cursor-not-allowed disabled:opacity-60';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
-        $cardClass = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6';
+        $inputClass = 'ui-control w-full';
+        $labelClass = 'ui-label';
+        $cardClass = 'ui-card p-4 sm:p-6';
         $errorClass = 'mt-1.5 text-xs text-danger-solid';
         $val = fn (string $key, mixed $default = '') => old($key, $portalSettings->{$key} ?? $default);
         $tabs = [
@@ -34,7 +34,7 @@
     }">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الموقع العام</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الموقع العام</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     تحكم بمحتوى بوابة التوظيف العامة لـ
                     <span class="font-medium text-ink-700 dark:text-mist-200">{{ $tenant?->name }}</span>
@@ -46,7 +46,7 @@
                         href="{{ $previewUrl }}"
                         target="_blank"
                         rel="noopener"
-                        class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200 dark:hover:border-brand-500 dark:hover:text-brand-300"
+                        class="ui-btn ui-btn-secondary"
                     >
                         معاينة الموقع
                     </a>
@@ -176,7 +176,7 @@
                                 <input type="text" :name="`values_json[${index}][title]`" x-model="row.title" placeholder="العنوان" class="{{ $inputClass }}">
                                 <input type="text" :name="`values_json[${index}][desc]`" x-model="row.desc" placeholder="الوصف" class="{{ $inputClass }}">
                                 @if ($canUpdate)
-                                    <button type="button" @click="values.length === 1 ? values[0] = { title: '', desc: '' } : values.splice(index, 1)" class="rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600">حذف</button>
+                                    <button type="button" @click="values.length === 1 ? values[0] = { title: '', desc: '' } : values.splice(index, 1)" class="ui-btn ui-btn-secondary">حذف</button>
                                 @endif
                             </div>
                         </template>
@@ -216,7 +216,7 @@
                                 <input type="text" :name="`services_json[${index}][icon]`" x-model="row.icon" placeholder="أيقونة (ops/tech/...)" dir="ltr" class="{{ $inputClass }}">
                                 <input type="text" :name="`services_json[${index}][description]`" x-model="row.description" placeholder="الوصف" class="{{ $inputClass }} sm:col-span-2">
                                 @if ($canUpdate)
-                                    <button type="button" @click="services.length === 1 ? services[0] = { title: '', description: '', icon: 'ops' } : services.splice(index, 1)" class="rounded-xl border border-mist-200 px-3 py-2 text-sm sm:col-span-2 dark:border-ink-600">حذف</button>
+                                    <button type="button" @click="services.length === 1 ? services[0] = { title: '', description: '', icon: 'ops' } : services.splice(index, 1)" class="ui-btn ui-btn-secondary sm:col-span-2">حذف</button>
                                 @endif
                             </div>
                         </template>
@@ -255,7 +255,7 @@
                                 <input type="text" :name="`culture_perks_json[${index}][title]`" x-model="row.title" placeholder="العنوان" class="{{ $inputClass }}">
                                 <input type="text" :name="`culture_perks_json[${index}][description]`" x-model="row.description" placeholder="الوصف" class="{{ $inputClass }}">
                                 @if ($canUpdate)
-                                    <button type="button" @click="culture.length === 1 ? culture[0] = { title: '', description: '' } : culture.splice(index, 1)" class="rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600">حذف</button>
+                                    <button type="button" @click="culture.length === 1 ? culture[0] = { title: '', description: '' } : culture.splice(index, 1)" class="ui-btn ui-btn-secondary">حذف</button>
                                 @endif
                             </div>
                         </template>
@@ -289,7 +289,7 @@
                                 <input type="text" :name="`stats_json[${index}][value]`" x-model="row.value" placeholder="القيمة" dir="ltr" class="{{ $inputClass }}">
                                 <input type="text" :name="`stats_json[${index}][suffix]`" x-model="row.suffix" placeholder="+" dir="ltr" class="{{ $inputClass }}">
                                 @if ($canUpdate)
-                                    <button type="button" @click="stats.length === 1 ? stats[0] = { label: '', value: '', suffix: '' } : stats.splice(index, 1)" class="rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600">حذف</button>
+                                    <button type="button" @click="stats.length === 1 ? stats[0] = { label: '', value: '', suffix: '' } : stats.splice(index, 1)" class="ui-btn ui-btn-secondary">حذف</button>
                                 @endif
                             </div>
                         </template>
@@ -352,7 +352,7 @@
                                 <input type="text" :name="`faqs_json[${index}][question]`" x-model="row.question" placeholder="السؤال" class="{{ $inputClass }}">
                                 <textarea :name="`faqs_json[${index}][answer]`" x-model="row.answer" rows="2" placeholder="الجواب" class="{{ $inputClass }}"></textarea>
                                 @if ($canUpdate)
-                                    <button type="button" @click="faqs.length === 1 ? faqs[0] = { question: '', answer: '' } : faqs.splice(index, 1)" class="rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600">حذف</button>
+                                    <button type="button" @click="faqs.length === 1 ? faqs[0] = { question: '', answer: '' } : faqs.splice(index, 1)" class="ui-btn ui-btn-secondary">حذف</button>
                                 @endif
                             </div>
                         </template>
@@ -421,7 +421,7 @@
 
             @can('tenant.settings.update')
                 <div class="flex justify-end">
-                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-[0.98]">
+                    <button type="submit" class="ui-btn ui-btn-primary">
                         حفظ إعدادات الموقع
                     </button>
                 </div>

@@ -1,6 +1,6 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
     $isEdit = ($method ?? 'POST') !== 'POST';
     $rolePermissionsMap = $rolePermissionsMap ?? [];
@@ -48,7 +48,7 @@
         @method($method)
     @endif
 
-    <div class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="ui-card space-y-4 p-4">
         <div>
             <label for="name" class="{{ $labelClass }}">الاسم الكامل</label>
             <input id="name" type="text" name="name" value="{{ old('name', $member->name) }}" required class="{{ $inputClass }}">
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <div class="rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="ui-card">
         <button
             type="button"
             @click="permissionsOpen = ! permissionsOpen"
@@ -119,7 +119,7 @@
             </p>
             <div class="grid gap-4 lg:grid-cols-2">
                 @foreach ($permissionGroups as $domain => $group)
-                    <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-900/40">
+                    <section class="ui-card p-4">
                         <h3 class="mb-3 font-display text-sm font-medium text-ink-900 dark:text-ink-50">{{ $group['label'] }}</h3>
                         <div class="space-y-2">
                             @foreach ($group['permissions'] as $permission => $permissionLabel)
@@ -151,7 +151,7 @@
         </div>
     </div>
 
-    <div class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="ui-card space-y-4 p-4">
         @if ($isEdit)
             <label class="flex items-center gap-2 rounded-xl border border-mist-200 px-3 py-2 text-sm text-ink-700 dark:border-ink-600 dark:text-mist-200">
                 <input type="hidden" name="reset_password" value="0">
@@ -187,6 +187,6 @@
 
     <div class="flex justify-end gap-3">
         <a href="{{ route('team.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">حفظ</button>
+        <button type="submit" class="ui-btn ui-btn-primary">حفظ</button>
     </div>
 </form>

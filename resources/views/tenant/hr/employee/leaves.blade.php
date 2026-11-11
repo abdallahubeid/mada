@@ -1,9 +1,9 @@
 @php
     use App\Domain\Tenancy\Enums\LeaveRequestStatus;
 
-    $card = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $card = 'ui-card p-4';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
     $statusClasses = [
@@ -34,7 +34,7 @@
                     </p>
                 </div>
                 @can('hr.my_leaves.view')
-                    <button type="button" @click="leaveOpen = true" class="inline-flex items-center rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                    <button type="button" @click="leaveOpen = true" class="ui-btn ui-btn-primary">
                         طلب إجازة جديد
                     </button>
                 @endcan
@@ -63,7 +63,7 @@
             {{-- History --}}
             <div class="space-y-4">
                 <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">سجل طلباتي</h2>
-                <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card w-full overflow-x-auto">
                     <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                         <thead class="bg-mist-50 dark:bg-ink-900">
                             <tr>
@@ -147,7 +147,7 @@
                                     <p class="{{ $errorClass }}">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <button type="submit" class="w-full rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                            <button type="submit" class="ui-btn ui-btn-primary w-full">
                                 إرسال الطلب
                             </button>
                         </form>

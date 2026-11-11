@@ -17,27 +17,27 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 @can('hr.leaves.manage_types')
-                    <button type="button" @click="typeOpen = true" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">نوع إجازة</button>
+                    <button type="button" @click="typeOpen = true" class="ui-btn ui-btn-secondary">نوع إجازة</button>
                 @endcan
                 @can('hr.leaves.create')
-                    <button type="button" @click="requestOpen = true" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">طلب إجازة</button>
+                    <button type="button" @click="requestOpen = true" class="ui-btn ui-btn-primary">طلب إجازة</button>
                 @endcan
             </div>
         </div>
 
         <div class="grid gap-3 sm:grid-cols-3">
             @foreach ($leaveTypes as $type)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="font-semibold text-ink-900 dark:text-ink-50">{{ $type->name }}</p>
                     <p class="mt-1 text-sm text-mist-500">{{ $type->annual_days }} يوم سنوياً · {{ $type->requires_approval ? 'يتطلب اعتماداً' : 'تلقائي' }}</p>
                 </div>
             @endforeach
         </div>
 
-        <form method="GET" action="{{ route('hr.leaves.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-3 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('hr.leaves.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-3">
             <div>
-                <label class="mb-1.5 block text-xs text-mist-500">الحالة</label>
-                <select name="status" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                <label for="f-index-status-1" class="mb-1.5 block text-xs text-mist-500">الحالة</label>
+                <select id="f-index-status-1" name="status" class="ui-control w-full">
                     <option value="all" @selected($filters['status'] === 'all')>الكل</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}" @selected($filters['status'] === $status->value)>{{ $status->label() }}</option>
@@ -45,8 +45,8 @@
                 </select>
             </div>
             <div>
-                <label class="mb-1.5 block text-xs text-mist-500">الموظف</label>
-                <select name="employee_id" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                <label for="f-index-employee-id-2" class="mb-1.5 block text-xs text-mist-500">الموظف</label>
+                <select id="f-index-employee-id-2" name="employee_id" class="ui-control w-full">
                     <option value="all" @selected($filters['employee_id'] === 'all')>الكل</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" @selected($filters['employee_id'] === (string) $employee->id)>{{ $employee->full_name }}</option>
@@ -54,11 +54,11 @@
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="rounded-xl bg-ink-900 px-4 py-2 text-sm font-semibold text-white dark:bg-ink-50 dark:text-ink-900">تصفية</button>
+                <button type="submit" class="ui-btn ui-btn-secondary">تصفية</button>
             </div>
         </form>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -90,11 +90,11 @@
                                         @can('hr.leaves.approve')
                                             <form method="POST" action="{{ route('hr.leaves.approve', $leaveRequest) }}">
                                                 @csrf
-                                                <button type="submit" class="rounded-lg border border-brand-500/40 px-3 py-1.5 text-xs font-semibold text-brand-700">اعتماد</button>
+                                                <button type="submit" class="ui-btn ui-btn-secondary ui-btn-sm">اعتماد</button>
                                             </form>
                                             <form method="POST" action="{{ route('hr.leaves.reject', $leaveRequest) }}">
                                                 @csrf
-                                                <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">رفض</button>
+                                                <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">رفض</button>
                                             </form>
                                         @endcan
                                     @endif
@@ -116,13 +116,13 @@
                     <h3 class="font-semibold">إضافة نوع إجازة</h3>
                     <form method="POST" action="{{ route('hr.leaves.types.store') }}" class="mt-4 space-y-3">
                         @csrf
-                        <input type="text" name="name" required placeholder="الاسم" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
-                        <input type="number" name="annual_days" value="14" min="1" required class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                        <input type="text" name="name" required placeholder="الاسم" class="ui-control w-full">
+                        <input type="number" name="annual_days" value="14" min="1" required class="ui-control w-full">
                         <label class="inline-flex items-center gap-2 text-sm">
                             <input type="checkbox" name="requires_approval" value="1" checked>
                             يتطلب اعتماداً
                         </label>
-                        <button type="submit" class="w-full rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">حفظ</button>
+                        <button type="submit" class="w-full ui-btn ui-btn-primary">حفظ</button>
                     </form>
                 </div>
             </div>
@@ -134,30 +134,30 @@
                     <h3 class="font-semibold">طلب إجازة</h3>
                     <form method="POST" action="{{ route('hr.leaves.requests.store') }}" class="mt-4 space-y-3">
                         @csrf
-                        <select name="employee_id" required class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                        <select name="employee_id" required class="ui-control w-full">
                             @foreach ($employees as $employee)
                                 <option value="{{ $employee->id }}">{{ $employee->full_name }}</option>
                             @endforeach
                         </select>
-                        <select name="leave_type_id" required class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                        <select name="leave_type_id" required class="ui-control w-full">
                             @foreach ($leaveTypes as $type)
                                 <option value="{{ $type->id }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
                         <div class="grid gap-3 sm:grid-cols-2">
-                            <input type="date" name="start_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
-                            <input type="date" name="end_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                            <input type="date" name="start_date" required dir="ltr" class="ui-control w-full">
+                            <input type="date" name="end_date" required dir="ltr" class="ui-control w-full">
                         </div>
-                        <textarea name="reason" rows="2" placeholder="السبب" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"></textarea>
+                        <textarea name="reason" rows="2" placeholder="السبب" class="ui-control w-full"></textarea>
                         <label class="flex items-center gap-2 text-sm text-ink-700 dark:text-mist-200">
                             <input type="checkbox" name="requires_manager_escalation" value="1" class="rounded border-mist-300 text-brand-500 focus:ring-brand-500">
                             يتطلب تصعيد المدير (اعتماد متعدد المستويات)
                         </label>
                         <div>
-                            <label class="mb-1 block text-xs text-mist-500">عدد مستويات الاعتماد</label>
-                            <input type="number" name="approval_level" min="1" max="5" value="2" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                            <label for="f-index-approval-level-3" class="mb-1 block text-xs text-mist-500">عدد مستويات الاعتماد</label>
+                            <input id="f-index-approval-level-3" type="number" name="approval_level" min="1" max="5" value="2" class="ui-control w-full">
                         </div>
-                        <button type="submit" class="w-full rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">إرسال</button>
+                        <button type="submit" class="w-full ui-btn ui-btn-primary">إرسال</button>
                     </form>
                 </div>
             </div>

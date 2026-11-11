@@ -18,14 +18,14 @@
             </div>
         </div>
 
-        <form method="GET" action="{{ route('hr.attendance.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-4 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('hr.attendance.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-4">
             <div>
                 <label for="date" class="mb-1.5 block text-xs font-medium text-mist-500">التاريخ</label>
-                <input id="date" type="date" name="date" dir="ltr" value="{{ $filters['date'] }}" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <input id="date" type="date" name="date" dir="ltr" value="{{ $filters['date'] }}" class="ui-control w-full">
             </div>
             <div>
                 <label for="employee_id" class="mb-1.5 block text-xs font-medium text-mist-500">الموظف</label>
-                <select id="employee_id" name="employee_id" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="employee_id" name="employee_id" class="ui-control w-full">
                     <option value="all" @selected($filters['employee_id'] === 'all')>الكل</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" @selected($filters['employee_id'] === (string) $employee->id)>{{ $employee->full_name }}</option>
@@ -34,7 +34,7 @@
             </div>
             <div>
                 <label for="status" class="mb-1.5 block text-xs font-medium text-mist-500">الحالة</label>
-                <select id="status" name="status" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="status" name="status" class="ui-control w-full">
                     <option value="all" @selected($filters['status'] === 'all')>الكل</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}" @selected($filters['status'] === $status->value)>{{ $status->label() }}</option>
@@ -42,12 +42,12 @@
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="rounded-xl bg-ink-900 px-4 py-2 text-sm font-semibold text-white dark:bg-ink-50 dark:text-ink-900">تصفية</button>
+                <button type="submit" class="ui-btn ui-btn-secondary">تصفية</button>
             </div>
         </form>
 
         @can('hr.attendance.create')
-            <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <section class="ui-card p-4">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">تسجيل سريع</h2>
                 <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($employees->take(12) as $employee)
@@ -71,7 +71,7 @@
                                     <form method="POST" action="{{ route('hr.attendance.check-in') }}">
                                         @csrf
                                         <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-                                        <button type="submit" class="rounded-lg bg-brand-500 px-2.5 py-1 text-xs font-semibold text-white">حضور</button>
+                                        <button type="submit" class="ui-btn ui-btn-primary ui-btn-sm">حضور</button>
                                     </form>
                                 @elseif ($today->check_out === null)
                                     <form method="POST" action="{{ route('hr.attendance.check-out') }}">
@@ -89,7 +89,7 @@
             </section>
         @endcan
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>

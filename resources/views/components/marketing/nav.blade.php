@@ -1,8 +1,8 @@
 @php
     /*
-     * Shared marketing top nav (docs/MARKETING.md §5.1). Sticky + blurred,
-     * RTL-native, dark-elevated theme with a persistent trial CTA and theme
-     * toggle. Links use final marketing paths; active state via request()->is().
+     * Shared marketing top nav (docs/MARKETING.md §5.1), styled after the
+     * Andromeda header: fixed white bar that tightens and gains a shadow once
+     * the page scrolls, slides away on scroll-down and returns on scroll-up.
      */
     $links = [
         ['label' => 'الصفحة الرئيسية', 'path' => '/', 'route' => 'landing'],
@@ -54,102 +54,124 @@
     }
 @endphp
 
+<div class="site-header-spacer" aria-hidden="true"></div>
+
 <header
-    x-data="{ mobileOpen: false }"
-    class="sticky top-0 z-40 border-b border-mist-200/70 bg-white/80 backdrop-blur-md dark:border-ink-800 dark:bg-ink-900/80"
+    x-data="{
+        mobileOpen: false,
+        sticky: false,
+        hidden: false,
+        lastY: 0,
+        track() {
+            const y = window.scrollY;
+            this.sticky = y > 0;
+            this.hidden = ! this.mobileOpen && y > this.$el.offsetHeight + 200 && y > this.lastY;
+            this.lastY = y;
+        },
+    }"
+    x-init="track()"
+    @scroll.window.passive="track()"
+    @focusin="hidden = false"
+    :class="{ 'is-sticky': sticky, 'is-unpinned': hidden }"
+    class="site-header"
 >
-    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="{{ route('landing') }}" class="flex shrink-0 items-center gap-2.5">
+    <div class="site-container-xl flex items-center justify-between gap-6">
+        <a href="{{ route('landing') }}" class="flex shrink-0 items-center gap-2.5" aria-label="مدى — الصفحة الرئيسية">
             @if ($logoUrl = \App\Models\Setting::assetUrl($settings['site_logo'] ?? null))
                 <img src="{{ $logoUrl }}" alt="مدى" class="h-10 max-h-10 w-auto max-w-[220px] shrink-0 object-contain object-start">
             @else
-                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 font-display text-sm font-bold text-white shadow-glow">م</span>
-                <span class="font-display text-xl font-bold text-ink-900 dark:text-white">مدى <span class="text-brand-600 dark:text-brand-300">ERP</span></span>
+                <span class="flex h-9 w-9 items-center justify-center rounded-md bg-site-primary text-lg font-semibold text-white">م</span>
+                <span class="text-2xl font-semibold text-site-dark">مدى</span>
             @endif
         </a>
 
-        <nav class="hidden items-center gap-8 lg:flex" aria-label="التنقّل الرئيسي">
-            @foreach ($links as $link)
-                @php
-                    $active = ($link['route'] ?? null)
-                        ? request()->routeIs($link['route'])
-                        : false;
-                @endphp
-                <a
-                    href="{{ $link['path'] }}"
-                    @class([
-                        'text-sm font-medium transition duration-200',
-                        'text-brand-600 dark:text-brand-300' => $active,
-                        'text-ink-600 hover:text-brand-600 dark:text-mist-300 dark:hover:text-brand-300' => ! $active,
-                    ])
-                >{{ $link['label'] }}</a>
-            @endforeach
+        <nav class="hidden xl:block" aria-label="التنقّل الرئيسي">
+            <ul class="flex items-center">
+                @foreach ($links as $link)
+                    @php
+                        $active = ($link['route'] ?? null)
+                            ? request()->routeIs($link['route'])
+                            : false;
+                    @endphp
+                    <li>
+                        <a
+                            href="{{ $link['path'] }}"
+                            class="site-nav-link whitespace-nowrap"
+                            @if ($active) aria-current="page" @endif
+                        >{{ $link['label'] }}</a>
+                    </li>
+                @endforeach
+            </ul>
         </nav>
 
-        <div class="hidden items-center gap-4 lg:flex">
+        <div class="flex items-center gap-2">
+            <div class="hidden items-center gap-2 whitespace-nowrap xl:flex">
+                @auth
+                    <a href="{{ $workspaceUrl }}" class="site-btn site-btn--compact site-btn-primary">{{ $workspaceLabel }}</a>
+                @endauth
 
-            @auth
-                <a
-                    href="{{ $workspaceUrl }}"
-                    class="rounded-md bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition duration-200 ease-in-out hover:bg-brand-600 active:scale-[0.98]"
-                >
-                    {{ $workspaceLabel }}
-                </a>
-            @endauth
+                @guest
+                    <a href="{{ route('login') }}" class="site-nav-link">تسجيل الدخول</a>
+                    <a href="{{ route('register') }}" class="site-btn site-btn--compact site-btn-primary">ابدأ التجربة المجانية</a>
+                @endguest
+            </div>
 
-            @guest
-                <a href="{{ route('login') }}" class="text-sm font-medium text-ink-600 transition duration-200 hover:text-brand-600 dark:text-mist-300 dark:hover:text-brand-300">
-                    تسجيل الدخول
-                </a>
-                <a
-                    href="{{ route('register') }}"
-                    class="rounded-md bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition duration-200 ease-in-out hover:bg-brand-600 active:scale-[0.98]"
-                >
-                    ابدأ التجربة المجانية
-                </a>
-            @endguest
+            {{-- The template's toggler: a 3×3 grid of squares, swapped for a cross when open. --}}
+            <button
+                type="button"
+                @click="mobileOpen = ! mobileOpen"
+                class="flex h-11 w-11 items-center justify-center text-site-dark xl:hidden"
+                :aria-expanded="mobileOpen ? 'true' : 'false'"
+                aria-controls="site-mobile-menu"
+                :aria-label="mobileOpen ? 'إغلاق القائمة' : 'فتح القائمة'"
+                aria-label="فتح القائمة"
+            >
+                <svg x-show="! mobileOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="h-7 w-7" aria-hidden="true">
+                    <path fill="currentColor" d="M 5 5 L 5 11 L 11 11 L 11 5 L 5 5 z M 13 5 L 13 11 L 19 11 L 19 5 L 13 5 z M 21 5 L 21 11 L 27 11 L 27 5 L 21 5 z M 7 7 L 9 7 L 9 9 L 7 9 L 7 7 z M 15 7 L 17 7 L 17 9 L 15 9 L 15 7 z M 23 7 L 25 7 L 25 9 L 23 9 L 23 7 z M 5 13 L 5 19 L 11 19 L 11 13 L 5 13 z M 13 13 L 13 19 L 19 19 L 19 13 L 13 13 z M 21 13 L 21 19 L 27 19 L 27 13 L 21 13 z M 7 15 L 9 15 L 9 17 L 7 17 L 7 15 z M 15 15 L 17 15 L 17 17 L 15 17 L 15 15 z M 23 15 L 25 15 L 25 17 L 23 17 L 23 15 z M 5 21 L 5 27 L 11 27 L 11 21 L 5 21 z M 13 21 L 13 27 L 19 27 L 19 21 L 13 21 z M 21 21 L 21 27 L 27 27 L 27 21 L 21 21 z M 7 23 L 9 23 L 9 25 L 7 25 L 7 23 z M 15 23 L 17 23 L 17 25 L 15 25 L 15 23 z M 23 23 L 25 23 L 25 25 L 23 25 L 23 23 z" />
+                </svg>
+                <svg x-show="mobileOpen" x-cloak xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" d="M6 6l12 12M18 6 6 18" />
+                </svg>
+            </button>
         </div>
-
-        <button
-            type="button"
-            @click="mobileOpen = !mobileOpen"
-            class="rounded-lg p-2 text-mist-500 transition duration-200 hover:bg-mist-100 active:scale-90 lg:hidden dark:text-mist-400 dark:hover:bg-ink-800"
-            aria-label="فتح القائمة"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-        </button>
     </div>
 
-    {{-- Mobile menu --}}
+    {{-- Mobile menu: the template drops the links into a centred full-width list. --}}
     <div
+        id="site-mobile-menu"
         x-show="mobileOpen"
         x-cloak
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 -translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-2"
-        class="border-t border-mist-200 bg-white px-4 py-4 lg:hidden dark:border-ink-800"
+        x-transition.opacity.duration.200ms
+        class="site-container-xl xl:hidden"
     >
-        <nav class="flex flex-col gap-1" aria-label="التنقّل للجوال">
-            @foreach ($links as $link)
-                <a href="{{ $link['path'] }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">{{ $link['label'] }}</a>
-            @endforeach
-            {{-- Mirrors the desktop bar above: one CTA when signed in, the
-                 login/register pair when not. Kept in step deliberately — a
-                 mobile menu still offering "تسجيل الدخول" to a signed-in user
-                 is the same defect, just on a narrower screen. --}}
-            @auth
-                <a href="{{ $workspaceUrl }}" class="mt-1 rounded-md bg-brand-500 px-5 py-2.5 text-center text-sm font-semibold text-white shadow-glow">{{ $workspaceLabel }}</a>
-            @endauth
+        <nav class="border-t border-site-border pt-3 pb-2 text-center" aria-label="التنقّل للجوال">
+            <ul>
+                @foreach ($links as $link)
+                    @php
+                        $active = ($link['route'] ?? null) ? request()->routeIs($link['route']) : false;
+                    @endphp
+                    <li>
+                        <a href="{{ $link['path'] }}" class="site-nav-link" @if ($active) aria-current="page" @endif>{{ $link['label'] }}</a>
+                    </li>
+                @endforeach
+            </ul>
 
-            @guest
-                <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">تسجيل الدخول</a>
-                <a href="{{ route('register') }}" class="mt-1 rounded-md bg-brand-500 px-5 py-2.5 text-center text-sm font-semibold text-white shadow-glow">ابدأ التجربة المجانية</a>
-            @endguest
+            {{--
+                Mirrors the desktop bar: one CTA when signed in, the
+                login/register pair when not. A mobile menu still offering
+                "تسجيل الدخول" to a signed-in user would be the same defect on
+                a narrower screen.
+            --}}
+            <div class="mt-3 flex flex-col items-stretch gap-2 px-2">
+                @auth
+                    <a href="{{ $workspaceUrl }}" class="site-btn site-btn--compact site-btn-primary">{{ $workspaceLabel }}</a>
+                @endauth
+
+                @guest
+                    <a href="{{ route('login') }}" class="site-nav-link">تسجيل الدخول</a>
+                    <a href="{{ route('register') }}" class="site-btn site-btn--compact site-btn-primary">ابدأ التجربة المجانية</a>
+                @endguest
+            </div>
         </nav>
     </div>
 </header>

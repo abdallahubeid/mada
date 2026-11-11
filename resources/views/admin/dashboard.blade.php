@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">نظرة عامة</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">لوحة التحكم</span>
 @endsection
 
@@ -43,7 +43,7 @@
 
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">مرحبًا، مشرف المنصّة</h2>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">مرحبًا، مشرف المنصّة</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">نظرة حيّة على صحّة المنصّة والإجراءات المطلوبة اليوم.</p>
         </div>
 
@@ -53,7 +53,7 @@
                     href="{{ route('admin.dashboard', ['range' => $key]) }}"
                     @class([
                         'rounded-lg px-3 py-1.5 font-medium transition duration-200',
-                        'bg-brand-500 text-white shadow-sm' => $range === $key,
+                        'bg-brand-action text-white shadow-sm' => $range === $key,
                         'text-mist-500 hover:text-ink-700 dark:hover:text-mist-200' => $range !== $key,
                     ])
                 >{{ $label }}</a>
@@ -61,8 +61,9 @@
         </div>
     </div>
 
-    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3 xl:grid-cols-5">
+    <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6 2xl:grid-cols-5">
         <x-admin.stat-card
+            class="lg:col-span-2 2xl:col-span-1"
             :label="$metrics['total']['label']"
             :value="$metrics['total']['value']"
             :delta="$metrics['total']['delta']"
@@ -70,6 +71,7 @@
             icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6M9 10.5h6M9 14.25h6" /></svg>'
         />
         <x-admin.stat-card
+            class="lg:col-span-2 2xl:col-span-1"
             :label="$metrics['active']['label']"
             :value="$metrics['active']['value']"
             :delta="$metrics['active']['delta']"
@@ -77,6 +79,7 @@
             icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>'
         />
         <x-admin.stat-card
+            class="lg:col-span-2 2xl:col-span-1"
             :label="$metrics['pending']['label']"
             :value="$metrics['pending']['value']"
             :delta="$metrics['pending']['delta']"
@@ -85,6 +88,7 @@
             icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>'
         />
         <x-admin.stat-card
+            class="lg:col-span-3 2xl:col-span-1"
             :label="$metrics['suspended']['label']"
             :value="$metrics['suspended']['value']"
             :delta="$metrics['suspended']['delta']"
@@ -92,6 +96,7 @@
             icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" /></svg>'
         />
         <x-admin.stat-card
+            class="lg:col-span-3 2xl:col-span-1"
             :label="$metrics['mrr']['label']"
             :value="$metrics['mrr']['value']"
             icon='<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>'
@@ -99,7 +104,7 @@
     </div>
 
     <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div class="rounded-2xl border border-mist-200 bg-white shadow-sm lg:col-span-2 dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card lg:col-span-2">
             <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
                 <div class="flex items-center gap-2">
                     <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">بانتظار موافقتك</h3>
@@ -116,7 +121,7 @@
                                 {{ mb_substr($item['company'], 0, 1) }}
                             </span>
                             <div class="min-w-0">
-                                <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="truncate text-sm font-semibold text-ink-900 hover:text-brand-600 dark:text-ink-50 dark:hover:text-brand-300">{{ $item['company'] }}</a>
+                                <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="block truncate py-0.5 text-sm font-semibold text-ink-900 hover:text-brand-600 dark:text-ink-50 dark:hover:text-brand-300">{{ $item['company'] }}</a>
                                 <p class="truncate text-xs text-mist-500 dark:text-mist-400">{{ $item['owner'] }} · {{ $item['email'] }}</p>
                             </div>
                         </div>
@@ -124,7 +129,7 @@
                         <div class="flex items-center gap-2 ps-13 sm:ps-0">
                             <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-medium text-mist-600 dark:bg-ink-700 dark:text-mist-300">{{ $item['plan'] }}</span>
                             <span class="hidden text-xs text-mist-400 sm:inline dark:text-mist-500">{{ $item['waiting'] }}</span>
-                            <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">مراجعة</a>
+                            <a href="{{ route('admin.tenants.show', $item['slug']) }}" class="ui-btn ui-btn-primary ui-btn-sm">مراجعة</a>
                         </div>
                     </li>
                 @empty
@@ -133,12 +138,12 @@
             </ul>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card p-4">
             <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">توزيع حالات المستأجرين</h3>
 
             <div class="mt-4 flex items-center justify-center">
-                <div class="relative h-40 w-40 rounded-md" style="background: {{ $gradient }};">
-                    <div class="absolute inset-[14px] flex flex-col items-center justify-center rounded-md bg-white dark:bg-ink-800">
+                <div class="relative h-40 w-40 rounded-full" style="background: {{ $gradient }};" role="img" aria-label="إجمالي المستأجرين: {{ $total }}">
+                    <div class="absolute inset-[14px] flex flex-col items-center justify-center rounded-full bg-white dark:bg-ink-800">
                         <span class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $total }}</span>
                         <span class="text-xs text-mist-500 dark:text-mist-400">مستأجر</span>
                     </div>
@@ -160,7 +165,7 @@
     </div>
 
     <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card p-4">
             <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">توزيع الخطط</h3>
             <ul class="mt-4 space-y-4">
                 @forelse ($planBreakdown as $plan)
@@ -170,7 +175,7 @@
                             <span class="text-mist-500">{{ $plan['count'] }} · {{ $plan['percent'] }}%</span>
                         </div>
                         <div class="mt-2 h-2 overflow-hidden rounded-full bg-mist-100 dark:bg-ink-700">
-                            <div class="h-full rounded-full bg-brand-500 transition-all" style="width: {{ ($plan['count'] / $planMax) * 100 }}%"></div>
+                            <div class="h-full rounded-full bg-brand-500 transition-[width]" style="width: {{ ($plan['count'] / $planMax) * 100 }}%"></div>
                         </div>
                     </li>
                 @empty
@@ -179,7 +184,7 @@
             </ul>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card">
             <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
                 <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">أحدث التسجيلات</h3>
                 <a href="{{ route('admin.tenants', ['status' => 'all']) }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">الكل</a>
@@ -188,7 +193,7 @@
                 @forelse ($recentSignups as $signup)
                     <li class="flex items-center justify-between gap-3 px-5 py-3">
                         <div class="min-w-0">
-                            <a href="{{ route('admin.tenants.show', $signup['slug']) }}" class="truncate text-sm font-semibold text-ink-900 hover:text-brand-600 dark:text-ink-50">{{ $signup['name'] }}</a>
+                            <a href="{{ route('admin.tenants.show', $signup['slug']) }}" class="block truncate py-0.5 text-sm font-semibold text-ink-900 hover:text-brand-600 dark:text-ink-50">{{ $signup['name'] }}</a>
                             <p class="text-xs text-mist-500">{{ $signup['plan'] }} · {{ $signup['created'] }}</p>
                         </div>
                         <x-admin.status-badge :status="$signup['status']" />
@@ -199,7 +204,7 @@
             </ul>
         </div>
 
-        <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card p-4">
             <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">حالة النظام</h3>
             <ul class="mt-4 space-y-3">
                 @foreach ($systemStatus as $item)
@@ -224,7 +229,7 @@
         </div>
     </div>
 
-    <div class="mt-6 rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+    <div class="ui-card mt-6">
         <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
             <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">آخر نشاطات المنصّة</h3>
             <a href="{{ route('admin.audit-log') }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">سجل النشاط</a>

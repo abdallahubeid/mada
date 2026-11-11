@@ -43,7 +43,7 @@
                             <span class="h-2 w-2 rounded-md bg-brand-500"></span>
                         </div>
                         <div class="flex flex-1 flex-col items-center justify-center gap-4 px-6">
-                            <span class="animate-glow-pulse flex h-16 w-16 items-center justify-center rounded-md border border-brand-500/30 text-brand-300">
+                            <span class="animate-glow-pulse flex h-16 w-16 items-center justify-center rounded-md border border-brand-500/30 text-brand-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-9 w-9">
                                     <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1" opacity="0.35" />
                                     <circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1" opacity="0.6" />
@@ -53,7 +53,7 @@
                                 </svg>
                             </span>
                             <div class="text-center">
-                                <p class="font-display text-xs font-medium uppercase tracking-[0.2em] text-brand-300">System Error</p>
+                                <p class="font-display text-xs font-medium uppercase tracking-[0.2em] text-brand-600">System Error</p>
                                 <p class="mt-1.5 text-xs uppercase tracking-wider text-mist-500">Unauthorized Access Detected</p>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
 
         {{-- "404" digit pill --}}
         <span class="relative z-10 -mt-6 inline-flex items-center justify-center rounded-md border border-mist-700 bg-mist-100 px-5 py-1.5 shadow-xl">
-            <span class="font-display text-4xl font-medium tracking-[-0.96px] text-brand-300 drop-shadow-lg">
+            <span class="font-display text-4xl font-medium tracking-[-0.96px] text-brand-600 drop-shadow-lg">
                 404
             </span>
         </span>
@@ -83,7 +83,7 @@
         <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
             <a
                 href="{{ route('landing') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-2.5 text-base font-semibold text-white shadow-glow transition duration-200 ease-in-out hover:bg-brand-600 active:scale-[0.98]"
+                class="ui-btn ui-btn-primary ui-btn-lg"
             >
                 العودة للرئيسية
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -93,7 +93,7 @@
             <button
                 type="button"
                 onclick="history.back()"
-                class="inline-flex items-center justify-center gap-2 rounded-xl border border-mist-700 px-6 py-2.5 text-base font-semibold text-ink-900 transition duration-200 ease-in-out hover:border-brand-500 hover:text-brand-300 active:scale-[0.98]"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-mist-700 px-6 py-2.5 text-base font-semibold text-ink-900 transition duration-200 ease-in-out hover:border-brand-500 hover:text-brand-600 active:scale-[0.98]"
             >
                 العودة للخلف
             </button>
@@ -103,11 +103,11 @@
         <div class="relative z-10 mt-16 w-full border-t border-mist-700/40 pt-8 sm:mt-24">
             <div class="mx-auto flex max-w-xl flex-col items-center justify-between gap-4 text-sm font-medium text-mist-600/60 sm:flex-row">
                 <div class="flex items-center gap-6">
-                    <a href="{{ route('landing') }}#contact" class="transition hover:text-brand-300">سياسة الأمان</a>
-                    <a href="{{ route('landing') }}#contact" class="transition hover:text-brand-300">الدعم الفني</a>
+                    <a href="{{ route('landing') }}#contact" class="transition hover:text-brand-600">سياسة الأمان</a>
+                    <a href="{{ route('landing') }}#contact" class="transition hover:text-brand-600">الدعم الفني</a>
                 </div>
                 <p>© {{ now()->year }} مدى. جميع الحقوق محفوظة.</p>
-                <p class="font-display text-lg font-medium text-brand-300">مدى</p>
+                <p class="font-display text-lg font-medium text-brand-600">مدى</p>
             </div>
         </div>
     </div>

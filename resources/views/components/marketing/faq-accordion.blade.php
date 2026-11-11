@@ -24,28 +24,25 @@
 @endphp
 
 @if ($framed)
-<section class="bg-mist-50 py-24">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+<section class="site-section">
+    <div class="site-container max-w-4xl">
         @if ($sectionTitle !== '')
             <x-marketing.section-heading :title="$sectionTitle" :subtitle="$sectionSubtitle" />
         @endif
 
-        <div @class(['mt-12' => $sectionTitle !== '', 'space-y-3' => true]) x-data="{ open: 0 }">
+        <div @class(['mt-10' => $sectionTitle !== '', 'space-y-2' => true]) x-data="{ open: 0 }">
             @include('components.marketing.partials.faq-items', ['items' => $faqs])
         </div>
 
         @if ($limit)
-            <div class="mt-8 text-center">
-                <a href="{{ route('marketing.faq') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 transition hover:gap-3 dark:text-brand-300">
-                    عرض جميع الأسئلة
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" /></svg>
-                </a>
+            <div class="mt-10 text-center">
+                <a href="{{ route('marketing.faq') }}" class="site-btn site-btn-outline">عرض جميع الأسئلة</a>
             </div>
         @endif
     </div>
 </section>
 @else
-<div class="space-y-3" x-data="{ open: 0 }">
+<div class="space-y-2" x-data="{ open: 0 }">
     @include('components.marketing.partials.faq-items', ['items' => $faqs])
 </div>
 @endif

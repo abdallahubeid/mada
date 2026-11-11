@@ -27,7 +27,7 @@
                         <option value="{{ $department }}" @selected(($filters['department'] ?? '') === $department)>{{ $department }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
+                <button type="submit" class="rounded-xl bg-brand-action px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
                     تصفية النتائج
                 </button>
             </form>
@@ -46,7 +46,7 @@
                     <p class="mt-2 flex-1 text-sm text-mist-500 dark:text-mist-400">{{ $job['summary'] }}</p>
                     <p class="mt-3 text-xs text-mist-400">{{ $job['location'] }} · {{ $job['type'] }}</p>
                     <div class="mt-4 flex gap-2">
-                        <a href="{{ route('portal.jobs.show', [$slug, $job['slug']]) }}" class="inline-flex flex-1 items-center justify-center rounded-xl bg-brand-500 px-3 py-2 text-sm font-bold text-white transition hover:bg-brand-600">
+                        <a href="{{ route('portal.jobs.show', [$slug, $job['slug']]) }}" class="inline-flex flex-1 items-center justify-center rounded-xl bg-brand-action px-3 py-2 text-sm font-bold text-white transition hover:bg-brand-600">
                             تقديم سريع
                         </a>
                         <a href="{{ route('portal.jobs.show', [$slug, $job['slug']]) }}" class="inline-flex items-center justify-center rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 dark:border-ink-600 dark:text-mist-200">

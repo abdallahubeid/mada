@@ -4,21 +4,21 @@
 
 @section('breadcrumbs')
     <a href="{{ route('admin.tenants') }}" class="text-mist-500 hover:text-brand-600 dark:text-mist-400 dark:hover:text-brand-300">المستأجرون</a>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span>
 @endsection
 
 @section('content')
     <div x-data="{ modal: null }">
         {{-- Header --}}
-        <div class="flex flex-col gap-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-4">
                 <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-500/15 font-display text-xl font-medium text-brand-600 dark:text-brand-300">
                     {{ mb_substr($tenant['name'], 0, 1) }}
                 </span>
                 <div class="min-w-0">
                     <div class="flex flex-wrap items-center gap-2">
-                        <h2 class="font-display text-xl font-medium text-ink-900 dark:text-ink-50">{{ $tenant['name'] }}</h2>
+                        <h1 class="font-display text-xl font-medium text-ink-900 dark:text-ink-50">{{ $tenant['name'] }}</h1>
                         <x-admin.status-badge :status="$tenant['status']" />
                     </div>
                     <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">{{ $tenant['slug'] }}.mada.app · انضم في {{ $tenant['member_since'] }}</p>
@@ -29,14 +29,14 @@
             <div class="flex flex-wrap items-center gap-2">
                 @switch($tenant['status'])
                     @case('pending_approval')
-                        <button type="button" @click="modal = 'approve'" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تفعيل</button>
-                        <button type="button" @click="modal = 'reject'" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-95 dark:border-ink-600 dark:text-mist-300">رفض</button>
+                        <button type="button" @click="modal = 'approve'" class="ui-btn ui-btn-primary">تفعيل</button>
+                        <button type="button" @click="modal = 'reject'" class="ui-btn ui-btn-danger-outline">رفض</button>
                         @break
                     @case('active')
-                        <button type="button" @click="modal = 'suspend'" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-95 dark:border-ink-600 dark:text-mist-300">إيقاف</button>
+                        <button type="button" @click="modal = 'suspend'" class="ui-btn ui-btn-danger-outline">إيقاف</button>
                         @break
                     @case('suspended')
-                        <button type="button" @click="modal = 'reactivate'" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">إعادة تفعيل</button>
+                        <button type="button" @click="modal = 'reactivate'" class="ui-btn ui-btn-primary">إعادة تفعيل</button>
                         @break
                     @case('cancelled')
                         <span class="rounded-xl bg-mist-100 px-4 py-2 text-sm font-medium text-mist-500 dark:bg-ink-700 dark:text-mist-400">عرض فقط · يُحذف خلال 90 يومًا</span>
@@ -76,7 +76,7 @@
         @endif
 
         {{-- Marketing opt-in (docs/ADMIN_CMS_ANALYSIS.md) --}}
-        <div class="mt-6 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card mt-6 p-4">
             <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">الظهور في التسويق</h3>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تفعيل ظهور المستأجر في شريط الشركاء ورفع شعار التسويق.</p>
 
@@ -102,11 +102,11 @@
                             </div>
                         @endif
                         <input type="file" name="marketing_logo" accept="image/*" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
-                        <input type="text" name="alt_text" value="{{ old('alt_text') }}" placeholder="نص بديل للشعار" class="mt-2 w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                        <input type="text" name="alt_text" value="{{ old('alt_text') }}" placeholder="نص بديل للشعار" class="ui-control mt-2 w-full">
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">حفظ إعدادات التسويق</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">حفظ إعدادات التسويق</button>
                     </div>
                 </form>
             @else
@@ -142,7 +142,7 @@
 
         <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
             {{-- Usage snapshot vs plan limits --}}
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm lg:col-span-2 dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4 lg:col-span-2">
                 <div class="flex items-center justify-between">
                     <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">الاستهلاك مقابل حدود الخطة</h3>
                     <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold uppercase text-mist-500 dark:bg-ink-700 dark:text-mist-400">مرجعي · المرحلة 4</span>
@@ -160,7 +160,7 @@
                                 <span class="text-mist-500 dark:text-mist-400">{{ $usage['used'] }} / {{ $usage['limit'] }}</span>
                             </div>
                             <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-mist-100 dark:bg-ink-700">
-                                <div class="h-full rounded-full {{ $bar }} transition-all duration-500 ease-out" style="width: {{ $pct }}%"></div>
+                                <div class="h-full rounded-full {{ $bar }} transition-[width] duration-500 ease-out" style="width: {{ $pct }}%"></div>
                             </div>
                         </div>
                     @endforeach
@@ -168,7 +168,7 @@
             </div>
 
             {{-- Owner / CEO profile --}}
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">مالك الحساب</h3>
 
                 <div class="mt-4 flex items-center gap-3">
@@ -203,7 +203,7 @@
             </div>
 
             {{-- Tenant audit log slice --}}
-            <div class="rounded-2xl border border-mist-200 bg-white shadow-sm lg:col-span-2 dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card lg:col-span-2">
                 <div class="flex items-center justify-between border-b border-mist-100 px-5 py-4 dark:border-ink-700">
                     <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">سجل نشاط المستأجر</h3>
                     <a href="{{ Route::has('admin.audit-log') ? route('admin.audit-log') : '#' }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-300">عرض في السجل الكامل</a>
@@ -231,14 +231,14 @@
 
                 <div class="mt-4 space-y-2">
                     @if ($tenant['status'] === 'active')
-                        <button type="button" @click="modal = 'suspend'" class="w-full rounded-xl border border-danger-solid/40 px-4 py-2 text-sm font-semibold text-danger-solid transition duration-200 hover:bg-danger-solid/10 active:scale-[0.98]">إيقاف المستأجر</button>
+                        <button type="button" @click="modal = 'suspend'" class="ui-btn ui-btn-danger-outline w-full">إيقاف المستأجر</button>
                     @endif
                     @if ($tenant['status'] !== 'cancelled')
-                        <button type="button" @click="modal = 'cancel'" class="w-full rounded-xl border border-danger-solid/40 px-4 py-2 text-sm font-semibold text-danger-solid transition duration-200 hover:bg-danger-solid/10 active:scale-[0.98]">إلغاء الحساب</button>
+                        <button type="button" @click="modal = 'cancel'" class="ui-btn ui-btn-danger-outline w-full">إلغاء الحساب</button>
                     @endif
 
                     {{-- Impersonate — Phase 4 (docs/DEVELOPMENT_ROADMAP.md), disabled with a visible tag --}}
-                    <button type="button" disabled title="يتوفّر في المرحلة 4" class="flex w-full cursor-not-allowed items-center justify-between gap-2 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-400 dark:border-ink-600 dark:text-mist-500">
+                    <button type="button" disabled title="يتوفّر في المرحلة 4" class="ui-btn ui-btn-secondary flex w-full cursor-not-allowed justify-between">
                         <span class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
                             انتحال شخصية المستأجر
@@ -286,7 +286,7 @@
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيتم تفعيل <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> وفتح لوحة التحكم الكاملة له، مع إرسال إشعار بالبريد إلى مالك الحساب.</p>
 
                     <label for="approve_plan_id" class="mt-4 block text-sm font-medium text-ink-700 dark:text-mist-200">الخطة المعتمدة</label>
-                    <select id="approve_plan_id" name="plan_id" class="mt-1.5 w-full rounded-xl border border-mist-200 bg-white p-2.5 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <select id="approve_plan_id" name="plan_id" class="ui-control mt-1.5 w-full">
                         <option value="">— إبقاء الخطة المختارة عند التسجيل —</option>
                         @foreach ($plans as $plan)
                             <option value="{{ $plan->id }}" @selected($tenant['plan_id'] === $plan->id)>{{ $plan->name }}</option>
@@ -295,7 +295,7 @@
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تأكيد التفعيل</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">تأكيد التفعيل</button>
                     </div>
                 </form>
 
@@ -304,11 +304,11 @@
                     @csrf
                     <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">رفض المستأجر</h3>
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">يُرجى توضيح سبب رفض <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span>. النص <span class="font-semibold">يُرسل إلى مقدّم الطلب</span> ويُحفظ في سجل التدقيق.</p>
-                    <textarea name="rejection_reason" rows="3" required minlength="10" maxlength="2000" placeholder="سبب الرفض..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
+                    <textarea name="rejection_reason" rows="3" required minlength="10" maxlength="2000" placeholder="سبب الرفض..." class="ui-control mt-3 w-full"></textarea>
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-danger-solid px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:opacity-90 active:scale-95">تأكيد الرفض</button>
+                        <button type="submit" class="ui-btn ui-btn-danger">تأكيد الرفض</button>
                     </div>
                 </form>
 
@@ -318,11 +318,11 @@
                     <h3 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">إيقاف المستأجر</h3>
                     <p class="mt-2 text-sm text-mist-500 dark:text-mist-400">سيفقد جميع مستخدمي <span class="font-semibold text-ink-700 dark:text-mist-200">{{ $tenant['name'] }}</span> الوصول إلى وحدات النظام فوراً. النص <span class="font-semibold">يُرسل إلى مالك الحساب</span> ويُحفظ في سجل التدقيق.</p>
                     <p class="mt-2 rounded-lg bg-mist-100 px-3 py-2 text-xs text-mist-600 dark:bg-ink-700 dark:text-mist-300">البيانات تبقى محفوظة بالكامل، والإجراء قابل للتراجع عبر إعادة التفعيل.</p>
-                    <textarea name="suspension_reason" rows="3" required minlength="10" maxlength="2000" placeholder="سبب الإيقاف..." class="mt-3 w-full rounded-xl border border-mist-200 bg-white p-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-danger-solid focus:outline-none focus:ring-2 focus:ring-danger-solid/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"></textarea>
+                    <textarea name="suspension_reason" rows="3" required minlength="10" maxlength="2000" placeholder="سبب الإيقاف..." class="ui-control mt-3 w-full"></textarea>
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-danger-solid px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:opacity-90 active:scale-95">تأكيد الإيقاف</button>
+                        <button type="submit" class="ui-btn ui-btn-danger">تأكيد الإيقاف</button>
                     </div>
                 </form>
 
@@ -334,7 +334,7 @@
 
                     <div class="mt-6 flex items-center justify-end gap-3">
                         <button type="button" @click="modal = null" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تأكيد إعادة التفعيل</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">تأكيد إعادة التفعيل</button>
                     </div>
                 </form>
 

@@ -35,11 +35,11 @@
             <div class="flex flex-wrap items-center gap-2">
                 @can('finance.payroll.prepare')
                     @if ($run->status->isEditable())
-                        <a href="{{ route('finance.payroll-runs.edit', $run) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تعديل</a>
+                        <a href="{{ route('finance.payroll-runs.edit', $run) }}" class="ui-btn ui-btn-secondary">تعديل</a>
 
                         <form method="POST" action="{{ route('finance.payroll-runs.recalculate', $run) }}">
                             @csrf
-                            <button type="submit" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">إعادة الاحتساب</button>
+                            <button type="submit" class="ui-btn ui-btn-secondary">إعادة الاحتساب</button>
                         </form>
 
                         <form method="POST" action="{{ route('finance.payroll-runs.submit', $run) }}"
@@ -49,7 +49,7 @@
                               data-swal-text="ستُرسل المسيرة إلى المعتمِد للمراجعة، ولن تتمكن من تعديلها حتى يتم اعتمادها أو إعادتها إليك."
                               data-swal-confirm-button="نعم، ارفع للاعتماد">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">رفع للاعتماد</button>
+                            <button type="submit" class="ui-btn ui-btn-primary">رفع للاعتماد</button>
                         </form>
                     @endif
                 @endcan
@@ -62,7 +62,7 @@
                           data-swal-text="سيتم قفل المسيرة نهائياً ولن يمكن تعديل أي مبلغ فيها. أي تصحيح لاحق يتم عبر قيد تسوية في مسيرة تالية."
                           data-swal-confirm-button="نعم، اعتمد المسيرة">
                         @csrf
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">اعتماد</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">اعتماد</button>
                     </form>
                 @endif
 
@@ -90,12 +90,12 @@
         @endif
 
         @if ($canApprove)
-            <form method="POST" action="{{ route('finance.payroll-runs.reject', $run) }}" class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <form method="POST" action="{{ route('finance.payroll-runs.reject', $run) }}" class="ui-card p-4">
                 @csrf
                 <label for="rejection_reason" class="mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200">رفض المسيرة وإعادتها للمُعِد</label>
                 <div class="flex flex-col gap-2 sm:flex-row">
-                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
-                    <button type="submit" class="rounded-xl border border-danger-solid px-4 py-2 text-sm font-semibold text-danger-solid">رفض</button>
+                    <input id="rejection_reason" type="text" name="rejection_reason" required placeholder="سبب الرفض" value="{{ old('rejection_reason') }}" class="ui-control w-full">
+                    <button type="submit" class="ui-btn ui-btn-danger-outline">رفض</button>
                 </div>
                 @error('rejection_reason')
                     <p class="mt-1.5 text-xs text-danger-solid">{{ $message }}</p>
@@ -110,7 +110,7 @@
                 ['label' => 'خصومات الغياب', 'value' => $run->total_absence_deduction, 'money' => true],
                 ['label' => 'صافي المستحق', 'value' => $run->total_net, 'money' => true],
             ] as $tile)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
                     <p class="mt-2 font-display text-xl font-medium text-ink-900 dark:text-ink-50">
                         @if ($tile['money'])
@@ -123,7 +123,7 @@
             @endforeach
         </div>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -154,7 +154,7 @@
                                 <x-ui.money :amount="$payslip->net_amount" :currency="$payslip->pay_currency" />
                             </td>
                             <td class="px-3 py-2 text-center">
-                                <a href="{{ route('finance.payslips.show', $payslip) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تفاصيل</a>
+                                <a href="{{ route('finance.payslips.show', $payslip) }}" class="ui-btn ui-btn-secondary ui-btn-sm">تفاصيل</a>
                             </td>
                         </tr>
                     @empty
@@ -167,7 +167,7 @@
         <div>{{ $payslips->links() }}</div>
 
         @if ($adjustments->isNotEmpty())
-            <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card w-full overflow-x-auto">
                 <div class="border-b border-mist-200 p-4 dark:border-ink-600">
                     <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">قيود التسوية المحمولة على هذه المسيرة</h2>
                     <p class="mt-1 text-xs text-mist-500 dark:text-mist-400">تصحيحات لفترات مقفلة — الفترة الأصلية لم تُمَس.</p>
@@ -205,7 +205,7 @@
 
         @can('finance.payroll.prepare')
             @if ($run->status->isEditable() && $correctablePayslips->isNotEmpty())
-                <form method="POST" action="{{ route('finance.payroll-runs.adjustments.store', $run) }}" class="space-y-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <form method="POST" action="{{ route('finance.payroll-runs.adjustments.store', $run) }}" class="ui-card space-y-3 p-4">
                     @csrf
                     <div>
                         <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">تسجيل قيد تسوية لفترة مقفلة</h2>
@@ -217,7 +217,7 @@
                     <div class="grid gap-3 sm:grid-cols-3">
                         <div class="sm:col-span-1">
                             <label for="original_payslip_id" class="mb-1.5 block text-xs font-medium text-mist-500">القسيمة الأصلية</label>
-                            <select id="original_payslip_id" name="original_payslip_id" required class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                            <select id="original_payslip_id" name="original_payslip_id" required class="ui-control w-full">
                                 @foreach ($correctablePayslips as $candidate)
                                     <option value="{{ $candidate->id }}">
                                         {{ $candidate->employee_name }} — {{ $candidate->payrollRun?->period }}
@@ -230,14 +230,14 @@
                         </div>
                         <div>
                             <label for="amount" class="mb-1.5 block text-xs font-medium text-mist-500">القيمة (سالب = استرداد)</label>
-                            <input id="amount" type="number" step="0.01" dir="ltr" name="amount" required value="{{ old('amount') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-end text-sm tabular-nums dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                            <input id="amount" type="number" step="0.01" dir="ltr" name="amount" required value="{{ old('amount') }}" class="ui-control w-full text-end tabular-nums">
                             @error('amount')
                                 <p class="mt-1.5 text-xs text-danger-solid">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label for="reason" class="mb-1.5 block text-xs font-medium text-mist-500">السبب</label>
-                            <input id="reason" type="text" name="reason" required value="{{ old('reason') }}" class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                            <input id="reason" type="text" name="reason" required value="{{ old('reason') }}" class="ui-control w-full">
                             @error('reason')
                                 <p class="mt-1.5 text-xs text-danger-solid">{{ $message }}</p>
                             @enderror
@@ -245,14 +245,14 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">تسجيل التسوية</button>
+                        <button type="submit" class="ui-btn ui-btn-primary">تسجيل التسوية</button>
                     </div>
                 </form>
             @endif
         @endcan
 
         @if ($run->notes)
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">ملاحظات</p>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">{{ $run->notes }}</p>
             </div>

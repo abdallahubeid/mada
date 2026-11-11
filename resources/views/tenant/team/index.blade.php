@@ -1,6 +1,6 @@
 <x-layouts.app title="أعضاء الفريق">
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
+        $inputClass = 'ui-control w-full';
     @endphp
 
     <div class="space-y-6">
@@ -12,14 +12,14 @@
             @can('tenant.users.manage')
                 <a
                     href="{{ route('team.create') }}"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                    class="ui-btn ui-btn-primary"
                 >
                     إضافة عضو
                 </a>
             @endcan
         </div>
 
-        <form method="GET" action="{{ route('team.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_220px_auto] dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('team.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-[1fr_220px_auto]">
             <input
                 type="search"
                 name="q"
@@ -27,18 +27,18 @@
                 placeholder="بحث بالاسم أو البريد..."
                 class="{{ $inputClass }}"
             >
-            <select name="department_id" class="{{ $inputClass }}">
+            <select name="department_id" aria-label="تصفية حسب القسم" class="{{ $inputClass }}">
                 <option value="all" @selected($filters['department_id'] === 'all')>كل الأقسام</option>
                 @foreach ($departments as $id => $name)
                     <option value="{{ $id }}" @selected($filters['department_id'] === (string) $id)>{{ $name }}</option>
                 @endforeach
             </select>
-            <button type="submit" class="rounded-xl bg-ink-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-ink-800 dark:bg-ink-700 dark:hover:bg-ink-600">
+            <button type="submit" class="ui-btn ui-btn-secondary">
                 تصفية
             </button>
         </form>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -92,7 +92,7 @@
                                     @can('tenant.users.manage')
                                         <a
                                             href="{{ route('team.edit', $member) }}"
-                                            class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:hover:border-brand-500"
+                                            class="ui-btn ui-btn-secondary ui-btn-sm"
                                         >
                                             تعديل
                                         </a>
@@ -107,7 +107,7 @@
                                         >
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-amber-400 hover:text-amber-600 dark:border-ink-600">
+                                            <button type="submit" class="ui-btn ui-btn-secondary ui-btn-sm">
                                                 {{ $member->is_active ? 'تعطيل' : 'تفعيل' }}
                                             </button>
                                         </form>
@@ -120,7 +120,7 @@
                                         >
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid transition hover:bg-danger-solid/10 dark:border-ink-600">
+                                            <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">
                                                 حذف
                                             </button>
                                         </form>

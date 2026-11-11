@@ -2,7 +2,7 @@
     use App\Domain\Tenancy\Enums\TaskStatus;
 
     $user = auth()->user();
-    $card = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $card = 'ui-card p-4';
     $heading = 'font-display text-lg font-medium text-ink-900 dark:text-ink-50';
     $emptyRow = 'rounded-xl border border-dashed border-mist-200 px-3 py-4 text-center text-xs text-mist-400 dark:border-ink-700';
 
@@ -18,22 +18,22 @@
     <div class="space-y-6">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">
                     لوحة الموارد البشرية
-                </h2>
+                </h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     نظرة تشغيلية على القوى العاملة اليوم — {{ now()->translatedFormat('l، j F Y') }}
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">
                 @can('hr.employees.create')
-                    <a href="{{ route('hr.employees.create') }}" class="inline-flex items-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">إضافة موظف</a>
+                    <a href="{{ route('hr.employees.create') }}" class="ui-btn ui-btn-primary">إضافة موظف</a>
                 @endcan
                 @can('hr.attendance.view_any')
-                    <a href="{{ route('hr.attendance.index') }}" class="inline-flex items-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200">سجل الحضور</a>
+                    <a href="{{ route('hr.attendance.index') }}" class="ui-btn ui-btn-secondary">سجل الحضور</a>
                 @endcan
                 @can('tenant.reports.view')
-                    <a href="{{ route('tenant.reports.index') }}" class="inline-flex items-center rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200">التقارير</a>
+                    <a href="{{ route('tenant.reports.index') }}" class="ui-btn ui-btn-secondary">التقارير</a>
                 @endcan
             </div>
         </div>
@@ -86,7 +86,7 @@
                 <div class="flex items-center justify-between">
                     <h3 class="{{ $heading }}">طلبات إجازة بانتظار الاعتماد</h3>
                     @can('hr.leaves.view_any')
-                        <a href="{{ route('hr.leaves.index', ['status' => 'pending']) }}" class="text-xs font-semibold text-brand-600 hover:underline dark:text-brand-300">عرض الكل</a>
+                        <a href="{{ route('hr.leaves.index', ['status' => 'pending']) }}" class="inline-flex min-h-6 items-center px-1 text-xs font-semibold text-brand-600 hover:underline">عرض الكل</a>
                     @endcan
                 </div>
                 <ul class="mt-4 space-y-2" data-testid="pending-leaves-list">

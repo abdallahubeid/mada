@@ -1,0 +1,232 @@
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * DASHBOARD COMPONENTS — one definition per control (docs/DESIGN_SYSTEM.md §4)
+ *
+ * Every dashboard (platform console, owner, manager, employee) builds its
+ * buttons, form controls and cards from these classes instead of repeating
+ * a utility string per view. They read the same tokens as the public site's
+ * `site-*` layer — orange primary, #222/#666 text, #dee2e6 hairlines, cream
+ * canvas — but at dashboard density: 40px controls instead of the marketing
+ * site's 48–58px.
+ *
+ * Layered as `components`, so a layout utility on the element (`w-full`,
+ * `ms-auto`, `hidden sm:inline-flex`) still wins over the base display and
+ * width set here.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
+@layer components {
+    /* ── Buttons ───────────────────────────────────────────────────────── */
+
+    .ui-btn {
+        display: inline-flex;
+        min-height: 2.5rem;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.375rem 1rem;
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        line-height: 1.4;
+        text-align: center;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+            color 150ms var(--ease-standard),
+            background-color 150ms var(--ease-standard),
+            border-color 150ms var(--ease-standard),
+            box-shadow 150ms var(--ease-standard);
+    }
+
+    .ui-btn:disabled,
+    .ui-btn[aria-disabled='true'] {
+        cursor: not-allowed;
+        opacity: 0.55;
+    }
+
+    .ui-btn-sm {
+        min-height: 2rem;
+        padding: 0.25rem 0.75rem;
+    }
+
+    .ui-btn-lg {
+        min-height: 3rem;
+        padding: 0.5rem 1.5rem;
+    }
+
+    /* The identity's primary: orange fill (the AA-safe step), a 10% black wash on hover. */
+    .ui-btn-primary {
+        background-color: var(--color-brand-action);
+        color: #ffffff;
+    }
+
+    .ui-btn-primary:not(:disabled):hover {
+        box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.1);
+    }
+
+    /* Secondary: white with a hairline; the accent arrives on hover. */
+    .ui-btn-secondary {
+        border-color: var(--color-mist-300);
+        background-color: #ffffff;
+        color: var(--color-ink-900);
+    }
+
+    .ui-btn-secondary:not(:disabled):hover {
+        border-color: var(--color-brand-500);
+        color: var(--color-brand-600);
+    }
+
+    /* Neutral: a quiet filled action (cancel, back, filters). */
+    .ui-btn-neutral {
+        background-color: var(--color-mist-100);
+        color: var(--color-ink-900);
+    }
+
+    .ui-btn-neutral:not(:disabled):hover {
+        background-color: var(--color-mist-200);
+    }
+
+    .ui-btn-danger {
+        background-color: var(--color-critical-500);
+        color: #ffffff;
+    }
+
+    .ui-btn-danger:not(:disabled):hover {
+        box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.12);
+    }
+
+    .ui-btn-danger-outline {
+        border-color: color-mix(in srgb, var(--color-critical-500) 35%, transparent);
+        background-color: #ffffff;
+        color: var(--color-critical-500);
+    }
+
+    .ui-btn-danger-outline:not(:disabled):hover {
+        border-color: var(--color-critical-500);
+        background-color: var(--color-critical-50);
+    }
+
+    .ui-btn-success {
+        background-color: var(--color-success-500);
+        color: #ffffff;
+    }
+
+    .ui-btn-success:not(:disabled):hover {
+        box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.12);
+    }
+
+    /* ── Form controls ─────────────────────────────────────────────────── */
+
+    .ui-label {
+        display: block;
+        margin-bottom: 0.375rem;
+        color: var(--color-ink-900);
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+
+    .ui-control {
+        display: block;
+        min-height: 2.5rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--color-mist-300);
+        border-radius: var(--radius-md);
+        background-color: #ffffff;
+        color: var(--color-ink-900);
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        transition:
+            border-color 150ms var(--ease-standard),
+            box-shadow 150ms var(--ease-standard);
+    }
+
+    /* Lighter than typed text and meta grey, still AA (5.5:1 on white). */
+    .ui-control::placeholder {
+        color: #636a71;
+        opacity: 1;
+    }
+
+    .ui-control:focus {
+        border-color: var(--color-brand-500);
+        outline: none;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 18%, transparent);
+    }
+
+    .ui-control[aria-invalid='true'],
+    .ui-control.is-invalid {
+        border-color: var(--color-critical-500);
+    }
+
+    .ui-control[aria-invalid='true']:focus,
+    .ui-control.is-invalid:focus {
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-critical-500) 18%, transparent);
+    }
+
+    .ui-control:disabled,
+    .ui-control[readonly] {
+        background-color: var(--color-mist-100);
+        color: var(--color-mist-500);
+    }
+
+    .ui-control:disabled {
+        cursor: not-allowed;
+    }
+
+    textarea.ui-control {
+        min-height: 5.5rem;
+        resize: vertical;
+    }
+
+    /* File inputs: the browser's picker button drawn as a small neutral button. */
+    .ui-control[type='file'] {
+        padding: 0.25rem;
+        color: var(--color-mist-500);
+        cursor: pointer;
+    }
+
+    .ui-control[type='file']::file-selector-button {
+        min-height: 2rem;
+        margin-inline-end: 0.75rem;
+        padding: 0.25rem 0.875rem;
+        border: 0;
+        border-radius: var(--radius-sm);
+        background-color: var(--color-mist-100);
+        color: var(--color-ink-900);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 150ms var(--ease-standard);
+    }
+
+    .ui-control[type='file']:hover::file-selector-button {
+        background-color: var(--color-mist-200);
+    }
+
+    .ui-help {
+        margin-top: 0.375rem;
+        color: var(--color-mist-500);
+        font-size: 0.9375rem;
+    }
+
+    .ui-error {
+        margin-top: 0.375rem;
+        color: var(--color-critical-500);
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+
+    /* ── Cards ─────────────────────────────────────────────────────────── */
+
+    /*
+     * White on the cream canvas, lifted by the identity's soft shadow and no
+     * border ("border or shadow, never both", §1.1). Padding stays with the
+     * markup: dense data cards and roomy form cards need different insets.
+     */
+    .ui-card {
+        border-radius: var(--radius-2xl);
+        background-color: #ffffff;
+        box-shadow: var(--shadow-sm);
+    }
+}

@@ -17,10 +17,10 @@
             <p class="mt-1 text-sm text-mist-500">لوحة ATS لمتابعة مراحل المرشحين.</p>
         </div>
 
-        <form method="GET" action="{{ route('hr.applications.index') }}" class="grid gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-3 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('hr.applications.index') }}" class="ui-card grid gap-3 p-4 sm:grid-cols-3">
             <div>
                 <label for="job_posting_id" class="mb-1.5 block text-xs font-medium text-mist-500">الوظيفة</label>
-                <select id="job_posting_id" name="job_posting_id" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="job_posting_id" name="job_posting_id" class="ui-control w-full">
                     <option value="all" @selected($filters['job_posting_id'] === 'all')>الكل</option>
                     @foreach ($jobs as $id => $title)
                         <option value="{{ $id }}" @selected($filters['job_posting_id'] === (string) $id)>{{ $title }}</option>
@@ -29,7 +29,7 @@
             </div>
             <div>
                 <label for="status" class="mb-1.5 block text-xs font-medium text-mist-500">مرحلة ATS</label>
-                <select id="status" name="status" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="status" name="status" class="ui-control w-full">
                     <option value="all" @selected($filters['status'] === 'all')>الكل</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}" @selected($filters['status'] === $status->value)>{{ $status->label() }}</option>
@@ -37,11 +37,11 @@
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="rounded-xl bg-ink-900 px-4 py-2 text-sm font-semibold text-white dark:bg-ink-50 dark:text-ink-900">تصفية</button>
+                <button type="submit" class="ui-btn ui-btn-secondary">تصفية</button>
             </div>
         </form>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -68,13 +68,13 @@
                             <td class="px-3 py-2 text-center">
                                 <div class="flex justify-center gap-2">
                                     @can('hr.applications.view')
-                                        <a href="{{ route('hr.applications.show', $application) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold hover:border-brand-500 dark:border-ink-600">عرض</a>
+                                        <a href="{{ route('hr.applications.show', $application) }}" class="ui-btn ui-btn-secondary ui-btn-sm">عرض</a>
                                     @endcan
                                     @can('hr.applications.delete')
                                         <form method="POST" action="{{ route('hr.applications.destroy', $application) }}" data-swal-confirm data-swal-title="حذف هذا الطلب؟">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                            <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف</button>
                                         </form>
                                     @endcan
                                 </div>

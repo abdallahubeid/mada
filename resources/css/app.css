@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 
 /*
- * Brand typefaces: Tajawal for UI/body copy, Cairo for display headings.
+ * Brand typefaces (identity, 2026-11-09): Poppins for Latin, with Tajawal
+ * covering every Arabic glyph — Poppins has none. Cairo and Marhey stay
+ * imported for the few marketing accents that still name them.
  *
  * Tajawal is loaded at 400;500;600;700 — the 600 face is REQUIRED. The import
  * previously requested `wght@400;500;700`, so every `font-semibold` (600) in
@@ -10,7 +12,13 @@
  * identically across ~1,500 elements, collapsing the second tier of the
  * typographic hierarchy in the primary language. Do not drop 600 again.
  */
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Marhey:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Marhey:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Public marketing site only — Andromeda identity under `.site` (see the file header). */
+@import './site.css';
+
+/* Dashboard components (buttons, form controls, cards) — see the file header. */
+@import './ui.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -25,9 +33,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Tajawal', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Poppins', 'Tajawal', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-display: 'Cairo', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Poppins', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 
     /*
      * The playful accent face. Odoo spends ALL of its personality in one place
@@ -42,20 +50,11 @@
     --font-hand: 'Marhey', 'Cairo', ui-sans-serif, system-ui, sans-serif;
 
     /*
-     * ─────────────────────────────────────────────────────────────────────
-     * SURFACE WHITE IS NOT #FFF.
-     *
-     * Overriding Tailwind's own `--color-white` re-points every `bg-white`
-     * card, nav bar and auth panel in one line instead of editing several
-     * hundred class strings. Pure white against the softened canvas was the
-     * source of the glare.
-     *
-     * #fbfbfb is imperceptible where `text-white` is used as a LABEL (on the
-     * plum primary it still measures 7.2:1) but visibly gentler across the
-     * large surfaces that were causing eye strain.
-     * ─────────────────────────────────────────────────────────────────────
+     * Surface white is pure #fff again (identity, 2026-11-09). Cards sit on
+     * the cream canvas (`mist-50` #fffaf3), so the glare the old #fbfbfb
+     * softened no longer comes from a white-on-white page.
      */
-    --color-white: #fbfbfb;
+    --color-white: #ffffff;
 
     /*
      * The 12px floor. `text-xs` is the smallest size in the system and every
@@ -112,51 +111,45 @@
     --text-lg--line-height: 1.65;
 
     /*
-     * ─────────────────────────────────────────────────────────────────────
-     * PRIMARY — Clay's near-black CTA (`colors.primary` #0a0a0a).
+     * PRIMARY — the identity's orange (docs/DESIGN_SYSTEM.md §1).
      *
-     * The `brand-*` NAMES are kept and re-pointed rather than renamed: 845
-     * `bg-brand-500` and 375 `text-brand-600` usages across 240 files all
-     * become the new primary the moment these values change. Renaming would
-     * have meant editing every one of them for no behavioural gain.
+     * The `brand-*` NAMES are kept and re-pointed rather than renamed, so
+     * every `bg-brand-500` / `text-brand-600` in the app moves at once.
      *
-     * brand-500 is the button fill, brand-600 its active state
-     * (`colors.primary-active` #1f1f1f). The lighter stops carry the muted
-     * text ramp so accent-coloured labels stay legible on cream instead of
-     * washing out the way a tinted mid-tone would.
-     * ─────────────────────────────────────────────────────────────────────
+     *   brand-500 #fe6019  fills: buttons, active states, marks.
+     *   brand-600 #c2410c  text and hover fill — 5.2:1 on white, so links
+     *                      and accent labels stay AA where 500 (3.0:1) is not.
+     *   brand-50/100       the identity's peach washes (#fff7f3 / #ffece4).
      */
-    --color-brand-50: #f8f3f7;
-    --color-brand-100: #efe3ec;
-    --color-brand-200: #dcc7d6;
-    --color-brand-300: #c4a3bb;
-    --color-brand-400: #a67b9b;
-    --color-brand-500: #714b67;
-    --color-brand-600: #5e3d56;
-    --color-brand-700: #4b3145;
-    --color-brand-800: #382434;
-    --color-brand-900: #261823;
-    --color-brand-950: #180f16;
+    --color-brand-50: #fff7f3;
+    --color-brand-100: #ffece4;
+    --color-brand-200: #ffd6c2;
+    --color-brand-300: #ffb38f;
+    --color-brand-400: #ff8a52;
+    --color-brand-500: #fe6019;
+    --color-brand-600: #c2410c;
+    --color-brand-700: #9a3412;
+    --color-brand-800: #7c2d12;
+    --color-brand-900: #5a210d;
+    --color-brand-950: #2e1106;
 
     /*
-     * ─────────────────────────────────────────────────────────────────────
-     * NEUTRALS — one hue family, replacing the previous two.
+     * Fill for anything that carries WHITE TEXT on the accent (primary buttons,
+     * the current page). White on brand-500 #fe6019 is 3.0:1 and fails WCAG AA
+     * at body size; #cf4510 is the brightest orange that clears it (4.65:1).
+     * brand-500 stays the accent for marks, bars and icons, where 3:1 suffices.
+     */
+    --color-brand-action: #cf4510;
+
+    /*
+     * NEUTRALS — the identity's greys (2026-11-09).
      *
-     * `mist` used to be a GREEN-tinted grey (hue ≈ 140°) and `ink` a NAVY
-     * (hue ≈ 215°). They sit adjacent on every screen, so switching themes
-     * swung the neutral hue 75° and nothing felt like one product. Both ramps
-     * are now built on a single low-saturation mauve axis (hue ≈ 290°) that
-     * sits under the plum without competing with it.
+     *   ink-*   structure: surfaces, borders, strong text (#222 headings).
+     *   mist-*  muted text and subtle fills; `mist-50` is the cream canvas.
      *
-     * The two NAMES are kept — and kept distinct — because they carry
-     * different roles that a single ramp cannot serve at one stop:
-     *
-     *   ink-*   structure: surfaces, borders, strong text.
-     *   mist-*  muted text and subtle fills (and is theme-split, see below).
-     *
-     * Every existing `bg-ink-800 dark:border-ink-600 text-mist-500` in the
-     * markup keeps its meaning; only the hue moved.
-     * ─────────────────────────────────────────────────────────────────────
+     * Text follows the identity's two-tone pair — #222 for headings, #666
+     * for body — with #6c757d as the quietest AA-safe meta tone. Borders are
+     * the identity's #dee2e6 / #e9ecef hairlines.
      */
     /*
      * INK — structure and strong text, re-pointed to Clay's ink ramp.
@@ -165,17 +158,17 @@
      * (599 usages split between the two), so it maps to the cream canvas
      * rather than to pure white — it has to read correctly in both roles.
      */
-    --color-ink-50: #f8f6f9;
-    --color-ink-100: #f1eef3;
-    --color-ink-200: #e5e1ea;
-    --color-ink-300: #d0cad7;
-    --color-ink-400: #9e96a8;
-    --color-ink-500: #4b4455;
-    --color-ink-600: #3b3544;
-    --color-ink-700: #2c2734;
-    --color-ink-800: #221d29;
-    --color-ink-900: #1a1620;
-    --color-ink-950: #110e15;
+    --color-ink-50: #f8f9fa;
+    --color-ink-100: #f1f3f5;
+    --color-ink-200: #e9ecef;
+    --color-ink-300: #dee2e6;
+    --color-ink-400: #a3a3a3;
+    --color-ink-500: #6b6b6b;
+    --color-ink-600: #4d4d4d;
+    --color-ink-700: #383838;
+    --color-ink-800: #2b2b2b;
+    --color-ink-900: #222222;
+    --color-ink-950: #1a202c;
 
     /*
      * Mist — muted text / icon / divider tones.
@@ -204,16 +197,13 @@
      * ─────────────────────────────────────────────────────────────────────
      * CANVAS + MUTED TEXT — softened ground, darkened copy.
      *
-     * `mist-50` is the page canvas and drops to #f6f7f9, a step deeper than
-     * the surface tone below it so cards still separate without needing a
-     * border to do it.
+     * `mist-50` is the page canvas: a warm off-white (#f8f6f2) rather than
+     * white or cream, so a page is not a sheet of glare and the white cards on
+     * it separate by tone as well as by shadow.
      *
-     * 400–600 were measurably fine (5.5 / 7.4 / 10.0 on white) and still read
-     * as washed out, because contrast ratio is not the same thing as
-     * perceived weight: a mid-grey at 12–14px on a near-white ground looks
-     * light long before it fails WCAG. They are darkened to land on the
-     * intended targets — roughly #4B5563 for tertiary and #374151 for body —
-     * while keeping the mauve cast that ties them to the plum.
+     * `mist-400` (meta) and `mist-500` (secondary copy) are darkened past
+     * their AA minimum (#5b636b ≈ 6:1, #555 ≈ 7.5:1): a mid-grey at small
+     * Arabic sizes reads light long before it fails WCAG.
      * ─────────────────────────────────────────────────────────────────────
      */
     /*
@@ -221,16 +211,16 @@
      * the system — every section, the body element and the nav all paint it.
      * `mist-200` (1,042 usages) is the hairline.
      */
-    --color-mist-50: #f6f7f9; /* page canvas */
-    --color-mist-100: #f0eef4;
-    --color-mist-200: #e3dfe9;
-    --color-mist-300: #cdc7d5;
-    --color-mist-400: #524c5e; /* light: 8.20:1 on white — tertiary/meta text */
-    --color-mist-500: #413b4f; /* light: 10.69:1 on white — secondary body text */
-    --color-mist-600: #2f2a3a; /* light: 13.4:1 on white — emphasis */
-    --color-mist-700: #3b3544;
-    --color-mist-800: #2c2734;
-    --color-mist-900: #1a1620;
+    --color-mist-50: #f8f6f2; /* page canvas — warm off-white; white cards read as raised on it */
+    --color-mist-100: #f3f4f6;
+    --color-mist-200: #e9ecef;
+    --color-mist-300: #dee2e6;
+    --color-mist-400: #5b636b; /* 6.1:1 on white, 5.6:1 on the canvas — tertiary/meta text */
+    --color-mist-500: #555555; /* 7.5:1 on white, 6.9:1 on the canvas — secondary body text */
+    --color-mist-600: #444444; /* 9.7:1 on white — emphasis */
+    --color-mist-700: #383838;
+    --color-mist-800: #2b2b2b;
+    --color-mist-900: #222222;
 
 
     /*
@@ -350,12 +340,12 @@
      */
     --radius-xs: 3px;
     --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 8px;
-    --radius-xl: 10px;
-    --radius-2xl: 14px;
-    --radius-3xl: 20px;
-    --radius-4xl: 26px;
+    --radius-md: 6px;
+    --radius-lg: 6px;
+    --radius-xl: 8px;
+    --radius-2xl: 12px;
+    --radius-3xl: 16px;
+    --radius-4xl: 20px;
 
     /*
      * ─────────────────────────────────────────────────────────────────────
@@ -370,13 +360,13 @@
      * wrong side when the layout mirrors to RTL.
      * ─────────────────────────────────────────────────────────────────────
      */
-    --shadow-2xs: 0 1px 1px rgb(26 22 32 / 0.03);
-    --shadow-xs: 0 1px 2px rgb(26 22 32 / 0.04);
-    --shadow-sm: 0 1px 2px rgb(26 22 32 / 0.05);
-    --shadow-md: 0 2px 6px -1px rgb(26 22 32 / 0.08);
-    --shadow-lg: 0 4px 12px -2px rgb(26 22 32 / 0.10);
-    --shadow-xl: 0 8px 20px -4px rgb(26 22 32 / 0.13);
-    --shadow-2xl: 0 14px 34px -8px rgb(26 22 32 / 0.18);
+    --shadow-2xs: 0 1px 1px rgb(0 0 0 / 0.03);
+    --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.04);
+    --shadow-sm: 0 4px 25px rgb(0 0 0 / 0.05);
+    --shadow-md: 0 6px 30px rgb(0 0 0 / 0.06);
+    --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.08);
+    --shadow-xl: 0 10px 50px rgb(0 0 0 / 0.08);
+    --shadow-2xl: 0 20px 60px rgb(0 0 0 / 0.12);
 
     /*
      * `shadow-glow` was a tinted bloom behind every primary CTA — a good
@@ -384,7 +374,7 @@
      * signature. It is redefined here as a restrained brand-tinted lift so all
      * 131 call sites become correct at once instead of needing 131 edits.
      */
-    --shadow-glow: 0 1px 2px rgb(26 22 32 / 0.10), 0 2px 6px -2px color-mix(in srgb, var(--color-brand-500) 28%, transparent);
+    --shadow-glow: 0 4px 14px color-mix(in srgb, var(--color-brand-500) 22%, transparent);
 
     /*
      * ─────────────────────────────────────────────────────────────────────
@@ -628,7 +618,7 @@
  * own complete stroke, which is what a real marker would do.
  */
 .mada-marker {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23f59e0b'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23ffd6c2'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 0.66em;
     background-position: 0 72%;
@@ -638,12 +628,12 @@
 }
 
 .mada-marker {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23f59e0b'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23ffd6c2'/%3E%3C/svg%3E");
 }
 
 /* A lighter wash, for a second highlighted phrase that must not compete. */
 .mada-marker-soft {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23fbbf5e'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40' preserveAspectRatio='none'%3E%3Cpath d='M4 20.5C48 6.5 128 4 205 7c50 2 85 6.5 92 11.5 1 8-7 15-18 17.5-57 5-161 6-217 2C30 34.5 8.5 30.5 3 26.5z' fill='%23ffe4d1'/%3E%3C/svg%3E");
 }
 
 /*
@@ -692,7 +682,7 @@
      * the teal stays a real token value.
      * ─────────────────────────────────────────────────────────────────────
      */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 92' preserveAspectRatio='none'%3E%3Cpath d='M126 8C74 4 22 19 12 43c-8 20 30 40 96 41 58 1 116-15 120-38 4-22-42-38-98-38-22 0-45 3-62 9' fill='none' stroke='%2300d2c8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 92' preserveAspectRatio='none'%3E%3Cpath d='M126 8C74 4 22 19 12 43c-8 20 30 40 96 41 58 1 116-15 120-38 4-22-42-38-98-38-22 0-45 3-62 9' fill='none' stroke='%23fe6019' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     opacity: 0.75;
@@ -714,7 +704,7 @@
     inset-inline: -0.1em;
     bottom: -0.34em;
     height: 0.34em;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 24' preserveAspectRatio='none'%3E%3Cpath d='M4 8C42 3 96 2 138 5c26 2 45 4 58 6' fill='none' stroke='%233b82f6' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M11 19C47 14 101 13 143 16c21 2 36 3 47 4' fill='none' stroke='%233b82f6' stroke-width='2.6' stroke-linecap='round' opacity='.75'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 24' preserveAspectRatio='none'%3E%3Cpath d='M4 8C42 3 96 2 138 5c26 2 45 4 58 6' fill='none' stroke='%23fe6019' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M11 19C47 14 101 13 143 16c21 2 36 3 47 4' fill='none' stroke='%23fe6019' stroke-width='2.6' stroke-linecap='round' opacity='.75'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     pointer-events: none;
@@ -736,7 +726,7 @@
     inset-inline: -0.08em;
     bottom: -0.28em;
     height: 0.3em;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 12.5C38 5 88 3 129 6c30 2 52 5 68 8' fill='none' stroke='%23f59e0b' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 12.5C38 5 88 3 129 6c30 2 52 5 68 8' fill='none' stroke='%23fe6019' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     pointer-events: none;
@@ -832,9 +822,9 @@
 a:focus-visible,
 button:focus-visible,
 [role='button']:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
+input:not(.ui-control):focus-visible,
+select:not(.ui-control):focus-visible,
+textarea:not(.ui-control):focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible {
     outline: 2px solid var(--color-brand-500);
@@ -950,10 +940,22 @@ table,
      * `brand-300` is included because it is the accent-text stop, and on a
      * dark mock the accent has to invert with everything else.
      */
-    --color-mist-400: #a9a1b2;
-    --color-mist-500: #948b9e;
-    --color-mist-600: #7d7388;
-    --color-brand-300: #c4a3bb;
+    --color-mist-400: #c4c4c4;
+    --color-mist-500: #ababab;
+    --color-mist-600: #949494;
+    --color-brand-300: #ffb38f;
+}
+
+/*
+ * A white panel inside a dark surface — chiefly a modal dialog over its
+ * `bg-ink-950/50` backdrop, which the list above matches — must get the
+ * light-surface tones back, or its muted text renders light-grey on white.
+ */
+:where([class~='bg-white'], [class~='ui-card'], [data-surface='light']) {
+    --color-mist-400: #5b636b;
+    --color-mist-500: #555555;
+    --color-mist-600: #444444;
+    --color-brand-300: #ffb38f;
 }
 
 /*

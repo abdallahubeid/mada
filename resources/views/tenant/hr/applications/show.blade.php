@@ -9,10 +9,10 @@
                 <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">{{ $application->applicant_name }}</h1>
                 <p class="mt-1 text-sm text-mist-500">{{ $application->jobPosting?->title }}</p>
             </div>
-            <a href="{{ route('hr.applications.index') }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-600 dark:border-ink-600">رجوع</a>
+            <a href="{{ route('hr.applications.index') }}" class="ui-btn ui-btn-secondary">رجوع</a>
         </div>
 
-        <section class="grid gap-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-2 dark:border-ink-600 dark:bg-ink-800">
+        <section class="ui-card grid gap-4 p-4 sm:grid-cols-2">
             <div>
                 <p class="text-xs text-mist-500">البريد</p>
                 <p class="mt-1 text-sm text-ink-800 dark:text-ink-100" dir="ltr">{{ $application->email }}</p>
@@ -42,24 +42,24 @@
         </section>
 
         @can('hr.applications.update')
-            <form method="POST" action="{{ route('hr.applications.update', $application) }}" class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <form method="POST" action="{{ route('hr.applications.update', $application) }}" class="ui-card space-y-4 p-4">
                 @csrf
                 @method('PUT')
                 <div>
                     <label for="status" class="mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200">مرحلة ATS</label>
-                    <select id="status" name="status" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                    <select id="status" name="status" class="ui-control w-full">
                         @foreach ($statuses as $status)
                             <option value="{{ $status->value }}" @selected(old('status', $application->status->value) === $status->value)>{{ $status->label() }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="flex justify-end">
-                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">تحديث المرحلة</button>
+                    <button type="submit" class="ui-btn ui-btn-primary">تحديث المرحلة</button>
                 </div>
             </form>
         @endcan
 
-        <section class="space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <section class="ui-card space-y-4 p-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">المقابلات</h2>
@@ -105,7 +105,7 @@
                     @can('hr.applications.convert')
                         <form method="POST" action="{{ route('hr.applications.convert', $application) }}" data-swal-confirm data-swal-variant="success" data-swal-title="تحويل المتقدم إلى موظف؟" data-swal-text="سيتم إنشاء ملف موظف مسبقاً بالبيانات والسيرة الذاتية." data-swal-confirm-button="نعم، حوّل إلى موظف">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">
+                            <button type="submit" class="ui-btn ui-btn-primary">
                                 تحويل إلى موظف
                             </button>
                         </form>

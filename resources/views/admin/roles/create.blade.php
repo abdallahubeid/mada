@@ -4,30 +4,30 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">الحساب والوصول</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <a href="{{ route('admin.roles.index') }}" class="text-mist-500 hover:text-ink-700 dark:text-mist-400">الأدوار والصلاحيات</a>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">إنشاء</span>
 @endsection
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+        $inputClass = 'ui-control w-full';
+        $labelClass = 'ui-label';
     @endphp
 
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إنشاء دور جديد</h2>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">إنشاء دور جديد</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">عرّف معرّف الدور ثم اختر صلاحياته حسب النطاق.</p>
         </div>
-        <a href="{{ route('admin.roles.index') }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">رجوع</a>
+        <a href="{{ route('admin.roles.index') }}" class="ui-btn ui-btn-secondary">رجوع</a>
     </div>
 
     <form method="POST" action="{{ route('admin.roles.store') }}" class="space-y-6">
         @csrf
 
-        <div class="max-w-xl rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card max-w-xl p-4">
             <label class="{{ $labelClass }}" for="name">معرّف الدور</label>
             <input
                 id="name"
@@ -45,8 +45,8 @@
         <x-admin.permission-domain-cards :groups="$groups" :assigned="old('permissions', [])" />
 
         <div class="flex justify-end gap-3">
-            <a href="{{ route('admin.roles.index') }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">إلغاء</a>
-            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">إنشاء الدور</button>
+            <a href="{{ route('admin.roles.index') }}" class="ui-btn ui-btn-secondary">إلغاء</a>
+            <button type="submit" class="ui-btn ui-btn-primary">إنشاء الدور</button>
         </div>
     </form>
 @endsection

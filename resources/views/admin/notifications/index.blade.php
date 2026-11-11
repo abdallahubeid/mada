@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">التواصل</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">الإشعارات</span>
 @endsection
 
@@ -23,9 +23,9 @@
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <div class="flex items-center gap-2">
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">مركز الإشعارات</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">مركز الإشعارات</h1>
                 @if ($unreadCounts['all'] > 0)
-                    <span class="rounded-md bg-brand-500 px-2 py-0.5 text-xs font-bold text-white">{{ $unreadCounts['all'] }} غير مقروء</span>
+                    <span class="rounded-md bg-brand-action px-2 py-0.5 text-xs font-bold text-white">{{ $unreadCounts['all'] }} غير مقروء</span>
                 @endif
             </div>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تنبيهات المنصّة على مستوى النظام — تُحفظ في قاعدة البيانات وتُبثّ العاجلة عبر Reverb.</p>
@@ -34,7 +34,7 @@
         <div class="flex items-center gap-2">
             <form method="POST" action="{{ route('admin.notifications.read-all') }}">
                 @csrf
-                <button type="submit" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition duration-200 hover:border-brand-500 hover:text-brand-600 active:scale-[0.98] dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300">
+                <button type="submit" class="ui-btn ui-btn-secondary">
                     تحديد الكل كمقروء
                 </button>
             </form>
@@ -49,7 +49,7 @@
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#b42318',
-                        cancelButtonColor: '#5a5262',
+                        cancelButtonColor: '#6c757d',
                         confirmButtonText: 'نعم، امسح',
                         cancelButtonText: 'إلغاء',
                     }).then((result) => { if (result.isConfirmed) $el.submit(); });
@@ -57,7 +57,7 @@
             >
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-600 transition duration-200 hover:border-danger-solid hover:text-danger-solid active:scale-[0.98] dark:border-ink-600 dark:text-mist-300">
+                <button type="submit" class="ui-btn ui-btn-danger-outline">
                     مسح الكل
                 </button>
             </form>

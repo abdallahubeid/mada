@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">التواصل</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">الرسائل والدعم</span>
 @endsection
 
@@ -33,7 +33,7 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الرسائل والدعم الفني</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الرسائل والدعم الفني</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">استفسارات نموذج التواصل وملّاك الحسابات — محادثة واحدة لكل عميل نشط.</p>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     href="{{ route('admin.messages', ['status' => $key, 'q' => $search ?: null]) }}"
                     data-status-tab="{{ $key }}"
                     @class([
-                        'flex shrink-0 items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-all duration-200',
+                        'flex shrink-0 items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-colors duration-150',
                         'border-brand-500 text-brand-600 dark:text-brand-300' => $isActive,
                         'border-transparent text-mist-500 hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200' => ! $isActive,
                     ])
@@ -63,7 +63,7 @@
             @endforeach
         </div>
 
-        <div class="mt-4 flex flex-col overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm lg:h-[calc(100dvh-15rem)] lg:flex-row dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card mt-4 flex flex-col overflow-hidden lg:h-[calc(100dvh-15rem)] lg:flex-row">
             <div class="flex max-h-[42vh] shrink-0 flex-col border-b border-mist-200 lg:max-h-none lg:w-80 lg:border-b-0 lg:border-e dark:border-ink-700">
                 <div class="border-b border-mist-100 p-3 dark:border-ink-700">
                     <form method="GET" action="{{ route('admin.messages') }}" class="relative">
@@ -74,7 +74,7 @@
                             name="q"
                             value="{{ $search }}"
                             placeholder="ابحث بالاسم أو البريد أو الموضوع..."
-                            class="w-full rounded-xl border border-mist-200 bg-white py-2 ps-9 pe-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="ui-control w-full ps-9 pe-3"
                         >
                     </form>
                 </div>
@@ -111,7 +111,7 @@
                                         id="thread-status"
                                         name="status"
                                         onchange="this.form.submit()"
-                                        class="rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm font-medium text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-mist-200"
+                                        class="ui-control"
                                     >
                                         @foreach ($tabs as $key => $label)
                                             <option value="{{ $key }}" @selected($selected->status === $key)>{{ $label }}</option>
@@ -148,9 +148,9 @@
                                     rows="1"
                                     required
                                     placeholder="اكتب ردًا..."
-                                    class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-mist-200 bg-white px-3 py-3 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                                    class="ui-control max-h-32 min-h-[2.75rem] flex-1 resize-none"
                                 ></textarea>
-                                <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95" aria-label="إرسال">
+                                <button type="submit" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-action text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95" aria-label="إرسال">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
                                 </button>
                             </form>
@@ -381,7 +381,7 @@
                 renderMessageBubble(message) {
                     const isAdmin = Boolean(message.is_admin);
                     const bubbleClass = isAdmin
-                        ? 'bg-brand-500 text-white rounded-se-none'
+                        ? 'bg-brand-action text-white rounded-se-none'
                         : 'border border-mist-200 bg-white text-ink-700 rounded-ss-none dark:border-ink-700 dark:bg-ink-800 dark:text-mist-100';
                     const rowClass = isAdmin ? 'flex-row-reverse' : 'flex-row';
                     const metaClass = isAdmin ? 'justify-end' : 'justify-start';
@@ -540,7 +540,7 @@
                         confirmButtonText: 'نعم، احذف',
                         cancelButtonText: 'إلغاء',
                         confirmButtonColor: '#b42318',
-                        cancelButtonColor: '#5a5262',
+                        cancelButtonColor: '#6c757d',
                         reverseButtons: true,
                     }).then(async (result) => {
                         if (! result.isConfirmed) {
@@ -584,7 +584,7 @@
                                 title: data.message || 'تم حذف المحادثة بنجاح.',
                                 showConfirmButton: Boolean(data.undo_url),
                                 confirmButtonText: data.undo_label || 'تراجع',
-                                confirmButtonColor: '#714b67',
+                                confirmButtonColor: '#fe6019',
                                 timer: data.undo_url ? 8000 : 2800,
                                 timerProgressBar: true,
                             }).then((toastResult) => {
@@ -614,7 +614,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'تعذّر حذف المحادثة',
-                                confirmButtonColor: '#714b67',
+                                confirmButtonColor: '#fe6019',
                             });
                         }
                     });

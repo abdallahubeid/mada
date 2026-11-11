@@ -3,67 +3,41 @@
     'title' => '',
     'subtitle' => null,
     'align' => 'center',
+    'level' => 'h2',
 ])
 
 @php
     /*
-     * Section headings share the hero's `**...**` convention, so one CMS habit
-     * covers both. The DECORATION differs on purpose: the hero gets the marker
-     * swash, section headings get the curved underline. Two devices used
-     * consistently reads as a system; the same device everywhere reads as a
-     * template, and one device per section reads as neither.
+     * Andromeda section heading: a plain line of body text above the title,
+     * the title itself with the short orange bar beneath it, and the
+     * description 40px further down so it clears the bar.
      *
-     * A title without the delimiter renders plain, so every existing CMS value
-     * keeps working untouched.
+     * Section titles share the hero's `**phrase**` CMS convention; the marked
+     * words get the orange double underline. A title without the delimiter
+     * renders plain, so every existing CMS value keeps working.
      */
     $isCenter = $align === 'center';
-    $titleParts = preg_split('/\*\*(.+?)\*\*/u', $title, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $titleParts = preg_split('/\*\*(.+?)\*\*/u', (string) $title, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $renderedTitle = collect($titleParts)
+        ->map(fn (string $part, int $i): string => $i % 2 === 1
+            ? '<span class="mada-underline-double">'.e($part).'</span>'
+            : e($part))
+        ->implode('');
+    $tag = in_array($level, ['h1', 'h2', 'h3'], true) ? $level : 'h2';
 @endphp
 
-<div class="{{ $isCenter ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl text-start' }}">
+<div {{ $attributes->class([$isCenter ? 'mx-auto max-w-3xl text-center' : 'max-w-2xl text-start']) }}>
     @if ($eyebrow)
-        {{--
-            The eyebrow was a bordered plum pill. Odoo sets its section eyebrows
-            as small caps-weight label text with no container at all — the extra
-            chrome is what made these read as badges competing with the heading
-            they introduce.
-        --}}
-        <span class="inline-block text-xs font-bold tracking-[0.12em] text-brand-500">
-            {{ $eyebrow }}
-        </span>
+        <p>{{ $eyebrow }}</p>
     @endif
 
-    {{--
-        The `h-1 w-16` plum bar that used to sit under every heading is gone.
-        A fixed rule under every title is decoration that encodes nothing, and
-        it appeared on all eleven landing sections identically.
-    --}}
-    <h2 class="mt-3 font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-        @foreach ($titleParts as $i => $part)
-            @if ($i % 2 === 1)
-                {{--
-                    The BLUE double swash, not the hero's orange marker. Three
-                    decorations split by role — orange marker and teal circle
-                    for the hero headline, blue double underline for section
-                    headings — is what keeps four accent hues on one page
-                    reading as a deliberate set of pen marks rather than as
-                    decoration applied at random.
-                --}}
-                <span class="mada-underline-double">{{ $part }}</span>
-            @else
-                {{ $part }}
-            @endif
-        @endforeach
-    </h2>
+    <{{ $tag }} @class([
+        'site-section-title site-h2',
+        'site-section-title--start' => ! $isCenter,
+        'mt-4' => $eyebrow,
+    ])>{!! $renderedTitle !!}</{{ $tag }}>
 
     @if ($subtitle)
-        {{--
-            `font-medium`, not `font-normal`. At 18px on a light canvas the
-            subtitle was sitting at the same visual weight as the card body
-            copy below it and reading as a stray paragraph rather than as part
-            of the heading block — the "lost on the screen" problem. Weight is
-            what re-attaches it to the h2, not size.
-        --}}
-        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed font-medium text-mist-500">{{ $subtitle }}</p>
+        <p @class(['mt-10', 'mx-auto max-w-2xl' => $isCenter])>{{ $subtitle }}</p>
     @endif
 </div>

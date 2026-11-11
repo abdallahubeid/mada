@@ -1,6 +1,6 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
     // Reopen the modal when the POST bounced back with errors, so the operator
@@ -50,7 +50,7 @@
     <button
         type="button"
         @click="open = true"
-        class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+        class="ui-btn ui-btn-primary"
     >
         جدولة مقابلة
     </button>
@@ -195,7 +195,7 @@
                     <div class="flex items-center justify-between gap-3">
                         <p class="text-xs text-mist-500 dark:text-mist-400">تحقّق من شكل الرسالة بعد استبدال الوسوم قبل الإرسال.</p>
                         <button type="button" @click="runPreview()" :disabled="previewing"
-                                class="shrink-0 rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 disabled:opacity-60 dark:border-ink-600 dark:text-mist-200">
+                                class="ui-btn ui-btn-secondary ui-btn-sm shrink-0">
                             <span x-show="! previewing">معاينة الرسالة</span>
                             <span x-show="previewing" x-cloak>جاري المعاينة…</span>
                         </button>
@@ -214,7 +214,7 @@
 
                 <div class="flex justify-end gap-3 border-t border-mist-100 pt-4 dark:border-ink-700">
                     <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 dark:text-mist-300">إلغاء</button>
-                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                    <button type="submit" class="ui-btn ui-btn-primary">
                         حفظ وإرسال الدعوة
                     </button>
                 </div>

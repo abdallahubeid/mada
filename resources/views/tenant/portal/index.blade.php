@@ -27,7 +27,7 @@
                     </p>
                     <div class="mt-8 flex flex-col gap-3 sm:flex-row">
                         @if (filled($portalSettings->hero_primary_cta_text))
-                            <a href="{{ $heroPrimaryUrl }}" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
+                            <a href="{{ $heroPrimaryUrl }}" class="inline-flex items-center justify-center rounded-xl bg-brand-action px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
                                 {{ $portalSettings->hero_primary_cta_text }}
                             </a>
                         @endif
@@ -129,7 +129,7 @@
             <div class="mt-8 grid gap-4 md:grid-cols-2">
                 @foreach ($portalSettings->culturePerks() as $perk)
                     <article class="flex gap-4 rounded-2xl border border-mist-200/80 portal-glass p-4 shadow-sm transition duration-300 hover:border-brand-500/40 dark:border-ink-600/70">
-                        <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-sm font-bold text-white shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></span>
+                        <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-action text-sm font-bold text-white shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></span>
                         <div>
                             <h3 class="font-display text-base font-medium text-ink-900 dark:text-ink-50">{{ $perk['title'] }}</h3>
                             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">{{ $perk['description'] }}</p>
@@ -190,7 +190,7 @@
                         <h3 class="mt-3 font-display text-lg font-medium text-ink-900 dark:text-ink-50">{{ $job['title'] }}</h3>
                         <p class="mt-2 flex-1 text-sm text-mist-500 dark:text-mist-400">{{ $job['summary'] }}</p>
                         <p class="mt-3 text-xs text-mist-400">{{ $job['location'] }} · {{ $job['type'] }}</p>
-                        <a href="{{ route('portal.jobs.show', [$slug, $job['slug']]) }}" class="mt-4 inline-flex items-center justify-center rounded-xl bg-brand-500 px-3 py-2 text-sm font-bold text-white transition group-hover:bg-brand-600">
+                        <a href="{{ route('portal.jobs.show', [$slug, $job['slug']]) }}" class="mt-4 inline-flex items-center justify-center rounded-xl bg-brand-action px-3 py-2 text-sm font-bold text-white transition group-hover:bg-brand-600">
                             تقديم سريع
                         </a>
                     </article>

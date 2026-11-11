@@ -7,7 +7,7 @@
 ## 1. Guiding Principles
 
 - **Arabic-first, RTL-native.** All copy is Arabic; every layout uses logical properties (`ps-*`, `pe-*`, `start-*`, `end-*`) per ADR-10 so a future locale switcher works without rework.
-- **One canvas with the product.** Same tokens, same light ground: `mist-*`/`ink-*` neutrals on one mauve axis, **plum** (`brand-*`, `#714B67`) as the brand accent — not emerald, and never a status colour — `font-display` (Cairo) for headings, `font-sans` (Tajawal) for body, `font-hand` (Marhey) for the hero's handwritten accents. There is no dark variant and no theme script to select one: **ADR-15 is withdrawn**, see `DESIGN_SYSTEM.md` §2. The footer and CTA band are still deep slabs, but they are always-dark *surfaces* on a light site (§2.4), not a second theme.
+- **Andromeda identity (amended 2026-11-09).** The public site replicates the Andromeda template rather than sharing the app's plum canvas: orange `#fe6019` accent, `#4a4a4a`/`#222` text on a warm off-white `#f8f6f2` canvas, cream wave panels with scattered circles, Poppins → Tajawal on a 1.246 scale, a light footer and a peach CTA panel. Tokens and component classes are `site-*` in `resources/css/site.css`, scoped under `body.site` — see `DESIGN_SYSTEM.md` §1.3. Light only; **ADR-15 stays withdrawn**.
 - **Honesty over hype.** Consistent with the product's "phase honesty" discipline: unreleased capabilities are labeled roadmap, never presented as shipped (see §4 AI section).
 - **Single source of truth.** Shared content (plans, FAQ) lives in one data source consumed by both the landing previews and the dedicated pages (§5) — no duplicated arrays.
 - **Extend, don't restart.** A landing page already exists (`resources/views/landing.blade.php`, served by `Route::view('/', 'landing')`). This effort refactors it into reusable section components and adds the remaining pages.
@@ -77,7 +77,7 @@ Reordered from the original proposal so features/modules are established **befor
 13. **Final High-Impact CTA** — "جاهز لتحويل مؤسستك؟".
 14. **Footer** — navigation, legal links, newsletter signup, social icons.
 
-Plus a **sticky top nav** (blurred, persistent trial CTA, theme toggle) present on every marketing page.
+Plus a **fixed top nav** (white; tightens with a shadow once scrolled, hides on scroll-down and returns on scroll-up; persistent trial CTA; full links from `xl`, toggle menu below) present on every marketing page.
 
 > **Open honesty note (not blocking):** the Testimonials section (10) is kept as planned per decision, but must use real, attributable customers when live — no fabricated logos or quotes. Until real proof exists, populate with an early-partner / metrics treatment.
 
@@ -85,7 +85,7 @@ Plus a **sticky top nav** (blurred, persistent trial CTA, theme toggle) present 
 
 ### 5.1 Layout & components
 - Reuse `components/layouts/marketing.blade.php`; add `title`/`description`/OG meta props.
-- Extract shared chrome: `<x-marketing.nav>` (sticky, blurred, CTA, theme toggle) and `<x-marketing.footer>` (nav columns, legal, newsletter, socials).
+- Extract shared chrome: `<x-marketing.nav>` (fixed, auto-hiding, CTA) and `<x-marketing.footer>` (nav columns, legal, newsletter, socials).
 - Decompose each section into a component under `resources/views/components/marketing/`: `hero`, `logo-ticker`, `problems`, `solution`, `feature-grid`, `module-grid`, `showcase`, `differentiators`, `testimonials`, `pricing-table`, `faq-accordion`, `cta-band`. Dedicated pages (Features, Pricing, FAQ) reuse these exact components.
 
 ### 5.2 Controllers & routes

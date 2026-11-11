@@ -6,12 +6,12 @@
                 <p class="mt-1 text-sm text-mist-500">الأصول النشطة وسجل الإسنادات السابقة.</p>
             </div>
             <div class="flex flex-wrap gap-2">
-                <a href="{{ route('hr.employees.show', [$employee, 'tab' => 'assets']) }}" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">ملف الموظف</a>
-                <a href="{{ route('tenant.assets.index') }}" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white">كل الأصول</a>
+                <a href="{{ route('hr.employees.show', [$employee, 'tab' => 'assets']) }}" class="ui-btn ui-btn-secondary">ملف الموظف</a>
+                <a href="{{ route('tenant.assets.index') }}" class="ui-btn ui-btn-primary">كل الأصول</a>
             </div>
         </div>
 
-        <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <section class="ui-card p-4">
             <h2 class="font-semibold text-ink-900 dark:text-ink-50">عهدة نشطة</h2>
             <div class="mt-3 overflow-x-auto">
                 <table class="w-full min-w-max text-sm">
@@ -41,7 +41,7 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <section class="ui-card p-4">
             <h2 class="font-semibold text-ink-900 dark:text-ink-50">سجل سابق</h2>
             <div class="mt-3 overflow-x-auto">
                 <table class="w-full min-w-max text-sm">

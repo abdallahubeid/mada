@@ -11,7 +11,7 @@
     <div class="max-w-[80%]">
         <div @class([
             'px-4 py-3 text-sm shadow-sm rounded-2xl',
-            'bg-brand-500 text-white rounded-se-none' => $isAdmin,
+            'bg-brand-action text-white rounded-se-none' => $isAdmin,
             'border border-mist-200 bg-white text-ink-700 rounded-ss-none dark:border-ink-700 dark:bg-ink-800 dark:text-mist-100' => ! $isAdmin,
         ])>
             {{ $message['body'] }}

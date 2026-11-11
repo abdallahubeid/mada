@@ -87,7 +87,7 @@
                     type="button"
                     @click="wrap(@js($marker['open']), @js($marker['close']))"
                     title="{{ $marker['name'] }} — {{ $marker['hint'] }} ({{ $marker['open'] }}…{{ $marker['close'] }})"
-                    class="inline-flex items-center gap-1.5 rounded-lg border border-mist-200 bg-white px-2 py-1 text-xs font-medium text-ink-700 transition-colors duration-150 hover:border-brand-400 hover:text-brand-600"
+                    class="ui-btn ui-btn-secondary ui-btn-sm"
                 >
                     <span class="{{ $marker['class'] }}">{{ $marker['name'] }}</span>
                 </button>
@@ -99,7 +99,7 @@
                 x-show="hasMarkers"
                 x-cloak
                 title="إزالة كل الزخارف من هذا العنوان"
-                class="rounded-lg border border-mist-200 bg-white px-2 py-1 text-xs font-medium text-mist-500 transition-colors duration-150 hover:border-critical-400 hover:text-critical-600"
+                class="ui-btn ui-btn-danger-outline ui-btn-sm"
             >إزالة الزخرفة</button>
         </div>
     </div>
@@ -136,9 +136,9 @@
     <p class="text-xs leading-relaxed text-mist-500">
         @foreach ($markers as $marker)
             <code class="rounded bg-mist-100 px-1 py-0.5 font-mono text-ink-700">{{ $marker['open'] }}نص{{ $marker['close'] }}</code>
-            <span>{{ $marker['hint'] }}</span>@if (! $loop->last)<span class="mx-1 text-mist-300">·</span>@endif
+            <span>{{ $marker['hint'] }}</span>@if (! $loop->last)<span class="mx-1 text-mist-400" aria-hidden="true">·</span>@endif
         @endforeach
-        <span class="mx-1 text-mist-300">·</span>
+        <span class="mx-1 text-mist-400" aria-hidden="true">·</span>
         <span>عنوان بلا علامات يظهر بلا زخرفة.</span>
     </p>
 </div>

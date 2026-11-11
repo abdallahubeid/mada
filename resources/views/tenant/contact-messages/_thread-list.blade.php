@@ -41,7 +41,7 @@
                 <div class="mt-1.5 flex items-center gap-2">
                     @include('tenant.contact-messages._receipt', ['status' => $thread['receipt'], 'onDark' => false])
                     @if ($thread['unread'])
-                        <span data-thread-unread class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-500 px-1.5 text-xs font-bold text-white">
+                        <span data-thread-unread class="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-action px-1.5 text-xs font-bold text-white">
                             {{ max(1, (int) ($thread['unread_count'] ?? 1)) }}
                         </span>
                     @endif

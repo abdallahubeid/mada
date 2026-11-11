@@ -1,8 +1,8 @@
 @php
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
-    $sectionClass = 'space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $sectionClass = 'ui-card space-y-4 p-4';
     $isEdit = ($method ?? 'POST') !== 'POST';
     $hasLinkedUser = $isEdit && filled($employee->user_id);
 @endphp
@@ -249,6 +249,6 @@
 
     <div class="flex justify-end gap-3">
         <a href="{{ route('hr.employees.index') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:text-ink-700 dark:text-mist-400 dark:hover:text-mist-200">إلغاء</a>
-        <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">حفظ</button>
+        <button type="submit" class="ui-btn ui-btn-primary">حفظ</button>
     </div>
 </form>

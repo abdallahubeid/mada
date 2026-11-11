@@ -4,14 +4,14 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">المستأجرون</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">الخطط والحدود</span>
 @endsection
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+        $inputClass = 'ui-control w-full';
+        $labelClass = 'ui-label';
         $blankPlan = [
             'id' => null,
             'key' => '',
@@ -39,11 +39,11 @@
     }">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الخطط وحدود الميزات</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الخطط وحدود الميزات</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تُحفظ مباشرة في جداول الخطط وميزاتها.</p>
             </div>
 
-            <button type="button" @click="create()" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">
+            <button type="button" @click="create()" class="ui-btn ui-btn-primary">
                 إضافة خطة
             </button>
         </div>
@@ -56,7 +56,7 @@
                     'border-mist-200 dark:border-ink-600' => ! $plan['popular'],
                 ])>
                     @if ($plan['popular'])
-                        <span class="absolute -top-2.5 end-5 rounded-md bg-brand-500 px-2.5 py-1 text-xs font-bold text-white">مميزة</span>
+                        <span class="absolute -top-2.5 end-5 rounded-md bg-brand-action px-2.5 py-1 text-xs font-bold text-white">مميزة</span>
                     @endif
 
                     <div class="flex items-center justify-between gap-2">
@@ -84,11 +84,11 @@
                     </ul>
 
                     <div class="mt-5 flex items-center gap-2 border-t border-mist-100 pt-4 dark:border-ink-700">
-                        <button type="button" @click="edit(@js($plan))" class="flex-1 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-200">تعديل</button>
+                        <button type="button" @click="edit(@js($plan))" class="ui-btn ui-btn-secondary flex-1">تعديل</button>
                         <form method="POST" action="{{ route('admin.plans.destroy', $plan['id']) }}" data-swal-confirm data-swal-variant="warning" data-swal-title="أرشفة هذه الخطة؟" data-swal-text="ستختفي الخطة من صفحة الأسعار العامة، وتبقى الاشتراكات القائمة عليها كما هي. يمكن استعادتها لاحقاً." data-swal-confirm-button="نعم، أرشف الخطة">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="rounded-xl border border-mist-200 px-3 py-2 text-sm font-semibold text-mist-500 transition hover:border-danger-solid hover:text-danger-solid dark:border-ink-600">أرشفة</button>
+                            <button type="submit" class="ui-btn ui-btn-danger-outline">أرشفة</button>
                         </form>
                     </div>
                 </div>
@@ -122,50 +122,50 @@
 
                 <div class="flex-1 space-y-4 overflow-y-auto p-4">
                     <div>
-                        <label class="{{ $labelClass }}">اسم الخطة</label>
-                        <input type="text" name="name" x-model="form.name" class="{{ $inputClass }}" required>
+                        <label for="f-index-name-1" class="{{ $labelClass }}">اسم الخطة</label>
+                        <input id="f-index-name-1" type="text" name="name" x-model="form.name" class="{{ $inputClass }}" required>
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">المعرّف (slug)</label>
-                        <input type="text" dir="ltr" name="slug" x-model="form.key" class="{{ $inputClass }}" required>
+                        <label for="f-index-slug-2" class="{{ $labelClass }}">المعرّف (slug)</label>
+                        <input id="f-index-slug-2" type="text" dir="ltr" name="slug" x-model="form.key" class="{{ $inputClass }}" required>
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">الوصف القصير</label>
-                        <input type="text" name="tagline" x-model="form.tagline" class="{{ $inputClass }}">
+                        <label for="f-index-tagline-3" class="{{ $labelClass }}">الوصف القصير</label>
+                        <input id="f-index-tagline-3" type="text" name="tagline" x-model="form.tagline" class="{{ $inputClass }}">
                     </div>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="{{ $labelClass }}">السعر الشهري</label>
-                            <input type="number" step="0.01" min="0" name="price_monthly" x-model="form.price_monthly" class="{{ $inputClass }}">
+                            <label for="f-index-price-monthly-4" class="{{ $labelClass }}">السعر الشهري</label>
+                            <input id="f-index-price-monthly-4" type="number" step="0.01" min="0" name="price_monthly" x-model="form.price_monthly" class="{{ $inputClass }}">
                         </div>
                         <div>
-                            <label class="{{ $labelClass }}">السعر السنوي</label>
-                            <input type="number" step="0.01" min="0" name="price_yearly" x-model="form.price_yearly" class="{{ $inputClass }}">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        <div>
-                            <label class="{{ $labelClass }}">العملة</label>
-                            <input type="text" dir="ltr" name="currency" x-model="form.currency" maxlength="3" class="{{ $inputClass }}">
-                        </div>
-                        <div>
-                            <label class="{{ $labelClass }}">ترتيب العرض</label>
-                            <input type="number" name="sort_order" x-model="form.sort_order" class="{{ $inputClass }}">
+                            <label for="f-index-price-yearly-5" class="{{ $labelClass }}">السعر السنوي</label>
+                            <input id="f-index-price-yearly-5" type="number" step="0.01" min="0" name="price_yearly" x-model="form.price_yearly" class="{{ $inputClass }}">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="{{ $labelClass }}">نص الزر</label>
-                            <input type="text" name="cta_label" x-model="form.cta_label" class="{{ $inputClass }}">
+                            <label for="f-index-currency-6" class="{{ $labelClass }}">العملة</label>
+                            <input id="f-index-currency-6" type="text" dir="ltr" name="currency" x-model="form.currency" maxlength="3" class="{{ $inputClass }}">
                         </div>
                         <div>
-                            <label class="{{ $labelClass }}">رابط الزر</label>
-                            <input type="text" dir="ltr" name="cta_url" x-model="form.cta_url" class="{{ $inputClass }}">
+                            <label for="f-index-sort-order-7" class="{{ $labelClass }}">ترتيب العرض</label>
+                            <input id="f-index-sort-order-7" type="number" name="sort_order" x-model="form.sort_order" class="{{ $inputClass }}">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div>
+                            <label for="f-index-cta-label-8" class="{{ $labelClass }}">نص الزر</label>
+                            <input id="f-index-cta-label-8" type="text" name="cta_label" x-model="form.cta_label" class="{{ $inputClass }}">
+                        </div>
+                        <div>
+                            <label for="f-index-cta-url-9" class="{{ $labelClass }}">رابط الزر</label>
+                            <input id="f-index-cta-url-9" type="text" dir="ltr" name="cta_url" x-model="form.cta_url" class="{{ $inputClass }}">
                         </div>
                     </div>
                     <div>
-                        <label class="{{ $labelClass }}">المزايا (سطر لكل ميزة)</label>
-                        <textarea name="features_text" rows="6" x-model="form.features_text" class="{{ $inputClass }}"></textarea>
+                        <label for="f-index-features-text-10" class="{{ $labelClass }}">المزايا (سطر لكل ميزة)</label>
+                        <textarea id="f-index-features-text-10" name="features_text" rows="6" x-model="form.features_text" class="{{ $inputClass }}"></textarea>
                     </div>
                     <label class="flex items-center justify-between rounded-xl border border-mist-200 px-3 py-2 dark:border-ink-600">
                         <span class="text-sm">خطة مميزة</span>
@@ -179,7 +179,7 @@
 
                 <div class="flex items-center justify-end gap-3 border-t border-mist-100 px-5 py-4 dark:border-ink-700">
                     <button type="button" @click="open = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600">إلغاء</button>
-                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow">حفظ الخطة</button>
+                    <button type="submit" class="ui-btn ui-btn-primary">حفظ الخطة</button>
                 </div>
             </form>
         </aside>

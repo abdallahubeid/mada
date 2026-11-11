@@ -1,0 +1,696 @@
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * PUBLIC SITE DESIGN LAYER — Andromeda visual identity
+ *
+ * Everything the public marketing site needs to look like the Andromeda
+ * template (Themefisher, MIT): an orange accent on white, cream panels with
+ * dashed wave lines and scattered circles, Poppins on a 1.246 type scale,
+ * and the short orange bar under section titles.
+ *
+ * SCOPED, NOT GLOBAL. The admin console and the tenant app share
+ * `brand-*`, `ink-*` and `mist-*` with the marketing views. Re-pointing those
+ * would repaint every dashboard, so this layer adds its own `site-*` tokens
+ * and its base rules only apply under `.site` (set on the marketing <body>).
+ *
+ * Arabic glyphs: Poppins has none, so `--font-site` falls through to Tajawal
+ * for every Arabic character. Tajawal is geometric and low-contrast like
+ * Poppins and is loaded at the same 400/500/600/700 weights, so the type
+ * hierarchy survives the fallback intact.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
+@theme {
+    --color-site-primary: #fe6019;
+    /* #fe6019 is 3.0:1 on white: shapes, icons and rules only. Orange text
+       uses -ink (5.2:1); a fill under white text uses -action (4.65:1). */
+    --color-site-primary-ink: #c2410c;
+    --color-site-primary-action: #cf4510;
+    --color-site-text: #4a4a4a; /* 8.3:1 on the canvas (was the template's #666, 5.4:1) */
+    --color-site-dark: #222222;
+    --color-site-light: #ceced0;
+    --color-site-border: #dee2e6;
+    --color-site-border-soft: #ffece4;
+    --color-site-cream: #fffaf3;
+    /* Page canvas: a warm off-white, so white cards read as raised and full
+       pages carry no white glare. Same value as the app canvas (`mist-50`). */
+    --color-site-canvas: #f8f6f2;
+    --color-site-peach: #fff7f3;
+    --color-site-circle: #ffe6db;
+    --color-site-wave: #ffe4d1;
+    --color-site-night: #1a202c;
+
+    --font-site: 'Poppins', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+
+    /* Template scale: base 16px × 1.246 per step; mobile headings at 80%. */
+    --text-site-h1: 3.0032rem;
+    --text-site-h1-sm: 2.4026rem;
+    --text-site-h2: 2.4103rem;
+    --text-site-h2-sm: 1.9282rem;
+    --text-site-h3: 1.9344rem;
+    --text-site-h3-sm: 1.5475rem;
+    --text-site-h4: 1.5525rem;
+    --text-site-h5: 1.246rem;
+    --text-site-h6: 1rem;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+
+@layer base {
+    .site {
+        /* Surfaces (cards, inputs) stay pure white on the off-white canvas. */
+        --color-white: #ffffff;
+
+        background-color: var(--color-site-canvas);
+        color: var(--color-site-text);
+        font-family: var(--font-site);
+        font-size: 0.9375rem;
+        font-weight: 400;
+        line-height: 1.625;
+    }
+
+    .site :is(h1, h2, h3, h4, h5, h6) {
+        color: var(--color-site-dark);
+        font-family: var(--font-site);
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .site :is(h1, .site-h1) {
+        font-size: var(--text-site-h1-sm);
+    }
+
+    .site :is(h2, .site-h2) {
+        font-size: var(--text-site-h2-sm);
+    }
+
+    .site :is(h3, .site-h3) {
+        font-size: var(--text-site-h3-sm);
+    }
+
+    @media (min-width: 768px) {
+        .site :is(h1, .site-h1) {
+            font-size: var(--text-site-h1);
+        }
+
+        .site :is(h2, .site-h2) {
+            font-size: var(--text-site-h2);
+        }
+
+        .site :is(h3, .site-h3) {
+            font-size: var(--text-site-h3);
+        }
+    }
+
+    .site :is(h4, .site-h4) {
+        font-size: var(--text-site-h4);
+    }
+
+    .site :is(h5, .site-h5) {
+        font-size: var(--text-site-h5);
+    }
+
+    .site :is(h6, .site-h6) {
+        font-size: var(--text-site-h6);
+    }
+
+    .site :is(b, strong) {
+        font-weight: 600;
+    }
+
+    /* The global focus ring is plum; on the public site it follows the accent. */
+    .site :is(a, button, [role='button'], input, select, textarea, summary, [tabindex]):focus-visible {
+        outline-color: var(--color-site-primary);
+    }
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+
+@layer components {
+    .site-container,
+    .site-container-xl {
+        width: 100%;
+        margin-inline: auto;
+        padding-inline: 1rem;
+    }
+
+    .site-container {
+        max-width: 1380px;
+    }
+
+    .site-container-xl {
+        max-width: 1440px;
+    }
+
+    @media (min-width: 640px) {
+        .site-container,
+        .site-container-xl {
+            padding-inline: 1.5rem;
+        }
+    }
+
+    .site-section {
+        padding-block: 4rem;
+    }
+
+    /* ── Buttons ───────────────────────────────────────────────────────── */
+
+    .site-btn {
+        position: relative;
+        z-index: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 3rem;
+        padding: 0.75rem 1.25rem;
+        overflow: hidden;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        line-height: 1.4;
+        text-align: center;
+        transition:
+            color 150ms ease,
+            background-color 150ms ease,
+            border-color 150ms ease;
+    }
+
+    /* Header-bar size: still a 44px target, 4px shorter than the default. */
+    .site-btn--compact {
+        min-height: 2.75rem;
+        padding-block: 0.5rem;
+    }
+
+    /*
+     * The fill is the AA-safe orange (white text 4.65:1), not the template's
+     * #fe6019 (3.0:1) — see `--color-brand-action` in app.css.
+     */
+    .site-btn-primary {
+        background-color: var(--color-brand-action);
+        color: #ffffff;
+    }
+
+    /* The template's hover: a 10% black wash that drops down over the fill. */
+    .site-btn-primary::before {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        z-index: -1;
+        height: 0;
+        background-color: rgb(0 0 0 / 0.1);
+        content: '';
+        transition: height 300ms ease;
+    }
+
+    .site-btn-primary:hover::before {
+        top: auto;
+        bottom: 0;
+        height: 100%;
+    }
+
+    .site-btn-outline {
+        border-color: var(--color-site-primary);
+        background-color: transparent;
+        color: var(--color-site-dark);
+    }
+
+    .site-btn-outline:hover {
+        background-color: var(--color-site-primary-action);
+        color: #ffffff;
+    }
+
+    .site-link {
+        color: var(--color-site-primary-ink);
+        font-weight: 500;
+        transition: color 150ms ease;
+    }
+
+    .site-link:hover {
+        text-decoration: underline;
+    }
+
+    /* ── Section heading ───────────────────────────────────────────────── */
+
+    .site-section-title {
+        position: relative;
+    }
+
+    .site-section-title::after {
+        position: absolute;
+        bottom: -1rem;
+        left: 50%;
+        width: 70px;
+        height: 4px;
+        border-radius: 30px;
+        background-color: var(--color-site-primary);
+        content: '';
+        transform: translateX(-50%);
+    }
+
+    /* `bar-left` in the template; logical so it sits on the right in Arabic. */
+    .site-section-title--start::after {
+        left: auto;
+        inset-inline-start: 0;
+        transform: none;
+    }
+
+    /* ── Cream wave panel (template `.bg-theme`) ───────────────────────── */
+
+    .site-panel-host {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .site-panel {
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        border-radius: 1rem;
+    }
+
+    .site-panel::before,
+    .site-panel::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        content: '';
+    }
+
+    /* Grows from 30% to full size the first time it scrolls into view. */
+    .site-panel::before {
+        border-radius: 30px;
+        background-color: var(--color-site-peach);
+        transform: scale(0.3);
+        transition: transform 1500ms cubic-bezier(0.105, 0.84, 0.44, 1);
+    }
+
+    .site-panel.is-in::before {
+        transform: scale(1);
+    }
+
+    .site-panel::after {
+        background-image: url("data:image/svg+xml,%3Csvg width='1401' height='613' viewBox='0 0 1401 613' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 580C35.1785 462.015 166.359 247.408 425.652 332.866C749.767 439.688 890.318 302.84 946.338 181.583C1002.36 60.3256 1149.41 -52.8479 1400 35.4968' stroke='%23FFE4D1' stroke-width='4' stroke-dasharray='10 10'/%3E%3Cpath d='M1398 0.999977C1364.87 125.95 1233.88 353.224 974.955 262.722C651.302 149.594 510.953 294.52 455.013 422.935C399.073 551.35 252.231 671.203 2.00002 577.644' stroke='%23FFE4D1' stroke-width='4' stroke-dasharray='10 10'/%3E%3C/svg%3E");
+        background-position: 0 center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .site-panel--plain::after {
+        display: none;
+    }
+
+    /* Home hero: solid cream, one dashed wave and a dotted arc in the corner. */
+    .site-panel--banner::before {
+        height: 95%;
+        background-color: var(--color-site-cream);
+        background-image: url("data:image/svg+xml,%3Csvg width='1397' height='502' viewBox='0 0 1397 502' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 501C35.0836 398.787 165.889 212.869 424.439 286.903C747.628 379.445 887.776 260.891 943.636 155.844C999.496 50.796 1146.13 -47.2484 1396 29.2863' stroke='%23FFE4D1' stroke-opacity='0.85' stroke-width='4' stroke-dasharray='10 10'/%3E%3C/svg%3E");
+        background-position: 0 50px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        transform: scale(1);
+    }
+
+    /* The template's dotted arc, top corner, half the panel wide. */
+    .site-panel--banner::after {
+        background-image: url('/images/site/banner-dots.svg');
+        background-position: 100% 0;
+        background-size: 50% auto;
+    }
+
+    /* Inner-page banner: flat cream with the long wave across it. */
+    .site-panel--flat {
+        overflow: hidden;
+        background-color: var(--color-site-cream);
+    }
+
+    .site-panel--flat::before {
+        display: none;
+    }
+
+    .site-panel--flat::after {
+        background-image: url('/images/site/wave.svg');
+        background-position: center bottom;
+        background-size: 100% auto;
+    }
+
+    @media (min-width: 768px) {
+        .site-panel--flat::after {
+            background-image: url('/images/site/wave.svg'), url('/images/site/banner-wave-arc.svg');
+            background-position:
+                center bottom,
+                right 8% top 0;
+            background-size:
+                100% auto,
+                auto 70%;
+        }
+    }
+
+    /* CTA band: the peach panel grows in, with the wave along the bottom. */
+    .site-panel--wave::after {
+        background-image: url('/images/site/wave.svg');
+        background-position: center bottom;
+        background-size: 100% auto;
+    }
+
+    .site-circle {
+        position: absolute;
+        border-radius: 9999px;
+        background-color: var(--color-site-primary);
+        pointer-events: none;
+    }
+
+    .site-circle--soft {
+        background-color: var(--color-site-circle);
+    }
+
+    /* ── Feature card ──────────────────────────────────────────────────── */
+
+    .site-feature-card {
+        height: 100%;
+        padding: 4rem 1.75rem;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgb(0 0 0 / 0.05);
+        transition:
+            border-color 300ms ease,
+            box-shadow 300ms ease;
+    }
+
+    .site-feature-card:hover {
+        border-color: var(--color-site-border-soft);
+        box-shadow: none;
+    }
+
+    .site-feature-card-icon {
+        position: relative;
+        z-index: 0;
+        display: inline-flex;
+        width: 5rem;
+        height: 5rem;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid var(--color-site-peach);
+        border-radius: 6px;
+        color: var(--color-site-primary);
+    }
+
+    .site-feature-card-icon::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 0;
+        background-color: var(--color-site-cream);
+        content: '';
+        transition: height 300ms ease;
+    }
+
+    .site-feature-card:hover .site-feature-card-icon::before {
+        top: auto;
+        bottom: 0;
+        height: 100%;
+    }
+
+    /* A plain white card on the cream panels (template author / contact cards). */
+    .site-card {
+        border-radius: 0.75rem;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgb(0 0 0 / 0.05);
+    }
+
+    /* ── Forms ─────────────────────────────────────────────────────────── */
+
+    .site-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--color-site-dark);
+        font-weight: 500;
+    }
+
+    .site-input {
+        display: block;
+        width: 100%;
+        padding: 1rem 0.75rem;
+        border: 1px solid transparent;
+        border-inline-start-color: var(--color-site-primary);
+        border-radius: 0.25rem;
+        background-color: var(--color-site-cream);
+        color: var(--color-site-dark);
+        font-size: 1rem;
+        line-height: 1.5;
+        transition: border-color 150ms ease;
+    }
+
+    /*
+     * The accent edge follows the PAGE's reading direction, not the field's:
+     * an email field is `dir="ltr"` inside an Arabic page, and a logical
+     * inline-start would move its edge to the left while every other field
+     * keeps it on the right.
+     */
+    :where(html[dir='rtl']) .site-input {
+        border-inline-start-color: transparent;
+        border-right-color: var(--color-site-primary);
+    }
+
+    /* Was #9a9a9a (2.7:1 on the cream field); now 5.3:1. */
+    .site-input::placeholder {
+        color: #636a71;
+    }
+
+    .site-input:focus {
+        border-color: var(--color-site-primary);
+        outline: none;
+    }
+
+    .site-input[aria-invalid='true'] {
+        border-color: #b42318;
+    }
+
+    .site-error {
+        margin-top: 0.375rem;
+        color: #b42318;
+        font-size: 0.9375rem;
+    }
+
+    .site-check {
+        width: 1.125rem;
+        height: 1.125rem;
+        flex-shrink: 0;
+        accent-color: var(--color-site-primary);
+    }
+
+    /* A confirmation line above a form ("we sent you a link"). */
+    .site-notice {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--color-site-border-soft);
+        border-inline-start: 4px solid var(--color-site-primary);
+        border-radius: 0.375rem;
+        background-color: var(--color-site-cream);
+        color: var(--color-site-dark);
+        font-weight: 500;
+    }
+
+    /* Numbered progress dot (register wizard): upcoming → current → done. */
+    .site-step {
+        display: flex;
+        width: 2.25rem;
+        height: 2.25rem;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-site-border);
+        border-radius: 9999px;
+        background-color: #ffffff;
+        color: var(--color-site-text);
+        font-weight: 600;
+        transition:
+            border-color 300ms ease,
+            background-color 300ms ease,
+            color 300ms ease;
+    }
+
+    .site-step.is-current {
+        border: 2px solid var(--color-site-primary);
+        background-color: var(--color-site-cream);
+        color: var(--color-site-primary-ink);
+    }
+
+    .site-step.is-done {
+        border-color: var(--color-site-primary-action);
+        background-color: var(--color-site-primary-action);
+        color: #ffffff;
+    }
+
+    /* ── Accordion (template shortcode) ────────────────────────────────── */
+
+    .site-accordion {
+        overflow: hidden;
+        border: 1px solid var(--color-site-border);
+        border-radius: 0.75rem;
+        background-color: #ffffff;
+    }
+
+    .site-accordion-head {
+        position: relative;
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1rem;
+        padding-inline-end: 3rem;
+        background-color: var(--color-site-cream);
+        color: var(--color-site-dark);
+        font-weight: 500;
+        text-align: start;
+    }
+
+    .site-accordion-head svg {
+        position: absolute;
+        top: 50%;
+        inset-inline-end: 1rem;
+        width: 1rem;
+        height: 1rem;
+        transform: translateY(-50%);
+        transition: transform 200ms ease;
+    }
+
+    .site-accordion-head[aria-expanded='true'] svg {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* ── Header ────────────────────────────────────────────────────────── */
+
+    .site-header {
+        position: fixed;
+        top: 0;
+        inset-inline: 0;
+        z-index: 50;
+        padding-block: 0.75rem;
+        background-color: var(--color-site-canvas);
+        transition:
+            padding 500ms ease,
+            transform 500ms ease,
+            box-shadow 500ms ease;
+    }
+
+    .site-header.is-sticky {
+        padding-block: 0.375rem;
+        box-shadow: 0 2px 8px rgb(32 45 73 / 0.1);
+    }
+
+    .site-header.is-unpinned {
+        transform: translateY(-100%);
+    }
+
+    /*
+     * Reserves the fixed header's resting height so content starts below it:
+     * 12px padding on each side of a 46px row (nav links, the 44px CTA and the
+     * 44px menu toggle all fit inside it), the same at every width.
+     */
+    .site-header-spacer {
+        height: 70px;
+    }
+
+    /* 26px line + 20px padding = a 46px target (WCAG 2.5.5 asks for 44). */
+    .site-nav-link {
+        display: block;
+        padding: 0.625rem 0.75rem;
+        color: var(--color-site-dark);
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 150ms ease;
+    }
+
+    .site-nav-link:hover,
+    .site-nav-link[aria-current='page'] {
+        color: var(--color-site-primary-ink);
+    }
+
+    /* ── Footer social icons ───────────────────────────────────────────── */
+
+    .site-social {
+        display: inline-flex;
+        width: 2.75rem;
+        height: 2.75rem;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-site-border);
+        border-radius: 9999px;
+        color: var(--color-site-text);
+        transition:
+            border-color 300ms ease,
+            color 300ms ease;
+    }
+
+    .site-social:hover {
+        border-color: var(--color-site-primary);
+        color: var(--color-site-primary-ink);
+    }
+
+    /* ── Testimonial blob ──────────────────────────────────────────────── */
+
+    .site-testimonial-blob {
+        background-image: url("data:image/svg+xml,%3Csvg width='462' height='458' viewBox='0 0 462 458' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M36.9901 53.2939C8.66553 90.8729-.680565 197.569.0380893 247.72 3.02596 456.228 136.937 460.573 283.124 457.125 406.681 454.211 459.969 401.82 461.426 261.777 462.591 149.742 432.9 78.8779 413.134 60.3019 326.242-21.359 89.5954-16.4987 36.9901 53.2939z' fill='%23cf4510'/%3E%3C/svg%3E");
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+
+    /* ── Long-form legal copy (template `.content`) ────────────────────── */
+
+    .site-prose {
+        color: var(--color-site-text);
+        font-size: 1rem;
+        line-height: 1.75;
+    }
+
+    .site-prose :is(h2, h3) {
+        margin-top: 0.5em;
+        margin-bottom: 0.9em;
+    }
+
+    .site-prose p + p {
+        margin-top: 1em;
+    }
+
+    .site-prose ul {
+        padding-inline-start: 1.25rem;
+        list-style: disc;
+    }
+
+    .site-prose li + li {
+        margin-top: 0.5em;
+    }
+
+    .site-prose li::marker {
+        color: var(--color-site-primary);
+    }
+
+    .site-prose a {
+        color: var(--color-site-primary-ink);
+    }
+
+    .site-prose a:hover {
+        text-decoration: underline;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-panel::before {
+        transform: scale(1);
+        transition: none;
+    }
+
+    .site-header {
+        transition: none;
+    }
+}

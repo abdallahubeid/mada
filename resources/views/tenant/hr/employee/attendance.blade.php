@@ -1,7 +1,7 @@
 @php
     use App\Domain\Tenancy\Enums\AttendanceStatus;
 
-    $card = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $card = 'ui-card p-4';
 
     $statusClasses = [
         AttendanceStatus::Present->value => 'bg-brand-500/15 text-brand-700 dark:text-brand-300',
@@ -58,7 +58,7 @@
                             @if ($todayAttendance?->check_in === null)
                                 <form method="POST" action="{{ route('tenant.hr.my-attendance.check-in') }}">
                                     @csrf
-                                    <button type="submit" class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                                    <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg">
                                         تسجيل حضور
                                     </button>
                                 </form>
@@ -98,7 +98,7 @@
             {{-- History --}}
             <div class="space-y-4">
                 <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">سجلّي الكامل</h2>
-                <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card w-full overflow-x-auto">
                     <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                         <thead class="bg-mist-50 dark:bg-ink-900">
                             <tr>

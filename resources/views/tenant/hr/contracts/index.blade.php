@@ -16,7 +16,7 @@
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة عقود الموظفين وتنبيهات الانتهاء.</p>
             </div>
             @can('hr.contracts.create')
-                <a href="{{ route('hr.contracts.create') }}" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                <a href="{{ route('hr.contracts.create') }}" class="ui-btn ui-btn-primary">
                     إضافة عقد
                 </a>
             @endcan
@@ -39,10 +39,10 @@
             </div>
         @endif
 
-        <form method="GET" action="{{ route('hr.contracts.index') }}" class="flex flex-wrap items-end gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" action="{{ route('hr.contracts.index') }}" class="ui-card flex flex-wrap items-end gap-3 p-4">
             <div>
                 <label for="status" class="mb-1.5 block text-xs font-medium text-mist-500">الحالة</label>
-                <select id="status" name="status" class="rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50">
+                <select id="status" name="status" class="ui-control">
                     <option value="all" @selected($filters['status'] === 'all')>الكل</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}" @selected($filters['status'] === $status->value)>{{ $status->label() }}</option>
@@ -53,10 +53,10 @@
                 <input type="checkbox" name="expiring" value="1" @checked($filters['expiring'])>
                 تنتهي خلال 30 يوماً
             </label>
-            <button type="submit" class="rounded-xl bg-ink-900 px-4 py-2 text-sm font-semibold text-white dark:bg-ink-50 dark:text-ink-900">تصفية</button>
+            <button type="submit" class="ui-btn ui-btn-secondary">تصفية</button>
         </form>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -88,13 +88,13 @@
                             <td class="px-3 py-2 text-center">
                                 <div class="flex items-center justify-end gap-2">
                                     @can('hr.contracts.update')
-                                        <a href="{{ route('hr.contracts.edit', $contract) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تعديل</a>
+                                        <a href="{{ route('hr.contracts.edit', $contract) }}" class="ui-btn ui-btn-secondary ui-btn-sm">تعديل</a>
                                     @endcan
                                     @can('hr.contracts.delete')
                                         <form method="POST" action="{{ route('hr.contracts.destroy', $contract) }}" data-swal-confirm data-swal-title="حذف هذا العقد؟">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                            <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف</button>
                                         </form>
                                     @endcan
                                 </div>

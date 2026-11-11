@@ -5,10 +5,10 @@
                 <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">تصنيفات المصروفات</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">تُستخدم لتحليل التكاليف في لوحة التحكم المالية.</p>
             </div>
-            <a href="{{ route('finance.expense-categories.create') }}" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">إضافة تصنيف</a>
+            <a href="{{ route('finance.expense-categories.create') }}" class="ui-btn ui-btn-primary">إضافة تصنيف</a>
         </div>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -40,11 +40,11 @@
                             </td>
                             <td class="px-3 py-2 text-center">
                                 <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ route('finance.expense-categories.edit', $category) }}" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">تعديل</a>
+                                    <a href="{{ route('finance.expense-categories.edit', $category) }}" class="ui-btn ui-btn-secondary ui-btn-sm">تعديل</a>
                                     <form method="POST" action="{{ route('finance.expense-categories.destroy', $category) }}" data-swal-confirm data-swal-title="حذف هذا التصنيف؟">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                        <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف</button>
                                     </form>
                                 </div>
                             </td>

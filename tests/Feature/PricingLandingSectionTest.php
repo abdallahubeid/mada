@@ -36,6 +36,22 @@ test('plan seeder persists the three erp pricing tiers', function () {
         ->and($plans->firstWhere('slug', 'startup')?->features)->toHaveCount(7);
 });
 
+test('pricing shows plan limits as readable lines, never raw limit keys', function () {
+    $this->seed(SettingSeeder::class);
+    $this->seed(PlanSeeder::class);
+
+    $this->get(route('marketing.pricing'))
+        ->assertOk()
+        ->assertDontSee('max_employees', false)
+        ->assertDontSee('max_departments', false)
+        ->assertDontSee('max_storage_mb', false)
+        ->assertSee('الموظفون: حتى 25', false)
+        ->assertSee('الأقسام: حتى 5', false)
+        ->assertSee('التخزين: 1 جيجابايت', false)
+        ->assertSee('التخزين: 10 جيجابايت', false)
+        ->assertSee('الموظفون: بلا حد', false);
+});
+
 test('the landing page pricing section renders seeded settings plans and comparison button', function () {
     $this->seed(SettingSeeder::class);
     $this->seed(PlanSeeder::class);

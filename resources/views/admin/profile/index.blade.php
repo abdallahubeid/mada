@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">الحساب والوصول</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">الملف الشخصي</span>
 @endsection
 
@@ -15,10 +15,10 @@
 @section('content')
     @php
         $inputClass =
-            'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+            'ui-control w-full';
+        $labelClass = 'ui-label';
         $cardClass =
-            'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:p-6 dark:border-ink-600 dark:bg-ink-800';
+            'ui-card p-4 sm:p-6';
         $avatarUrl = $user->avatar_url;
         $hasUploadedAvatar = $user->avatar !== null;
     @endphp
@@ -32,7 +32,7 @@
         class="mx-auto max-w-4xl"
     >
         <div>
-            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الملف الشخصي</h2>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الملف الشخصي</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة معلوماتك الشخصية وصورة الحساب وكلمة المرور.</p>
         </div>
 
@@ -56,7 +56,7 @@
                     <button
                         type="button"
                         @click="pickAvatar()"
-                        class="absolute -bottom-1 -end-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border-2 border-white bg-brand-500 text-white shadow-md transition duration-200 hover:bg-brand-600 active:scale-90 dark:border-ink-800"
+                        class="absolute -bottom-1 -end-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border-2 border-white bg-brand-action text-white shadow-md transition duration-200 hover:bg-brand-600 active:scale-90 dark:border-ink-800"
                         title="تغيير الصورة"
                         aria-label="تغيير الصورة"
                     >
@@ -214,7 +214,7 @@
 
             <div class="mt-6 flex items-center justify-end gap-3 border-t border-mist-200 pt-5 dark:border-ink-700">
                 <a href="{{ route('admin.profile') }}" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-800">إلغاء</a>
-                <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95">
+                <button type="submit" class="ui-btn ui-btn-primary">
                     حفظ التغييرات
                 </button>
             </div>
@@ -261,7 +261,7 @@
                         </svg>
                         إعادة ضبط / قص الصورة
                     </button>
-                    <button type="button" @click="pickAvatar()" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+                    <button type="button" @click="pickAvatar()" class="ui-btn ui-btn-primary">
                         اختيار صورة جديدة
                     </button>
                 </div>
@@ -313,7 +313,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button type="button" @click="cancelCrop()" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-400 transition hover:text-white">إلغاء</button>
-                        <button type="button" @click="applyCrop()" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+                        <button type="button" @click="applyCrop()" class="ui-btn ui-btn-primary">
                             تطبيق القص
                         </button>
                     </div>

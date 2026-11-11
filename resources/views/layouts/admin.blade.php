@@ -22,7 +22,7 @@
     @livewireStyles
 </head>
 <body
-    class="h-full overflow-hidden bg-neutral-50 font-sans text-ink-600 antialiased dark:bg-ink-950 dark:text-mist-300"
+    class="h-full overflow-hidden bg-mist-50 font-sans text-ink-600 antialiased"
     x-data="{
         sidebarOpen: false,
         profileOpen: false,
@@ -150,7 +150,7 @@
                 confirmButtonText: form.dataset.swalConfirmButton || variant.confirm,
                 cancelButtonText: form.dataset.swalCancelButton || 'إلغاء',
                 confirmButtonColor: variant.color,
-                cancelButtonColor: '#5a5262',
+                cancelButtonColor: '#6c757d',
                 reverseButtons: true,
             }).then((result) => {
                 if (! result.isConfirmed) {
@@ -175,7 +175,7 @@
                     title: flasher.message,
                     showConfirmButton: hasUndo,
                     confirmButtonText: flasher.undo_label || 'تراجع',
-                    confirmButtonColor: '#714b67',
+                    confirmButtonColor: '#fe6019',
                     showCancelButton: false,
                     timer: hasUndo ? 8000 : 3200,
                     timerProgressBar: true,

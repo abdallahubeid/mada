@@ -62,7 +62,7 @@
                 <div class="flex flex-wrap gap-2">
                     <a
                         href="{{ route('marketing.pricing') }}"
-                        class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                        class="ui-btn ui-btn-primary"
                     >
                         ترقية الخطة
                     </a>
@@ -79,7 +79,7 @@
         {{-- Usage meters --}}
         <section class="grid gap-3 sm:grid-cols-3">
             @foreach ($usage as $meter)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <div class="flex items-center justify-between gap-2">
                         <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $meter['label'] }}</p>
                         <p class="text-xs text-mist-500" dir="ltr">
@@ -91,7 +91,7 @@
                     </div>
                     <div class="mt-3 h-2 overflow-hidden rounded-full bg-mist-100 dark:bg-ink-700">
                         <div
-                            class="h-full rounded-full transition-all {{ $meter['percent'] >= 90 ? 'bg-amber-400' : 'bg-brand-500' }}"
+                            class="h-full rounded-full transition-[width] {{ $meter['percent'] >= 90 ? 'bg-amber-400' : 'bg-brand-500' }}"
                             style="width: {{ $meter['limit'] === null ? 8 : $meter['percent'] }}%"
                         ></div>
                     </div>
@@ -109,7 +109,7 @@
         {{-- Invoices --}}
         <section class="space-y-3">
             <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">سجل الفواتير</h2>
-            <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card w-full overflow-x-auto">
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>

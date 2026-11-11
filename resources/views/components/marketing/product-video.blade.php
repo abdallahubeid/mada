@@ -78,45 +78,28 @@
 
 @if ($hasVideo)
     {{--
-        `-mt-*` pulls the band up into the hero's trailing space so the two
-        share one continuous ground, and the section paints the canvas colour
-        itself so the feathered video edges dissolve into it rather than into
-        whatever happens to sit behind.
+        Framed like the template's banner screenshot: a rounded, shadowed
+        picture that sits on the hero's cream panel and overlaps its lower
+        edge. The hero renders this inside its own container.
     --}}
-    <section class="relative -mt-4 overflow-hidden bg-mist-50 sm:-mt-8" data-scroll-video>
+    <div data-scroll-video>
         {{--
             Optional heading, rendered only when the admin has filled it in.
             The reel works as a silent band with no copy at all, so an empty
             title must produce no markup rather than an empty heading element.
         --}}
         @if (filled($videoTitle) || filled($videoDescription))
-            <div class="mx-auto mb-10 max-w-3xl px-4 text-center sm:px-6">
+            <div class="mx-auto mb-8 max-w-3xl text-center">
                 @if (filled($videoTitle))
-                    <h2 class="font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">{{ $videoTitle }}</h2>
+                    <h2 class="site-h4">{{ $videoTitle }}</h2>
                 @endif
                 @if (filled($videoDescription))
-                    <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed font-medium text-mist-500">{{ $videoDescription }}</p>
+                    <p class="mx-auto mt-3 max-w-2xl">{{ $videoDescription }}</p>
                 @endif
             </div>
         @endif
 
-        {{--
-            The feather. A mask is used rather than stacked gradient overlays
-            because an overlay has to match the canvas colour exactly to be
-            invisible — and would stop matching the moment the canvas token
-            changes. A mask removes the pixels instead, so it stays correct
-            against any ground.
-
-            `-webkit-mask-image` is duplicated for Safari, which still needs
-            the prefix here.
-        --}}
-        <div
-            class="mx-auto w-full max-w-[1600px]"
-            style="
-                -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%);
-                mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%);
-            "
-        >
+        <div class="overflow-hidden rounded-2xl bg-white shadow-[0_10px_50px_rgb(0_0_0/0.08)]">
             <video
                 data-scroll-video-el
                 class="block h-auto w-full object-cover"
@@ -131,7 +114,7 @@
                 <source src="{{ $src }}" type="video/mp4">
             </video>
         </div>
-    </section>
+    </div>
 
     @once
         {{--

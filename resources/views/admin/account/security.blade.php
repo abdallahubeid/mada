@@ -4,21 +4,21 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">الحساب والوصول</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">أمان الحساب</span>
 @endsection
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
-        $cardClass = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+        $inputClass = 'ui-control w-full';
+        $labelClass = 'ui-label';
+        $cardClass = 'ui-card p-4';
     @endphp
 
     <div x-data="{ twoFaModal: false, recoveryDrawer: false }" class="mx-auto max-w-3xl space-y-6">
         {{-- Header --}}
         <div>
-            <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">أمان الحساب</h2>
+            <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">أمان الحساب</h1>
             <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة كلمة المرور والتحقق بخطوتين والجلسات النشطة لحسابك.</p>
         </div>
 
@@ -29,21 +29,21 @@
 
             <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="sm:col-span-2">
-                    <label class="{{ $labelClass }}">كلمة المرور الحالية</label>
-                    <input type="password" dir="ltr" class="{{ $inputClass }} max-w-md" autocomplete="current-password">
+                    <label for="f-current-password" class="{{ $labelClass }}">كلمة المرور الحالية</label>
+                    <input id="f-current-password" type="password" dir="ltr" class="{{ $inputClass }} max-w-md" autocomplete="current-password">
                 </div>
                 <div>
-                    <label class="{{ $labelClass }}">كلمة المرور الجديدة</label>
-                    <input type="password" dir="ltr" class="{{ $inputClass }}" autocomplete="new-password">
+                    <label for="f-new-password" class="{{ $labelClass }}">كلمة المرور الجديدة</label>
+                    <input id="f-new-password" type="password" dir="ltr" class="{{ $inputClass }}" autocomplete="new-password">
                 </div>
                 <div>
-                    <label class="{{ $labelClass }}">تأكيد كلمة المرور</label>
-                    <input type="password" dir="ltr" class="{{ $inputClass }}" autocomplete="new-password">
+                    <label for="f-new-password-confirmation" class="{{ $labelClass }}">تأكيد كلمة المرور</label>
+                    <input id="f-new-password-confirmation" type="password" dir="ltr" class="{{ $inputClass }}" autocomplete="new-password">
                 </div>
             </div>
 
             <div class="mt-4 flex justify-end">
-                <button type="button" class="rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تحديث كلمة المرور</button>
+                <button type="button" class="ui-btn ui-btn-primary">تحديث كلمة المرور</button>
             </div>
         </div>
 
@@ -72,10 +72,10 @@
                 </div>
 
                 <div class="flex shrink-0 flex-wrap gap-2">
-                    <button type="button" @click="recoveryDrawer = true" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300">
+                    <button type="button" @click="recoveryDrawer = true" class="ui-btn ui-btn-secondary">
                         رموز الاسترداد
                     </button>
-                    <button type="button" @click="twoFaModal = true" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">
+                    <button type="button" @click="twoFaModal = true" class="ui-btn ui-btn-primary">
                         {{ $twoFactor['enabled'] ? 'إعادة الضبط' : 'تفعيل الآن' }}
                     </button>
                 </div>
@@ -121,7 +121,7 @@
                                     @if ($session['current'])
                                         <span class="text-xs text-mist-400 dark:text-mist-500">—</span>
                                     @else
-                                        <button type="button" class="rounded-lg border border-danger-solid/30 px-3 py-1.5 text-xs font-semibold text-danger-solid transition hover:bg-danger-solid/10 active:scale-95">إنهاء الجلسة</button>
+                                        <button type="button" class="ui-btn ui-btn-danger-outline ui-btn-sm">إنهاء الجلسة</button>
                                     @endif
                                 </td>
                             </tr>
@@ -162,7 +162,7 @@
 
                 {{-- Dummy QR code --}}
                 <div class="mt-5 flex justify-center">
-                    <div class="rounded-2xl border border-mist-200 bg-white p-3 dark:border-ink-600">
+                    <div class="ui-card p-3">
                         <div class="grid h-40 w-40 grid-cols-8 grid-rows-8 gap-0.5" aria-label="رمز QR للمصادقة">
                             @php $pattern = [1,1,1,0,1,0,1,1,1,0,0,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,0,1,1,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,1]; @endphp
                             @for ($i = 0; $i < 64; $i++)
@@ -181,7 +181,7 @@
 
                 <div class="mt-5 flex justify-end gap-3">
                     <button type="button" @click="twoFaModal = false" class="rounded-xl px-4 py-2 text-sm font-semibold text-mist-600 transition hover:bg-mist-100 dark:text-mist-300 dark:hover:bg-ink-700">إلغاء</button>
-                    <button type="button" @click="twoFaModal = false" class="rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تأكيد التفعيل</button>
+                    <button type="button" @click="twoFaModal = false" class="ui-btn ui-btn-primary">تأكيد التفعيل</button>
                 </div>
             </div>
         </div>
@@ -229,8 +229,8 @@
                 </div>
 
                 <div class="flex gap-2 pt-2">
-                    <button type="button" class="flex-1 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300">نسخ الكل</button>
-                    <button type="button" class="flex-1 rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-brand-500 hover:text-brand-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300">توليد رموز جديدة</button>
+                    <button type="button" class="ui-btn ui-btn-secondary flex-1">نسخ الكل</button>
+                    <button type="button" class="ui-btn ui-btn-secondary flex-1">توليد رموز جديدة</button>
                 </div>
             </div>
         </aside>

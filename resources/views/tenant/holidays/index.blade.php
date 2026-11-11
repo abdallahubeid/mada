@@ -15,13 +15,13 @@
                 <p class="mt-1 text-sm text-mist-500">تُستثنى هذه الأيام تلقائياً من احتساب مدة طلبات الإجازة.</p>
             </div>
             @if ($canManage)
-                <button type="button" @click="openCreate()" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-600">
+                <button type="button" @click="openCreate()" class="ui-btn ui-btn-primary">
                     إضافة عطلة
                 </button>
             @endif
         </div>
 
-        <div class="overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card overflow-hidden">
             <div class="w-full overflow-x-auto">
                 <table class="w-full min-w-max text-sm">
                     <thead>
@@ -65,11 +65,11 @@
                                 <td class="px-3 py-2 text-center">
                                     @if ($canManage)
                                         <div class="flex justify-center gap-2">
-                                            <button type="button" @click="openEdit(@js($editPayload))" class="rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold dark:border-ink-600">تعديل</button>
+                                            <button type="button" @click="openEdit(@js($editPayload))" class="ui-btn ui-btn-secondary ui-btn-sm">تعديل</button>
                                             <form method="POST" action="{{ route('tenant.holidays.destroy', $holiday) }}" data-swal-confirm data-swal-title="حذف هذه العطلة؟">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="rounded-lg border border-mist-200 px-2.5 py-1 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                                <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف</button>
                                             </form>
                                         </div>
                                     @endif
@@ -93,19 +93,19 @@
                     <form method="POST" class="mt-4 space-y-3" :action="editing ? editing.action : @js(route('tenant.holidays.store'))">
                         @csrf
                         <input type="hidden" name="_method" value="PUT" x-bind:disabled="!editing">
-                        <input type="text" name="name" required placeholder="اسم العطلة" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.name || ''">
+                        <input type="text" name="name" required placeholder="اسم العطلة" class="ui-control w-full" :value="editing?.name || ''">
                         <div class="grid gap-3 sm:grid-cols-2">
-                            <input type="date" name="start_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.start_date || ''">
-                            <input type="date" name="end_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.end_date || ''">
+                            <input type="date" name="start_date" required dir="ltr" class="ui-control w-full" :value="editing?.start_date || ''">
+                            <input type="date" name="end_date" required dir="ltr" class="ui-control w-full" :value="editing?.end_date || ''">
                         </div>
                         <label class="flex items-center gap-2 text-sm">
                             <input type="checkbox" name="is_recurring" value="1" class="rounded border-mist-300 text-brand-500" :checked="!!editing?.is_recurring">
                             تتكرر سنوياً
                         </label>
-                        <textarea name="notes" rows="2" placeholder="ملاحظات" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900" :value="editing?.notes || ''"></textarea>
+                        <textarea name="notes" rows="2" placeholder="ملاحظات" class="ui-control w-full" :value="editing?.notes || ''"></textarea>
                         <div class="flex gap-2">
-                            <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2 text-sm font-semibold text-white">حفظ</button>
-                            <button type="button" @click="close()" class="rounded-xl border border-mist-200 px-4 py-2 text-sm dark:border-ink-600">إلغاء</button>
+                            <button type="submit" class="flex-1 ui-btn ui-btn-primary">حفظ</button>
+                            <button type="button" @click="close()" class="ui-btn ui-btn-secondary">إلغاء</button>
                         </div>
                     </form>
                 </div>

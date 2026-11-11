@@ -37,7 +37,7 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-                <a href="{{ route('finance.offboarding.print', $settlement) }}" target="_blank" rel="noopener" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600">نسخة للطباعة</a>
+                <a href="{{ route('finance.offboarding.print', $settlement) }}" target="_blank" rel="noopener" class="ui-btn ui-btn-secondary">نسخة للطباعة</a>
 
                 @can('finance.offboarding.manage')
                     @if ($settlement->status->isEditable())
@@ -48,7 +48,7 @@
                               data-swal-text="ستُرسل التسوية للمراجعة، ولن تتمكن من تعديل مبالغها حتى يتم اعتمادها."
                               data-swal-confirm-button="نعم، ارفع للاعتماد">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">رفع للاعتماد</button>
+                            <button type="submit" class="ui-btn ui-btn-primary">رفع للاعتماد</button>
                         </form>
                     @endif
                 @endcan
@@ -62,7 +62,7 @@
                               data-swal-text="سيتم قفل التسوية نهائياً ولن يمكن تعديل أي مبلغ فيها. الخطوة التالية هي الصرف وإنهاء الخدمة."
                               data-swal-confirm-button="نعم، اعتمد التسوية">
                             @csrf
-                            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600">اعتماد</button>
+                            <button type="submit" class="ui-btn ui-btn-primary">اعتماد</button>
                         </form>
                     @endif
 
@@ -100,7 +100,7 @@
                 ['label' => 'تاريخ الالتحاق', 'value' => $settlement->joining_date?->format('Y-m-d') ?? '—', 'ltr' => true],
                 ['label' => 'أيام إجازات متبقية', 'value' => $settlement->unused_leave_days, 'ltr' => true],
             ] as $tile)
-                <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <div class="ui-card p-4">
                     <p class="text-xs font-medium uppercase tracking-wider text-mist-500 dark:text-mist-400">{{ $tile['label'] }}</p>
                     <p class="mt-2 font-display text-lg font-medium text-ink-900 dark:text-ink-50">
                         @if ($tile['ltr'] ?? false)
@@ -113,7 +113,7 @@
             @endforeach
         </div>
 
-        <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 dark:bg-ink-900">
                     <tr>
@@ -184,7 +184,7 @@
         </details>
 
         @if ($settlement->notes)
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">ملاحظات</p>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">{{ $settlement->notes }}</p>
             </div>

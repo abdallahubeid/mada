@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">التواصل</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">النشرة البريدية</span>
 @endsection
 
@@ -26,20 +26,20 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">النشرة البريدية</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">النشرة البريدية</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">إدارة المشتركين وإرسال الحملات مع إمكانية استثناء مستلمين محددين.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <a
                     href="{{ route('admin.newsletter.export') }}"
-                    class="inline-flex items-center gap-2 rounded-xl border border-mist-200 bg-white px-4 py-2 text-sm font-semibold text-ink-700 transition hover:bg-mist-50 dark:border-ink-600 dark:bg-ink-800 dark:text-mist-200"
+                    class="ui-btn ui-btn-secondary"
                 >
                     تصدير CSV
                 </a>
                 <button
                     type="button"
                     @click="campaignOpen = true"
-                    class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                    class="ui-btn ui-btn-primary"
                 >
                     إرسال حملة
                 </button>
@@ -47,15 +47,15 @@
         </div>
 
         <div class="grid gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <p class="text-xs font-semibold uppercase text-mist-500">إجمالي المشتركين</p>
                 <p class="mt-2 font-display text-3xl font-medium text-ink-900 dark:text-ink-50" x-text="stats.total" data-stat="total">{{ $stats['total'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <p class="text-xs font-semibold uppercase text-mist-500">نشط</p>
                 <p class="mt-2 font-display text-3xl font-medium text-brand-600 dark:text-brand-300" x-text="stats.active" data-stat="active">{{ $stats['active'] }}</p>
             </div>
-            <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-4">
                 <p class="text-xs font-semibold uppercase text-mist-500">ملغى الاشتراك</p>
                 <p class="mt-2 font-display text-3xl font-medium text-amber-600 dark:text-amber-400" x-text="stats.unsubscribed" data-stat="unsubscribed">{{ $stats['unsubscribed'] }}</p>
             </div>
@@ -85,12 +85,12 @@
                     name="q"
                     value="{{ $search }}"
                     placeholder="بحث بالبريد..."
-                    class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                    class="ui-control w-full"
                 >
             </form>
         </div>
 
-        <div class="w-full overflow-x-auto overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card w-full overflow-x-auto overflow-hidden">
             <table class="min-w-full table-fixed divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>
@@ -130,7 +130,7 @@
                                     <form method="POST" action="{{ $row['toggle_url'] }}">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600">
+                                        <button type="submit" class="ui-btn ui-btn-secondary ui-btn-sm">
                                             {{ $row['is_subscribed'] ? 'إلغاء الاشتراك' : 'تفعيل' }}
                                         </button>
                                     </form>
@@ -141,7 +141,7 @@
                                     >
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                        <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف</button>
                                     </form>
                                 </div>
                             </td>
@@ -194,7 +194,7 @@
                             value="{{ old('subject') }}"
                             required
                             maxlength="255"
-                            class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="ui-control w-full"
                         >
                         @error('subject')
                             <p class="mt-1 text-xs text-danger-solid">{{ $message }}</p>
@@ -208,7 +208,7 @@
                             name="body"
                             rows="8"
                             required
-                            class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                            class="ui-control w-full"
                         >{{ old('body') }}</textarea>
                         @error('body')
                             <p class="mt-1 text-xs text-danger-solid">{{ $message }}</p>
@@ -243,10 +243,10 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-2 pt-2">
-                        <button type="button" @click="campaignOpen = false" class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold dark:border-ink-600">إلغاء</button>
+                        <button type="button" @click="campaignOpen = false" class="ui-btn ui-btn-secondary">إلغاء</button>
                         <button
                             type="submit"
-                            class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+                            class="ui-btn ui-btn-primary"
                             :disabled="activeSubscribers.length === 0"
                         >
                             إرسال الحملة
@@ -317,7 +317,7 @@
                         confirmButtonText: 'نعم، احذف',
                         cancelButtonText: 'إلغاء',
                         confirmButtonColor: '#b42318',
-                        cancelButtonColor: '#5a5262',
+                        cancelButtonColor: '#6c757d',
                         reverseButtons: true,
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -337,8 +337,8 @@
                         showCancelButton: true,
                         confirmButtonText: 'إرسال',
                         cancelButtonText: 'إلغاء',
-                        confirmButtonColor: '#714b67',
-                        cancelButtonColor: '#5a5262',
+                        confirmButtonColor: '#fe6019',
+                        cancelButtonColor: '#6c757d',
                         reverseButtons: true,
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -433,12 +433,12 @@
                                     <form method="POST" action="${this.escapeHtml(row.toggle_url)}">
                                         <input type="hidden" name="_token" value="${this.escapeHtml(this.csrf)}">
                                         <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600">${toggleLabel}</button>
+                                        <button type="submit" class="ui-btn ui-btn-secondary ui-btn-sm">${toggleLabel}</button>
                                     </form>
                                     <form method="POST" action="${this.escapeHtml(row.destroy_url)}" data-delete-form>
                                         <input type="hidden" name="_token" value="${this.escapeHtml(this.csrf)}">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف</button>
+                                        <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف</button>
                                     </form>
                                 </div>
                             </td>

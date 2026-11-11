@@ -306,7 +306,7 @@
                                         x-bind:title="sidebarCollapsed ? @js($item['label']) : null"
                                         :class="sidebarCollapsed && 'lg:justify-center'"
                                         @class([
-                                            'group flex w-full items-center gap-3 rounded-lg border-s-2 px-3 py-2 text-sm font-medium transition-all duration-300 ease-out active:scale-[0.98]',
+                                            'group flex w-full items-center gap-3 rounded-lg border-s-2 px-3 py-2 text-sm font-medium transition-colors duration-150',
                                             'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300' => $isActive,
                                             'border-transparent text-ink-600 hover:border-mist-300 hover:bg-mist-100 dark:text-mist-300 dark:hover:border-ink-600 dark:hover:bg-ink-800' => ! $isActive,
                                         ])
@@ -353,7 +353,7 @@
                                     x-bind:title="sidebarCollapsed ? @js($item['label']) : null"
                                     :class="sidebarCollapsed && 'lg:justify-center'"
                                     @class([
-                                        'group flex items-center gap-3 rounded-lg border-s-2 px-3 py-2 text-sm font-medium transition-all duration-300 ease-out active:scale-[0.98]',
+                                        'group flex items-center gap-3 rounded-lg border-s-2 px-3 py-2 text-sm font-medium transition-colors duration-150',
                                         'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300' => $isActive,
                                         'border-transparent text-ink-600 hover:border-mist-300 hover:bg-mist-100 dark:text-mist-300 dark:hover:border-ink-600 dark:hover:bg-ink-800' => ! $isActive,
                                     ])

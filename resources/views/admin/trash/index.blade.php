@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">المنصّة</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">سلة المحذوفات</span>
 @endsection
 
@@ -15,7 +15,7 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">سلة المحذوفات</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">سلة المحذوفات</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">
                     العناصر المحذوفة ناعماً (Soft Delete). يمكن استعادتها أو حذفها نهائياً.
                     <span class="font-semibold text-ink-700 dark:text-mist-200">({{ $items->count() }} / {{ $totalCount }})</span>
@@ -38,7 +38,7 @@
                     @endif
                     <button
                         type="submit"
-                        class="inline-flex items-center gap-2 rounded-xl border border-danger-solid/40 px-4 py-2 text-sm font-semibold text-danger-solid transition hover:bg-danger-solid/10 disabled:opacity-40"
+                        class="ui-btn ui-btn-danger-outline"
                         @disabled($items->isEmpty())
                     >
                         تفريغ السلة
@@ -52,7 +52,7 @@
                 href="{{ route('admin.trash.index') }}"
                 @class([
                     'rounded-md px-3 py-1.5 text-xs font-semibold transition',
-                    'bg-brand-500 text-white' => blank($activeType),
+                    'bg-brand-action text-white' => blank($activeType),
                     'bg-mist-100 text-mist-600 hover:bg-mist-200 dark:bg-ink-700 dark:text-mist-300' => filled($activeType),
                 ])
             >الكل</a>
@@ -61,7 +61,7 @@
                     href="{{ route('admin.trash.index', ['type' => $key]) }}"
                     @class([
                         'rounded-md px-3 py-1.5 text-xs font-semibold transition',
-                        'bg-brand-500 text-white' => $activeType === $key,
+                        'bg-brand-action text-white' => $activeType === $key,
                         'bg-mist-100 text-mist-600 hover:bg-mist-200 dark:bg-ink-700 dark:text-mist-300' => $activeType !== $key,
                     ])
                 >{{ $config['label'] }}</a>
@@ -78,7 +78,7 @@
                     @if ($activeType)
                         <input type="hidden" name="type" value="{{ $activeType }}">
                     @endif
-                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                    <button type="submit" class="ui-btn ui-btn-primary">
                         استعادة المحدد (<span x-text="selected.length"></span>)
                     </button>
                 </form>
@@ -101,14 +101,14 @@
                     @if ($activeType)
                         <input type="hidden" name="type" value="{{ $activeType }}">
                     @endif
-                    <button type="submit" class="rounded-xl border border-danger-solid/40 px-4 py-2 text-sm font-semibold text-danger-solid transition hover:bg-danger-solid/10">
+                    <button type="submit" class="ui-btn ui-btn-danger-outline">
                         حذف نهائي للمحدد
                     </button>
                 </form>
             @endcan
         </div>
 
-        <div class="overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card overflow-x-auto">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>
@@ -116,7 +116,7 @@
                             <input
                                 type="checkbox"
                                 class="rounded border-mist-300 text-brand-500 focus:ring-brand-500"
-                                @change="toggleAll($event.target.checked)"
+                                aria-label="تحديد كل العناصر" @change="toggleAll($event.target.checked)"
                                 :checked="allSelected"
                                 :indeterminate="partialSelected"
                             >
@@ -138,7 +138,7 @@
                                     type="checkbox"
                                     class="rounded border-mist-300 text-brand-500 focus:ring-brand-500"
                                     value="{{ $token }}"
-                                    @change="toggle('{{ $token }}', $event.target.checked)"
+                                    aria-label="تحديد هذا العنصر" @change="toggle('{{ $token }}', $event.target.checked)"
                                     :checked="selected.includes('{{ $token }}')"
                                 >
                             </td>
@@ -161,7 +161,7 @@
                                     @can('trash.restore')
                                         <form method="POST" action="{{ $item['restore_url'] }}">
                                             @csrf
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-brand-600 dark:border-ink-600 dark:text-brand-300">استعادة</button>
+                                            <button type="submit" class="ui-btn ui-btn-secondary ui-btn-sm">استعادة</button>
                                         </form>
                                     @endcan
                                     @can('trash.force_delete')
@@ -178,7 +178,7 @@
                                             @if ($activeType)
                                                 <input type="hidden" name="type" value="{{ $activeType }}">
                                             @endif
-                                            <button type="submit" class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-danger-solid dark:border-ink-600">حذف نهائي</button>
+                                            <button type="submit" class="ui-btn ui-btn-danger-outline ui-btn-sm">حذف نهائي</button>
                                         </form>
                                     @endcan
                                 </div>

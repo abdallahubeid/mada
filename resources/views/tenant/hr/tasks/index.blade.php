@@ -2,8 +2,8 @@
     use App\Domain\Tenancy\Enums\TaskPriority;
     use App\Domain\Tenancy\Enums\TaskStatus;
 
-    $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-    $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+    $inputClass = 'ui-control w-full';
+    $labelClass = 'ui-label';
     $errorClass = 'mt-1.5 text-xs text-danger-solid';
 
     $priorityClasses = [
@@ -28,16 +28,16 @@
         </div>
 
         @if ($manager === null)
-            <div class="rounded-2xl border border-mist-200 bg-white p-8 text-center shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-8 text-center">
                 <p class="text-sm text-mist-500">حسابك الإداري غير مرتبط بملف موظف، لذا لا يمكنك إسناد مهام.</p>
             </div>
         @elseif ($directReports->isEmpty())
-            <div class="rounded-2xl border border-dashed border-mist-200 bg-white p-8 text-center dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card border border-dashed border-mist-200 p-8 text-center">
                 <p class="text-sm text-mist-500">لا يوجد لديك مرؤوسون مباشرون حالياً.</p>
             </div>
         @else
             <div class="grid gap-6 lg:grid-cols-[380px_1fr]">
-                <section class="h-fit space-y-4 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="ui-card h-fit space-y-4 p-4">
                     <div>
                         <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">مهمة جديدة</h2>
                         <p class="mt-1 text-xs text-mist-500">تُسند فقط لأعضاء فريقك المباشرين.</p>
@@ -95,7 +95,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                        <button type="submit" class="ui-btn ui-btn-primary w-full">
                             إسناد المهمة
                         </button>
                     </form>
@@ -105,11 +105,11 @@
                     <h2 class="font-display text-lg font-medium text-ink-900 dark:text-ink-50">مهام الفريق</h2>
 
                     @if ($tasks->isEmpty())
-                        <div class="rounded-2xl border border-dashed border-mist-200 bg-white p-8 text-center dark:border-ink-600 dark:bg-ink-800">
+                        <div class="ui-card border border-dashed border-mist-200 p-8 text-center">
                             <p class="text-sm text-mist-500">لم يتم إسناد أي مهام بعد.</p>
                         </div>
                     @else
-                        <div class="overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                        <div class="ui-card overflow-hidden">
                             <div class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                                     <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">

@@ -67,7 +67,7 @@
                 x-model="query"
                 type="search"
                 placeholder="ابحث في محادثاتك..."
-                class="w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50"
+                class="ui-control w-full"
             >
         </div>
 

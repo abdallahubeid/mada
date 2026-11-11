@@ -12,8 +12,8 @@
     <x-marketing.nav />
 
     <main>
+        {{-- The hero renders the product video itself, framed as its banner picture. --}}
         <x-marketing.hero :hero="$hero" />
-        <x-marketing.product-video />
         <x-marketing.logo-ticker :eyebrow="$partners['eyebrow']" :brands="$partners['names']" />
         <x-marketing.problems :problems="$content['problems']" />
         <x-marketing.solution :modules="$content['solution_sidebar_modules']" :solutions="$content['solutions']" />

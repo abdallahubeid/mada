@@ -21,7 +21,7 @@
 
 <x-layouts.app title="ملف الموظف">
     <div class="mx-auto max-w-5xl space-y-6" x-data="{ activeTab: @js($activeTab), leaveOpen: false }">
-        <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800 sm:p-6">
+        <section class="ui-card p-4 sm:p-6">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div class="flex items-start gap-4">
                     <img
@@ -56,7 +56,7 @@
                     @can('hr.employees.update')
                         <a
                             href="{{ route('hr.employees.edit', $employee) }}"
-                            class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                            class="ui-btn ui-btn-primary"
                         >
                             تعديل الموظف
                         </a>
@@ -88,7 +88,7 @@
 
                     <a
                         href="{{ route('hr.employees.index') }}"
-                        class="rounded-xl border border-mist-200 px-4 py-2 text-sm font-semibold text-mist-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-ink-600 dark:text-mist-300"
+                        class="ui-btn ui-btn-secondary"
                     >
                         رجوع
                     </a>
@@ -109,7 +109,7 @@
 
         <div x-show="activeTab === 'overview'" x-cloak class="space-y-4">
             <div class="grid gap-4 sm:grid-cols-2">
-                <section class="space-y-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="ui-card space-y-3 p-4">
                     <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">البيانات الشخصية</h2>
                     <dl class="space-y-2 text-sm">
                         <div class="flex justify-between gap-3">
@@ -127,7 +127,7 @@
                     </dl>
                 </section>
 
-                <section class="space-y-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="ui-card space-y-3 p-4">
                     <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">بيانات التوظيف</h2>
                     <dl class="space-y-2 text-sm">
                         <div class="flex justify-between gap-3">
@@ -146,7 +146,7 @@
                 </section>
             </div>
 
-            <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <section class="ui-card p-4">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">السيرة الذاتية</h2>
                 <div class="mt-3 text-sm">
                     @if ($employee->cvUrl())
@@ -160,7 +160,7 @@
             </section>
 
             @if ($employee->subordinates->isNotEmpty())
-                <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="ui-card p-4">
                     <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">المرؤوسون</h2>
                     <ul class="mt-3 space-y-2 text-sm text-mist-600 dark:text-mist-300">
                         @foreach ($employee->subordinates as $subordinate)
@@ -177,7 +177,7 @@
         </div>
 
         <div x-show="activeTab === 'contract'" x-cloak>
-            <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <section class="ui-card p-4">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">العقد النشط</h2>
                 @if ($activeContract)
                     <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -233,7 +233,7 @@
         </div>
 
         <div x-show="activeTab === 'attendance'" x-cloak class="space-y-4">
-            <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card w-full overflow-x-auto">
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
@@ -272,7 +272,7 @@
             <div class="flex items-center justify-between gap-3">
                 <h2 class="text-sm font-semibold text-ink-900 dark:text-ink-50">أرصدة الإجازات ({{ now()->year }})</h2>
                 @can('hr.leaves.create')
-                    <button type="button" @click="leaveOpen = true" class="rounded-xl bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-glow hover:bg-brand-600">
+                    <button type="button" @click="leaveOpen = true" class="ui-btn ui-btn-primary ui-btn-sm">
                         طلب إجازة جديد
                     </button>
                 @endcan
@@ -280,7 +280,7 @@
 
             <div class="grid gap-3 sm:grid-cols-3">
                 @forelse ($leaveBalances as $balance)
-                    <div class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                    <div class="ui-card p-4">
                         <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $balance['type']->name }}</p>
                         <p class="mt-2 text-2xl font-bold text-brand-600 dark:text-brand-300">{{ $balance['remaining'] }}</p>
                         <p class="text-xs text-mist-500">متبقي من {{ $balance['annual'] }} · مستخدم {{ $balance['used'] }}</p>
@@ -290,7 +290,7 @@
                 @endforelse
             </div>
 
-            <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card w-full overflow-x-auto">
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
@@ -335,8 +335,8 @@
                         @csrf
                         <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                         <div>
-                            <label class="mb-1 block text-xs text-mist-500">نوع الإجازة</label>
-                            <select name="leave_type_id" required class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                            <label for="f-show-leave-type-id-1" class="mb-1 block text-xs text-mist-500">نوع الإجازة</label>
+                            <select id="f-show-leave-type-id-1" name="leave_type_id" required class="ui-control w-full">
                                 @foreach ($leaveTypes as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }} ({{ $type->annual_days }} يوم)</option>
                                 @endforeach
@@ -344,19 +344,19 @@
                         </div>
                         <div class="grid gap-3 sm:grid-cols-2">
                             <div>
-                                <label class="mb-1 block text-xs text-mist-500">من</label>
-                                <input type="date" name="start_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                                <label for="f-show-start-date-2" class="mb-1 block text-xs text-mist-500">من</label>
+                                <input id="f-show-start-date-2" type="date" name="start_date" required dir="ltr" class="ui-control w-full">
                             </div>
                             <div>
-                                <label class="mb-1 block text-xs text-mist-500">إلى</label>
-                                <input type="date" name="end_date" required dir="ltr" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900">
+                                <label for="f-show-end-date-3" class="mb-1 block text-xs text-mist-500">إلى</label>
+                                <input id="f-show-end-date-3" type="date" name="end_date" required dir="ltr" class="ui-control w-full">
                             </div>
                         </div>
                         <div>
-                            <label class="mb-1 block text-xs text-mist-500">السبب</label>
-                            <textarea name="reason" rows="2" class="w-full rounded-xl border border-mist-200 px-3 py-2 text-sm dark:border-ink-600 dark:bg-ink-900"></textarea>
+                            <label for="f-show-reason-4" class="mb-1 block text-xs text-mist-500">السبب</label>
+                            <textarea id="f-show-reason-4" name="reason" rows="2" class="ui-control w-full"></textarea>
                         </div>
-                        <button type="submit" class="w-full rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white">إرسال الطلب</button>
+                        <button type="submit" class="ui-btn ui-btn-primary w-full">إرسال الطلب</button>
                     </form>
                 </div>
             </div>
@@ -369,7 +369,7 @@
                     <a href="{{ route('hr.evaluations.index') }}" class="text-sm font-semibold text-brand-600 hover:underline dark:text-brand-300">لوحة التقييمات</a>
                 @endcan
             </div>
-            <div class="w-full overflow-x-auto rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card w-full overflow-x-auto">
                 <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                     <thead class="bg-mist-50 dark:bg-ink-900">
                         <tr>
@@ -407,7 +407,7 @@
                     <a href="{{ route('tenant.assets.employee', $employee) }}" class="text-sm font-semibold text-brand-600 hover:underline dark:text-brand-300">عرض صفحة العهدة الكاملة</a>
                 </div>
 
-                <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="ui-card p-4">
                     <h3 class="text-sm font-semibold text-ink-900 dark:text-ink-50">عهدة نشطة</h3>
                     <div class="mt-3 overflow-x-auto">
                         <table class="w-full min-w-max text-sm">
@@ -437,7 +437,7 @@
                     </div>
                 </section>
 
-                <section class="rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800">
+                <section class="ui-card p-4">
                     <h3 class="text-sm font-semibold text-ink-900 dark:text-ink-50">سجل الإسنادات</h3>
                     <div class="mt-3 overflow-x-auto">
                         <table class="w-full min-w-max text-sm">

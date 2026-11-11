@@ -4,7 +4,7 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">المنصّة</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">سجل النشاط</span>
 @endsection
 
@@ -18,18 +18,18 @@
             'settings_change' => ['label' => 'تغيير إعدادات', 'badge' => 'bg-violet-500/10 text-violet-600 dark:text-violet-400', 'dot' => 'bg-violet-500'],
             'security_flag' => ['label' => 'تنبيه أمني', 'badge' => 'bg-amber-500/10 text-amber-600 dark:text-amber-400', 'dot' => 'bg-amber-500'],
         ];
-        $selectClass = 'rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50';
+        $selectClass = 'ui-control';
     @endphp
 
     <div x-data="{ open: false, entry: null }">
         {{-- Header --}}
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">سجل النشاط والرقابة</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">سجل النشاط والرقابة</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">سجل غير قابل للتعديل لكل إجراء حسّاس على المنصّة (NFR-05).</p>
             </div>
 
-            <button type="button" disabled title="يتوفّر في المرحلة 4" class="inline-flex cursor-not-allowed items-center gap-2 rounded-xl border border-mist-200 px-4 py-2 text-sm font-medium text-mist-400 dark:border-ink-600 dark:text-mist-500">
+            <button type="button" disabled title="يتوفّر في المرحلة 4" class="ui-btn ui-btn-secondary cursor-not-allowed">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
                 تصدير
                 <span class="rounded-md bg-mist-100 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-mist-500 dark:bg-ink-700 dark:text-mist-400">Phase 4</span>
@@ -37,10 +37,10 @@
         </div>
 
         {{-- Filter bar --}}
-        <form method="GET" class="mt-6 grid grid-cols-1 gap-3 rounded-2xl border border-mist-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4 dark:border-ink-600 dark:bg-ink-800">
+        <form method="GET" class="ui-card mt-6 grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-                <label class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">المستأجر / الكيان</label>
-                <select name="tenant" class="{{ $selectClass }} w-full">
+                <label for="f-index-tenant-1" class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">المستأجر / الكيان</label>
+                <select id="f-index-tenant-1" name="tenant" class="{{ $selectClass }} w-full">
                     <option value="">الكل</option>
                     @foreach ($tenants as $t)
                         <option value="{{ $t }}" @selected($filters['tenant'] === $t)>{{ $t }}</option>
@@ -48,8 +48,8 @@
                 </select>
             </div>
             <div>
-                <label class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">نوع الإجراء</label>
-                <select name="action" class="{{ $selectClass }} w-full">
+                <label for="f-index-action-2" class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">نوع الإجراء</label>
+                <select id="f-index-action-2" name="action" class="{{ $selectClass }} w-full">
                     <option value="">الكل</option>
                     @foreach ($actionTypes as $key => $label)
                         <option value="{{ $key }}" @selected($filters['action'] === $key)>{{ $label }}</option>
@@ -57,20 +57,20 @@
                 </select>
             </div>
             <div>
-                <label class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">النطاق الزمني</label>
-                <input type="date" name="from" class="{{ $selectClass }} w-full">
+                <label for="f-index-from-3" class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">النطاق الزمني</label>
+                <input id="f-index-from-3" type="date" name="from" class="{{ $selectClass }} w-full">
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-medium text-mist-500 dark:text-mist-400">بحث عن منفّذ</label>
                 <div class="flex gap-2">
                     <input type="search" name="actor" value="{{ $filters['actor'] }}" placeholder="اسم المنفّذ..." class="{{ $selectClass }} min-w-0 flex-1">
-                    <button type="submit" class="shrink-0 rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-glow transition duration-200 hover:bg-brand-600 active:scale-95">تصفية</button>
+                    <button type="submit" class="ui-btn ui-btn-secondary shrink-0">تصفية</button>
                 </div>
             </div>
         </form>
 
         {{-- Audit table --}}
-        <div class="mt-4 overflow-hidden rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card mt-4 overflow-hidden">
             <div class="w-full overflow-x-auto">
                 <table class="w-full min-w-max text-start text-sm">
                     <thead>
@@ -107,7 +107,7 @@
                                 <td class="px-3 py-2 text-ink-700 dark:text-mist-200">{{ $entry['target'] }}</td>
                                 <td class="px-3 py-2 font-mono text-xs text-mist-500 dark:text-mist-400">{{ $entry['ip'] }}</td>
                                 <td class="px-3 py-2 text-end">
-                                    <button type="button" @click="entry = @js($entry); open = true" class="inline-flex items-center gap-1 rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold text-ink-700 transition duration-200 hover:border-brand-500 hover:text-brand-600 active:scale-95 dark:border-ink-600 dark:text-mist-200 dark:hover:text-brand-300">
+                                    <button type="button" @click="entry = @js($entry); open = true" class="ui-btn ui-btn-secondary ui-btn-sm">
                                         عرض
                                     </button>
                                 </td>

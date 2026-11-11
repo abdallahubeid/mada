@@ -42,7 +42,7 @@
                 Swal.fire({
                     icon: @js(session('flasher.type', 'success')),
                     title: @js(session('flasher.message')),
-                    confirmButtonColor: '#714b67',
+                    confirmButtonColor: '#fe6019',
                     confirmButtonText: 'حسنًا',
                     timer: 4200,
                     timerProgressBar: true,

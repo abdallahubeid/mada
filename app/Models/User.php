@@ -134,14 +134,18 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     /**
      * SVG data URI showing the user's first initial (fallback when no upload).
+     *
+     * Drawn in the identity's colours (docs/DESIGN_SYSTEM.md §1): orange
+     * initial (#c2410c) on the peach wash (#ffece4), 4.6:1. It was emerald,
+     * which the design system reserves for "success".
      */
     public function initialAvatarDataUri(): string
     {
         $initial = htmlspecialchars(mb_strtoupper(mb_substr(trim((string) $this->name), 0, 1) ?: '?'), ENT_QUOTES | ENT_XML1, 'UTF-8');
         $svg = <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{$initial}">
-  <rect width="64" height="64" rx="32" fill="#10b981"/>
-  <text x="32" y="38" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="#022c22">{$initial}</text>
+  <rect width="64" height="64" rx="32" fill="#ffece4"/>
+  <text x="32" y="38" text-anchor="middle" font-family="Poppins,Tajawal,system-ui,sans-serif" font-size="28" font-weight="600" fill="#c2410c">{$initial}</text>
 </svg>
 SVG;
 

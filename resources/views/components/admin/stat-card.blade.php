@@ -16,14 +16,15 @@
      * approvals); `muted` + `phaseTag` render a not-yet-live metric (e.g. MRR,
      * a Phase 2 dependency) without implying a capability that isn't shipped.
      */
-    $base = 'relative overflow-hidden rounded-2xl border p-4 shadow-sm transition duration-200 ease-out';
+    $base = 'relative overflow-hidden rounded-2xl border p-4 transition-shadow duration-200 ease-out';
 
     if ($muted) {
-        $surface = 'border-dashed border-mist-200 bg-white/60 dark:border-ink-600 dark:bg-ink-800/50';
+        $surface = 'border-dashed border-mist-300 bg-white/60';
     } elseif ($accent) {
-        $surface = 'border-brand-500/40 bg-white ring-1 ring-brand-500/30 dark:bg-ink-800';
+        $surface = 'border-brand-500/50 bg-white shadow-sm';
     } else {
-        $surface = 'border-mist-200 bg-white hover:border-mist-300 dark:border-ink-600 dark:bg-ink-800 dark:hover:border-ink-500';
+        // Same surface as `ui-card`: white, the soft shadow, no visible border.
+        $surface = 'border-transparent bg-white shadow-sm hover:shadow-md';
     }
 @endphp
 
@@ -34,7 +35,7 @@
 
     <div class="relative flex items-start justify-between gap-3">
         <div class="min-w-0">
-            <p class="truncate text-sm font-medium {{ $muted ? 'text-mist-400 dark:text-mist-500' : 'text-mist-500 dark:text-mist-400' }}">
+            <p class="text-sm leading-snug font-medium {{ $muted ? 'text-mist-400 dark:text-mist-500' : 'text-mist-500 dark:text-mist-400' }}">
                 {{ $label }}
             </p>
             <p class="mt-2 font-display text-3xl font-medium {{ $muted ? 'text-mist-400 dark:text-mist-500' : 'text-ink-900 dark:text-ink-50' }}">
@@ -51,7 +52,7 @@
 
     <div class="relative mt-3 flex items-center gap-2">
         @if ($phaseTag)
-            <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-mist-500 dark:bg-ink-700 dark:text-mist-400">
+            <span class="rounded-md bg-mist-100 px-2 py-0.5 text-xs font-semibold text-mist-500 dark:bg-ink-700 dark:text-mist-400">
                 {{ $phaseTag }}
             </span>
         @elseif (! is_null($delta))

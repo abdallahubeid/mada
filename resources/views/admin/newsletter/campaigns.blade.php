@@ -4,9 +4,9 @@
 
 @section('breadcrumbs')
     <span class="text-mist-500 dark:text-mist-400">التواصل</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-mist-500 dark:text-mist-400">النشرة البريدية</span>
-    <span class="mx-1.5 text-mist-300 dark:text-mist-600">/</span>
+    <span class="mx-1.5 text-mist-400 dark:text-mist-600" aria-hidden="true">/</span>
     <span class="text-ink-700 dark:text-mist-200">الحملات</span>
 @endsection
 
@@ -36,7 +36,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'تعذّر تحميل محتوى الحملة',
-                        confirmButtonColor: '#714b67',
+                        confirmButtonColor: '#fe6019',
                     });
                 } finally {
                     this.loading = false;
@@ -47,18 +47,18 @@
     >
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الحملات البريدية</h2>
+                <h1 class="font-display text-2xl font-medium text-ink-900 dark:text-ink-50">الحملات البريدية</h1>
                 <p class="mt-1 text-sm text-mist-500 dark:text-mist-400">سجل الحملات المرسلة وعدد المستلمين مع إمكانية مراجعة المحتوى.</p>
             </div>
             <a
                 href="{{ route('admin.newsletter.index') }}"
-                class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600"
+                class="ui-btn ui-btn-primary"
             >
                 إرسال حملة جديدة
             </a>
         </div>
 
-        <div class="overflow-x-auto w-full rounded-2xl border border-mist-200 bg-white shadow-sm dark:border-ink-600 dark:bg-ink-800">
+        <div class="ui-card overflow-x-auto w-full">
             <table class="min-w-full divide-y divide-mist-100 text-sm dark:divide-ink-700">
                 <thead class="bg-mist-50 text-mist-500 dark:bg-ink-900 dark:text-mist-400">
                     <tr>
@@ -89,7 +89,7 @@
                                 <button
                                     type="button"
                                     @click="viewCampaign(@js(route('admin.newsletter.campaigns.show', $campaign)))"
-                                    class="rounded-lg border border-mist-200 px-3 py-1.5 text-xs font-semibold dark:border-ink-600"
+                                    class="ui-btn ui-btn-secondary ui-btn-sm"
                                 >
                                     قراءة المحتوى
                                 </button>

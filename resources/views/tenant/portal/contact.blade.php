@@ -4,8 +4,8 @@
 
 @section('content')
     @php
-        $inputClass = 'w-full rounded-xl border border-mist-200 bg-white px-3 py-2 text-sm text-ink-700 shadow-sm transition placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-900 dark:text-ink-50';
-        $labelClass = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
+        $inputClass = 'ui-control w-full';
+        $labelClass = 'ui-label';
         $cards = [
             ['label' => 'هاتف المكتب', 'value' => $contact['phone'], 'dir' => 'ltr'],
             ['label' => 'بريد الدعم', 'value' => $contact['email'], 'dir' => 'ltr'],
@@ -77,7 +77,7 @@
                             <p class="mt-1 text-xs text-danger-solid">{{ $message }}</p>
                         @enderror
                     </div>
-                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
+                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-brand-action px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600">
                         إرسال الرسالة
                     </button>
                 </div>

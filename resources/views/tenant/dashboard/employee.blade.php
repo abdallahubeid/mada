@@ -1,7 +1,7 @@
 @php
     use App\Domain\Tenancy\Enums\TaskStatus;
 
-    $card = 'rounded-2xl border border-mist-200 bg-white p-4 shadow-sm dark:border-ink-600 dark:bg-ink-800';
+    $card = 'ui-card p-4';
     $heading = 'font-display text-lg font-medium text-ink-900 dark:text-ink-50';
     $emptyRow = 'rounded-xl border border-dashed border-mist-200 px-3 py-4 text-center text-xs text-mist-400 dark:border-ink-700';
 
@@ -51,7 +51,7 @@
                             @if ($todayAttendance?->check_in === null)
                                 <form method="POST" action="{{ route('tenant.hr.my-attendance.check-in') }}">
                                     @csrf
-                                    <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600">تسجيل حضور</button>
+                                    <button type="submit" class="ui-btn ui-btn-primary">تسجيل حضور</button>
                                 </form>
                             @elseif ($todayAttendance->check_out === null)
                                 <form method="POST" action="{{ route('tenant.hr.my-attendance.check-out') }}">
@@ -69,7 +69,7 @@
             </section>
 
             {{-- Personal KPIs --}}
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
                 <div class="{{ $card }}">
                     <p class="text-sm font-medium text-mist-500 dark:text-mist-400">رصيد الإجازات المتبقي</p>
                     <p class="mt-2 font-display text-3xl font-medium text-brand-600 dark:text-brand-300" data-testid="kpi-leave-balance">{{ $remainingLeaveDays }}</p>
@@ -107,7 +107,7 @@
                 <div class="{{ $card }} lg:col-span-2">
                     <div class="flex items-center justify-between">
                         <h3 class="{{ $heading }}">مهامي</h3>
-                        <a href="{{ route('tenant.hr.my-tasks') }}" class="text-xs font-semibold text-brand-600 hover:underline dark:text-brand-300">فتح اللوحة</a>
+                        <a href="{{ route('tenant.hr.my-tasks') }}" class="inline-flex min-h-6 items-center px-1 text-xs font-semibold text-brand-600 hover:underline">فتح اللوحة</a>
                     </div>
                     <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         @foreach (TaskStatus::cases() as $status)
@@ -131,7 +131,7 @@
                 <div class="{{ $card }}">
                     <div class="flex items-center justify-between">
                         <h3 class="{{ $heading }}">أرصدة الإجازات</h3>
-                        <a href="{{ route('tenant.hr.my-leaves') }}" class="text-xs font-semibold text-brand-600 hover:underline dark:text-brand-300">طلب إجازة</a>
+                        <a href="{{ route('tenant.hr.my-leaves') }}" class="inline-flex min-h-6 items-center px-1 text-xs font-semibold text-brand-600 hover:underline">طلب إجازة</a>
                     </div>
                     <ul class="mt-4 space-y-3 text-sm" data-testid="leave-balances">
                         @forelse ($leaveBalances as $balance)

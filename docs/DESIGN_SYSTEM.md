@@ -6,21 +6,34 @@
 
 Brand name: **مدى** (latin transliteration *Mada*, used only in code comments and identifiers).
 
-- **Palette:** Plum & Slate, used consistently across the public marketing site, the tenant app, the Super Admin console, and error pages (403/404/500). No module or page may introduce an off-palette color scheme.
-  - **Plum** (`brand-*`, anchored on `#714B67`) is the primary action/brand accent — CTAs, active states, brand marks. It is *not* a status colour.
-  - **Slate** (`ink-*` for structure, `mist-*` for muted text) is the primary neutral — see §2. Both ramps sit on one low-saturation mauve axis (hue ≈ 290°).
-- **Brand ≠ action ≠ success.** Green means one thing only: success. `success-*`, `warning-*`, `critical-*` and `accent-*` (informational blue) are separate token families and never double as the brand. A filled plum button is an action; a status is always a chip, never a fill.
-- **Consistency rule:** the Landing Page, Super Admin console, and internal tenant dashboard must feel like one product, not three different skins.
+- **Palette (amended 2026-11-10 — one identity platform-wide):** the orange identity of §1.3 now covers every surface — public site, auth screens, the Platform Console, the tenant app (owner, managers, employees) and error pages. It reaches the app by **re-pointing the token values**, not the class names, so every `bg-brand-500` / `text-ink-900` / `border-mist-200` moved at once. No module or page may introduce an off-palette color scheme.
+  - **Orange** (`brand-*`): `brand-500` `#fe6019` is the accent for marks, bars, icons and focus (3:1 contexts). `brand-600` `#c2410c` is orange **text** (5.2:1 on white, 4.6:1 on a 10% orange tint). `brand-action` `#cf4510` is the fill for anything carrying **white text** — buttons, the current page, chat bubbles, badges (4.65:1). White on `brand-500` is 3.0:1 and is not allowed for text.
+  - **Neutrals:** `ink-*` structure (`ink-900` `#222` headings), `mist-*` muted text and fills (`mist-500` `#555` secondary copy, `mist-400` `#5b636b` meta, `mist-200/300` `#e9ecef`/`#dee2e6` hairlines), and `mist-50` `#f8f6f2` the warm off-white page canvas (amended 2026-11-11, was cream `#fffaf3`). White cards sit on it, so a page is never a sheet of white glare. Placeholders use `#636a71` (5.5:1), lighter than meta text so they never read as typed values.
+- **Brand ≠ action ≠ success.** Green means one thing only: success. `success-*`, `warning-*`, `critical-*` and `accent-*` (informational blue) are separate token families and never double as the brand. A filled orange button is an action; a status is always a chip, never a fill.
+- **Type:** `--font-sans` and `--font-display` are both Poppins → Tajawal (every Arabic glyph renders in Tajawal at 400–700).
+- **Consistency rule:** the public site, the Super Admin console and the tenant dashboards are one product. The marketing site keeps its roomier `site-*` metrics (§1.3); the dashboards use the denser `ui-*` components (§4).
 
 ### 1.1 Geometry & elevation
 
-Radii are applied by redefining Tailwind's scale in `app.css`, not by rewriting class names — `rounded-xl` resolves to **6px**, `rounded-2xl` to **8px**. Nothing in the app reads past 8px; `rounded-full` is reserved for avatars, toggle knobs and unread dots.
+Radii are applied by redefining Tailwind's scale in `app.css`, not by rewriting class names: `rounded-md`/`rounded-lg` **6px** (controls, buttons), `rounded-xl` **8px**, `rounded-2xl` **12px** (cards), `rounded-3xl` 16px. `rounded-full` is reserved for avatars, toggle knobs and unread dots.
 
-Elevation is semantic and flat by default: **border or shadow, never both.** `shadow-sm` is a hairline lift, `shadow-lg` is for dropdowns/popovers, `shadow-2xl` for modals and drawers. No shadow token carries a horizontal offset, so nothing appears lit from the wrong side when the layout mirrors to RTL.
+Elevation is semantic and flat by default: **border or shadow, never both.** `shadow-sm` is the identity's soft card lift (`0 4px 25px rgb(0 0 0 / .05)`), `shadow-lg` is for dropdowns/popovers, `shadow-2xl` for modals and drawers. No shadow token carries a horizontal offset, so nothing appears lit from the wrong side when the layout mirrors to RTL.
 
 ### 1.2 Motion
 
 Three durations (120 / 180 / 260ms) and three curves (`--ease-standard`, `--ease-enter`, `--ease-exit`). Never `transition: all` — enumerate the properties. Nothing containing text may scale on hover (scaling resamples glyphs and shimmers a 1px border); press states use `translateY(1px)`.
+
+### 1.3 Public site identity — Andromeda (amended 2026-11-09)
+
+At the owner's direction the public marketing site (`resources/views/marketing/*`, `x-marketing.*`, `components/layouts/marketing.blade.php`) replicates the **Andromeda** template (Themefisher, MIT). The guest auth screens follow it too (`resources/views/auth/*` on `components/layouts/auth-centered.blade.php`: sign-in, register, forgot/reset password, email verification, two-factor challenge), so a visitor keeps one canvas from the landing page to the password field. It is a presentation-only change: routes, controllers, CMS data and copy are untouched.
+
+- **Scoped metrics.** Its tokens and components live in `resources/css/site.css` as `site-*` (imported by `app.css`), and its base rules apply only under `body.site`, which only the marketing and auth-centered layouts set. Since 2026-11-10 the app's own tokens carry the same identity (§1), so the two layers differ in density, not in colour.
+- **Tokens:** primary `#fe6019` (`site-primary`), body text `#4a4a4a` (8.3:1; the template's `#666` read washed out), headings `#222`, page canvas `#f8f6f2` (`site-canvas`, same as the app), white cards, borders `#dee2e6` / peach `#ffece4`, cream panels `#fffaf3` / `#fff7f3`, unfilled circles `#ffe6db`, dashed waves `#ffe4d1`.
+- **Type:** `--font-site` = Poppins → Tajawal (Poppins has no Arabic, so every Arabic glyph falls to Tajawal at the same 400–700 weights). Body 15px / 1.625; headings 600 on the template's 1.246 scale (h1 48px, h2 38.6px, h3 31px, h4 24.8px, h5 19.9px), 80% for h1–h3 below `md`.
+- **Components (`site.css`):** `site-container` (1380px) / `site-container-xl` (1440px), `site-section` (64px block padding), `site-btn` + `site-btn-primary` / `site-btn-outline` (48px, 6px radius, black-wash hover; `site-btn--compact` 44px in the header), `site-section-title` (+ `--start`) with the 70×4px orange bar, `site-panel` cream wave panels (`--banner`, `--flat`, `--wave`, `--plain`) inside a `site-panel-host`, `site-circle`, `site-feature-card` + `-icon`, `site-card`, `site-input` (cream, orange edge on the page's reading-start side even for `dir="ltr"` fields), `site-label` / `site-error`, `site-check`, `site-notice`, `site-step` (`.is-current` / `.is-done`), `site-accordion`, `site-header` (fixed, 70px at rest: 12px padding around 46px nav links, the 44px CTA and a 44px menu toggle, every target ≥ 44px; on the canvas colour; tightens and hides on scroll-down, returns on scroll-up), `site-social`, `site-testimonial-blob`, `site-prose`.
+- **Blade:** `x-marketing.panel` and `x-marketing.circles` (named circle presets) draw the template's decoration; the large circles are hidden below `md` so they never sit on copy.
+- **CMS title markers stay.** `**…**`, `((…))` and `__…__` still render (`mada-marker`, `mada-circle`, `mada-underline-double`), recoloured to the orange/peach palette in `app.css` so the admin preview still paints the public mark.
+- **Contrast (amended 2026-11-10):** `#fe6019` is 3.0:1 on white, so it is for shapes, icons, bars and marks only. Orange **text** (links, the active nav item, breadcrumbs, step numbers, prices) uses `site-primary-ink` `#c2410c` (5.2:1); a **fill under white text** (`site-btn-primary`, the pricing toggle, the "الأكثر طلباً" badge, numbered steps, `site-step.is-done`, the testimonial blob) uses `site-primary-action` `#cf4510` (4.65:1). The logo mark is exempt as a logotype.
 
 ## 2. Appearance Strategy — One Light Canvas (supersedes ADR-15)
 
@@ -46,15 +59,15 @@ The component was **not** deleted with the feature, and every page that owns its
 - It **strips `.dark` from `<html>`** on load and again on every `livewire:navigated`. `wire:navigate` copies the incoming document's `<html>` attributes onto the live element, so a `dark` class left by a cached page, an extension or a restored bfcache entry would otherwise survive the swap. Stripping after each navigation is what makes "light only" true at runtime and not merely true in the templates.
 - It **clears the legacy `mada-theme` key** once. Returning visitors still carry `"dark"` in their browser from before the change. Nothing reads it today, but leaving it would let a future stored-preference feature silently inherit a choice made against a palette that no longer exists. The `localStorage` access is wrapped in `try/catch` — private-mode browsers throw on access, and losing the cleanup is acceptable where taking the page down before first paint is not.
 
-### 2.4 Muted text is a single ramp (updated 2026-08-16)
+### 2.4 Muted text is a single ramp (updated 2026-11-11)
 
 The `mist-*` stops were theme-split while both themes existed. They are now **single-valued** in the `@theme` block of `app.css`, measured on white:
 
 | Token | Value | Contrast on white | Role |
 |---|---|---|---|
-| `--color-mist-400` | `#524c5e` | 8.20:1 | tertiary / meta text |
-| `--color-mist-500` | `#413b4f` | 10.69:1 | secondary body text |
-| `--color-mist-600` | `#2f2a3a` | 13.4:1 | emphasis |
+| `--color-mist-400` | `#5b636b` | 6.1:1 (5.6:1 on the canvas) | tertiary / meta text |
+| `--color-mist-500` | `#555555` | 7.5:1 (6.9:1 on the canvas) | secondary body text |
+| `--color-mist-600` | `#444444` | 9.7:1 | emphasis |
 
 - **Always-dark *surfaces* still exist, and are not dark mode.** The footer, the CTA band, the login showcase and the 403/404 pages are deep-neutral brand slabs on a light site. A `:where()` block in `app.css` re-resolves the `mist-*` tones inside them so their muted text stays legible without any per-panel opt-out.
 - **New always-dark panels declare `data-surface="dark"`** rather than extending the enumerated `[class~='bg-ink-*']` allowlist beside it. Those selectors match with `~=` (whole token), never `*=`: a substring match would also hit `dark:bg-ink-900/60`, which sits in the class attribute of cards that are **white** — they would then take dark muted tones on a white ground, i.e. the exact bug that block exists to fix, inverted.
@@ -78,9 +91,38 @@ Do not read an existing `dark:` class as a pattern to copy. New markup gets one 
 
 ## 4. Component Inventory (mandatory shared components)
 
+### 4.1 Dashboard primitives — `resources/css/ui.css` (2026-11-10)
+
+Every dashboard (Platform Console, owner, managers, employees) builds controls from these classes instead of repeating utility strings. Layout utilities on the element (`w-full`, `flex-1`, `ms-auto`, `hidden sm:inline-flex`, `ps-9` for an icon) still apply on top; colour, border, radius, padding and type come from the class.
+
+| Class | Use | Spec |
+|---|---|---|
+| `ui-btn` + `ui-btn-primary` | The one main action of a view | `brand-action` fill, white 600 text, 6px radius, 40px min-height; hover is a 10% black wash |
+| `ui-btn-secondary` | Second actions, row actions, the "تصفية" filter submit | White, `mist-300` hairline, `ink-900` text; hover turns border and text orange |
+| `ui-btn-neutral` | Cancel / back / reset-filter ("مسح", "إعادة ضبط") / quiet actions | `mist-100` fill, `ink-900` text |
+| `ui-btn-danger` / `ui-btn-danger-outline` | Destructive actions (filled for the final confirm, outline in rows) | `critical-500` |
+| `ui-btn-success` | Approve-type confirmations | `success-500` fill |
+| `ui-btn-sm` / `ui-btn-lg` | Size steps | 32px / 48px min-height |
+| `ui-control` | Every text input, select and textarea | 40px min-height, `mist-300` border, 6px radius, white; focus = orange border + 3px orange ring; `aria-invalid="true"` or `.is-invalid` = critical border; disabled/readonly = `mist-100` |
+| `ui-label` / `ui-help` / `ui-error` | Field label, hint, inline error | 15px; label `ink-900` 500, hint `mist-500`, error `critical-500` 500 |
+| `ui-card` | Every content container | White, 12px radius, `shadow-sm`, no border; padding stays in markup (`p-4` dense, `p-6` forms) |
+
+Rules that come with them:
+
+- **Every control has an accessible name.** A visible `<label for>` paired by `id`, or `aria-label` when there is no visible label (filters, table-row inputs, select-all checkboxes).
+- **White text only on `brand-action`, `critical-500` or `success-500`.** Never on `brand-500`.
+- **One `<h1>` per page.** The topbar title is a `<p>`; the page's own heading is the `<h1>`.
+- **Targets are at least 24px tall.** Small text links (breadcrumbs, "عرض الكل", list titles) get `inline-flex min-h-6 items-center` or `block py-0.5`.
+- **Decorative separators** (`/` in breadcrumbs, `·` between hints) use `mist-400` and `aria-hidden="true"`.
+- **Transitions name their properties** (`transition-colors`, `transition-shadow`, `transition-[width]`). Never `transition-all`.
+- **Pagination** is the published `resources/views/vendor/pagination/tailwind.blade.php`: Arabic range summary, 36px page buttons, current page on `brand-action`, arrows flipped under RTL.
+- **Charts** use `#c2410c` (orange) and `#0369a1` (blue), validated for colour-blind separation and 3:1 on white; text in `#222`/`#666`, grid `#e9ecef`.
+
+### 4.2 Shared patterns
+
 | Component | Purpose | Notes |
 |---|---|---|
-| `card` | Base content container used across all dashboards/lists | Single light pass (§2.1) |
+| `card` | Base content container used across all dashboards/lists | `ui-card` (§4.1) |
 | `status-badge` | Status indicators (`pending`, `active`, `suspended`, task statuses, payroll states) | Color-coded consistently per status across the whole app |
 | `kanban-column` | Drag-and-drop board column (Applicants, Tasks) | Livewire-driven (ADR-01) |
 | `empty-state` | Icon + message + guided CTA, shown on every list/board/dashboard with no data | Never a blank screen (per `USER_JOURNEYS.md` §4) |
@@ -98,7 +140,7 @@ Do not read an existing `dark:` class as a pattern to copy. New markup gets one 
 
 | Token | Value | Applies to |
 | --- | --- | --- |
-| `--spacing-control` | 32px | buttons, inputs, selects |
+| `--spacing-control` | 32px | compact controls (toolbars, `ui-btn-sm`) — standard `ui-btn` / `ui-control` are 40px |
 | `--spacing-row` | 36px | data table rows (`px-3 py-2` at `text-sm`) |
 | `--spacing-bar` | 48px | topbar, card header, toolbar |
 

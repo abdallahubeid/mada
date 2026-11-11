@@ -8,7 +8,7 @@
         </div>
 
         <a href="{{ route('hr.employees.index') }}" wire:navigate
-           class="inline-flex h-10 items-center gap-2 rounded-lg bg-mist-100 px-4 text-sm font-semibold text-ink-700 transition duration-150 hover:bg-mist-200">
+           class="ui-btn ui-btn-neutral">
             كل الموظفين
         </a>
     </div>
@@ -20,7 +20,7 @@
             type="search"
             wire:model.live.debounce.400ms="search"
             placeholder="ابحث بالاسم أو البريد أو المسمى الوظيفي"
-            class="block h-11 w-full max-w-md rounded-lg border border-mist-300 bg-white px-4 text-sm text-ink-900 transition duration-150 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/25"
+            class="ui-control block w-full max-w-md"
         >
     </div>
 
@@ -66,7 +66,7 @@
                                 <button
                                     type="button"
                                     wire:click="viewDetails({{ $employee->id }})"
-                                    class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-mist-100 px-3 text-xs font-semibold text-ink-700 transition duration-150 hover:bg-mist-200"
+                                    class="ui-btn ui-btn-neutral ui-btn-sm"
                                 >
                                     عرض التفاصيل
                                 </button>
@@ -74,7 +74,7 @@
                                 <button
                                     type="button"
                                     wire:click="startCreate({{ $employee->id }})"
-                                    class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-brand-500 px-3 text-xs font-semibold text-white transition duration-150 hover:bg-brand-600 active:translate-y-px"
+                                    class="ui-btn ui-btn-primary ui-btn-sm"
                                 >
                                     إنشاء حساب
                                 </button>
@@ -138,7 +138,7 @@
                     @if ($viewing->cv_path)
                         {{-- Streamed through the authorised route, never a direct file link. --}}
                         <a href="{{ route('hr.employees.cv', $viewing) }}"
-                           class="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-mist-100 px-4 text-sm font-semibold text-ink-700 transition duration-150 hover:bg-mist-200">
+                           class="ui-btn ui-btn-neutral mt-6">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                             </svg>
@@ -149,7 +149,7 @@
 
                 <footer class="border-t border-mist-200 px-6 py-4">
                     <button type="button" wire:click="startCreate({{ $viewing->id }})"
-                            class="inline-flex h-11 w-full items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-semibold text-white transition duration-150 hover:bg-brand-600">
+                            class="ui-btn ui-btn-primary ui-btn-lg w-full">
                         إنشاء حساب لهذا الموظف
                     </button>
                 </footer>
@@ -187,7 +187,7 @@
                             dir="ltr"
                             wire:model="accountEmail"
                             placeholder="name@company.com"
-                            class="block h-11 w-full rounded-lg border px-3 text-start text-sm text-ink-900 transition duration-150 placeholder:text-mist-400 focus:outline-none focus:ring-2 @error('accountEmail') border-critical-500 focus:ring-critical-500/25 @else border-mist-300 focus:border-brand-500 focus:ring-brand-500/25 @enderror"
+                            class="ui-control block w-full text-start @error('accountEmail') border-critical-500 focus:ring-critical-500/25 @else border-mist-300 focus:border-brand-500 focus:ring-brand-500/25 @enderror"
                         >
                         @error('accountEmail')
                             <p class="mt-1.5 text-xs font-medium text-critical-500">{{ $message }}</p>
@@ -201,7 +201,7 @@
                         <select
                             id="account-role"
                             wire:model="accountRole"
-                            class="block h-11 w-full rounded-lg border border-mist-300 bg-white px-3 text-sm text-ink-900 transition duration-150 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/25"
+                            class="ui-control block w-full"
                         >
                             @foreach ($roles as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
@@ -214,12 +214,12 @@
 
                     <div class="flex items-center justify-end gap-3 pt-1">
                         <button type="button" wire:click="closeCreate"
-                                class="inline-flex h-11 items-center rounded-lg bg-mist-100 px-5 text-sm font-semibold text-ink-700 transition duration-150 hover:bg-mist-200">
+                                class="ui-btn ui-btn-neutral ui-btn-lg">
                             إلغاء
                         </button>
 
                         <button type="submit" wire:loading.attr="disabled" wire:target="createAccount"
-                                class="inline-flex h-11 items-center gap-2 rounded-lg bg-brand-500 px-5 text-sm font-semibold text-white transition duration-150 hover:bg-brand-600 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60">
+                                class="ui-btn ui-btn-primary ui-btn-lg">
                             <svg wire:loading wire:target="createAccount" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25" />
                                 <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round" />

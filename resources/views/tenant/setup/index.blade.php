@@ -24,11 +24,11 @@
 
     $logoUrl = $tenant->images()->where('collection', 'logo')->first()?->url();
 
-    $inputClasses = 'block w-full rounded-xl border border-mist-300 bg-white px-3 py-2 text-sm text-ink-900 shadow-sm transition duration-150 placeholder:text-mist-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-50 dark:placeholder:text-mist-500';
+    $inputClasses = 'ui-control w-full';
     $labelClasses = 'mb-1.5 block text-sm font-medium text-ink-700 dark:text-mist-200';
     $errorClasses = 'mt-1.5 text-xs text-danger-solid';
-    $primaryBtn = 'inline-flex items-center justify-center gap-2 rounded-md bg-brand-500 px-6 py-3 text-sm font-semibold text-white shadow-glow transition duration-200 ease-in-out hover:bg-brand-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50';
-    $secondaryBtn = 'inline-flex items-center justify-center gap-2 rounded-md border border-mist-300 px-6 py-3 text-sm font-semibold text-ink-700 transition duration-200 ease-in-out hover:border-brand-500 hover:text-brand-600 active:scale-[0.98] dark:border-ink-600 dark:text-mist-200 dark:hover:border-brand-500 dark:hover:text-brand-300';
+    $primaryBtn = 'ui-btn ui-btn-primary ui-btn-lg';
+    $secondaryBtn = 'ui-btn ui-btn-secondary ui-btn-lg';
 @endphp
 
 <x-layouts.guest max-width="max-w-3xl" title="إعداد المؤسسة — مدى">
@@ -60,7 +60,7 @@
                 this.holidays.splice(index, 1);
             },
         }"
-        class="rounded-3xl border border-mist-200 bg-white p-6 shadow-sm dark:border-ink-700 dark:bg-ink-800/60 sm:p-8"
+        class="ui-card p-6 sm:p-8"
     >
         <div class="mb-8 flex items-center" role="list" aria-label="خطوات إعداد المؤسسة">
             @foreach ($steps as $index => $label)
@@ -69,7 +69,7 @@
                     <div class="flex flex-col items-center gap-2">
                         <span
                             :class="step > {{ $n }}
-                                ? 'bg-brand-500 text-white'
+                                ? 'bg-brand-action text-white'
                                 : (step === {{ $n }}
                                     ? 'border-2 border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300'
                                     : 'border border-mist-300 text-mist-400 dark:border-ink-600 dark:text-mist-500')"

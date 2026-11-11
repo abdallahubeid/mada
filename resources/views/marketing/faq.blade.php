@@ -1,4 +1,4 @@
-{{-- Full FAQ page — config/faq.php grouped by category. --}}
+{{-- Full FAQ page — config/faq.php grouped by category, in the Andromeda accordion style. --}}
 <x-layouts.marketing
     title="الأسئلة الشائعة — مدى"
     description="إجابات عن مدى: التسعير، الأمان، الإعداد، والدعم. قائمة كاملة مصنّفة حسب الموضوع."
@@ -12,32 +12,30 @@
             subtitle="إجابات مرتبة حسب الموضوع. لم تجد سؤالك؟ تواصل معنا مباشرة."
         />
 
-        <section class="border-b border-mist-200 bg-white py-6 dark:border-ink-800 dark:bg-ink-900">
-            <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-2 px-4 sm:px-6">
-                @foreach ($categories as $category)
-                    <a
-                        href="#{{ $category['id'] }}"
-                        class="rounded-md border border-mist-200 px-4 py-1.5 text-sm font-medium text-ink-600 transition duration-200 hover:border-brand-500 hover:text-brand-600 dark:border-ink-700 dark:text-mist-300 dark:hover:border-brand-500 dark:hover:text-brand-300"
-                    >{{ $category['title'] }}</a>
-                @endforeach
+        <section class="site-section">
+            <div class="site-container max-w-4xl">
+                <nav aria-label="أقسام الأسئلة">
+                    <ul class="flex flex-wrap items-center justify-center gap-2">
+                        @foreach ($categories as $category)
+                            <li>
+                                <a href="#{{ $category['id'] }}" class="site-btn site-btn-outline min-h-0 px-4 py-2">{{ $category['title'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+
+                <div class="mt-14 space-y-14">
+                    @foreach ($categories as $category)
+                        <section id="{{ $category['id'] }}" aria-labelledby="{{ $category['id'] }}-title">
+                            <h2 id="{{ $category['id'] }}-title" class="site-section-title site-section-title--start site-h4">{{ $category['title'] }}</h2>
+                            <div class="mt-10">
+                                <x-marketing.faq-accordion :framed="false" :items="$category['items']" />
+                            </div>
+                        </section>
+                    @endforeach
+                </div>
             </div>
         </section>
-
-        <div class="bg-ink-100 py-16 dark:bg-ink-950">
-            <div class="mx-auto max-w-3xl space-y-14 px-4 sm:px-6 lg:px-8">
-                @foreach ($categories as $category)
-                    <section id="{{ $category['id'] }}" class="scroll-mt-24">
-                        <h2 class="font-display text-xl font-medium text-ink-900 dark:text-ink-50">{{ $category['title'] }}</h2>
-                        <div class="mt-4">
-                            <x-marketing.faq-accordion
-                                :framed="false"
-                                :items="$category['items']"
-                            />
-                        </div>
-                    </section>
-                @endforeach
-            </div>
-        </div>
 
         <x-marketing.cta-band
             title="لم تجد إجابتك؟"

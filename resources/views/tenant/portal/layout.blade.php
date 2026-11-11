@@ -41,7 +41,7 @@
     <header class="sticky top-0 z-50 border-b border-mist-200/60 bg-white/80 backdrop-blur-xl dark:border-ink-700/60 dark:bg-ink-950/75">
         <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
             <a href="{{ route('portal.index', $slug) }}" class="flex min-w-0 items-center gap-3">
-                <span class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-500 font-display text-lg font-medium text-white shadow-lg">
+                <span class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-action font-display text-lg font-medium text-white shadow-lg">
                     {{ $company['logo_initial'] }}
                 </span>
                 <span class="min-w-0">
@@ -77,7 +77,7 @@
                 @if ($portalSettings->isSectionActive('careers'))
                     <a
                         href="{{ route('portal.careers', $slug) }}"
-                        class="hidden rounded-xl bg-brand-500 px-4 py-2 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600 sm:inline-flex"
+                        class="hidden rounded-xl bg-brand-action px-4 py-2 text-sm font-bold text-white shadow-lg transition hover:bg-brand-600 sm:inline-flex"
                     >
                         الشواغر المتاحة
                     </a>
@@ -101,7 +101,7 @@
                     <a href="{{ $item['href'] }}" @click="navOpen = false" class="rounded-lg px-3 py-2 text-sm font-medium text-ink-700 hover:bg-mist-100 dark:text-mist-200 dark:hover:bg-ink-800">{{ $item['label'] }}</a>
                 @endforeach
                 @if ($portalSettings->isSectionActive('careers'))
-                    <a href="{{ route('portal.careers', $slug) }}" class="mt-2 rounded-xl bg-brand-500 px-3 py-2 text-center text-sm font-bold text-white">الشواغر المتاحة</a>
+                    <a href="{{ route('portal.careers', $slug) }}" class="mt-2 rounded-xl bg-brand-action px-3 py-2 text-center text-sm font-bold text-white">الشواغر المتاحة</a>
                 @endif
             </div>
         </div>
@@ -158,7 +158,7 @@
                     Swal.fire({
                         icon: flasher.type || 'success',
                         title: flasher.message,
-                        confirmButtonColor: '#714b67',
+                        confirmButtonColor: '#fe6019',
                         confirmButtonText: 'حسنًا',
                     });
                 }

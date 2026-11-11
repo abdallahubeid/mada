@@ -10,6 +10,7 @@ use App\Models\Feature;
 use App\Models\Module;
 use App\Models\Offering;
 use App\Models\Plan;
+use App\Models\PlanFeature;
 use App\Models\Problem;
 use App\Models\Setting;
 use App\Models\Solution;
@@ -209,8 +210,52 @@ class MarketingContent
             'cta' => $plan->cta_label,
             'href' => $plan->cta_url,
             'highlighted' => $plan->is_highlighted,
-            'features' => $plan->features->pluck('label')->all(),
+            'features' => $plan->features
+                ->map(fn (PlanFeature $feature): ?string => $this->planFeatureLine($feature))
+                ->filter()
+                ->values()
+                ->all(),
         ])->all();
+    }
+
+    /**
+     * Visitor-facing text for one plan feature row.
+     *
+     * Display bullets show their label. Capacity rows share the relation
+     * (PlanSeeder writes each limit with `feature_key`, e.g. `max_employees`)
+     * and become a readable line; an unknown key is left out rather than
+     * printed raw.
+     */
+    private function planFeatureLine(PlanFeature $feature): ?string
+    {
+        if (blank($feature->feature_key)) {
+            return $feature->label;
+        }
+
+        $name = match ($feature->feature_key) {
+            'max_employees' => 'الموظفون',
+            'max_departments' => 'الأقسام',
+            'max_storage_mb' => 'التخزين',
+            default => null,
+        };
+
+        if ($name === null) {
+            return null;
+        }
+
+        if (! is_numeric($feature->value)) {
+            return "{$name}: بلا حد";
+        }
+
+        $amount = (int) $feature->value;
+
+        if ($feature->feature_key === 'max_storage_mb') {
+            return $amount >= 1024 && $amount % 1024 === 0
+                ? "{$name}: ".number_format($amount / 1024).' جيجابايت'
+                : "{$name}: ".number_format($amount).' ميجابايت';
+        }
+
+        return "{$name}: حتى ".number_format($amount);
     }
 
     public function currencySymbol(): string

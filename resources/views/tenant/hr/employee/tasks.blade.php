@@ -18,7 +18,7 @@
 <x-layouts.app title="مهامي">
     @if ($employee === null)
         <div class="mx-auto max-w-2xl">
-            <div class="rounded-2xl border border-mist-200 bg-white p-8 text-center shadow-sm dark:border-ink-600 dark:bg-ink-800">
+            <div class="ui-card p-8 text-center">
                 <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/15 text-mist-400 dark:text-mist-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg></div>
                 <h1 class="mt-4 font-display text-2xl font-medium text-ink-900 dark:text-ink-50">مهامي</h1>
                 <p class="mt-2 text-sm text-mist-500">
@@ -63,7 +63,7 @@
                                     draggable="true"
                                     @dragstart="draggedId = {{ $task->id }}"
                                     @dragend="draggedId = null"
-                                    class="cursor-grab space-y-2 rounded-xl border border-mist-200 bg-white p-3 shadow-sm transition active:cursor-grabbing dark:border-ink-600 dark:bg-ink-800"
+                                    class="ui-card cursor-grab space-y-2 p-3 transition active:cursor-grabbing"
                                 >
                                     <div class="flex items-start justify-between gap-2">
                                         <p class="text-sm font-semibold text-ink-900 dark:text-ink-50">{{ $task->title }}</p>
